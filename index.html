@@ -3,399 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASIACOMKHK | 极客导航</title>
-    <meta name="description" content="Cloudflare Workers 生态工具箱：网络诊断、M3U8播放器及开发者实用工具。">
-    <meta name="theme-color" content="#0f172a">
+    <title>极客导航 | 2026 Edition</title>
+    <!-- PWA 支持 -->
+    <meta name="theme-color" content="#1e293b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <style>
-        /* --- 全局样式与变量 --- */
         :root {
             --bg-color: #0f172a;
             --card-bg: rgba(30, 41, 59, 0.7);
-            --primary-color: #38bdf8;
             --text-main: #f1f5f9;
-            --text-sub: #94a3b8;
-            --border-color: rgba(148, 163, 184, 0.1);
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
-            padding: 20px;
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, var(--bg-color) 80%);
-        }
-
-        /* --- 布局网格 --- */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* --- 卡片通用样式 --- */
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            height: 100%;
-        }
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-            border-color: var(--primary-color);
-        }
-
-        .card-header {
-            display: flex;
             align-items: center;
-            margin-bottom: 20px;
-        }
-        .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(56, 189, 248, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-        }
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
+            padding: 2rem 1rem;
+            background-image: radial-gradient(circle at top right, #1e293b 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #0c4a6e 0%, transparent 40%);
         }
 
-        /* --- 按钮样式 --- */
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-            outline: none;
-            text-decoration: none;
-            margin-top: auto; /* 按钮沉底 */
-        }
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: #0f172a;
-        }
-        .btn-primary:hover {
-            background-color: #7dd3fc;
-            transform: scale(1.02);
-        }
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.1);
-            color: var(--text-main);
-            margin-left: 10px;
-        }
-        .btn-sm:hover {
-            background: rgba(255,255,255,0.2);
-        }
+        .container { max-width: 1000px; width: 100%; }
 
-        /* --- 模块特有样式 --- */
-        /* GitHub 模块 */
-        .gh-stats {
-            display: flex;
-            gap: 20px;
-            margin: 15px 0;
-            font-family: monospace;
-            font-size: 1.1rem;
-        }
-        .gh-stat-item { color: var(--text-sub); }
-        .gh-stat-val { color: var(--text-main); font-weight: bold; }
+        /* 头部与天气 */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        h1 { font-size: 1.8rem; background: linear-gradient(to right, #38bdf8, #818cf8); -webkit-background-clip: text; color: transparent; }
+        .weather-badge { background: var(--card-bg); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border); font-size: 0.9rem; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); }
 
-        /* 天气模块 */
-        .weather-content { text-align: center; padding: 10px 0; }
-        .temp { font-size: 2.5rem; font-weight: 700; color: var(--primary-color); }
-        .desc { color: var(--text-sub); margin-top: 5px; text-transform: capitalize; }
-        .location { font-size: 0.9rem; color: var(--text-sub); margin-top: 10px; }
-
-        /* 工具箱 */
-        .tool-group { margin-bottom: 15px; }
-        .tool-label { display: block; margin-bottom: 8px; color: var(--text-sub); font-size: 0.9rem; }
-        .input-group { display: flex; gap: 10px; }
-        input {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            flex: 1;
-            outline: none;
+        /* 网格布局 */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            backdrop-filter: blur(12px);
         }
-        input:focus { border-color: var(--primary-color); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); border-color: var(--accent); }
+        
+        .card-title { font-size: 1.1rem; margin-bottom: 1rem; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        
+        .link-list { list-style: none; }
+        .link-list li { margin-bottom: 0.8rem; }
+        .link-list a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; display: block; }
+        .link-list a:hover { color: var(--text-main); padding-left: 4px; }
 
-        /* 状态页 */
-        .status-row { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
-        .status-label { color: var(--text-sub); }
-        .status-val { font-family: monospace; color: var(--primary-color); }
-        .status-badge {
-            display: inline-block; padding: 4px 8px; border-radius: 4px;
-            font-size: 0.75rem; background: rgba(34, 197, 94, 0.2); color: #4ade80;
-        }
+        /* Base64 工具样式 */
+        .tool-group { display: flex; flex-direction: column; gap: 10px; }
+        textarea { width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: var(--text-main); padding: 8px; resize: none; font-size: 0.85rem; }
+        .btn-row { display: flex; gap: 8px; }
+        button { flex: 1; padding: 8px; border: none; border-radius: 6px; background: var(--accent); color: #0f172a; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+        button:hover { opacity: 0.9; }
+        button.secondary { background: #475569; color: white; }
 
-        /* 底部版权 */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-sub);
-            font-size: 0.9rem;
-            opacity: 0.6;
-        }
-
-        @media (max-width: 600px) {
-            .grid-container { grid-template-columns: 1fr; }
-        }
+        footer { margin-top: 3rem; color: var(--text-muted); font-size: 0.8rem; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="grid-container">
+<div class="container">
+    <header>
+        <h1>GeekNav 2026</h1>
+        <div class="weather-badge" id="weather">
+            <span>📍 江门</span>
+            <span id="weather-text">加载中...</span>
+        </div>
+    </header>
 
-        <!-- 1. NetDiag 网络诊断 -->
+    <div class="grid">
+        <!-- 常用开发 -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-icon">🛰️</div>
-                <div class="card-title">NetDiag 网络诊断</div>
-            </div>
-            <p style="color:var(--text-sub); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
-                基于 Cloudflare Workers 的边缘网络诊断工具。支持多节点延迟测试、带宽测速及路由追踪。
-            </p>
-            <a href="https://asiacomkhk.github.io/CF-workers-netdiag/" target="_blank" class="btn btn-primary">访问工具</a>
+            <div class="card-title">🛠️ 开发与工具</div>
+            <ul class="link-list">
+                <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+                <!-- 已修复拼写错误 Wroker -> Worker -->
+                <li><a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank">M3U8 播放器 (Fixed)</a></li>
+                <li><a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank">网络诊断 NetDiag</a></li>
+                <li><a href="https://jsonformatter.org/" target="_blank">JSON 格式化</a></li>
+            </ul>
         </div>
 
-        <!-- 2. M3U8 播放器 -->
+        <!-- 2026 AI 专区 -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-icon">🎬</div>
-                <div class="card-title">M3U8 播放器</div>
-            </div>
-            <p style="color:var(--text-sub); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
-                轻量级、无广告的在线流媒体播放器。专为 HLS/M3U8 格式优化，支持低延迟播放。
-            </p>
-            <a href="https://asiacomkhk.github.io/CF-Wroker-M3U8Player/" target="_blank" class="btn btn-primary">立即播放</a>
+            <div class="card-title">🤖 AI 助手 (2026)</div>
+            <ul class="link-list">
+                <li><a href="https://chatgpt.com/" target="_blank">ChatGPT</a></li>
+                <li><a href="https://claude.ai/" target="_blank">Claude AI</a></li>
+                <li><a href="https://kimi.moonshot.cn/" target="_blank">Kimi 智能助手</a></li>
+                <li><a href="https://gemini.google.com/" target="_blank">Google Gemini</a></li>
+            </ul>
         </div>
 
-        <!-- 3. 智能天气 (修复版：增加兜底逻辑) -->
+        <!-- 江门/大湾区本地服务 -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-icon">⛅</div>
-                <div class="card-title">智能天气</div>
-            </div>
-            <div id="weather-card" class="weather-content">
-                <div class="temp">--°C</div>
-                <div class="desc">正在定位...</div>
-                <div class="location" id="weather-location">获取中</div>
-                <button onclick="fetchWeather()" style="margin-top:15px; background:none; border:none; color:var(--primary-color); cursor:pointer; text-decoration:underline;">刷新天气</button>
-            </div>
+            <div class="card-title">🌆 江门 & 湾区生活</div>
+            <ul class="link-list">
+                <li><a href="https://www.gdzwfw.gov.cn/" target="_blank">粤省事 (小程序/网页)</a></li>
+                <li><a href="https://www.12306.cn/" target="_blank">铁路 12306 (广珠城轨)</a></li>
+                <li><a href="https://map.baidu.com/" target="_blank">百度地图 (实时路况)</a></li>
+                <li><a href="https://weibo.com/" target="_blank">微博热搜</a></li>
+            </ul>
         </div>
 
-        <!-- 4. GitHub 动态 (修复版：N/A 问题) -->
+        <!-- Base64 实用工具 -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-icon"><img src="https://github.githubassets.com/favicons/favicon.svg" width="24" alt="GH"></div>
-                <div class="card-title">GitHub 动态</div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <div class="gh-stats">
-                    <div class="gh-stat-item">Stars: <span id="gh-stars" class="gh-stat-val">--</span></div>
-                    <div class="gh-stat-item">Forks: <span id="gh-forks" class="gh-stat-val">--</span></div>
-                </div>
-                <p style="color:var(--text-sub); font-size: 0.85rem;">实时同步 GitHub 仓库数据。</p>
-            </div>
-            <a href="https://github.com/asiacomkhk" target="_blank" class="btn btn-primary">查看主页</a>
-        </div>
-
-        <!-- 5. 开发者工具箱 -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">🛠️</div>
-                <div class="card-title">开发者工具箱</div>
-            </div>
-
-            <!-- 密码生成 -->
+            <div class="card-title">⚡ Base64 编解码</div>
             <div class="tool-group">
-                <label class="tool-label">密码生成 (长度)</label>
-                <div class="input-group">
-                    <input type="number" id="pwd-len" value="16" min="4" max="64" style="max-width:80px;">
-                    <button class="btn btn-primary" onclick="genPwd()" style="margin-top:0;">生成</button>
+                <textarea id="b64-input" placeholder="在此输入原始内容..."></textarea>
+                <div class="btn-row">
+                    <button onclick="b64Encode()">加密 (Encode)</button>
+                    <button class="secondary" onclick="b64Decode()">解密 (Decode)</button>
                 </div>
-                <input type="text" id="pwd-result" readonly style="margin-top:10px; cursor:pointer;" onclick="this.select()" placeholder="点击生成密码">
-            </div>
-
-            <!-- Base64 -->
-            <div class="tool-group" style="margin-top:15px;">
-                <label class="tool-label">Base64 编解码</label>
-                <input type="text" id="b64-input" placeholder="输入文本" style="margin-bottom:8px;">
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-primary" onclick="b64Encode()" style="margin-top:0; flex:1; font-size:0.9rem;">编码</button>
-                    <button class="btn btn-primary" onclick="b64Decode()" style="margin-top:0; flex:1; font-size:0.9rem;">解码</button>
-                </div>
+                <textarea id="b64-output" readonly placeholder="结果显示在这里..."></textarea>
+                <button class="secondary" style="background: #059669;" onclick="copyResult()">复制结果</button>
             </div>
         </div>
-
-        <!-- 6. 网站运行状态 (修复版：去除不稳定的实时 Ping) -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">🟢</div>
-                <div class="card-title">网站运行状态</div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <div class="status-row">
-                    <span class="status-label">系统状态</span>
-                    <span class="status-badge">正常运行</span>
-                </div>
-                <div class="status-row" style="border:none;">
-                    <span class="status-label">累计运行</span>
-                    <span class="status-val" id="uptime">计算中...</span>
-                </div>
-            </div>
-            <p style="font-size:0.8rem; color:var(--text-sub); text-align:center; margin-top:auto;">
-                数据更新于: <span id="update-time"></span>
-            </p>
-        </div>
-
     </div>
 
     <footer>
-        &copy; 2026 ASIACOMKHK. Powered by Cloudflare Workers.
+        <p>&copy; <span id="year"></span> BlueDriftHK. Hosted on GitHub Pages.</p>
+        <p>本站不收集任何隐私数据，天气数据由 Open-Meteo 提供。</p>
     </footer>
+</div>
 
-    <script>
-        // --- 1. GitHub 数据获取 (修复 N/A 问题) ---
-        async function fetchGitHubStats() {
-            const starsEl = document.getElementById('gh-stars');
-            const forksEl = document.getElementById('gh-forks');
-            const username = 'asiacomkhk'; // 修改为你的用户名
-            const repo = 'CF-workers-netdiag'; // 修改为你想展示的主仓库，或者留空获取用户总Star
+<script>
+    // 动态年份
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-            try {
-                // 尝试获取特定仓库数据，如果失败则获取用户总览
-                const response = await fetch(`https://api.github.com/repos/${username}/${repo}`, {
-                    headers: { 'Accept': 'application/vnd.github.v3+json' },
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    starsEl.textContent = data.stargazers_count || 0;
-                    // 修复点：如果 forks_count 为 null 或 undefined，显示 0
-                    forksEl.textContent = data.forks_count ?? 0;
-                } else {
-                    throw new Error('Repo not found');
-                }
-            } catch (err) {
-                console.error(err);
-                starsEl.textContent = 'Error';
-                forksEl.textContent = 'Error';
-            }
+    // 获取江门天气 (使用 Open-Meteo API，无需 Key)
+    async function getWeather() {
+        const weatherText = document.getElementById('weather-text');
+        // 江门坐标: 22.5922, 113.0950
+        const lat = 22.5922;
+        const lon = 113.0950;
+        
+        try {
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+            const data = await res.json();
+            const temp = data.current_weather.temperature;
+            const wind = data.current_weather.windspeed;
+            weatherText.textContent = `${temp}°C | 风速 ${wind} km/h`;
+        } catch (error) {
+            weatherText.textContent = "天气加载失败";
+            console.error("Weather Error:", error);
         }
-        fetchGitHubStats();
+    }
+    getWeather();
 
-        // --- 2. 天气模块 (修复定位失败) ---
-        async function fetchWeather() {
-            const tempEl = document.querySelector('.temp');
-            const descEl = document.querySelector('.desc');
-            const locEl = document.getElementById('weather-location');
-
-            // 默认兜底城市坐标 (北京)
-            let lat = 39.9042;
-            let lon = 116.4074;
-            let isDefault = true;
-
-            tempEl.textContent = '--°C';
-            descEl.textContent = '定位中...';
-
-            // 尝试获取用户定位
-            if (navigator.geolocation) {
-                try {
-                    const position = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
-                    });
-                    lat = position.coords.latitude;
-                    lon = position.coords.longitude;
-                    isDefault = false;
-                } catch (e) {
-                    console.log("定位失败，使用默认城市");
-                }
-            }
-
-            try {
-                // 使用免费的 Open-Meteo API (无Key，速度快)
-                const resp = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`);
-                const data = await resp.json();
-
-                const temp = Math.round(data.current.temperature_2m);
-                // 简单映射天气代码
-                const weatherMap = { 0:'晴朗', 1:'主要晴朗', 2:'多云', 3:'阴天', 45:'雾', 48:'雾', 51:'小雨', 61:'雨', 71:'雪', 80:'阵雨', 95:'雷暴' };
-                const weatherText = weatherMap[data.current.weather_code] || '未知';
-
-                tempEl.textContent = `${temp}°C`;
-                descEl.textContent = weatherText;
-                locEl.textContent = isDefault ? "北京 (默认)" : "当前位置";
-
-            } catch (err) {
-                tempEl.textContent = 'Err';
-                descEl.textContent = '服务不可用';
-            }
+    // Base64 逻辑优化
+    function b64Encode() {
+        const input = document.getElementById('b64-input').value;
+        try {
+            document.getElementById('b64-output').value = btoa(unescape(encodeURIComponent(input)));
+        } catch (e) {
+            document.getElementById('b64-output').value = "编码错误：包含非法字符";
         }
-        fetchWeather();
+    }
 
-        // --- 3. 运行时长计算 ---
-        function updateUptime() {
-            // 假设上线日期为 2023-01-01，请修改为你实际的上线日期
-            const startDate = new Date('2023-01-01');
-            const now = new Date();
-            const diff = now - startDate;
-
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            document.getElementById('uptime').textContent = `${days} 天`;
-            document.getElementById('update-time').textContent = now.toLocaleDateString();
+    function b64Decode() {
+        const input = document.getElementById('b64-input').value;
+        try {
+            document.getElementById('b64-output').value = decodeURIComponent(escape(atob(input)));
+        } catch (e) {
+            document.getElementById('b64-output').value = "解码错误：格式不正确";
         }
-        updateUptime();
+    }
 
-        // --- 4. 工具箱功能 ---
-        function genPwd() {
-            const len = document.getElementById('pwd-len').value;
-            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let pwd = "";
-            for(let i=0; i<len; i++) {
-                pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('pwd-result').value = pwd;
-        }
+    function copyResult() {
+        const output = document.getElementById('b64-output');
+        output.select();
+        document.execCommand('copy'); // 兼容旧浏览器
+        // 或者使用 navigator.clipboard.writeText(output.value);
+        alert('结果已复制到剪贴板！');
+    }
+</script>
 
-        function b64Encode() {
-            const input = document.getElementById('b64-input').value;
-            try {
-                document.getElementById('b64-input').value = btoa(input);
-            } catch(e) { alert("包含非法字符"); }
-        }
-
-        function b64Decode() {
-            const input = document.getElementById('b64-input').value;
-            try {
-                document.getElementById('b64-input').value = atob(input);
-            } catch(e) { alert("解码失败"); }
-        }
-    </script>
 </body>
 </html>
