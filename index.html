@@ -110,7 +110,8 @@
         <div class="card">
             <div class="card-title">🛠️ 开发与工具</div>
             <ul class="link-list">
-                <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+                <!-- 已更新：GitHub 链接 -->
+                <li><a href="https://github.com/BlueDriftHK" target="_blank">GitHub (BlueDriftHK)</a></li>
                 <li><a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank">M3U8 播放器 (Fixed)</a></li>
                 <li><a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank">网络诊断 NetDiag</a></li>
                 <li><a href="https://jsonformatter.org/" target="_blank">JSON 格式化</a></li>
@@ -128,13 +129,12 @@
             </ul>
         </div>
 
-        <!-- 江门/大湾区本地服务 (已替换为高德地图) -->
+        <!-- 江门/大湾区本地服务 -->
         <div class="card">
             <div class="card-title">🌆 江门 & 湾区生活</div>
             <ul class="link-list">
                 <li><a href="https://www.gdzwfw.gov.cn/" target="_blank">粤省事 (小程序/网页)</a></li>
                 <li><a href="https://www.12306.cn/" target="_blank">铁路 12306 (广珠城轨)</a></li>
-                <!-- 已更新：使用高德地图官网链接，并优化了描述 -->
                 <li><a href="https://www.amap.com/" target="_blank">高德地图 (出行/团购)</a></li>
                 <li><a href="https://weibo.com/" target="_blank">微博热搜</a></li>
             </ul>
@@ -266,8 +266,18 @@
     renderTodos(); // 初始化
 
     // --- 时间戳模块 ---
+    // 设置时区为中国标准时间 (CST/UTC+8)
+    function formatTime(date) {
+        return date.toLocaleString('zh-CN', { 
+            timeZone: 'Asia/Shanghai',
+            hour12: false
+        });
+    }
+
     setInterval(() => {
-        document.getElementById('current-ts').textContent = Math.floor(Date.now() / 1000);
+        const now = new Date();
+        document.getElementById('current-ts').textContent = Math.floor(now.getTime() / 1000);
+        // 如果需要显示格式化时间，可以更新其他元素
     }, 1000);
 
     function convertTs() {
@@ -275,7 +285,7 @@
         if (!ts) return;
         if (ts.length === 10) ts *= 1000; // 自动兼容秒级时间戳
         const date = new Date(parseInt(ts));
-        document.getElementById('ts-result').textContent = date.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+        document.getElementById('ts-result').textContent = formatTime(date);
     }
 </script>
 
