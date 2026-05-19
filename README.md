@@ -1,4 +1,4 @@
-# 👋 欢迎来到 ASIACOMKHK 的咸鱼窝
+# 👋 欢迎来到 BlueDriftHK 的咸鱼窝
 
 https://bluedrifthk.github.io/BlueDriftHK/
 
