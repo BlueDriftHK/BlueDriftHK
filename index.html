@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>BlueDriftHK · 极光幻域 | 开发者导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | 动态星轨">
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | 动态星轨 | 个人主页">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -135,6 +135,52 @@
             line-height: 1.45;
             margin-bottom: 1.4rem;
             font-weight: 400;
+        }
+
+        /* 个人介绍专用样式 - 更丰富的社交链接 */
+        .bio-text {
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: #cbd5f0;
+        }
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 1rem 0 0.5rem;
+        }
+        .social-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid #2dd4bf40;
+            border-radius: 2rem;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: #e2f0ff;
+            text-decoration: none;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .social-badge:hover {
+            background: rgba(45, 212, 191, 0.25);
+            border-color: #2dd4bf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45,212,191,0.2);
+        }
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1.2rem;
+            padding: 8px 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #a5b4da;
+            border: 0.5px solid rgba(56,189,248,0.2);
         }
 
         /* 霓虹按钮 */
@@ -277,6 +323,7 @@
             .universe-container { padding: 1rem; }
             .glitch-title { font-size: 1.9rem; }
             .nova-card { padding: 1.2rem; }
+            .social-badge { font-size: 0.7rem; padding: 4px 12px; }
         }
 
         /* 波浪装饰 */
@@ -295,11 +342,37 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | 星尘信标</div>
         <div class="wave-divider"></div>
     </div>
 
     <div class="grid-galaxy">
+        <!-- 新增：个人主页介绍区 - 星尘信标 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🧑‍🚀</div>
+                <div class="card-title">星尘信标 · 关于我</div>
+            </div>
+            <div class="bio-text">
+                ✦ 全栈极客 & 云原生探险者 ✦<br>
+                热衷于 Cloudflare Workers 生态、边缘计算与开源精神。创造实用工具链，让网络更透明、开发更高效。<br>
+                目前专注于 Serverless 架构、Web3 工具与开发者体验提升。
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/BlueDriftHK" target="_blank" class="social-badge">🐙 GitHub / BlueDriftHK</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank" class="social-badge">𝕏 Twitter / @BlueDriftHK</a>
+                <a href="mailto:bluedrift@proton.me" class="social-badge">✉️ 加密邮局</a>
+            </div>
+            <div class="contact-row">
+                <span>🌐 个人主页建设中 · 极客叙事</span>
+                <span style="margin-left: auto;">✨ 持续迭代</span>
+            </div>
+            <div style="margin-top: 12px;">
+                <span class="status-badge-live" style="background:#2dd4bf20;">⚡ 开源布道者</span>
+                <span class="status-badge-live" style="background:#2dd4bf20; margin-left: 8px;">🛸 工具链工匠</span>
+            </div>
+        </div>
+
         <!-- 1. NetDiag 诊断跃迁 -->
         <div class="nova-card">
             <div class="card-orbit">
@@ -328,7 +401,7 @@
             </a>
         </div>
 
-        <!-- 3. GitHub 动态 (修复N/A 华丽展示) - 原天气模块已移除，布局自动填充 -->
+        <!-- 3. GitHub 动态 (修复N/A 华丽展示) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🐙⚡</div>
@@ -560,7 +633,7 @@
     document.getElementById('passwordResult')?.addEventListener('click', function() { this.select(); });
     // 额外优雅元素闪烁
     const styleInject = document.createElement('style');
-    styleInject.textContent = `.btn-mini, .btn-nebula { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
+    styleInject.textContent = `.btn-mini, .btn-nebula, .social-badge { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
     document.head.appendChild(styleInject);
 </script>
 </body>
