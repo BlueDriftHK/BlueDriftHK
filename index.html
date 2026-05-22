@@ -24,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* 动态粒子画布背景 */
         #canvas-bg {
             position: fixed;
             top: 0;
@@ -36,7 +35,6 @@
             opacity: 0.5;
         }
 
-        /* 主容器 */
         .universe-container {
             position: relative;
             z-index: 10;
@@ -45,7 +43,6 @@
             padding: 2rem 1.8rem;
         }
 
-        /* 标题区 */
         .hero-space {
             margin-bottom: 3rem;
             text-align: center;
@@ -68,14 +65,12 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 响应式网格 */
         .grid-galaxy {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
-        /* 玻璃卡片 */
         .nova-card {
             background: rgba(12, 22, 40, 0.5);
             backdrop-filter: blur(16px);
@@ -96,7 +91,6 @@
             background: rgba(18, 30, 52, 0.65);
         }
 
-        /* 卡片头部 */
         .card-orbit {
             display: flex;
             align-items: center;
@@ -137,7 +131,6 @@
             font-weight: 400;
         }
 
-        /* 个人介绍专用样式 */
         .bio-text {
             margin-bottom: 1.2rem;
             font-size: 0.9rem;
@@ -183,7 +176,6 @@
             border: 0.5px solid rgba(56,189,248,0.2);
         }
 
-        /* 按钮风格 */
         .btn-nebula {
             display: inline-flex;
             align-items: center;
@@ -210,7 +202,6 @@
             box-shadow: 0 0 14px rgba(45,212,191,0.5);
         }
 
-        /* GitHub 数据模块 */
         .cosmic-stats {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.6rem;
@@ -241,7 +232,6 @@
             color: transparent;
         }
 
-        /* 工具箱组件 */
         .tool-galaxy {
             margin-bottom: 1.2rem;
         }
@@ -288,7 +278,6 @@
             transform: scale(0.98);
         }
 
-        /* IP 查询结果区块 - 增强样式 */
         .ip-result {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.2rem;
@@ -315,6 +304,9 @@
         .ip-value {
             color: #cffafe;
             font-family: monospace;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-all;
         }
         .loading-spinner {
             display: inline-block;
@@ -330,7 +322,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 状态行 */
         .status-rail {
             background: rgba(0, 0, 0, 0.35);
             border-radius: 1.3rem;
@@ -364,6 +355,8 @@
             .glitch-title { font-size: 1.9rem; }
             .nova-card { padding: 1.2rem; }
             .grid-galaxy { gap: 1.2rem; }
+            .ip-line { flex-direction: column; gap: 4px; }
+            .ip-value { text-align: left; max-width: 100%; }
         }
 
         .wave-divider {
@@ -371,6 +364,22 @@
             background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent);
             width: 80%;
             margin: 1rem auto 0;
+        }
+        
+        .retry-btn {
+            background: transparent;
+            border: 1px solid #2dd4bf50;
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #2dd4bf;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .retry-btn:hover {
+            background: #2dd4bf20;
+            border-color: #2dd4bf;
         }
     </style>
 </head>
@@ -450,7 +459,7 @@
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 5. 开发者工坊 (密码生成+Base64) -->
+        <!-- 5. 开发者工坊 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -474,13 +483,13 @@
             </div>
         </div>
 
-        <!-- 6. IP 归属地查询 - 修复版 -->
+        <!-- 6. IP 归属地查询 - 完全修复版 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
                 <div class="card-title">IP 星际定位</div>
             </div>
-            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（基于 ip-api.com / ipapi.co 双源）</div>
+            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（IPv4/IPv6 双栈支持）</div>
             <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
             <div id="ipInfoBox" class="ip-result">
                 <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
@@ -489,6 +498,7 @@
                 <div class="ip-line"><span class="ip-label">📡 运营商/ISP</span><span class="ip-value" id="ipOrg">--</span></div>
                 <div class="ip-line"><span class="ip-label">📍 坐标/时区</span><span class="ip-value" id="ipLoc">--</span></div>
             </div>
+            <button class="retry-btn" onclick="fetchIPInfo()" style="margin-top:8px; align-self:flex-start;">⟳ 重新查询</button>
         </div>
 
         <!-- 7. 星轨运行状态 -->
@@ -504,7 +514,7 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | IP 数据由 ip-api.com 提供
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | IP 数据由 ip-api.com + ipapi.co 双源提供
     </div>
 </div>
 
@@ -618,7 +628,7 @@
     }
     document.getElementById('passwordResult')?.addEventListener('click', function(){ this.select(); });
 
-    // ---------- IP归属地查询 (修复版 - 使用更稳定的 ip-api.com) ----------
+    // ---------- IP归属地查询 (完全修复版，支持IPv6) ----------
     async function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr');
         const countrySpan = document.getElementById('ipCountry');
@@ -630,13 +640,14 @@
         ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中';
         countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--';
         
-        // 方案1: 使用 ip-api.com (免费、无需API密钥、支持CORS)
+        // 方案1: 使用 ip-api.com (支持 IPv4 和 IPv6)
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
             
-            const resp = await fetch('https://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,query', {
-                signal: controller.signal
+            const resp = await fetch('https://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,query,timezone', {
+                signal: controller.signal,
+                mode: 'cors'
             });
             clearTimeout(timeoutId);
             
@@ -644,21 +655,23 @@
                 const data = await resp.json();
                 if (data.status === 'success') {
                     ipSpan.innerText = data.query || '未知';
-                    countrySpan.innerText = `${data.country || '未知'} (${data.countryCode || ''})`;
+                    countrySpan.innerText = `${data.country || '未知'} ${data.countryCode ? '('+data.countryCode+')' : ''}`;
                     citySpan.innerText = `${data.city || '未知'} / ${data.regionName || data.region || ''}`;
                     orgSpan.innerText = data.isp || data.org || '未知运营商';
-                    locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon}` : '无坐标';
+                    locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon} | ${data.timezone || ''}` : '无坐标';
                     return;
+                } else {
+                    console.log('ip-api 返回失败状态:', data.message);
                 }
             }
             throw new Error('ip-api 查询失败');
         } catch (err) {
-            console.log('ip-api 失败，尝试备用 API...', err);
+            console.log('ip-api 失败:', err);
             
-            // 方案2: 备用 ipapi.co
+            // 方案2: 使用 ipapi.co (备用)
             try {
                 const controller2 = new AbortController();
-                const timeoutId2 = setTimeout(() => controller2.abort(), 8000);
+                const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
                 
                 const resp2 = await fetch('https://ipapi.co/json/', { signal: controller2.signal });
                 clearTimeout(timeoutId2);
@@ -667,7 +680,7 @@
                     const data = await resp2.json();
                     if (data && data.ip) {
                         ipSpan.innerText = data.ip;
-                        countrySpan.innerText = `${data.country_name || '未知'} (${data.country_code || ''})`;
+                        countrySpan.innerText = `${data.country_name || '未知'} ${data.country_code ? '('+data.country_code+')' : ''}`;
                         citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
                         orgSpan.innerText = data.org || data.asn || '未知运营商';
                         locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
@@ -676,25 +689,20 @@
                 }
                 throw new Error('ipapi.co 查询失败');
             } catch (err2) {
-                console.log('备用 API 也失败', err2);
+                console.log('备用 API 失败:', err2);
                 
-                // 方案3: 使用 cloudflare 的 trace 获取 IP
+                // 方案3: 纯 IP 获取 (只显示 IP)
                 try {
-                    const resp3 = await fetch('https://cloudflare.com/cdn-cgi/trace');
-                    const text = await resp3.text();
-                    const match = text.match(/ip=([^\n]+)/);
-                    if (match) {
-                        ipSpan.innerText = match[1];
-                        countrySpan.innerText = '无法获取详情';
-                        citySpan.innerText = '请检查网络';
-                        orgSpan.innerText = '--';
-                        locSpan.innerText = '--';
-                    } else {
-                        throw new Error('无法获取 IP');
-                    }
-                } catch {
+                    const resp3 = await fetch('https://api.ipify.org?format=json');
+                    const data3 = await resp3.json();
+                    ipSpan.innerText = data3.ip;
+                    countrySpan.innerText = '无法获取地理位置';
+                    citySpan.innerText = '请检查网络或稍后重试';
+                    orgSpan.innerText = '--';
+                    locSpan.innerText = '--';
+                } catch (err3) {
                     ipSpan.innerText = '获取失败';
-                    countrySpan.innerText = '请检查网络连接或稍后重试';
+                    countrySpan.innerText = '网络异常，请刷新重试';
                     citySpan.innerText = '--';
                     orgSpan.innerText = '--';
                     locSpan.innerText = '--';
@@ -704,7 +712,9 @@
     }
     
     // 页面加载时自动查询一次 IP
-    fetchIPInfo();
+    setTimeout(() => {
+        fetchIPInfo();
+    }, 500);
     
     // 动画入场样式
     const styleInject = document.createElement('style');
