@@ -509,7 +509,7 @@
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 5. 开发者工坊 (密码+Base64) -->
+        <!-- 5. 开发者工坊 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -617,13 +617,13 @@
             </div>
         </div>
 
-        <!-- 10. IP 归属地查询 - 完全修复版 -->
+        <!-- 10. IP 归属地查询 - 终极修复版（使用国内可访问的API） -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
                 <div class="card-title">IP 星际定位</div>
             </div>
-            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（使用多个免费API，确保可用）</div>
+            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（使用 ip.sb / ip.seeip 等稳定API）</div>
             <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
             <div id="ipInfoBox" class="result-box">
                 <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
@@ -746,7 +746,7 @@
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
     function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`; }
 
-    // IP 归属地查询 - 多备用方案确保可用
+    // IP 归属地查询 - 终极修复版（使用国内可访问的 API）
     async function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr');
         const countrySpan = document.getElementById('ipCountry');
@@ -757,60 +757,71 @@
         ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中';
         countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--';
         
-        // 方案1: ip-api.com (最稳定)
+        // 方案1: ip.sb (稳定，支持CORS，国内可访问)
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 8000);
-            const resp = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,isp,query,lat,lon,timezone', {
-                signal: controller.signal
-            });
+            const resp = await fetch('https://ip.sb/json', { signal: controller.signal });
             clearTimeout(timeoutId);
             if (resp.ok) {
                 const data = await resp.json();
+                ipSpan.innerText = data.ip || '未知';
+                countrySpan.innerText = data.country || '未知';
+                citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
+                orgSpan.innerText = data.isp || '未知运营商';
+                locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
+                return;
+            }
+        } catch (err) { console.log('ip.sb 失败:', err); }
+        
+        // 方案2: ip.seeip.org (备用)
+        try {
+            const controller2 = new AbortController();
+            const timeoutId2 = setTimeout(() => controller2.abort(), 8000);
+            const resp2 = await fetch('https://ip.seeip.org/geoip', { signal: controller2.signal });
+            clearTimeout(timeoutId2);
+            if (resp2.ok) {
+                const data = await resp2.json();
+                ipSpan.innerText = data.ip || '未知';
+                countrySpan.innerText = data.country_name || '未知';
+                citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
+                orgSpan.innerText = data.asn_org || '未知运营商';
+                locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
+                return;
+            }
+        } catch (err) { console.log('ip.seeip.org 失败:', err); }
+        
+        // 方案3: ip-api.com (JSONP 备用)
+        try {
+            const resp3 = await fetch('https://ip-api.com/json/?fields=status,country,city,isp,query');
+            if (resp3.ok) {
+                const data = await resp3.json();
                 if (data.status === 'success') {
                     ipSpan.innerText = data.query;
-                    countrySpan.innerText = `${data.country || '未知'}`;
-                    citySpan.innerText = `${data.city || '未知'} / ${data.regionName || ''}`;
-                    orgSpan.innerText = data.isp || '未知运营商';
-                    locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon}` : '无坐标';
+                    countrySpan.innerText = data.country || '未知';
+                    citySpan.innerText = data.city || '未知';
+                    orgSpan.innerText = data.isp || '未知';
+                    locSpan.innerText = '--';
                     return;
                 }
             }
-            throw new Error();
-        } catch (err) {
-            // 方案2: ipinfo.io (需要 token，但有限制，使用另一个)
-            try {
-                const resp2 = await fetch('https://ipwho.is/');
-                if (resp2.ok) {
-                    const data = await resp2.json();
-                    if (data && data.ip) {
-                        ipSpan.innerText = data.ip;
-                        countrySpan.innerText = `${data.country || '未知'}`;
-                        citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
-                        orgSpan.innerText = data.connection?.isp || '未知';
-                        locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
-                        return;
-                    }
-                }
-                throw new Error();
-            } catch (err2) {
-                // 方案3: 纯IP获取
-                try {
-                    const resp3 = await fetch('https://api.ipify.org?format=json');
-                    const data3 = await resp3.json();
-                    ipSpan.innerText = data3.ip;
-                    countrySpan.innerText = '无法获取详细信息';
-                    citySpan.innerText = '请检查网络连接';
-                    orgSpan.innerText = '--';
-                    locSpan.innerText = '--';
-                } catch {
-                    ipSpan.innerText = '获取失败';
-                    countrySpan.innerText = '请检查网络或稍后重试';
-                    citySpan.innerText = '--';
-                    orgSpan.innerText = '--';
-                    locSpan.innerText = '--';
-                }
-            }
+        } catch (err) { console.log('ip-api 失败:', err); }
+        
+        // 方案4: 纯 IP 获取
+        try {
+            const resp4 = await fetch('https://api.ipify.org?format=json');
+            const data4 = await resp4.json();
+            ipSpan.innerText = data4.ip;
+            countrySpan.innerText = '无法获取地理位置';
+            citySpan.innerText = '请检查网络或使用代理';
+            orgSpan.innerText = '--';
+            locSpan.innerText = '--';
+        } catch {
+            ipSpan.innerText = '获取失败';
+            countrySpan.innerText = '网络异常，请刷新后重试';
+            citySpan.innerText = '--';
+            orgSpan.innerText = '--';
+            locSpan.innerText = '--';
         }
     }
     
