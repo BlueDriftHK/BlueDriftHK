@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 极光幻域 | 全栈极客终极导航站</title>
-    <meta name="description" content="终极极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON | 时间戳 | 二维码 | 正则 | 颜色 | URL | HTTP | 字数 | UUID | MD5 | JWT | Diff | SQL | YAML | DNS | WhoIS | 进制 | 图片Base64 | Markdown | 游戏 | 名言">
+    <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成 | MD5哈希 | 密码增强">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sql-formatter@12.1.0/dist/sql-formatter.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/diff@5.1.0/dist/diff.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -28,28 +24,6 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        body.light-theme {
-            background: #e8edf5;
-            color: #1a2a3a;
-        }
-        body.light-theme .nova-card {
-            background: rgba(240, 245, 255, 0.7);
-            border-color: rgba(45,212,191,0.3);
-            color: #1a2a3a;
-        }
-        body.light-theme .desc-cosmic, body.light-theme .tool-label, body.light-theme .ip-label,
-        body.light-theme .stat-name, body.light-theme .http-desc {
-            color: #4a5a7a;
-        }
-        body.light-theme .result-box, body.light-theme .cosmic-stats, body.light-theme .status-rail {
-            background: rgba(0,0,0,0.1);
-        }
-        body.light-theme .input-cosmic, body.light-theme .json-textarea {
-            background: rgba(255,255,255,0.8);
-            color: #1a2a3a;
         }
 
         #canvas-bg {
@@ -72,7 +46,7 @@
         }
 
         .hero-space {
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             text-align: center;
         }
         .glitch-title {
@@ -83,291 +57,974 @@
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
+            filter: drop-shadow(0 4px 12px rgba(45,212,191,0.2));
         }
         .subhead {
             color: #8b9bcf;
             margin-top: 0.6rem;
             font-weight: 400;
-            font-size: 0.9rem;
-        }
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(45,212,191,0.2);
-            border: 1px solid #2dd4bf;
-            border-radius: 3rem;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            backdrop-filter: blur(10px);
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(4px);
         }
 
         .grid-galaxy {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
         }
 
         .nova-card {
             background: rgba(12, 22, 40, 0.5);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-radius: 2rem;
+            border-radius: 2.2rem;
             border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 1.4rem 1.5rem;
-            transition: all 0.3s;
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            padding: 1.6rem 1.7rem;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
         }
-        .nova-card:hover { transform: translateY(-4px); border-color: #2dd4bf; }
 
-        .card-orbit { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-        .orbit-icon { width: 48px; height: 48px; background: linear-gradient(145deg, rgba(45,212,191,0.2), rgba(56,189,248,0.1)); border-radius: 1.2rem; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; border: 1px solid rgba(45,212,191,0.5); }
-        .card-title { font-size: 1.35rem; font-weight: 600; background: linear-gradient(145deg, #eef5ff, #a5f3fc); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .nova-card:hover {
+            transform: translateY(-6px);
+            border-color: #2dd4bf;
+            box-shadow: 0 28px 42px -18px rgba(45, 212, 191, 0.4);
+            background: rgba(18, 30, 52, 0.65);
+        }
 
-        .desc-cosmic { color: #9dabcf; font-size: 0.8rem; line-height: 1.4; margin-bottom: 1rem; }
-        .tool-label { font-size: 0.7rem; font-weight: 500; color: #b4c2e6; margin-bottom: 6px; }
-        .input-cosmic { background: rgba(0,0,0,0.5); border: 1px solid #2dd4bf50; border-radius: 1rem; padding: 0.6rem 0.8rem; color: #f0f4ff; width: 100%; outline: none; font-family: monospace; font-size: 0.75rem; }
-        .flex-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-mini { background: #2dd4bf20; border: 1px solid #2dd4bf70; border-radius: 2rem; padding: 5px 14px; color: #d6f3ff; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.75rem; }
-        .btn-mini:hover { background: #2dd4bf40; border-color: #2dd4bf; transform: scale(0.98); }
-        .result-box { background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 0.6rem; margin-top: 10px; font-size: 0.7rem; border-left: 3px solid #2dd4bf; word-break: break-all; max-height: 150px; overflow: auto; }
+        .card-orbit {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .orbit-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, rgba(45,212,191,0.2), rgba(56,189,248,0.1));
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+            border: 1px solid rgba(45,212,191,0.5);
+            transition: 0.2s;
+        }
+        .nova-card:hover .orbit-icon {
+            border-color: #2dd4bf;
+            box-shadow: 0 0 12px rgba(45,212,191,0.4);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            background: linear-gradient(145deg, #eef5ff, #a5f3fc);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
 
-        .word-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-        .stat-card { flex: 1; background: rgba(0,0,0,0.3); border-radius: 0.8rem; padding: 6px; text-align: center; }
-        .stat-number { font-size: 1.2rem; font-weight: 700; color: #2dd4bf; }
+        .desc-cosmic {
+            color: #9dabcf;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            margin-bottom: 1.4rem;
+            font-weight: 400;
+        }
 
-        .http-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 6px; max-height: 180px; overflow-y: auto; }
-        .http-item { background: rgba(0,0,0,0.3); border-radius: 0.6rem; padding: 4px 8px; font-size: 0.65rem; cursor: pointer; border-left: 2px solid #2dd4bf; }
+        .bio-text {
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: #cbd5f0;
+        }
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 1rem 0 0.5rem;
+        }
+        .social-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid #2dd4bf40;
+            border-radius: 2rem;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: #e2f0ff;
+            text-decoration: none;
+            transition: 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        .social-badge:hover {
+            background: rgba(45, 212, 191, 0.25);
+            border-color: #2dd4bf;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45,212,191,0.2);
+        }
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1.2rem;
+            padding: 8px 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #a5b4da;
+            border: 0.5px solid rgba(56,189,248,0.2);
+        }
 
-        .color-preview { width: 50px; height: 50px; border-radius: 1rem; border: 1px solid #2dd4bf; margin-top: 6px; }
-        .strength-meter { height: 4px; background: rgba(0,0,0,0.3); border-radius: 2px; margin-top: 6px; }
-        .strength-fill { width: 0%; height: 100%; transition: width 0.3s; }
+        .btn-nebula {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            background: rgba(45, 212, 191, 0.08);
+            border: 1px solid #2dd4bf70;
+            padding: 0.7rem 1.5rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #d4f1ff;
+            text-decoration: none;
+            transition: 0.25s;
+            margin-top: auto;
+            width: fit-content;
+            backdrop-filter: blur(4px);
+        }
+        .btn-nebula:hover {
+            background: rgba(45, 212, 191, 0.25);
+            border-color: #2dd4bf;
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 0 14px rgba(45,212,191,0.5);
+        }
+
+        .cosmic-stats {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.6rem;
+            padding: 0.9rem 1rem;
+            display: flex;
+            gap: 1.2rem;
+            margin: 0.8rem 0 1.2rem;
+            border: 1px solid rgba(56,189,248,0.2);
+        }
+        .stat-block {
+            flex: 1;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 500;
+            color: #7b8bb0;
+            letter-spacing: 1px;
+        }
+        .stat-digit {
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: monospace;
+            background: linear-gradient(145deg, #cffafe, #67e8f9);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .tool-galaxy {
+            margin-bottom: 1.2rem;
+        }
+        .tool-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #b4c2e6;
+            margin-bottom: 8px;
+        }
+        .input-cosmic {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #2dd4bf50;
+            border-radius: 1.2rem;
+            padding: 0.7rem 1rem;
+            color: #f0f4ff;
+            width: 100%;
+            outline: none;
+            transition: 0.2s;
+            font-family: 'Space Grotesk', monospace;
+        }
+        .input-cosmic:focus {
+            border-color: #2dd4bf;
+            box-shadow: 0 0 8px rgba(45,212,191,0.4);
+        }
+        .flex-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .btn-mini {
+            background: #2dd4bf20;
+            border: 1px solid #2dd4bf70;
+            border-radius: 2rem;
+            padding: 6px 18px;
+            color: #d6f3ff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-mini:hover {
+            background: #2dd4bf40;
+            border-color: #2dd4bf;
+            transform: scale(0.98);
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            border-left: 3px solid #2dd4bf;
+            word-break: break-all;
+        }
+        .ip-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(45,212,191,0.2);
+        }
+        .ip-line:last-child {
+            border-bottom: none;
+        }
+        .ip-label {
+            color: #8b9bcf;
+            font-weight: 500;
+        }
+        .ip-value {
+            color: #cffafe;
+            font-family: monospace;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-all;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(45,212,191,0.3);
+            border-top-color: #2dd4bf;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .json-textarea, .regex-textarea, .url-textarea, .word-textarea, .md5-textarea {
+            width: 100%;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #2dd4bf50;
+            border-radius: 1rem;
+            color: #e2e8f0;
+            padding: 0.7rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            resize: vertical;
+        }
+        .regex-flags {
+            display: flex;
+            gap: 15px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .regex-flags label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .color-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 1rem;
+            border: 1px solid #2dd4bf;
+            margin-top: 8px;
+        }
+        .color-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .http-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .http-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 0.8rem;
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-left: 2px solid #2dd4bf;
+        }
+        .http-item:hover {
+            background: rgba(45,212,191,0.2);
+            transform: translateX(4px);
+        }
+        .http-code {
+            font-weight: 700;
+            color: #2dd4bf;
+            font-family: monospace;
+        }
+        .http-desc {
+            color: #9dabcf;
+            font-size: 0.65rem;
+        }
+
+        .word-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .stat-card {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1rem;
+            padding: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2dd4bf;
+            font-family: monospace;
+        }
+        .stat-name {
+            font-size: 0.65rem;
+            color: #8b9bcf;
+        }
+
+        .uuid-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .uuid-value {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 1rem;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #cffafe;
+            word-break: break-all;
+        }
+
+        /* 密码强度指示器 */
+        .strength-meter {
+            height: 6px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .strength-fill {
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s;
+        }
         .strength-weak { background: #f87171; width: 25%; }
         .strength-medium { background: #fbbf24; width: 50%; }
         .strength-strong { background: #4ade80; width: 75%; }
         .strength-very { background: #2dd4bf; width: 100%; }
 
-        .diff-container { display: flex; gap: 10px; flex-wrap: wrap; }
-        .diff-textarea { flex: 1; background: rgba(0,0,0,0.4); border: 1px solid #2dd4bf50; border-radius: 0.8rem; padding: 6px; color: #e2e8f0; font-family: monospace; font-size: 0.7rem; resize: vertical; }
-        .game-board { display: grid; grid-template-columns: repeat(20, 1fr); background: #0a0c14; border-radius: 0.8rem; overflow: hidden; margin-top: 8px; }
-        .game-cell { aspect-ratio: 1; background: #1a2a3a; border: 0.5px solid #2dd4bf20; }
-        .game-cell.snake { background: #2dd4bf; }
-        .game-cell.food { background: #f87171; border-radius: 50%; }
+        .status-rail {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 1.3rem;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-left: 3px solid #2dd4bf;
+        }
+        .status-badge-live {
+            background: #10b98130;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #6ee7b7;
+            border: 0.5px solid #2dd4bf80;
+        }
 
-        .status-rail { background: rgba(0,0,0,0.3); border-radius: 1rem; padding: 0.5rem 0.8rem; display: flex; justify-content: space-between; margin-bottom: 8px; border-left: 3px solid #2dd4bf; }
-        .status-badge-live { background: #10b98130; padding: 2px 8px; border-radius: 40px; font-size: 0.65rem; color: #6ee7b7; }
+        .footer-stardust {
+            text-align: center;
+            margin-top: 3.5rem;
+            color: #5a6b97;
+            font-size: 0.8rem;
+            border-top: 1px dashed #2dd4bf40;
+            padding-top: 1.8rem;
+        }
 
-        .footer-stardust { text-align: center; margin-top: 2rem; color: #5a6b97; font-size: 0.7rem; border-top: 1px dashed #2dd4bf40; padding-top: 1.2rem; }
-        .wave-divider { height: 2px; background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent); width: 60%; margin: 0.5rem auto 0; }
+        @media (max-width: 760px) {
+            .universe-container { padding: 1rem; }
+            .glitch-title { font-size: 1.9rem; }
+            .nova-card { padding: 1.2rem; }
+            .grid-galaxy { gap: 1.2rem; }
+            .ip-line { flex-direction: column; gap: 4px; }
+            .ip-value { text-align: left; max-width: 100%; }
+            .word-stats { flex-direction: column; }
+        }
 
-        @media (max-width: 860px) { .grid-galaxy { grid-template-columns: 1fr; } .universe-container { padding: 1rem; } }
+        .wave-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent);
+            width: 80%;
+            margin: 1rem auto 0;
+        }
+        .retry-btn {
+            background: transparent;
+            border: 1px solid #2dd4bf50;
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #2dd4bf;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .retry-btn:hover {
+            background: #2dd4bf20;
+            border-color: #2dd4bf;
+        }
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        #qrcode img {
+            border-radius: 0.8rem;
+            background: white;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
-<div class="theme-toggle" onclick="toggleTheme()">🌓 主题切换</div>
+
 <canvas id="canvas-bg"></canvas>
+
 <div class="universe-container">
     <div class="hero-space">
-        <div class="glitch-title">✦ BlueDriftHK · 终极幻域 ✦</div>
-        <div class="subhead">全栈极客工具箱 | 29+ 开发神器 | 网络诊断 | 加密工具 | 编码转换 | 趣味游戏</div>
+        <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊 | URL工具 | HTTP速查 | 字数统计 | UUID生成 | MD5哈希 | 密码增强</div>
         <div class="wave-divider"></div>
     </div>
 
     <div class="grid-galaxy">
-        <!-- 1. 个人介绍 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🧑‍🚀</div><div class="card-title">星尘信标</div></div>
-            <div class="desc-cosmic">✦ 全栈极客 & 云原生探险者 ✦ 专注于 Cloudflare Workers、边缘计算与开源精神。</div>
-            <div class="flex-row"><a href="https://github.com/BlueDriftHK" class="social-badge" style="color:#2dd4bf;">🐙 GitHub</a><a href="https://twitter.com/BlueDriftHK" class="social-badge">𝕏 Twitter</a><a href="mailto:bluedrift@proton.me" class="social-badge">✉️ 邮局</a></div>
+        <!-- 1. 个人主页介绍区 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🧑‍🚀</div>
+                <div class="card-title">星尘信标 · 关于我</div>
+            </div>
+            <div class="bio-text">
+                ✦ 全栈极客 & 云原生探险者 ✦<br>
+                热衷于 Cloudflare Workers 生态、边缘计算与开源精神。创造实用工具链，让网络更透明、开发更高效。<br>
+                目前专注于 Serverless 架构、Web3 工具与开发者体验提升。
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/BlueDriftHK" target="_blank" class="social-badge">🐙 GitHub / BlueDriftHK</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank" class="social-badge">𝕏 Twitter / @BlueDriftHK</a>
+                <a href="mailto:bluedrift@proton.me" class="social-badge">✉️ 加密邮局</a>
+            </div>
+            <div class="contact-row">
+                <span>🌐 个人主页建设中 · 极客叙事</span>
+                <span style="margin-left: auto;">✨ 持续迭代</span>
+            </div>
+            <div style="margin-top: 12px;">
+                <span class="status-badge-live" style="background:#2dd4bf20;">⚡ 开源布道者</span>
+                <span class="status-badge-live" style="background:#2dd4bf20; margin-left: 8px;">🛸 工具链工匠</span>
+            </div>
         </div>
 
-        <!-- 2. NetDiag + 3. M3U8 + 4. GitHub (合并快速入口) -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🛸</div><div class="card-title">极速入口</div></div>
-            <div class="flex-row"><a href="https://bluedrifthk.github.io/CF-workers-netdiag/" class="btn-mini">NetDiag 诊断</a><a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" class="btn-mini">M3U8 播放器</a></div>
-            <div class="cosmic-stats" style="display:flex; gap:1rem; margin-top:10px;"><div>✨ Stars: <span id="starCount">—</span></div><div>🍴 Forks: <span id="forkCount">—</span></div></div>
+        <!-- 2. NetDiag 诊断跃迁 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🛸</div>
+                <div class="card-title">NetDiag 星链诊断</div>
+            </div>
+            <div class="desc-cosmic">
+                Cloudflare Workers 驱动的网络探针 — 毫秒级延迟测绘、边缘路由跟踪与带宽反演。
+            </div>
+            <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn-nebula">⟡ 启动诊断协议 ⟡</a>
         </div>
 
-        <!-- 5. 密码+Base64 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">⚙️</div><div class="card-title">异能工坊</div></div>
-            <div class="tool-label">🔐 密码 (长度 <input type="number" id="pwdLength" value="16" style="width:55px;">)</div>
-            <div class="flex-row"><button class="btn-mini" onclick="genQuantumPassword()">生成</button><input type="text" id="passwordResult" readonly class="input-cosmic" style="flex:1;"></div>
-            <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
-            <div class="tool-label mt-2">📡 Base64</div>
-            <div class="flex-row"><input type="text" id="base64Field" class="input-cosmic" style="flex:2;"><button class="btn-mini" onclick="encodeBase64Uni()">编码</button><button class="btn-mini" onclick="decodeBase64Uni()">解码</button></div>
+        <!-- 3. M3U8 流媒体播放器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🎞️</div>
+                <div class="card-title">M3U8 超感播放器</div>
+            </div>
+            <div class="desc-cosmic">
+                零广告 · 低延迟 HLS 引擎，直接播放 .m3u8 链接，沉浸式影流体验。
+            </div>
+            <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn-nebula">⟡ 开启全息影舱 ⟡</a>
         </div>
 
-        <!-- 6. JSON + 7. 正则 + 8. 颜色 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">📋</div><div class="card-title">JSON/正则/颜色</div></div>
-            <textarea id="jsonInput" class="input-cosmic" placeholder='{"name":"BlueDriftHK"}' rows="2"></textarea>
-            <div class="flex-row"><button class="btn-mini" onclick="formatJSON()">格式化</button><button class="btn-mini" onclick="minifyJSON()">压缩</button><button class="btn-mini" onclick="validateJSON()">验证</button></div>
-            <div id="jsonResult" class="result-box"></div>
-            <div class="tool-label mt-1">🔍 正则</div><input type="text" id="regexPattern" class="input-cosmic" value="\d+">
-            <div class="flex-row"><input type="text" id="testText" class="input-cosmic" placeholder="测试文本" value="2025年"><button class="btn-mini" onclick="testRegex()">测试</button></div>
-            <div id="regexResult" class="result-box"></div>
-            <div class="tool-label">🎨 颜色</div><div class="flex-row"><input type="text" id="colorInput" placeholder="#2dd4bf" class="input-cosmic"><button class="btn-mini" onclick="convertColor()">转换</button><div id="colorPreview" class="color-preview"></div></div>
+        <!-- 4. GitHub 动态 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🐙⚡</div>
+                <div class="card-title">开源脉冲星</div>
+            </div>
+            <div class="cosmic-stats">
+                <div class="stat-block"><div class="stat-label">✨ 星辉</div><div class="stat-digit" id="starCount">—</div></div>
+                <div class="stat-block"><div class="stat-label">🍴 分叉引力</div><div class="stat-digit" id="forkCount">—</div></div>
+            </div>
+            <div class="desc-cosmic" style="margin-bottom:1rem;">实时同步 BlueDriftHK 核心仓库 · 开放宇宙</div>
+            <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 9. URL + 10. HTTP -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🔗</div><div class="card-title">URL/HTTP</div></div>
-            <textarea id="urlInput" class="input-cosmic" placeholder="https://example.com/测试" rows="2"></textarea>
-            <div class="flex-row"><button class="btn-mini" onclick="urlEncode()">编码</button><button class="btn-mini" onclick="urlDecode()">解码</button></div>
-            <div id="urlResult" class="result-box"></div>
-            <div class="tool-label">📡 HTTP状态码</div><div id="httpList" class="http-grid"></div><div id="httpDetail" class="result-box"></div>
+        <!-- 5. 开发者工坊 (增强版密码+Base64) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">⚙️🌀</div>
+                <div class="card-title">异能工坊</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">🔐 量子密码生成</div>
+                <div class="flex-row">
+                    <input type="number" id="pwdLength" value="16" min="6" max="48" class="input-cosmic" style="max-width:95px;">
+                    <button class="btn-mini" onclick="genQuantumPassword()">生成熵值</button>
+                </div>
+                <input type="text" id="passwordResult" readonly class="input-cosmic" style="margin-top:10px;" placeholder="点击生成密钥">
+                <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">📡 Base64 编/解码器</div>
+                <input type="text" id="base64Field" class="input-cosmic" placeholder="文本 或 Base64 字符串" style="margin-bottom:10px;">
+                <div class="flex-row">
+                    <button class="btn-mini" style="flex:1;" onclick="encodeBase64Uni()">⟡ 编码 ⟡</button>
+                    <button class="btn-mini" style="flex:1;" onclick="decodeBase64Uni()">⟡ 解码 ⟡</button>
+                </div>
+            </div>
         </div>
 
-        <!-- 11. 字数 + 12. UUID -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">📊</div><div class="card-title">文本/UUID</div></div>
-            <textarea id="wordInput" class="input-cosmic" placeholder="输入文本..." rows="2"></textarea>
-            <div class="word-stats"><div class="stat-card"><div class="stat-number" id="charCount">0</div><div>字符</div></div><div class="stat-card"><div class="stat-number" id="wordCount">0</div><div>单词</div></div><div class="stat-card"><div class="stat-number" id="chineseCount">0</div><div>中文</div></div></div>
-            <div class="tool-label">🆔 UUID</div><div class="flex-row"><div class="input-cosmic" id="uuidDisplay" style="flex:1;">点击生成</div><button class="btn-mini" onclick="generateUUIDAndDisplay()">生成</button><button class="btn-mini" onclick="copyUUID()">复制</button></div>
+        <!-- 6. JSON 格式化 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📋</div>
+                <div class="card-title">JSON 星云格式化</div>
+            </div>
+            <textarea id="jsonInput" class="json-textarea" placeholder='输入 JSON 代码，例如：{"name":"BlueDriftHK","type":"极客导航"}'></textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="formatJSON()" style="flex:1;">✨ 格式化</button>
+                <button class="btn-mini" onclick="minifyJSON()" style="flex:1;">📦 压缩</button>
+                <button class="btn-mini" onclick="validateJSON()" style="flex:1;">✅ 验证</button>
+            </div>
+            <div id="jsonResult" class="result-box" style="max-height:150px; overflow:auto;">等待操作...</div>
         </div>
 
-        <!-- 13. MD5 + 14. 时间戳 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🔐</div><div class="card-title">MD5/时间戳</div></div>
-            <textarea id="md5Input" class="input-cosmic" placeholder="文本转MD5" rows="2"></textarea><button class="btn-mini" onclick="generateMD5()">生成MD5</button><div id="md5Result" class="result-box"></div>
-            <div class="tool-label">⏰ 时间戳</div><div class="flex-row"><input type="text" id="timestampInput" class="input-cosmic" placeholder="秒/毫秒"><button class="btn-mini" onclick="timestampToDate()">转换</button></div><div id="timestampResult" class="result-box"></div>
+        <!-- 7. 正则表达式测试器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🔍</div>
+                <div class="card-title">正则引擎 · 测试器</div>
+            </div>
+            <div class="tool-label">📐 正则表达式</div>
+            <input type="text" id="regexPattern" class="input-cosmic" placeholder="例如: \d+|^[a-z]+$" value="\b\d{4}\b">
+            <div class="regex-flags">
+                <label><input type="checkbox" id="flagG"> global (g)</label>
+                <label><input type="checkbox" id="flagI"> ignoreCase (i)</label>
+                <label><input type="checkbox" id="flagM"> multiline (m)</label>
+            </div>
+            <div class="tool-label" style="margin-top: 8px;">📝 测试文本</div>
+            <textarea id="testText" class="regex-textarea" placeholder="输入要匹配的文本...">2024年 BlueDriftHK 发布了 8 个工具，2025年将发布 15 个。</textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="testRegex()" style="flex:1;">🎯 执行匹配</button>
+                <button class="btn-mini" onclick="clearRegex()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="regexResult" class="result-box">等待测试...</div>
         </div>
 
-        <!-- 15. IP + 16. 二维码 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">📍</div><div class="card-title">IP/二维码</div></div>
-            <button class="btn-mini" onclick="fetchIPInfo()">🌐 查询IP</button><div id="ipInfoBox" class="result-box"><div>IP: <span id="ipAddr">--</span></div><div>方式: <span id="ipMethod">--</span></div></div>
-            <div class="tool-label">📱 二维码</div><input type="text" id="qrText" class="input-cosmic" value="https://github.com/BlueDriftHK"><button class="btn-mini" onclick="generateQRCode()">生成</button><div id="qrcode" style="display:flex; justify-content:center;"></div>
+        <!-- 8. 颜色转换器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🎨</div>
+                <div class="card-title">色彩工坊 · 转换器</div>
+            </div>
+            <div class="tool-label">🔴 HEX / RGB 转换</div>
+            <div class="color-row">
+                <input type="text" id="colorInput" class="input-cosmic" placeholder="#2dd4bf 或 rgb(45,212,191)" style="flex:2;">
+                <button class="btn-mini" onclick="convertColor()">转换</button>
+            </div>
+            <div id="colorResult" class="result-box">输入颜色代码进行转换...</div>
+            <div id="colorPreview" class="color-preview"></div>
+            <div class="flex-row" style="margin-top: 8px;">
+                <button class="btn-mini" onclick="randomColor()" style="flex:1;">🎲 随机颜色</button>
+                <button class="btn-mini" onclick="copyColor()" style="flex:1;">📋 复制结果</button>
+            </div>
         </div>
 
-        <!-- 17. JWT解码器 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🪪</div><div class="card-title">JWT解码器</div></div>
-            <textarea id="jwtInput" class="input-cosmic" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." rows="2"></textarea><button class="btn-mini" onclick="decodeJWT()">解码</button><div id="jwtResult" class="result-box"></div>
+        <!-- 9. URL 编解码器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🔗</div>
+                <div class="card-title">URL 编解码器</div>
+            </div>
+            <div class="tool-label">📝 输入 URL 或文本</div>
+            <textarea id="urlInput" class="url-textarea" placeholder="https://example.com/测试 或 %E6%B5%8B%E8%AF%95"></textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="urlEncode()" style="flex:1;">🔒 编码</button>
+                <button class="btn-mini" onclick="urlDecode()" style="flex:1;">🔓 解码</button>
+                <button class="btn-mini" onclick="clearUrl()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="urlResult" class="result-box" style="max-height: 100px; overflow: auto;">等待操作...</div>
         </div>
 
-        <!-- 18. SQL格式化 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🗄️</div><div class="card-title">SQL格式化</div></div>
-            <textarea id="sqlInput" class="input-cosmic" placeholder="SELECT * FROM users WHERE id=1" rows="2"></textarea><button class="btn-mini" onclick="formatSQL()">格式化</button><div id="sqlResult" class="result-box"></div>
+        <!-- 10. HTTP 状态码速查 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📡</div>
+                <div class="card-title">HTTP 状态码速查</div>
+            </div>
+            <div class="tool-label">点击状态码查看详细说明</div>
+            <div id="httpList" class="http-grid"></div>
+            <div id="httpDetail" class="result-box" style="margin-top: 8px; font-size: 0.75rem;">点击任意状态码查看详情</div>
         </div>
 
-        <!-- 19. YAML↔JSON -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">📄</div><div class="card-title">YAML/JSON</div></div>
-            <textarea id="yamlInput" class="input-cosmic" placeholder="name: BlueDriftHK" rows="2"></textarea><div class="flex-row"><button class="btn-mini" onclick="yamlToJson()">YAML→JSON</button><button class="btn-mini" onclick="jsonToYaml()">JSON→YAML</button></div><div id="yamlResult" class="result-box"></div>
+        <!-- 11. 字数统计工具 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📊</div>
+                <div class="card-title">字数统计 · 文本分析</div>
+            </div>
+            <textarea id="wordInput" class="word-textarea" placeholder="输入或粘贴文本，实时统计..."></textarea>
+            <div id="wordStats" class="word-stats">
+                <div class="stat-card"><div class="stat-number" id="charCount">0</div><div class="stat-name">字符数</div></div>
+                <div class="stat-card"><div class="stat-number" id="wordCount">0</div><div class="stat-name">单词数</div></div>
+                <div class="stat-card"><div class="stat-number" id="lineCount">0</div><div class="stat-name">行数</div></div>
+                <div class="stat-card"><div class="stat-number" id="chineseCount">0</div><div class="stat-name">中文字符</div></div>
+                <div class="stat-card"><div class="stat-number" id="spaceCount">0</div><div class="stat-name">空格数</div></div>
+            </div>
+            <button class="btn-mini" onclick="clearWordStats()" style="margin-top: 8px;">🗑️ 清空</button>
         </div>
 
-        <!-- 20. 进制转换器 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🔢</div><div class="card-title">进制转换</div></div>
-            <input type="text" id="decInput" class="input-cosmic" placeholder="十进制数字"><div class="flex-row"><button class="btn-mini" onclick="convertBase()">转换</button></div><div id="baseResult" class="result-box"></div>
+        <!-- 12. UUID 生成器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🆔</div>
+                <div class="card-title">UUID · 全局唯一标识</div>
+            </div>
+            <div class="tool-label">生成符合 RFC 4122 标准的 UUID v4</div>
+            <div class="uuid-box">
+                <div class="uuid-value" id="uuidDisplay">点击下方按钮生成</div>
+            </div>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="generateUUIDAndDisplay()" style="flex:1;">✨ 生成 UUID</button>
+                <button class="btn-mini" onclick="copyUUID()" style="flex:1;">📋 复制 UUID</button>
+                <button class="btn-mini" onclick="generateMultipleUUIDs()" style="flex:1;">🔢 生成多个</button>
+            </div>
+            <div id="uuidHistory" class="result-box" style="max-height: 120px; overflow: auto; font-size: 0.7rem;"></div>
         </div>
 
-        <!-- 21. DNS查询 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🌐</div><div class="card-title">DNS查询</div></div>
-            <input type="text" id="dnsDomain" class="input-cosmic" placeholder="域名如 google.com"><button class="btn-mini" onclick="queryDNS()">查询A记录</button><div id="dnsResult" class="result-box"></div>
+        <!-- 13. MD5 哈希生成器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🔐</div>
+                <div class="card-title">MD5 · 哈希指纹</div>
+            </div>
+            <div class="tool-label">📝 输入文本生成 MD5 哈希值</div>
+            <textarea id="md5Input" class="md5-textarea" placeholder="输入任意文本..."></textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="generateMD5()" style="flex:1;">🔒 生成 MD5</button>
+                <button class="btn-mini" onclick="clearMD5()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="md5Result" class="result-box" style="font-family: monospace;">等待生成...</div>
         </div>
 
-        <!-- 22. 图片转Base64 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🖼️</div><div class="card-title">图片→Base64</div></div>
-            <input type="file" id="imageInput" accept="image/*" class="input-cosmic"><button class="btn-mini" onclick="imageToBase64()">转换</button><div id="base64ImageResult" class="result-box" style="max-height:100px;"></div>
+        <!-- 14. 时间戳转换器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">⏰</div>
+                <div class="card-title">时间枢纽 · 转换器</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">🕐 时间戳 → 日期时间</div>
+                <div class="flex-row">
+                    <input type="text" id="timestampInput" class="input-cosmic" placeholder="输入时间戳 (秒 或 毫秒)">
+                    <button class="btn-mini" onclick="timestampToDate()">转换</button>
+                </div>
+                <div id="timestampResult" class="result-box">等待转换...</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">📅 日期时间 → 时间戳</div>
+                <div class="flex-row">
+                    <input type="datetime-local" id="datetimeInput" class="input-cosmic">
+                    <button class="btn-mini" onclick="dateToTimestamp()">转换</button>
+                </div>
+                <div id="datetimeResult" class="result-box">等待转换...</div>
+            </div>
+            <div class="flex-row">
+                <button class="btn-mini" onclick="getCurrentTimestamp()" style="flex:1;">📌 当前时间戳</button>
+                <button class="btn-mini" onclick="getCurrentDateTime()" style="flex:1;">🗓️ 当前日期</button>
+            </div>
         </div>
 
-        <!-- 23. Markdown预览 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">📝</div><div class="card-title">Markdown预览</div></div>
-            <textarea id="mdInput" class="input-cosmic" placeholder="# 标题" rows="2"># Hello\n**极客导航**</textarea><div id="mdPreview" class="result-box" style="min-height:80px;"></div>
+        <!-- 15. IP 星际定位 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📍</div>
+                <div class="card-title">IP 星际定位</div>
+            </div>
+            <div class="desc-cosmic">获取本地IP地址（WebRTC + Cloudflare 双方案）</div>
+            <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
+            <div id="ipInfoBox" class="result-box">
+                <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
+                <div class="ip-line"><span class="ip-label">📡 获取方式</span><span class="ip-value" id="ipMethod">--</span></div>
+                <div class="ip-line"><span class="ip-label">💡 说明</span><span class="ip-value" id="ipNote">WebRTC可获取本地IP</span></div>
+            </div>
+            <button class="retry-btn" onclick="fetchIPInfo()">⟳ 重新查询</button>
         </div>
 
-        <!-- 24. 代码Diff对比 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🔄</div><div class="card-title">代码Diff</div></div>
-            <textarea id="diffOld" class="input-cosmic" placeholder="旧代码" rows="2"></textarea><textarea id="diffNew" class="input-cosmic" placeholder="新代码" rows="2"></textarea><button class="btn-mini" onclick="computeDiff()">对比</button><div id="diffResult" class="result-box"></div>
+        <!-- 16. 二维码生成器 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📱</div>
+                <div class="card-title">量子码 · 生成器</div>
+            </div>
+            <input type="text" id="qrText" class="input-cosmic" placeholder="https://github.com/BlueDriftHK" value="https://github.com/BlueDriftHK">
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="generateQRCode()" style="flex:1;">✨ 生成二维码</button>
+                <button class="btn-mini" onclick="clearQRCode()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="qrcode" class="result-box" style="display: flex; justify-content: center;"></div>
         </div>
 
-        <!-- 25. 贪吃蛇游戏 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🐍</div><div class="card-title">贪吃蛇</div></div>
-            <div class="flex-row"><span id="snakeScore">得分:0</span><button class="btn-mini" onclick="resetGame()">新游戏</button></div>
-            <div id="snakeBoard" class="game-board" style="display:grid; grid-template-columns:repeat(20,1fr); gap:1px;"></div>
-        </div>
-
-        <!-- 26. 极客名言轮播 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">💬</div><div class="card-title">极客名言</div></div>
-            <div id="quoteDisplay" class="result-box" style="font-style:italic;">加载中...</div><button class="btn-mini" onclick="nextQuote()">换一句</button>
-        </div>
-
-        <!-- 27. 星环状态 -->
-        <div class="nova-card"><div class="card-orbit"><div class="orbit-icon">🪐</div><div class="card-title">星环状态</div></div>
+        <!-- 17. 星轨运行状态 -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🪐</div>
+                <div class="card-title">星环状态</div>
+            </div>
             <div class="status-rail"><span>🟢 核心引擎</span><span class="status-badge-live">● 聚变运行中</span></div>
-            <div class="status-rail"><span>⏳ 时空存续</span><span id="uptimeCosmic">计算中...</span></div>
-            <div class="status-rail"><span>🕛 最近校准</span><span id="syncTime">--:--</span></div>
+            <div class="status-rail" style="border-left-color:#38bdf8;"><span>⏳ 时空存续</span><span style="font-family:monospace; font-weight:600;" id="uptimeCosmic">计算中...</span></div>
+            <div class="status-rail" style="border-left-color:#7aa2f7;"><span>🕛 最近校准</span><span id="syncTime" style="font-family:monospace;">--:--</span></div>
+            <div class="desc-cosmic" style="margin-top:8px; text-align:center;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</div>
         </div>
     </div>
-    <div class="footer-stardust">© 2026 BlueDriftHK · 29+ 极客工具集 | 探索无界</div>
+    <div class="footer-stardust">
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | MD5哈希 | 密码增强 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成 | 正则 | 色彩 | JSON | 时间戳 | 二维码
+    </div>
 </div>
 
 <script>
-    // 背景粒子
-    const canvas = document.getElementById('canvas-bg'), ctx = canvas.getContext('2d');
-    let particles = [], w, h;
-    function resizeCanvas() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-    class Particle { constructor() { this.x = Math.random() * w; this.y = Math.random() * h; this.size = Math.random() * 2; this.speedX = (Math.random() - 0.5) * 0.3; this.speedY = (Math.random() - 0.5) * 0.2; this.color = `rgba(90,210,230,${Math.random()*0.4})`; } update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0) this.x = w; if (this.x > w) this.x = 0; if (this.y < 0) this.y = h; if (this.y > h) this.y = 0; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = this.color; ctx.fill(); } }
-    function initParticles() { particles = []; for(let i=0;i<80;i++) particles.push(new Particle()); }
-    function animate() { ctx.clearRect(0,0,w,h); ctx.fillStyle='#0a0c14'; ctx.fillRect(0,0,w,h); particles.forEach(p=>{p.update(); p.draw();}); requestAnimationFrame(animate); }
-    window.addEventListener('resize',()=>{resizeCanvas(); initParticles();}); resizeCanvas(); initParticles(); animate();
+    // 动态粒子背景
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let width, height;
+    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
+    class Particle { constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 2.5 + 0.8; this.speedX = (Math.random() - 0.5) * 0.4; this.speedY = (Math.random() - 0.5) * 0.2; this.opacity = Math.random() * 0.5 + 0.2; this.color = `rgba(90, 210, 230, ${this.opacity})`; } update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); } }
+    function initParticles() { particles = []; const count = Math.min(120, Math.floor(width * height / 10000)); for (let i = 0; i < count; i++) particles.push(new Particle()); }
+    function animateParticles() { if (!ctx) return; ctx.clearRect(0, 0, width, height); ctx.fillStyle = '#0a0c14'; ctx.fillRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+    resizeCanvas(); initParticles(); animateParticles();
 
-    // 通用函数
-    function escapeHtml(s){ return String(s).replace(/[&<>]/g, function(m){if(m==='&')return'&amp;';if(m==='<')return'&lt;';if(m==='>')return'&gt;';return m;}); }
-    async function fetchGalaxyStars() { try { let r=await fetch('https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag'); if(r.ok){let d=await r.json(); document.getElementById('starCount').innerText=d.stargazers_count||0; document.getElementById('forkCount').innerText=d.forks_count||0;} } catch(e){} }
-    fetchGalaxyStars(); setInterval(fetchGalaxyStars, 60000);
-    function updateCosmicUptime() { let start=new Date(2007,9,28); let days=Math.floor((new Date()-start)/86400000); document.getElementById('uptimeCosmic').innerHTML=days+'天 🌌'; document.getElementById('syncTime').innerText=new Date().toLocaleString(); }
-    updateCosmicUptime(); setInterval(updateCosmicUptime,1000);
-    function checkPasswordStrength(pwd){ let s=0; if(pwd.length>=12)s++; if(pwd.length>=16)s++; if(/[a-z]/.test(pwd))s++; if(/[A-Z]/.test(pwd))s++; if(/[0-9]/.test(pwd))s++; if(/[^a-zA-Z0-9]/.test(pwd))s++; let fill=document.getElementById('strengthFill'); if(s<=2)fill.className='strength-fill strength-weak'; else if(s<=4)fill.className='strength-fill strength-medium'; else if(s<=5)fill.className='strength-fill strength-strong'; else fill.className='strength-fill strength-very'; }
-    function genQuantumPassword(){ let len=Math.min(48,Math.max(8,parseInt(document.getElementById('pwdLength').value)||16)); let chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*+?'; let pwd=Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join(''); document.getElementById('passwordResult').value=pwd; checkPasswordStrength(pwd); }
-    function encodeBase64Uni(){ let val=document.getElementById('base64Field').value; try{ document.getElementById('base64Field').value=btoa(unescape(encodeURIComponent(val))); }catch(e){ alert('编码失败'); } }
-    function decodeBase64Uni(){ let val=document.getElementById('base64Field').value; try{ document.getElementById('base64Field').value=decodeURIComponent(escape(atob(val))); }catch(e){ alert('解码失败'); } }
-    function formatJSON(){ try{ let obj=JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML=`<pre>${escapeHtml(JSON.stringify(obj,null,2))}</pre>`; }catch(e){ document.getElementById('jsonResult').innerHTML='❌ '+e.message; } }
-    function minifyJSON(){ try{ let obj=JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML=escapeHtml(JSON.stringify(obj)); }catch(e){ document.getElementById('jsonResult').innerHTML='❌ '+e.message; } }
-    function validateJSON(){ try{ JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML='✅ 有效JSON'; }catch(e){ document.getElementById('jsonResult').innerHTML='❌ 无效'; } }
-    function testRegex(){ let p=document.getElementById('regexPattern').value; try{ let r=new RegExp(p,'g'); let m=document.getElementById('testText').value.match(r); document.getElementById('regexResult').innerHTML=m?`✅ 找到${m.length}个: ${m.join(', ')}`:'❌ 无匹配'; }catch(e){ document.getElementById('regexResult').innerHTML='正则错误'; } }
-    function convertColor(){ let inp=document.getElementById('colorInput').value; if(inp.startsWith('#')){ document.getElementById('colorPreview').style.backgroundColor=inp; document.getElementById('colorResult').innerHTML=`HEX:${inp}`; }else if(inp.startsWith('rgb')){ document.getElementById('colorPreview').style.backgroundColor=inp; document.getElementById('colorResult').innerHTML=`RGB:${inp}`; } }
-    function randomColor(){ let r=Math.floor(Math.random()*256),g=Math.floor(Math.random()*256),b=Math.floor(Math.random()*256); let hex='#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); document.getElementById('colorInput').value=hex; convertColor(); }
-    function copyColor(){ alert('颜色已复制'); }
-    function urlEncode(){ let v=document.getElementById('urlInput').value; document.getElementById('urlResult').innerHTML=encodeURIComponent(v); }
-    function urlDecode(){ let v=document.getElementById('urlInput').value; document.getElementById('urlResult').innerHTML=decodeURIComponent(v); }
-    const httpCodes=[{code:'200',name:'OK'},{code:'404',name:'Not Found'},{code:'500',name:'Server Error'}];
-    function renderHttpCodes(){ let html=''; httpCodes.forEach(c=>{ html+=`<div class="http-item" onclick="document.getElementById('httpDetail').innerHTML='${c.code}: ${c.name}'">${c.code} ${c.name}</div>`; }); document.getElementById('httpList').innerHTML=html; }
-    renderHttpCodes();
-    function updateWordStats(){ let t=document.getElementById('wordInput').value; document.getElementById('charCount').innerText=t.length; document.getElementById('wordCount').innerText=t.trim()?t.trim().split(/\s+/).length:0; document.getElementById('chineseCount').innerText=(t.match(/[\u4e00-\u9fa5]/g)||[]).length; }
-    document.getElementById('wordInput')?.addEventListener('input',updateWordStats); updateWordStats();
-    function generateUUID(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){let r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8); return v.toString(16);}); }
-    function generateUUIDAndDisplay(){ let u=generateUUID(); document.getElementById('uuidDisplay').innerHTML=u; }
-    function copyUUID(){ navigator.clipboard.writeText(document.getElementById('uuidDisplay').innerText); alert('已复制'); }
-    function generateMD5(){ let v=document.getElementById('md5Input').value; document.getElementById('md5Result').innerHTML=CryptoJS.MD5(v).toString(); }
-    function timestampToDate(){ let ts=parseInt(document.getElementById('timestampInput').value); if(isNaN(ts)) return; if(ts.toString().length===10) ts*=1000; document.getElementById('timestampResult').innerHTML=new Date(ts).toLocaleString(); }
-    function fetchIPInfo(){ document.getElementById('ipAddr').innerHTML='检测中...'; fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(d=>{ document.getElementById('ipAddr').innerHTML=d.ip; document.getElementById('ipMethod').innerHTML='公网IP'; }).catch(()=>{ document.getElementById('ipAddr').innerHTML='无法获取'; }); }
-    function generateQRCode(){ let t=document.getElementById('qrText').value; document.getElementById('qrcode').innerHTML=''; new QRCode(document.getElementById('qrcode'),{text:t,width:100,height:100}); }
-    function decodeJWT(){ let t=document.getElementById('jwtInput').value; try{ let d=JSON.parse(atob(t.split('.')[1])); document.getElementById('jwtResult').innerHTML=JSON.stringify(d,null,2); }catch(e){ document.getElementById('jwtResult').innerHTML='无效JWT'; } }
-    function formatSQL(){ let sql=document.getElementById('sqlInput').value; try{ let formatted=sqlFormatter.format(sql); document.getElementById('sqlResult').innerHTML=escapeHtml(formatted); }catch(e){ document.getElementById('sqlResult').innerHTML='格式化失败'; } }
-    function yamlToJson(){ let y=document.getElementById('yamlInput').value; try{ let j=jsyaml.load(y); document.getElementById('yamlResult').innerHTML=JSON.stringify(j,null,2); }catch(e){ document.getElementById('yamlResult').innerHTML='YAML解析失败'; } }
-    function jsonToYaml(){ try{ let j=JSON.parse(document.getElementById('yamlInput').value); let y=jsyaml.dump(j); document.getElementById('yamlResult').innerHTML=y; }catch(e){ document.getElementById('yamlResult').innerHTML='JSON解析失败'; } }
-    function convertBase(){ let dec=parseInt(document.getElementById('decInput').value); if(isNaN(dec)) return; document.getElementById('baseResult').innerHTML=`二进制: ${dec.toString(2)}<br>八进制: ${dec.toString(8)}<br>十六进制: ${dec.toString(16)}`; }
-    function queryDNS(){ let domain=document.getElementById('dnsDomain').value; fetch(`https://dns.google/resolve?name=${domain}&type=A`).then(r=>r.json()).then(d=>{ let ips=(d.Answer||[]).map(a=>a.data).join(', '); document.getElementById('dnsResult').innerHTML=ips||'无记录'; }).catch(()=>{ document.getElementById('dnsResult').innerHTML='查询失败'; }); }
-    function imageToBase64(){ let file=document.getElementById('imageInput').files[0]; if(!file) return; let reader=new FileReader(); reader.onload=e=>{ document.getElementById('base64ImageResult').innerHTML=e.target.result.substring(0,200)+'...'; }; reader.readAsDataURL(file); }
-    function updateMarkdown(){ let md=document.getElementById('mdInput').value; document.getElementById('mdPreview').innerHTML=marked.parse(md); }
-    document.getElementById('mdInput')?.addEventListener('input',updateMarkdown); updateMarkdown();
-    function computeDiff(){ let oldT=document.getElementById('diffOld').value, newT=document.getElementById('diffNew').value; let diff=Diff.diffChars(oldT,newT); let html=''; diff.forEach(part=>{ let color=part.added?'#4ade80':part.removed?'#f87171':'#cffafe'; html+=`<span style="background:${color}30;">${escapeHtml(part.value)}</span>`; }); document.getElementById('diffResult').innerHTML=html; }
-    // 贪吃蛇
-    let snake=[[10,10],[9,10],[8,10]], food=[15,10], dir='RIGHT', gameInterval, gameRunning=true, score=0;
-    function initGameBoard(){ let board=document.getElementById('snakeBoard'); if(!board)return; board.innerHTML=''; for(let i=0;i<400;i++){ let cell=document.createElement('div'); cell.classList.add('game-cell'); board.appendChild(cell); } }
-    function drawSnake(){ let cells=document.querySelectorAll('#snakeBoard .game-cell'); cells.forEach(c=>c.classList.remove('snake','food')); snake.forEach(s=>{ let idx=s[1]*20+s[0]; if(cells[idx])cells[idx].classList.add('snake'); }); let fIdx=food[1]*20+food[0]; if(cells[fIdx])cells[fIdx].classList.add('food'); }
-    function moveSnake(){ if(!gameRunning) return; let head=[...snake[0]]; if(dir==='RIGHT')head[0]++; if(dir==='LEFT')head[0]--; if(dir==='UP')head[1]--; if(dir==='DOWN')head[1]++; if(head[0]<0||head[0]>=20||head[1]<0||head[1]>=20||snake.some(s=>s[0]===head[0]&&s[1]===head[1])){ gameRunning=false; clearInterval(gameInterval); alert('游戏结束！得分:'+score); return; }
-        snake.unshift(head); if(head[0]===food[0]&&head[1]===food[1]){ score++; document.getElementById('snakeScore').innerText='得分:'+score; food=[Math.floor(Math.random()*20),Math.floor(Math.random()*20)]; }else{ snake.pop(); }
-        drawSnake();
+    // GitHub 动态
+    async function fetchGalaxyStars() {
+        const starsSpan = document.getElementById('starCount');
+        const forksSpan = document.getElementById('forkCount');
+        try {
+            const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`);
+            if (resp.ok) { const data = await resp.json(); starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString(); forksSpan.innerText = (data.forks_count ?? 0).toLocaleString(); }
+            else { starsSpan.innerText = '✨'; forksSpan.innerText = '⚡'; }
+        } catch (e) { starsSpan.innerText = '★'; forksSpan.innerText = '⑂'; }
     }
-    function resetGame(){ snake=[[10,10],[9,10],[8,10]]; food=[15,10]; dir='RIGHT'; score=0; gameRunning=true; document.getElementById('snakeScore').innerText='得分:0'; if(gameInterval) clearInterval(gameInterval); gameInterval=setInterval(moveSnake,150); drawSnake(); }
-    document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'&&dir!=='LEFT') dir='RIGHT'; if(e.key==='ArrowLeft'&&dir!=='RIGHT') dir='LEFT'; if(e.key==='ArrowUp'&&dir!=='DOWN') dir='UP'; if(e.key==='ArrowDown'&&dir!=='UP') dir='DOWN'; });
-    initGameBoard(); resetGame();
-    // 名言
-    const quotes=["Talk is cheap. Show me the code. - Linus Torvalds","Keep it simple, stupid!","代码即艺术","任何足够先进的技术都与魔法无异。","先解决问题，再写代码。"];
-    let quoteIdx=0;
-    function nextQuote(){ quoteIdx=(quoteIdx+1)%quotes.length; document.getElementById('quoteDisplay').innerHTML=`“${quotes[quoteIdx]}”`; }
-    nextQuote(); setInterval(nextQuote,8000);
-    function toggleTheme(){ document.body.classList.toggle('light-theme'); }
-    setTimeout(()=>{ generateUUIDAndDisplay(); fetchIPInfo(); },500);
-    document.getElementById('passwordResult')?.addEventListener('click',function(){this.select();});
+    fetchGalaxyStars(); setInterval(fetchGalaxyStars, 35 * 60 * 1000);
+
+    // 宇宙计时
+    function updateCosmicUptime() { const startDate = new Date(2007, 9, 28); const diffDays = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)); const years = Math.floor(diffDays / 365), remain = diffDays % 365; document.getElementById('uptimeCosmic').innerHTML = (years > 0 ? `${years}年 ${remain}天` : `${diffDays}天`) + ' 🌌'; document.getElementById('syncTime').innerText = new Date().toLocaleString('zh-CN', { hour12: false }); }
+    updateCosmicUptime(); setInterval(updateCosmicUptime, 1000);
+
+    // 增强版密码生成 + 强度检测
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 12) strength++;
+        if (password.length >= 16) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+        const fill = document.getElementById('strengthFill');
+        if (!fill) return;
+        if (strength <= 2) { fill.className = 'strength-fill strength-weak'; }
+        else if (strength <= 4) { fill.className = 'strength-fill strength-medium'; }
+        else if (strength <= 5) { fill.className = 'strength-fill strength-strong'; }
+        else { fill.className = 'strength-fill strength-very'; }
+    }
+    function genQuantumPassword() { 
+        let len = parseInt(document.getElementById('pwdLength').value, 10); 
+        if (isNaN(len)) len = 16; 
+        len = Math.min(48, Math.max(8, len)); 
+        const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?'; 
+        const all = upper + lower + digits + special; 
+        let pwd = ''; 
+        pwd += upper[Math.floor(Math.random() * upper.length)] + lower[Math.floor(Math.random() * lower.length)] + digits[Math.floor(Math.random() * digits.length)] + special[Math.floor(Math.random() * special.length)]; 
+        for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)]; 
+        pwd = pwd.split('').sort(() => Math.random() - 0.5).join(''); 
+        const resField = document.getElementById('passwordResult'); 
+        resField.value = pwd; 
+        resField.style.borderColor = '#2dd4bf'; 
+        setTimeout(() => resField.style.borderColor = '', 400);
+        checkPasswordStrength(pwd);
+    }
+    function encodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value) { alert('⛔ 输入文本'); return; } try { const utf8 = new TextEncoder().encode(inputField.value); let binary = ''; utf8.forEach(byte => binary += String.fromCharCode(byte)); inputField.value = btoa(binary); } catch (e) { alert('编码异常'); } }
+    function decodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value.trim()) { alert('⛔ 输入Base64'); return; } try { const binary = atob(inputField.value); const uintArr = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); inputField.value = new TextDecoder().decode(uintArr); } catch (e) { alert('解码失败'); } }
+
+    // JSON 工具
+    function formatJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function minifyJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(JSON.stringify(obj))}</span>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function validateJSON() { try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确</span>'; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
+
+    // 正则测试
+    function testRegex() {
+        let pattern = document.getElementById('regexPattern').value;
+        if (!pattern) { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">请输入正则表达式</span>'; return; }
+        let flags = '';
+        if (document.getElementById('flagG').checked) flags += 'g';
+        if (document.getElementById('flagI').checked) flags += 'i';
+        if (document.getElementById('flagM').checked) flags += 'm';
+        try {
+            const regex = new RegExp(pattern, flags);
+            const testText = document.getElementById('testText').value;
+            const matches = testText.match(regex);
+            if (matches && matches.length > 0) {
+                let resultHtml = `<span style="color:#4ade80;">✅ 找到 ${matches.length} 个匹配:</span><br>`;
+                matches.forEach((m, i) => { resultHtml += `<span style="color:#cffafe;">${i + 1}. "${escapeHtml(m)}"</span><br>`; });
+                document.getElementById('regexResult').innerHTML = resultHtml;
+            } else { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">❌ 未找到匹配项</span>'; }
+        } catch (e) { document.getElementById('regexResult').innerHTML = `<span style="color:#f87171;">❌ 正则错误: ${e.message}</span>`; }
+    }
+    function clearRegex() { document.getElementById('regexPattern').value = ''; document.getElementById('testText').value = ''; document.getElementById('regexResult').innerHTML = '已清除'; }
+
+    // 颜色转换
+    function hexToRgb(hex) { let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null; }
+    function rgbToHex(r, g, b) { return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); }
+    function convertColor() {
+        let input = document.getElementById('colorInput').value.trim();
+        if (input.startsWith('#')) { const rgbObj = hexToRgb(input); if (rgbObj) { document.getElementById('colorResult').innerHTML = `HEX: ${input}<br>RGB: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`; document.getElementById('colorPreview').style.backgroundColor = input; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 HEX 格式</span>'; } }
+        else if (input.startsWith('rgb')) { const match = input.match(/\d+/g); if (match && match.length >= 3) { const r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]); const hex = rgbToHex(r, g, b); document.getElementById('colorResult').innerHTML = `RGB: rgb(${r}, ${g}, ${b})<br>HEX: ${hex}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 RGB 格式</span>'; } }
+        else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB 格式</span>'; }
+    }
+    function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
+    function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); alert('已复制到剪贴板'); } else { alert('无有效颜色数据'); } }
+
+    // 时间戳函数
+    function timestampToDate() { const input = document.getElementById('timestampInput').value.trim(); if (!input) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入时间戳</span>'; return; } let ts = parseInt(input); if (isNaN(ts)) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入有效数字</span>'; return; } if (ts.toString().length === 10) ts = ts * 1000; const date = new Date(ts); if (isNaN(date.getTime())) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">无效的时间戳</span>'; return; } document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`; }
+    function dateToTimestamp() { const input = document.getElementById('datetimeInput').value; if (!input) { document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">请选择日期时间</span>'; return; } const date = new Date(input); const tsSeconds = Math.floor(date.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级: ${tsSeconds}<br>⚡ 毫秒级: ${date.getTime()}`; }
+    function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
+    function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${Math.floor(now.getTime() / 1000)}<br>📅 ${now.toLocaleString('zh-CN')}`; }
+
+    // URL 编解码器
+    function urlEncode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要编码的内容</span>'; return; } try { const encoded = encodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(encoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败: ${e.message}</span>`; } }
+    function urlDecode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; } try { const decoded = decodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; } }
+    function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
+
+    // HTTP 状态码
+    const httpStatusCodes = [
+        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" }, { code: "100", name: "Continue", desc: "服务器已收到请求头" },
+        { code: "200", name: "OK", desc: "请求成功" }, { code: "301", name: "Moved Permanently", desc: "资源已永久移动" },
+        { code: "302", name: "Found", desc: "资源临时移动" }, { code: "304", name: "Not Modified", desc: "资源未修改" },
+        { code: "400", name: "Bad Request", desc: "请求语法错误" }, { code: "401", name: "Unauthorized", desc: "需要身份验证" },
+        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" }, { code: "404", name: "Not Found", desc: "请求资源不存在" },
+        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" }, { code: "502", name: "Bad Gateway", desc: "网关错误" },
+        { code: "503", name: "Service Unavailable", desc: "服务不可用" }, { code: "504", name: "Gateway Timeout", desc: "网关超时" }
+    ];
+    function renderHttpCodes() { const container = document.getElementById('httpList'); if (!container) return; container.innerHTML = ''; httpStatusCodes.forEach(item => { const div = document.createElement('div'); div.className = 'http-item'; div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`; div.onclick = () => { document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`; }; container.appendChild(div); }); }
+    renderHttpCodes();
+
+    // 字数统计
+    function updateWordStats() {
+        const text = document.getElementById('wordInput').value;
+        document.getElementById('charCount').innerText = text.length;
+        document.getElementById('wordCount').innerText = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        document.getElementById('lineCount').innerText = text === '' ? 0 : text.split(/\r\n|\r|\n/).length;
+        document.getElementById('chineseCount').innerText = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+        document.getElementById('spaceCount').innerText = (text.match(/\s/g) || []).length;
+    }
+    function clearWordStats() { document.getElementById('wordInput').value = ''; updateWordStats(); }
+    document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
+    updateWordStats();
+
+    // UUID 生成
+    function generateUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); }
+    let uuidHistory = [];
+    function generateUUIDAndDisplay() { const newUUID = generateUUID(); document.getElementById('uuidDisplay').innerHTML = newUUID; uuidHistory.unshift(newUUID); if (uuidHistory.length > 5) uuidHistory.pop(); document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="font-family:monospace; font-size:0.7rem; padding:4px 0; border-bottom:1px dashed #2dd4bf20;">${u}</div>`).join('') || '<span style="color:#8b9bcf;">暂无历史记录</span>'; }
+    function copyUUID() { const uuidText = document.getElementById('uuidDisplay').innerText; if (uuidText && uuidText !== '点击下方按钮生成') { navigator.clipboard.writeText(uuidText); alert('✅ UUID 已复制'); } else { alert('请先生成 UUID'); } }
+    function generateMultipleUUIDs() { for(let i = 0; i < 3; i++) { generateUUIDAndDisplay(); } }
+
+    // MD5 哈希生成器 (新增)
+    function generateMD5() {
+        const input = document.getElementById('md5Input').value;
+        if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入要加密的文本</span>'; return; }
+        try {
+            const md5Hash = CryptoJS.MD5(input).toString();
+            document.getElementById('md5Result').innerHTML = `<span style="color:#4ade80;">✅ MD5 哈希值:</span><br><span style="font-family:monospace;word-break:break-all;">${md5Hash}</span>`;
+        } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败: ${e.message}</span>`; }
+    }
+    function clearMD5() { document.getElementById('md5Input').value = ''; document.getElementById('md5Result').innerHTML = '等待生成...'; }
+
+    // IP 查询
+    function fetchIPInfo() {
+        const ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod'), noteSpan = document.getElementById('ipNote');
+        ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中'; methodSpan.innerText = '--'; noteSpan.innerText = '正在尝试...';
+        let found = false;
+        fetch('https://cloudflare.com/cdn-cgi/trace', { mode: 'cors' }).then(res => res.text()).then(text => {
+            if (found) return; const match = text.match(/ip=([^\n]+)/);
+            if (match) { ipSpan.innerText = match[1]; methodSpan.innerText = 'Cloudflare Trace'; noteSpan.innerText = '✓ 公网IP'; found = true; }
+        }).catch(() => {});
+        setTimeout(() => {
+            if (found) return;
+            try {
+                const pc = new RTCPeerConnection({ iceServers: [] });
+                pc.createDataChannel(''); pc.createOffer().then(offer => pc.setLocalDescription(offer));
+                pc.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        const ipMatch = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(event.candidate.candidate);
+                        if (ipMatch && !found) { ipSpan.innerText = ipMatch[0]; methodSpan.innerText = 'WebRTC'; noteSpan.innerText = '⚠️ 本地/局域网IP'; found = true; pc.close(); }
+                    }
+                };
+                setTimeout(() => { if (!found) pc.close(); }, 3000);
+            } catch(e) {}
+        }, 500);
+        setTimeout(() => { if (!found) { ipSpan.innerText = '无法获取'; methodSpan.innerText = '--'; noteSpan.innerText = '请检查网络连接'; } }, 5000);
+    }
+    setTimeout(() => { fetchIPInfo(); }, 500);
+
+    // 二维码
+    let currentQR = null;
+    function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
+    function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
+    setTimeout(() => generateQRCode(), 500);
+    document.getElementById('passwordResult')?.addEventListener('click', function () { this.select(); });
+    setTimeout(() => { generateUUIDAndDisplay(); }, 500);
 </script>
 </body>
 </html>
