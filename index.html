@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | Markdown预览 | 动态星轨">
+    <title>BlueDriftHK · 极光幻域 | 开发者导航站</title>
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | 动态星轨">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- marked.js CDN 用于 Markdown 渲染 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -306,37 +304,6 @@
             margin-bottom: 6px;
         }
 
-        /* Markdown 预览双栏布局 */
-        .md-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .md-textarea {
-            width: 100%;
-            height: 160px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #2dd4bf50;
-            border-radius: 1rem;
-            color: #e2e8f0;
-            padding: 0.8rem;
-            font-family: monospace;
-            resize: vertical;
-        }
-        .md-preview {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 1rem;
-            padding: 1rem;
-            border: 1px solid #2dd4bf30;
-            min-height: 180px;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-        .md-preview h1, .md-preview h2 { color: #7dd3fc; margin-bottom: 0.5rem; }
-        .md-preview p { margin-bottom: 0.5rem; line-height: 1.4; }
-        .md-preview a { color: #2dd4bf; }
-        .md-preview code { background: #1e293b; padding: 0.2rem 0.4rem; border-radius: 6px; font-size: 0.8rem; }
-
         /* 状态行 */
         .status-rail {
             background: rgba(0, 0, 0, 0.35);
@@ -372,6 +339,13 @@
             .nova-card { padding: 1.2rem; }
             .grid-galaxy { gap: 1.2rem; }
         }
+
+        .wave-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent);
+            width: 80%;
+            margin: 1rem auto 0;
+        }
     </style>
 </head>
 <body>
@@ -381,8 +355,8 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | 实时Markdown</div>
-        <div class="wave-divider" style="height:2px; background:linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent); width:80%; margin:1rem auto 0;"></div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | 开源脉冲</div>
+        <div class="wave-divider"></div>
     </div>
 
     <div class="grid-galaxy">
@@ -474,7 +448,7 @@
             </div>
         </div>
 
-        <!-- 6. IP 归属地查询 (新增) -->
+        <!-- 6. IP 归属地查询 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
@@ -491,19 +465,7 @@
             </div>
         </div>
 
-        <!-- 7. Markdown 实时预览 (新增) -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📝</div>
-                <div class="card-title">Markdown 星云预览</div>
-            </div>
-            <div class="md-container">
-                <textarea id="mdInput" class="md-textarea" placeholder="输入 Markdown 内容，右侧实时预览...&#10;# 标题&#10;## 二级标题&#10;- 列表项&#10;**粗体** _斜体_&#10;[链接](https://example.com)"></textarea>
-                <div id="mdPreview" class="md-preview"></div>
-            </div>
-        </div>
-
-        <!-- 8. 星轨运行状态 -->
+        <!-- 7. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
@@ -653,24 +615,9 @@
             countrySpan.innerText = '--'; citySpan.innerText='--'; orgSpan.innerText='--'; locSpan.innerText='--';
         }
     }
-    // 自动加载一次IP
     fetchIPInfo();
 
-    // ---------- Markdown 实时预览 (marked) ----------
-    const mdTextarea = document.getElementById('mdInput');
-    const previewDiv = document.getElementById('mdPreview');
-    // 默认填充示例
-    mdTextarea.value = `# ✦ BlueDriftHK 星尘手册 ✦\n\n## 极客信条\n- 探索边缘计算\n- 构建开源工具\n- 分享技术美学\n\n**欢迎使用 Markdown 预览** — 实时渲染，让文档更优雅。\n\n[访问 GitHub →](https://github.com/BlueDriftHK)`;
-    function updateMarkdownPreview() {
-        if(window.marked) {
-            previewDiv.innerHTML = window.marked.parse(mdTextarea.value);
-        } else {
-            previewDiv.innerHTML = '<p>Markdown 解析器加载中...</p>';
-        }
-    }
-    mdTextarea.addEventListener('input', updateMarkdownPreview);
-    updateMarkdownPreview();
-    // 动态注入波浪分割线样式
+    // 动画入场样式
     const styleInject = document.createElement('style');
     styleInject.textContent = `.btn-mini, .btn-nebula, .social-badge { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
     document.head.appendChild(styleInject);
