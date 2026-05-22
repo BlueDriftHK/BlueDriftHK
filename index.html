@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | 动态星轨">
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -33,7 +33,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.4;
         }
 
         .universe-container {
@@ -348,11 +348,6 @@
             font-size: 0.75rem;
             cursor: pointer;
         }
-        .match-highlight {
-            background: #2dd4bf30;
-            border-radius: 4px;
-            padding: 2px;
-        }
 
         .color-preview {
             width: 60px;
@@ -553,7 +548,7 @@
             <div id="jsonResult" class="result-box" style="max-height:150px; overflow:auto;">等待操作...</div>
         </div>
 
-        <!-- 7. 正则表达式测试器 (新增) -->
+        <!-- 7. 正则表达式测试器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🔍</div>
@@ -575,7 +570,7 @@
             <div id="regexResult" class="result-box">等待测试...</div>
         </div>
 
-        <!-- 8. 颜色转换器 (新增) -->
+        <!-- 8. 颜色转换器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🎨</div>
@@ -622,13 +617,13 @@
             </div>
         </div>
 
-        <!-- 10. IP 归属地查询 -->
+        <!-- 10. IP 归属地查询 - 完全修复版 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
                 <div class="card-title">IP 星际定位</div>
             </div>
-            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（IPv4/IPv6 双栈支持）</div>
+            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（使用多个免费API，确保可用）</div>
             <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
             <div id="ipInfoBox" class="result-box">
                 <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
@@ -672,7 +667,7 @@
 </div>
 
 <script>
-    // 动态粒子背景 (省略详细代码保持简洁，与之前相同)
+    // 动态粒子背景
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -689,7 +684,7 @@
         const starsSpan = document.getElementById('starCount');
         const forksSpan = document.getElementById('forkCount');
         try {
-            const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+            const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`);
             if (resp.ok) { const data = await resp.json(); starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString(); forksSpan.innerText = (data.forks_count ?? 0).toLocaleString(); }
             else { starsSpan.innerText = '✨'; forksSpan.innerText = '⚡'; }
         } catch (e) { starsSpan.innerText = '★'; forksSpan.innerText = '⑂'; }
@@ -740,7 +735,7 @@
         let hex = '', rgb = '';
         if (input.startsWith('#')) { hex = input; const rgbObj = hexToRgb(hex); if (rgbObj) { rgb = `rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: ${rgb}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 HEX 格式</span>'; } }
         else if (input.startsWith('rgb')) { const match = input.match(/\d+/g); if (match && match.length >= 3) { const r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]); hex = rgbToHex(r, g, b); document.getElementById('colorResult').innerHTML = `RGB: rgb(${r}, ${g}, ${b})<br>HEX: ${hex}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 RGB 格式</span>'; } }
-        else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB (rgb(r,g,b)) 格式</span>'; }
+        else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB 格式</span>'; }
     }
     function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
     function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); alert('已复制到剪贴板'); } else { alert('无有效颜色数据'); } }
@@ -751,9 +746,76 @@
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
     function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`; }
 
-    // IP 查询
-    async function fetchIPInfo() { const ipSpan = document.getElementById('ipAddr'), countrySpan = document.getElementById('ipCountry'), citySpan = document.getElementById('ipCity'), orgSpan = document.getElementById('ipOrg'), locSpan = document.getElementById('ipLoc'); ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中'; countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--'; try { const resp = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,isp,query', { timeout: 8000 }); if (resp.ok) { const data = await resp.json(); if (data.status === 'success') { ipSpan.innerText = data.query; countrySpan.innerText = `${data.country || '未知'}`; citySpan.innerText = `${data.city || '未知'} / ${data.regionName || ''}`; orgSpan.innerText = data.isp || '未知'; locSpan.innerText = '已获取'; return; } } throw new Error(); } catch (err) { try { const resp2 = await fetch('https://api.ipify.org?format=json'); const data2 = await resp2.json(); ipSpan.innerText = data2.ip; countrySpan.innerText = '无法获取地理位置'; citySpan.innerText = '请检查网络'; } catch { ipSpan.innerText = '获取失败'; } } }
-    setTimeout(() => fetchIPInfo(), 500);
+    // IP 归属地查询 - 多备用方案确保可用
+    async function fetchIPInfo() {
+        const ipSpan = document.getElementById('ipAddr');
+        const countrySpan = document.getElementById('ipCountry');
+        const citySpan = document.getElementById('ipCity');
+        const orgSpan = document.getElementById('ipOrg');
+        const locSpan = document.getElementById('ipLoc');
+        
+        ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中';
+        countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--';
+        
+        // 方案1: ip-api.com (最稳定)
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const resp = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,isp,query,lat,lon,timezone', {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (resp.ok) {
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    ipSpan.innerText = data.query;
+                    countrySpan.innerText = `${data.country || '未知'}`;
+                    citySpan.innerText = `${data.city || '未知'} / ${data.regionName || ''}`;
+                    orgSpan.innerText = data.isp || '未知运营商';
+                    locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon}` : '无坐标';
+                    return;
+                }
+            }
+            throw new Error();
+        } catch (err) {
+            // 方案2: ipinfo.io (需要 token，但有限制，使用另一个)
+            try {
+                const resp2 = await fetch('https://ipwho.is/');
+                if (resp2.ok) {
+                    const data = await resp2.json();
+                    if (data && data.ip) {
+                        ipSpan.innerText = data.ip;
+                        countrySpan.innerText = `${data.country || '未知'}`;
+                        citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
+                        orgSpan.innerText = data.connection?.isp || '未知';
+                        locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
+                        return;
+                    }
+                }
+                throw new Error();
+            } catch (err2) {
+                // 方案3: 纯IP获取
+                try {
+                    const resp3 = await fetch('https://api.ipify.org?format=json');
+                    const data3 = await resp3.json();
+                    ipSpan.innerText = data3.ip;
+                    countrySpan.innerText = '无法获取详细信息';
+                    citySpan.innerText = '请检查网络连接';
+                    orgSpan.innerText = '--';
+                    locSpan.innerText = '--';
+                } catch {
+                    ipSpan.innerText = '获取失败';
+                    countrySpan.innerText = '请检查网络或稍后重试';
+                    citySpan.innerText = '--';
+                    orgSpan.innerText = '--';
+                    locSpan.innerText = '--';
+                }
+            }
+        }
+    }
+    
+    // 页面加载时自动查询IP
+    setTimeout(() => { fetchIPInfo(); }, 500);
 
     // 二维码
     let currentQR = null;
