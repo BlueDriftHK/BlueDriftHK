@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 极光幻域 | 开发者导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | 动态星轨">
+    <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | JSON格式化 | 时间戳转换 | 二维码生成 | 动态星轨">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- QRCode.js 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -67,7 +69,7 @@
 
         .grid-galaxy {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 2rem;
         }
 
@@ -278,7 +280,7 @@
             transform: scale(0.98);
         }
 
-        .ip-result {
+        .ip-result, .json-result, .qrcode-container {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.2rem;
             padding: 0.8rem;
@@ -320,6 +322,72 @@
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* JSON 格式化样式 */
+        .json-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #2dd4bf50;
+            border-radius: 1rem;
+            color: #e2e8f0;
+            padding: 0.7rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            resize: vertical;
+        }
+        .json-preview {
+            max-height: 150px;
+            overflow: auto;
+            font-family: monospace;
+            font-size: 0.7rem;
+            white-space: pre-wrap;
+        }
+
+        /* 时间戳转换器样式 */
+        .timestamp-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .timestamp-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #2dd4bf50;
+            border-radius: 1rem;
+            padding: 0.6rem;
+            color: #f0f4ff;
+            font-family: monospace;
+        }
+
+        /* 二维码样式 */
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        #qrcode img {
+            border-radius: 0.8rem;
+            background: white;
+            padding: 8px;
+        }
+        .retry-btn {
+            background: transparent;
+            border: 1px solid #2dd4bf50;
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #2dd4bf;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .retry-btn:hover {
+            background: #2dd4bf20;
+            border-color: #2dd4bf;
         }
 
         .status-rail {
@@ -365,22 +433,6 @@
             width: 80%;
             margin: 1rem auto 0;
         }
-        
-        .retry-btn {
-            background: transparent;
-            border: 1px solid #2dd4bf50;
-            border-radius: 2rem;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            color: #2dd4bf;
-            cursor: pointer;
-            margin-top: 8px;
-            transition: 0.2s;
-        }
-        .retry-btn:hover {
-            background: #2dd4bf20;
-            border-color: #2dd4bf;
-        }
     </style>
 </head>
 <body>
@@ -390,7 +442,7 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | 开源脉冲</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | JSON格式化 | 时间枢纽 | 量子码</div>
         <div class="wave-divider"></div>
     </div>
 
@@ -459,7 +511,7 @@
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 5. 开发者工坊 -->
+        <!-- 5. 开发者工坊 (密码生成+Base64) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -483,7 +535,50 @@
             </div>
         </div>
 
-        <!-- 6. IP 归属地查询 - 完全修复版 -->
+        <!-- 6. JSON 格式化工具 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📋</div>
+                <div class="card-title">JSON 星云格式化</div>
+            </div>
+            <textarea id="jsonInput" class="json-textarea" placeholder='输入 JSON 代码，例如：{"name":"BlueDriftHK","type":"极客导航"}'></textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="formatJSON()" style="flex:1;">✨ 格式化/美化</button>
+                <button class="btn-mini" onclick="minifyJSON()" style="flex:1;">📦 压缩/最小化</button>
+                <button class="btn-mini" onclick="validateJSON()" style="flex:1;">✅ 验证 JSON</button>
+            </div>
+            <div id="jsonResult" class="json-preview" style="margin-top: 12px; color: #9dabcf;">等待操作...</div>
+        </div>
+
+        <!-- 7. 时间戳转换器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">⏰</div>
+                <div class="card-title">时间枢纽 · 转换器</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">🕐 时间戳 → 日期时间</div>
+                <div class="timestamp-row">
+                    <input type="text" id="timestampInput" class="timestamp-input" placeholder="输入时间戳 (秒 或 毫秒)">
+                    <button class="btn-mini" onclick="timestampToDate()">转换</button>
+                </div>
+                <div id="timestampResult" class="ip-result" style="margin-top: 8px;">等待转换...</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">📅 日期时间 → 时间戳</div>
+                <div class="timestamp-row">
+                    <input type="datetime-local" id="datetimeInput" class="timestamp-input" style="flex:1;">
+                    <button class="btn-mini" onclick="dateToTimestamp()">转换</button>
+                </div>
+                <div id="datetimeResult" class="ip-result" style="margin-top: 8px;">等待转换...</div>
+            </div>
+            <div class="flex-row" style="margin-top: 5px;">
+                <button class="btn-mini" onclick="getCurrentTimestamp()" style="flex:1;">📌 当前时间戳</button>
+                <button class="btn-mini" onclick="getCurrentDateTime()" style="flex:1;">🗓️ 当前日期时间</button>
+            </div>
+        </div>
+
+        <!-- 8. IP 归属地查询 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
@@ -501,7 +596,24 @@
             <button class="retry-btn" onclick="fetchIPInfo()" style="margin-top:8px; align-self:flex-start;">⟳ 重新查询</button>
         </div>
 
-        <!-- 7. 星轨运行状态 -->
+        <!-- 9. 二维码生成器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📱</div>
+                <div class="card-title">量子码 · 生成器</div>
+            </div>
+            <div class="tool-galaxy">
+                <div class="tool-label">输入文本或链接</div>
+                <input type="text" id="qrText" class="input-cosmic" placeholder="https://github.com/BlueDriftHK 或任意文字" value="https://github.com/BlueDriftHK">
+                <div class="flex-row" style="margin-top: 10px;">
+                    <button class="btn-mini" onclick="generateQRCode()" style="flex:1;">✨ 生成二维码</button>
+                    <button class="btn-mini" onclick="clearQRCode()" style="flex:1;">🗑️ 清除</button>
+                </div>
+            </div>
+            <div id="qrcode" class="qrcode-container" style="display: flex; justify-content: center; min-height: 140px;"></div>
+        </div>
+
+        <!-- 10. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
@@ -514,7 +626,7 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | IP 数据由 ip-api.com + ipapi.co 双源提供
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | JSON | 时间戳 | 二维码 | IP数据
     </div>
 </div>
 
@@ -592,7 +704,7 @@
     }
     updateCosmicUptime(); setInterval(updateCosmicUptime,1000);
 
-    // ---------- 工具函数 ----------
+    // ---------- 原有工具函数 ----------
     function genQuantumPassword() {
         let len = parseInt(document.getElementById('pwdLength').value,10);
         if(isNaN(len)) len=16; len = Math.min(48, Math.max(8,len));
@@ -628,7 +740,118 @@
     }
     document.getElementById('passwordResult')?.addEventListener('click', function(){ this.select(); });
 
-    // ---------- IP归属地查询 (完全修复版，支持IPv6) ----------
+    // ---------- JSON 工具函数 ----------
+    function formatJSON() {
+        const input = document.getElementById('jsonInput').value;
+        if (!input.trim()) {
+            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
+            return;
+        }
+        try {
+            const obj = JSON.parse(input);
+            const formatted = JSON.stringify(obj, null, 2);
+            document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(formatted)}</pre>`;
+        } catch(e) {
+            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ JSON 解析错误: ${e.message}</span>`;
+        }
+    }
+    
+    function minifyJSON() {
+        const input = document.getElementById('jsonInput').value;
+        if (!input.trim()) {
+            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
+            return;
+        }
+        try {
+            const obj = JSON.parse(input);
+            const minified = JSON.stringify(obj);
+            document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(minified)}</span>`;
+        } catch(e) {
+            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ JSON 解析错误: ${e.message}</span>`;
+        }
+    }
+    
+    function validateJSON() {
+        const input = document.getElementById('jsonInput').value;
+        if (!input.trim()) {
+            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
+            return;
+        }
+        try {
+            JSON.parse(input);
+            document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确，有效！</span>';
+        } catch(e) {
+            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ 无效 JSON: ${e.message}</span>`;
+        }
+    }
+    
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---------- 时间戳转换函数 ----------
+    function timestampToDate() {
+        const input = document.getElementById('timestampInput').value.trim();
+        if (!input) {
+            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入时间戳</span>';
+            return;
+        }
+        let ts = parseInt(input);
+        if (isNaN(ts)) {
+            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">❌ 请输入有效数字</span>';
+            return;
+        }
+        // 判断是秒还是毫秒 (10位数是秒，13位数是毫秒)
+        if (ts.toString().length === 10) {
+            ts = ts * 1000;
+        }
+        const date = new Date(ts);
+        if (isNaN(date.getTime())) {
+            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">❌ 无效的时间戳</span>';
+            return;
+        }
+        document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`;
+    }
+    
+    function dateToTimestamp() {
+        const input = document.getElementById('datetimeInput').value;
+        if (!input) {
+            document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">⚠️ 请选择日期时间</span>';
+            return;
+        }
+        const date = new Date(input);
+        const tsSeconds = Math.floor(date.getTime() / 1000);
+        const tsMillis = date.getTime();
+        document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级时间戳: ${tsSeconds}<br>⚡ 毫秒级时间戳: ${tsMillis}`;
+    }
+    
+    function getCurrentTimestamp() {
+        const now = new Date();
+        const tsSeconds = Math.floor(now.getTime() / 1000);
+        const tsMillis = now.getTime();
+        document.getElementById('timestampInput').value = tsSeconds;
+        document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${tsMillis}<br>📅 ${now.toLocaleString('zh-CN')}`;
+    }
+    
+    function getCurrentDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.getElementById('datetimeInput').value = localDateTime;
+        const tsSeconds = Math.floor(now.getTime() / 1000);
+        document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`;
+    }
+
+    // ---------- IP归属地查询 ----------
     async function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr');
         const countrySpan = document.getElementById('ipCountry');
@@ -636,21 +859,17 @@
         const orgSpan = document.getElementById('ipOrg');
         const locSpan = document.getElementById('ipLoc');
         
-        // 显示加载状态
         ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中';
         countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--';
         
-        // 方案1: 使用 ip-api.com (支持 IPv4 和 IPv6)
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
-            
             const resp = await fetch('https://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,query,timezone', {
                 signal: controller.signal,
                 mode: 'cors'
             });
             clearTimeout(timeoutId);
-            
             if (resp.ok) {
                 const data = await resp.json();
                 if (data.status === 'success') {
@@ -660,63 +879,58 @@
                     orgSpan.innerText = data.isp || data.org || '未知运营商';
                     locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon} | ${data.timezone || ''}` : '无坐标';
                     return;
-                } else {
-                    console.log('ip-api 返回失败状态:', data.message);
                 }
             }
-            throw new Error('ip-api 查询失败');
+            throw new Error('ip-api 失败');
         } catch (err) {
-            console.log('ip-api 失败:', err);
-            
-            // 方案2: 使用 ipapi.co (备用)
             try {
-                const controller2 = new AbortController();
-                const timeoutId2 = setTimeout(() => controller2.abort(), 10000);
-                
-                const resp2 = await fetch('https://ipapi.co/json/', { signal: controller2.signal });
-                clearTimeout(timeoutId2);
-                
-                if (resp2.ok) {
-                    const data = await resp2.json();
-                    if (data && data.ip) {
-                        ipSpan.innerText = data.ip;
-                        countrySpan.innerText = `${data.country_name || '未知'} ${data.country_code ? '('+data.country_code+')' : ''}`;
-                        citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
-                        orgSpan.innerText = data.org || data.asn || '未知运营商';
-                        locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
-                        return;
-                    }
-                }
-                throw new Error('ipapi.co 查询失败');
-            } catch (err2) {
-                console.log('备用 API 失败:', err2);
-                
-                // 方案3: 纯 IP 获取 (只显示 IP)
-                try {
-                    const resp3 = await fetch('https://api.ipify.org?format=json');
-                    const data3 = await resp3.json();
-                    ipSpan.innerText = data3.ip;
-                    countrySpan.innerText = '无法获取地理位置';
-                    citySpan.innerText = '请检查网络或稍后重试';
-                    orgSpan.innerText = '--';
-                    locSpan.innerText = '--';
-                } catch (err3) {
-                    ipSpan.innerText = '获取失败';
-                    countrySpan.innerText = '网络异常，请刷新重试';
-                    citySpan.innerText = '--';
-                    orgSpan.innerText = '--';
-                    locSpan.innerText = '--';
-                }
+                const resp2 = await fetch('https://api.ipify.org?format=json');
+                const data2 = await resp2.json();
+                ipSpan.innerText = data2.ip;
+                countrySpan.innerText = '无法获取地理位置';
+                citySpan.innerText = '请检查网络或稍后重试';
+                orgSpan.innerText = '--';
+                locSpan.innerText = '--';
+            } catch {
+                ipSpan.innerText = '获取失败';
+                countrySpan.innerText = '网络异常，请刷新重试';
             }
         }
     }
     
-    // 页面加载时自动查询一次 IP
-    setTimeout(() => {
-        fetchIPInfo();
-    }, 500);
+    setTimeout(() => { fetchIPInfo(); }, 500);
+
+    // ---------- 二维码生成 ----------
+    let currentQR = null;
+    function generateQRCode() {
+        const text = document.getElementById('qrText').value.trim();
+        if (!text) {
+            alert('请输入文本或链接');
+            return;
+        }
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = '';
+        try {
+            currentQR = new QRCode(qrContainer, {
+                text: text,
+                width: 128,
+                height: 128,
+                colorDark: "#2dd4bf",
+                colorLight: "#0a0c14",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        } catch(e) {
+            qrContainer.innerHTML = '<span style="color:#f87171;">生成失败，请检查输入</span>';
+        }
+    }
+    function clearQRCode() {
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = '';
+        document.getElementById('qrText').value = '';
+    }
+    // 默认生成一个二维码
+    setTimeout(() => { generateQRCode(); }, 800);
     
-    // 动画入场样式
     const styleInject = document.createElement('style');
     styleInject.textContent = `.btn-mini, .btn-nebula, .social-badge { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
     document.head.appendChild(styleInject);
