@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换">
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | URL编解码 | HTTP状态码">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -323,7 +323,7 @@
             to { transform: rotate(360deg); }
         }
 
-        .json-textarea, .regex-textarea {
+        .json-textarea, .regex-textarea, .url-textarea {
             width: 100%;
             height: 100px;
             background: rgba(0, 0, 0, 0.5);
@@ -361,6 +361,37 @@
             gap: 10px;
             align-items: center;
             flex-wrap: wrap;
+        }
+
+        /* HTTP状态码表格样式 */
+        .http-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .http-item {
+            background: rgba(0,0,0,0.3);
+            border-radius: 0.8rem;
+            padding: 6px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            border-left: 2px solid #2dd4bf;
+        }
+        .http-item:hover {
+            background: rgba(45,212,191,0.2);
+            transform: translateX(4px);
+        }
+        .http-code {
+            font-weight: 700;
+            color: #2dd4bf;
+            font-family: monospace;
+        }
+        .http-desc {
+            color: #9dabcf;
+            font-size: 0.65rem;
         }
 
         .status-rail {
@@ -440,7 +471,7 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊 | URL工具 | HTTP速查</div>
         <div class="wave-divider"></div>
     </div>
 
@@ -589,7 +620,34 @@
             </div>
         </div>
 
-        <!-- 9. 时间戳转换器 -->
+        <!-- 9. URL 编解码器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🔗</div>
+                <div class="card-title">URL 编解码器</div>
+            </div>
+            <div class="tool-label">📝 输入 URL 或文本</div>
+            <textarea id="urlInput" class="url-textarea" placeholder="https://example.com/测试 或 %E6%B5%8B%E8%AF%95"></textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="urlEncode()" style="flex:1;">🔒 编码 (Encode)</button>
+                <button class="btn-mini" onclick="urlDecode()" style="flex:1;">🔓 解码 (Decode)</button>
+                <button class="btn-mini" onclick="clearUrl()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="urlResult" class="result-box" style="max-height: 100px; overflow: auto;">等待操作...</div>
+        </div>
+
+        <!-- 10. HTTP 状态码速查 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📡</div>
+                <div class="card-title">HTTP 状态码速查</div>
+            </div>
+            <div class="tool-label">点击状态码查看详细说明</div>
+            <div id="httpList" class="http-grid"></div>
+            <div id="httpDetail" class="result-box" style="margin-top: 8px; font-size: 0.75rem;">点击任意状态码查看详情</div>
+        </div>
+
+        <!-- 11. 时间戳转换器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⏰</div>
@@ -617,13 +675,13 @@
             </div>
         </div>
 
-        <!-- 10. IP 归属地查询 - 终极方案：WebRTC + Cloudflare Trace -->
+        <!-- 12. IP 星际定位 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
                 <div class="card-title">IP 星际定位</div>
             </div>
-            <div class="desc-cosmic">获取本地IP地址（WebRTC + Cloudflare 双方案，无需外部API）</div>
+            <div class="desc-cosmic">获取本地IP地址（WebRTC + Cloudflare 双方案）</div>
             <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
             <div id="ipInfoBox" class="result-box">
                 <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
@@ -633,7 +691,7 @@
             <button class="retry-btn" onclick="fetchIPInfo()">⟳ 重新查询</button>
         </div>
 
-        <!-- 11. 二维码生成器 -->
+        <!-- 13. 二维码生成器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📱</div>
@@ -647,7 +705,7 @@
             <div id="qrcode" class="result-box" style="display: flex; justify-content: center;"></div>
         </div>
 
-        <!-- 12. 星轨运行状态 -->
+        <!-- 14. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
@@ -660,7 +718,7 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | 正则 | 色彩 | JSON | 时间戳 | 二维码
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | URL编解码 | HTTP状态码 | 正则 | 色彩 | JSON | 时间戳 | 二维码
     </div>
 </div>
 
@@ -744,19 +802,78 @@
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
     function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`; }
 
-    // IP 归属地查询 - 终极方案：WebRTC + Cloudflare Trace（完全不需要外部API）
+    // URL 编解码器 (新增)
+    function urlEncode() {
+        const input = document.getElementById('urlInput').value;
+        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要编码的内容</span>'; return; }
+        try {
+            const encoded = encodeURIComponent(input);
+            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(encoded)}</span>`;
+        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败: ${e.message}</span>`; }
+    }
+    function urlDecode() {
+        const input = document.getElementById('urlInput').value;
+        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; }
+        try {
+            const decoded = decodeURIComponent(input);
+            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`;
+        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; }
+    }
+    function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
+
+    // HTTP 状态码速查 (新增)
+    const httpStatusCodes = [
+        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" },
+        { code: "100", name: "Continue", desc: "服务器已收到请求头，客户端应继续发送请求体" },
+        { code: "101", name: "Switching Protocols", desc: "服务器正在切换协议" },
+        { code: "2xx", name: "成功响应", desc: "请求成功完成" },
+        { code: "200", name: "OK", desc: "请求成功" },
+        { code: "201", name: "Created", desc: "请求成功且服务器创建了新资源" },
+        { code: "204", name: "No Content", desc: "请求成功，但没有返回内容" },
+        { code: "3xx", name: "重定向", desc: "需要进一步操作以完成请求" },
+        { code: "301", name: "Moved Permanently", desc: "资源已永久移动到新URL" },
+        { code: "302", name: "Found", desc: "资源临时移动到新URL" },
+        { code: "304", name: "Not Modified", desc: "资源未修改，可使用缓存" },
+        { code: "4xx", name: "客户端错误", desc: "请求包含错误或无法处理" },
+        { code: "400", name: "Bad Request", desc: "服务器无法理解请求" },
+        { code: "401", name: "Unauthorized", desc: "需要身份验证" },
+        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" },
+        { code: "404", name: "Not Found", desc: "请求的资源不存在" },
+        { code: "405", name: "Method Not Allowed", desc: "HTTP方法不允许" },
+        { code: "408", name: "Request Timeout", desc: "请求超时" },
+        { code: "429", name: "Too Many Requests", desc: "请求过于频繁" },
+        { code: "5xx", name: "服务端错误", desc: "服务器无法完成有效请求" },
+        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" },
+        { code: "502", name: "Bad Gateway", desc: "网关错误" },
+        { code: "503", name: "Service Unavailable", desc: "服务不可用" },
+        { code: "504", name: "Gateway Timeout", desc: "网关超时" }
+    ];
+    function renderHttpCodes() {
+        const container = document.getElementById('httpList');
+        if (!container) return;
+        container.innerHTML = '';
+        httpStatusCodes.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'http-item';
+            div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`;
+            div.onclick = () => {
+                document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`;
+            };
+            container.appendChild(div);
+        });
+    }
+    renderHttpCodes();
+
+    // IP 归属地查询
     function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr');
         const methodSpan = document.getElementById('ipMethod');
         const noteSpan = document.getElementById('ipNote');
-        
         ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中';
         methodSpan.innerText = '--';
         noteSpan.innerText = '正在尝试多种方式...';
-        
         let found = false;
-        
-        // 方案1: Cloudflare CDN Trace (最稳定的公网IP获取方式)
+        // Cloudflare Trace
         fetch('https://cloudflare.com/cdn-cgi/trace', { mode: 'cors' })
             .then(res => res.text())
             .then(text => {
@@ -765,13 +882,11 @@
                 if (match) {
                     ipSpan.innerText = match[1];
                     methodSpan.innerText = 'Cloudflare Trace';
-                    noteSpan.innerText = '✓ 公网IP (通过Cloudflare)';
+                    noteSpan.innerText = '✓ 公网IP';
                     found = true;
                 }
-            })
-            .catch(() => {});
-        
-        // 方案2: WebRTC 获取本地IP (可以在无网络时获取)
+            }).catch(() => {});
+        // WebRTC
         setTimeout(() => {
             if (found) return;
             try {
@@ -783,44 +898,24 @@
                         const ipMatch = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(event.candidate.candidate);
                         if (ipMatch && !found) {
                             ipSpan.innerText = ipMatch[0];
-                            methodSpan.innerText = 'WebRTC 本地IP';
-                            noteSpan.innerText = '⚠️ 本地/局域网IP，非公网地址';
+                            methodSpan.innerText = 'WebRTC';
+                            noteSpan.innerText = '⚠️ 本地/局域网IP';
                             found = true;
                             pc.close();
                         }
                     }
                 };
                 setTimeout(() => { if (!found) pc.close(); }, 3000);
-            } catch(e) { console.log('WebRTC不可用'); }
+            } catch(e) {}
         }, 500);
-        
-        // 方案3: ipify 备用
-        setTimeout(() => {
-            if (found) return;
-            fetch('https://api.ipify.org?format=json')
-                .then(res => res.json())
-                .then(data => {
-                    if (data.ip && !found) {
-                        ipSpan.innerText = data.ip;
-                        methodSpan.innerText = 'ipify API';
-                        noteSpan.innerText = '✓ 公网IP (备选方案)';
-                        found = true;
-                    }
-                })
-                .catch(() => {});
-        }, 1500);
-        
-        // 最终超时：如果所有方式都失败
         setTimeout(() => {
             if (!found) {
                 ipSpan.innerText = '无法获取';
                 methodSpan.innerText = '--';
-                noteSpan.innerText = '请检查网络连接，或尝试刷新页面';
+                noteSpan.innerText = '请检查网络连接';
             }
         }, 5000);
     }
-    
-    // 页面加载时自动查询IP
     setTimeout(() => { fetchIPInfo(); }, 500);
 
     // 二维码
