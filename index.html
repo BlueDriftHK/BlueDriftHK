@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 极光幻域 | 开发者导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | 动态星轨 | 个人主页">
+    <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | Markdown预览 | 动态星轨">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- marked.js CDN 用于 Markdown 渲染 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -40,12 +42,12 @@
         .universe-container {
             position: relative;
             z-index: 10;
-            max-width: 1380px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem 1.8rem;
         }
 
-        /* 优雅标题区 */
+        /* 标题区 */
         .hero-space {
             margin-bottom: 3rem;
             text-align: center;
@@ -68,14 +70,14 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 响应式网格 - 极致玻璃质感 */
+        /* 响应式网格 */
         .grid-galaxy {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
-        /* 超新星卡片 */
+        /* 玻璃卡片 */
         .nova-card {
             background: rgba(12, 22, 40, 0.5);
             backdrop-filter: blur(16px);
@@ -96,7 +98,7 @@
             background: rgba(18, 30, 52, 0.65);
         }
 
-        /* 头部标识 */
+        /* 卡片头部 */
         .card-orbit {
             display: flex;
             align-items: center;
@@ -137,7 +139,7 @@
             font-weight: 400;
         }
 
-        /* 个人介绍专用样式 - 更丰富的社交链接 */
+        /* 个人介绍专用样式 */
         .bio-text {
             margin-bottom: 1.2rem;
             font-size: 0.9rem;
@@ -183,7 +185,7 @@
             border: 0.5px solid rgba(56,189,248,0.2);
         }
 
-        /* 霓虹按钮 */
+        /* 按钮风格 */
         .btn-nebula {
             display: inline-flex;
             align-items: center;
@@ -202,7 +204,6 @@
             width: fit-content;
             backdrop-filter: blur(4px);
         }
-
         .btn-nebula:hover {
             background: rgba(45, 212, 191, 0.25);
             border-color: #2dd4bf;
@@ -211,7 +212,7 @@
             box-shadow: 0 0 14px rgba(45,212,191,0.5);
         }
 
-        /* github 数据模块 */
+        /* GitHub 数据模块 */
         .cosmic-stats {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.6rem;
@@ -242,7 +243,7 @@
             color: transparent;
         }
 
-        /* 工具箱 */
+        /* 工具箱组件 */
         .tool-galaxy {
             margin-bottom: 1.2rem;
         }
@@ -289,7 +290,54 @@
             transform: scale(0.98);
         }
 
-        /* 状态轨道 */
+        /* IP 查询结果区块 */
+        .ip-result {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.2rem;
+            padding: 0.8rem;
+            margin-top: 12px;
+            font-size: 0.8rem;
+            border-left: 3px solid #2dd4bf;
+            word-break: break-all;
+        }
+        .ip-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        /* Markdown 预览双栏布局 */
+        .md-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .md-textarea {
+            width: 100%;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #2dd4bf50;
+            border-radius: 1rem;
+            color: #e2e8f0;
+            padding: 0.8rem;
+            font-family: monospace;
+            resize: vertical;
+        }
+        .md-preview {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid #2dd4bf30;
+            min-height: 180px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .md-preview h1, .md-preview h2 { color: #7dd3fc; margin-bottom: 0.5rem; }
+        .md-preview p { margin-bottom: 0.5rem; line-height: 1.4; }
+        .md-preview a { color: #2dd4bf; }
+        .md-preview code { background: #1e293b; padding: 0.2rem 0.4rem; border-radius: 6px; font-size: 0.8rem; }
+
+        /* 状态行 */
         .status-rail {
             background: rgba(0, 0, 0, 0.35);
             border-radius: 1.3rem;
@@ -298,7 +346,6 @@
             justify-content: space-between;
             margin-bottom: 12px;
             border-left: 3px solid #2dd4bf;
-            transition: 0.2s;
         }
         .status-badge-live {
             background: #10b98130;
@@ -319,19 +366,11 @@
             padding-top: 1.8rem;
         }
 
-        @media (max-width: 720px) {
+        @media (max-width: 760px) {
             .universe-container { padding: 1rem; }
             .glitch-title { font-size: 1.9rem; }
             .nova-card { padding: 1.2rem; }
-            .social-badge { font-size: 0.7rem; padding: 4px 12px; }
-        }
-
-        /* 波浪装饰 */
-        .wave-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent);
-            width: 80%;
-            margin: 1rem auto 0;
+            .grid-galaxy { gap: 1.2rem; }
         }
     </style>
 </head>
@@ -342,12 +381,12 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | 星尘信标</div>
-        <div class="wave-divider"></div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | 实时Markdown</div>
+        <div class="wave-divider" style="height:2px; background:linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent); width:80%; margin:1rem auto 0;"></div>
     </div>
 
     <div class="grid-galaxy">
-        <!-- 新增：个人主页介绍区 - 星尘信标 -->
+        <!-- 1. 个人主页介绍区 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🧑‍🚀</div>
@@ -360,7 +399,7 @@
             </div>
             <div class="social-links">
                 <a href="https://github.com/BlueDriftHK" target="_blank" class="social-badge">🐙 GitHub / BlueDriftHK</a>
-                <a href="https://t.me/BlueDriftHK" target="_blank" class="social-badge">TG / @BlueDriftHK</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank" class="social-badge">𝕏 Twitter / @BlueDriftHK</a>
                 <a href="mailto:bluedrift@proton.me" class="social-badge">✉️ 加密邮局</a>
             </div>
             <div class="contact-row">
@@ -373,7 +412,7 @@
             </div>
         </div>
 
-        <!-- 1. NetDiag 诊断跃迁 -->
+        <!-- 2. NetDiag 诊断跃迁 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🛸</div>
@@ -382,12 +421,10 @@
             <div class="desc-cosmic">
                 Cloudflare Workers 驱动的网络探针 — 毫秒级延迟测绘、边缘路由跟踪与带宽反演。
             </div>
-            <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn-nebula">
-                ⟡ 启动诊断协议 ⟡
-            </a>
+            <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn-nebula">⟡ 启动诊断协议 ⟡</a>
         </div>
 
-        <!-- 2. M3U8 流媒体播放器 未来主义 -->
+        <!-- 3. M3U8 流媒体播放器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🎞️</div>
@@ -396,32 +433,24 @@
             <div class="desc-cosmic">
                 零广告 · 低延迟 HLS 引擎，直接播放 .m3u8 链接，沉浸式影流体验。
             </div>
-            <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn-nebula">
-                ⟡ 开启全息影舱 ⟡
-            </a>
+            <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn-nebula">⟡ 开启全息影舱 ⟡</a>
         </div>
 
-        <!-- 3. GitHub 动态 (修复N/A 华丽展示) -->
+        <!-- 4. GitHub 动态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🐙⚡</div>
                 <div class="card-title">开源脉冲星</div>
             </div>
             <div class="cosmic-stats">
-                <div class="stat-block">
-                    <div class="stat-label">✨ 星辉</div>
-                    <div class="stat-digit" id="starCount">—</div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-label">🍴 分叉引力</div>
-                    <div class="stat-digit" id="forkCount">—</div>
-                </div>
+                <div class="stat-block"><div class="stat-label">✨ 星辉</div><div class="stat-digit" id="starCount">—</div></div>
+                <div class="stat-block"><div class="stat-label">🍴 分叉引力</div><div class="stat-digit" id="forkCount">—</div></div>
             </div>
-            <div class="desc-cosmic" style="margin-bottom: 1rem;">实时同步 BlueDriftHK 核心仓库 · 开放宇宙</div>
+            <div class="desc-cosmic" style="margin-bottom:1rem;">实时同步 BlueDriftHK 核心仓库 · 开放宇宙</div>
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 4. 开发者工坊 (密码&Base64) 科技感升级 -->
+        <!-- 5. 开发者工坊 (密码生成+Base64) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -430,14 +459,14 @@
             <div class="tool-galaxy">
                 <div class="tool-label">🔐 量子密码生成</div>
                 <div class="flex-row">
-                    <input type="number" id="pwdLength" value="16" min="6" max="48" class="input-cosmic" style="max-width: 95px;">
+                    <input type="number" id="pwdLength" value="16" min="6" max="48" class="input-cosmic" style="max-width:95px;">
                     <button class="btn-mini" onclick="genQuantumPassword()">生成熵值</button>
                 </div>
-                <input type="text" id="passwordResult" readonly class="input-cosmic" style="margin-top: 10px;" placeholder="点击生成密钥">
+                <input type="text" id="passwordResult" readonly class="input-cosmic" style="margin-top:10px;" placeholder="点击生成密钥">
             </div>
             <div class="tool-galaxy">
                 <div class="tool-label">📡 Base64 编/解码器</div>
-                <input type="text" id="base64Field" class="input-cosmic" placeholder="文本 或 Base64 字符串" style="margin-bottom: 10px;">
+                <input type="text" id="base64Field" class="input-cosmic" placeholder="文本 或 Base64 字符串" style="margin-bottom:10px;">
                 <div class="flex-row">
                     <button class="btn-mini" style="flex:1;" onclick="encodeBase64Uni()">⟡ 编码 ⟡</button>
                     <button class="btn-mini" style="flex:1;" onclick="decodeBase64Uni()">⟡ 解码 ⟡</button>
@@ -445,34 +474,54 @@
             </div>
         </div>
 
-        <!-- 5. 星轨运行状态 + 优美 uptime -->
+        <!-- 6. IP 归属地查询 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📍</div>
+                <div class="card-title">IP 星际定位</div>
+            </div>
+            <div class="desc-cosmic">查询当前设备公网IP及归属地信息（基于ipapi.co）</div>
+            <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
+            <div id="ipInfoBox" class="ip-result" style="margin-top:12px;">
+                <div class="ip-line"><span>🌍 IP 地址</span><span id="ipAddr">--</span></div>
+                <div class="ip-line"><span>🗺️ 国家/地区</span><span id="ipCountry">--</span></div>
+                <div class="ip-line"><span>🏙️ 城市/区域</span><span id="ipCity">--</span></div>
+                <div class="ip-line"><span>📡 运营商</span><span id="ipOrg">--</span></div>
+                <div class="ip-line"><span>📍 坐标</span><span id="ipLoc">--</span></div>
+            </div>
+        </div>
+
+        <!-- 7. Markdown 实时预览 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📝</div>
+                <div class="card-title">Markdown 星云预览</div>
+            </div>
+            <div class="md-container">
+                <textarea id="mdInput" class="md-textarea" placeholder="输入 Markdown 内容，右侧实时预览...&#10;# 标题&#10;## 二级标题&#10;- 列表项&#10;**粗体** _斜体_&#10;[链接](https://example.com)"></textarea>
+                <div id="mdPreview" class="md-preview"></div>
+            </div>
+        </div>
+
+        <!-- 8. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
                 <div class="card-title">星环状态</div>
             </div>
-            <div class="status-rail">
-                <span>🟢 核心引擎</span>
-                <span class="status-badge-live">● 聚变运行中</span>
-            </div>
-            <div class="status-rail" style="border-left-color:#38bdf8;">
-                <span>⏳ 时空存续</span>
-                <span style="font-family: monospace; font-weight: 600;" id="uptimeCosmic">计算中...</span>
-            </div>
-            <div class="status-rail" style="border-left-color:#7aa2f7;">
-                <span>🕛 最近校准</span>
-                <span id="syncTime" style="font-family: monospace;">--:--</span>
-            </div>
-            <div class="desc-cosmic" style="margin-top: 8px; text-align: center;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</div>
+            <div class="status-rail"><span>🟢 核心引擎</span><span class="status-badge-live">● 聚变运行中</span></div>
+            <div class="status-rail" style="border-left-color:#38bdf8;"><span>⏳ 时空存续</span><span style="font-family:monospace; font-weight:600;" id="uptimeCosmic">计算中...</span></div>
+            <div class="status-rail" style="border-left-color:#7aa2f7;"><span>🕛 最近校准</span><span id="syncTime" style="font-family:monospace;">--:--</span></div>
+            <div class="desc-cosmic" style="margin-top:8px; text-align:center;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</div>
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | IP数据来自ipapi.co
     </div>
 </div>
 
 <script>
-    // ---------- 动态粒子背景 (科技感Canvas) ----------
+    // ---------- 动态粒子背景 ----------
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -484,7 +533,6 @@
         canvas.width = width;
         canvas.height = height;
     }
-
     class Particle {
         constructor() {
             this.x = Math.random() * width;
@@ -503,135 +551,126 @@
             if (this.y < 0) this.y = height;
             if (this.y > height) this.y = 0;
         }
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-        }
+        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = this.color; ctx.fill(); }
     }
-
     function initParticles() {
         particles = [];
         const count = Math.min(120, Math.floor(width * height / 10000));
-        for (let i = 0; i < count; i++) {
-            particles.push(new Particle());
-        }
+        for (let i=0; i<count; i++) particles.push(new Particle());
     }
-
     function animateParticles() {
-        if (!ctx) return;
-        ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#0a0c14';
-        ctx.fillRect(0, 0, width, height);
-        for (let p of particles) {
-            p.update();
-            p.draw();
-        }
+        if(!ctx) return;
+        ctx.clearRect(0,0,width,height);
+        ctx.fillStyle='#0a0c14';
+        ctx.fillRect(0,0,width,height);
+        particles.forEach(p=>{ p.update(); p.draw(); });
         requestAnimationFrame(animateParticles);
     }
+    window.addEventListener('resize', ()=>{ resizeCanvas(); initParticles(); });
+    resizeCanvas(); initParticles(); animateParticles();
 
-    window.addEventListener('resize', () => {
-        resizeCanvas();
-        initParticles();
-    });
-    resizeCanvas();
-    initParticles();
-    animateParticles();
-
-    // ---------- GitHub 动态修复 (无N/A) ----------
+    // ---------- GitHub 动态 ----------
     async function fetchGalaxyStars() {
         const starsSpan = document.getElementById('starCount');
         const forksSpan = document.getElementById('forkCount');
-        const repoOwner = 'BlueDriftHK';
-        const repoName = 'CF-workers-netdiag';
         try {
-            const resp = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}`, {
-                headers: { 'Accept': 'application/vnd.github.v3+json' }
-            });
-            if (resp.ok) {
+            const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
+            if(resp.ok) {
                 const data = await resp.json();
-                const stars = (data.stargazers_count !== undefined && data.stargazers_count !== null) ? data.stargazers_count : 0;
-                const forks = (data.forks_count !== undefined && data.forks_count !== null) ? data.forks_count : 0;
-                starsSpan.innerText = stars.toLocaleString();
-                forksSpan.innerText = forks.toLocaleString();
-            } else {
-                starsSpan.innerText = '✨';
-                forksSpan.innerText = '⚡';
-            }
-        } catch (err) {
-            starsSpan.innerText = '★';
-            forksSpan.innerText = '⑂';
-        }
+                starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString();
+                forksSpan.innerText = (data.forks_count ?? 0).toLocaleString();
+            } else { starsSpan.innerText='✨'; forksSpan.innerText='⚡'; }
+        } catch(e) { starsSpan.innerText='★'; forksSpan.innerText='⑂'; }
     }
-    fetchGalaxyStars();
-    setInterval(fetchGalaxyStars, 35 * 60 * 1000);
+    fetchGalaxyStars(); setInterval(fetchGalaxyStars, 35*60*1000);
 
-    // ---------- 宇宙计时 (uptime) ----------
+    // ---------- 宇宙计时 ----------
     function updateCosmicUptime() {
-        const startPoint = new Date(2007, 9, 28);
-        const nowDate = new Date();
-        const diffDays = Math.floor((nowDate - startPoint) / (1000 * 60 * 60 * 24));
-        const years = Math.floor(diffDays / 365);
-        const daysRemain = diffDays % 365;
-        let uptimeStr = years > 0 ? `${years}年 ${daysRemain}天` : `${diffDays}天`;
-        document.getElementById('uptimeCosmic').innerHTML = uptimeStr + ' 🌌';
-        const timeNow = new Date().toLocaleString('zh-CN', { hour12: false });
-        document.getElementById('syncTime').innerText = timeNow;
+        const startDate = new Date(2007,9,28);
+        const diffDays = Math.floor((new Date() - startDate) / (1000*60*60*24));
+        const years = Math.floor(diffDays/365), remain = diffDays%365;
+        document.getElementById('uptimeCosmic').innerHTML = (years>0? `${years}年 ${remain}天`: `${diffDays}天`) + ' 🌌';
+        document.getElementById('syncTime').innerText = new Date().toLocaleString('zh-CN',{hour12:false});
     }
-    updateCosmicUptime();
-    setInterval(updateCosmicUptime, 1000);
+    updateCosmicUptime(); setInterval(updateCosmicUptime,1000);
 
-    // ---------- 工具函数: 强密码 ----------
+    // ---------- 工具函数 ----------
     function genQuantumPassword() {
-        let len = parseInt(document.getElementById('pwdLength').value, 10);
-        if (isNaN(len)) len = 16;
-        len = Math.min(48, Math.max(8, len));
-        const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
-        const lower = 'abcdefghijkmnopqrstuvwxyz';
-        const digits = '23456789';
-        const special = '!@#$%&*+?';
-        const all = upper + lower + digits + special;
+        let len = parseInt(document.getElementById('pwdLength').value,10);
+        if(isNaN(len)) len=16; len = Math.min(48, Math.max(8,len));
+        const upper='ABCDEFGHJKLMNPQRSTUVWXYZ', lower='abcdefghijkmnopqrstuvwxyz', digits='23456789', special='!@#$%&*+?';
+        const all = upper+lower+digits+special;
         let pwd = '';
-        pwd += upper[Math.floor(Math.random() * upper.length)];
-        pwd += lower[Math.floor(Math.random() * lower.length)];
-        pwd += digits[Math.floor(Math.random() * digits.length)];
-        pwd += special[Math.floor(Math.random() * special.length)];
-        for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)];
-        pwd = pwd.split('').sort(() => Math.random() - 0.5).join('');
-        const resultField = document.getElementById('passwordResult');
-        resultField.value = pwd;
-        resultField.style.borderColor = '#2dd4bf';
-        setTimeout(() => resultField.style.borderColor = '', 400);
+        pwd += upper[Math.floor(Math.random()*upper.length)] + lower[Math.floor(Math.random()*lower.length)] + digits[Math.floor(Math.random()*digits.length)] + special[Math.floor(Math.random()*special.length)];
+        for(let i=pwd.length; i<len; i++) pwd += all[Math.floor(Math.random()*all.length)];
+        pwd = pwd.split('').sort(()=>Math.random()-0.5).join('');
+        const resField = document.getElementById('passwordResult');
+        resField.value = pwd;
+        resField.style.borderColor='#2dd4bf';
+        setTimeout(()=>resField.style.borderColor='',400);
     }
-    // Base64 支持全unicode
     function encodeBase64Uni() {
         const inputField = document.getElementById('base64Field');
-        let text = inputField.value;
-        if (!text) { alert('⛔ 输入文本或字符串'); return; }
+        if(!inputField.value) { alert('⛔ 输入文本'); return; }
         try {
-            const utf8 = new TextEncoder().encode(text);
-            let binary = '';
-            utf8.forEach(byte => binary += String.fromCharCode(byte));
-            const encoded = btoa(binary);
-            inputField.value = encoded;
-        } catch(e) { alert('编码异常，请检查内容'); }
+            const utf8 = new TextEncoder().encode(inputField.value);
+            let binary=''; utf8.forEach(byte=>binary+=String.fromCharCode(byte));
+            inputField.value = btoa(binary);
+        } catch(e){ alert('编码异常'); }
     }
     function decodeBase64Uni() {
         const inputField = document.getElementById('base64Field');
-        let str = inputField.value.trim();
-        if (!str) { alert('⛔ 输入Base64密文'); return; }
+        if(!inputField.value.trim()) { alert('⛔ 输入Base64'); return; }
         try {
-            const decodedBinary = atob(str);
-            const uintArr = new Uint8Array(decodedBinary.length);
-            for (let i = 0; i < decodedBinary.length; i++) uintArr[i] = decodedBinary.charCodeAt(i);
-            const decodedText = new TextDecoder().decode(uintArr);
-            inputField.value = decodedText;
-        } catch(e) { alert('❌ Base64解码失败，格式无效'); }
+            const binary = atob(inputField.value);
+            const uintArr = new Uint8Array(binary.length);
+            for(let i=0;i<binary.length;i++) uintArr[i]=binary.charCodeAt(i);
+            inputField.value = new TextDecoder().decode(uintArr);
+        } catch(e){ alert('解码失败'); }
     }
-    // 密码点击自动全选
-    document.getElementById('passwordResult')?.addEventListener('click', function() { this.select(); });
-    // 额外优雅元素闪烁
+    document.getElementById('passwordResult')?.addEventListener('click', function(){ this.select(); });
+
+    // ---------- IP归属地查询 ----------
+    async function fetchIPInfo() {
+        const ipSpan = document.getElementById('ipAddr');
+        const countrySpan = document.getElementById('ipCountry');
+        const citySpan = document.getElementById('ipCity');
+        const orgSpan = document.getElementById('ipOrg');
+        const locSpan = document.getElementById('ipLoc');
+        ipSpan.innerText = '查询中...'; countrySpan.innerText='--'; citySpan.innerText='--'; orgSpan.innerText='--'; locSpan.innerText='--';
+        try {
+            const resp = await fetch('https://ipapi.co/json/');
+            const data = await resp.json();
+            if(data && data.ip) {
+                ipSpan.innerText = data.ip;
+                countrySpan.innerText = `${data.country_name || '未知'} (${data.country_code || ''})`;
+                citySpan.innerText = `${data.city || '未知'} / ${data.region || ''}`;
+                orgSpan.innerText = data.org || data.asn || '未知运营商';
+                locSpan.innerText = data.latitude && data.longitude ? `${data.latitude}, ${data.longitude}` : '无坐标';
+            } else throw new Error();
+        } catch(err) {
+            ipSpan.innerText = '获取失败';
+            countrySpan.innerText = '--'; citySpan.innerText='--'; orgSpan.innerText='--'; locSpan.innerText='--';
+        }
+    }
+    // 自动加载一次IP
+    fetchIPInfo();
+
+    // ---------- Markdown 实时预览 (marked) ----------
+    const mdTextarea = document.getElementById('mdInput');
+    const previewDiv = document.getElementById('mdPreview');
+    // 默认填充示例
+    mdTextarea.value = `# ✦ BlueDriftHK 星尘手册 ✦\n\n## 极客信条\n- 探索边缘计算\n- 构建开源工具\n- 分享技术美学\n\n**欢迎使用 Markdown 预览** — 实时渲染，让文档更优雅。\n\n[访问 GitHub →](https://github.com/BlueDriftHK)`;
+    function updateMarkdownPreview() {
+        if(window.marked) {
+            previewDiv.innerHTML = window.marked.parse(mdTextarea.value);
+        } else {
+            previewDiv.innerHTML = '<p>Markdown 解析器加载中...</p>';
+        }
+    }
+    mdTextarea.addEventListener('input', updateMarkdownPreview);
+    updateMarkdownPreview();
+    // 动态注入波浪分割线样式
     const styleInject = document.createElement('style');
     styleInject.textContent = `.btn-mini, .btn-nebula, .social-badge { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
     document.head.appendChild(styleInject);
