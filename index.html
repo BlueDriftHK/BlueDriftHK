@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | JSON格式化 | 时间戳转换 | 二维码生成 | 动态星轨">
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | IP归属地 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | 动态星轨">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- QRCode.js 库 -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         * {
@@ -69,7 +68,7 @@
 
         .grid-galaxy {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
             gap: 2rem;
         }
 
@@ -280,7 +279,7 @@
             transform: scale(0.98);
         }
 
-        .ip-result, .json-result, .qrcode-container {
+        .result-box {
             background: rgba(0, 0, 0, 0.4);
             border-radius: 1.2rem;
             padding: 0.8rem;
@@ -324,10 +323,9 @@
             to { transform: rotate(360deg); }
         }
 
-        /* JSON 格式化样式 */
-        .json-textarea {
+        .json-textarea, .regex-textarea {
             width: 100%;
-            height: 120px;
+            height: 100px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid #2dd4bf50;
             border-radius: 1rem;
@@ -337,57 +335,37 @@
             font-size: 0.75rem;
             resize: vertical;
         }
-        .json-preview {
-            max-height: 150px;
-            overflow: auto;
-            font-family: monospace;
-            font-size: 0.7rem;
-            white-space: pre-wrap;
-        }
-
-        /* 时间戳转换器样式 */
-        .timestamp-row {
+        .regex-flags {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
+            gap: 15px;
+            margin: 8px 0;
             flex-wrap: wrap;
         }
-        .timestamp-input {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #2dd4bf50;
-            border-radius: 1rem;
-            padding: 0.6rem;
-            color: #f0f4ff;
-            font-family: monospace;
+        .regex-flags label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .match-highlight {
+            background: #2dd4bf30;
+            border-radius: 4px;
+            padding: 2px;
         }
 
-        /* 二维码样式 */
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            padding: 10px;
-        }
-        #qrcode img {
-            border-radius: 0.8rem;
-            background: white;
-            padding: 8px;
-        }
-        .retry-btn {
-            background: transparent;
-            border: 1px solid #2dd4bf50;
-            border-radius: 2rem;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            color: #2dd4bf;
-            cursor: pointer;
+        .color-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 1rem;
+            border: 1px solid #2dd4bf;
             margin-top: 8px;
-            transition: 0.2s;
         }
-        .retry-btn:hover {
-            background: #2dd4bf20;
-            border-color: #2dd4bf;
+        .color-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .status-rail {
@@ -433,6 +411,31 @@
             width: 80%;
             margin: 1rem auto 0;
         }
+        .retry-btn {
+            background: transparent;
+            border: 1px solid #2dd4bf50;
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #2dd4bf;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .retry-btn:hover {
+            background: #2dd4bf20;
+            border-color: #2dd4bf;
+        }
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+        }
+        #qrcode img {
+            border-radius: 0.8rem;
+            background: white;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
@@ -442,7 +445,7 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | JSON格式化 | 时间枢纽 | 量子码</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | IP星图 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊</div>
         <div class="wave-divider"></div>
     </div>
 
@@ -511,7 +514,7 @@
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 5. 开发者工坊 (密码生成+Base64) -->
+        <!-- 5. 开发者工坊 (密码+Base64) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -535,7 +538,7 @@
             </div>
         </div>
 
-        <!-- 6. JSON 格式化工具 (新增) -->
+        <!-- 6. JSON 格式化 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📋</div>
@@ -543,14 +546,55 @@
             </div>
             <textarea id="jsonInput" class="json-textarea" placeholder='输入 JSON 代码，例如：{"name":"BlueDriftHK","type":"极客导航"}'></textarea>
             <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="formatJSON()" style="flex:1;">✨ 格式化/美化</button>
-                <button class="btn-mini" onclick="minifyJSON()" style="flex:1;">📦 压缩/最小化</button>
-                <button class="btn-mini" onclick="validateJSON()" style="flex:1;">✅ 验证 JSON</button>
+                <button class="btn-mini" onclick="formatJSON()" style="flex:1;">✨ 格式化</button>
+                <button class="btn-mini" onclick="minifyJSON()" style="flex:1;">📦 压缩</button>
+                <button class="btn-mini" onclick="validateJSON()" style="flex:1;">✅ 验证</button>
             </div>
-            <div id="jsonResult" class="json-preview" style="margin-top: 12px; color: #9dabcf;">等待操作...</div>
+            <div id="jsonResult" class="result-box" style="max-height:150px; overflow:auto;">等待操作...</div>
         </div>
 
-        <!-- 7. 时间戳转换器 (新增) -->
+        <!-- 7. 正则表达式测试器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🔍</div>
+                <div class="card-title">正则引擎 · 测试器</div>
+            </div>
+            <div class="tool-label">📐 正则表达式</div>
+            <input type="text" id="regexPattern" class="input-cosmic" placeholder="例如: \d+|^[a-z]+$" value="\b\d{4}\b">
+            <div class="regex-flags">
+                <label><input type="checkbox" id="flagG"> global (g)</label>
+                <label><input type="checkbox" id="flagI"> ignoreCase (i)</label>
+                <label><input type="checkbox" id="flagM"> multiline (m)</label>
+            </div>
+            <div class="tool-label" style="margin-top: 8px;">📝 测试文本</div>
+            <textarea id="testText" class="regex-textarea" placeholder="输入要匹配的文本...">2024年 BlueDriftHK 发布了 8 个工具，2025年将发布 15 个。</textarea>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="testRegex()" style="flex:1;">🎯 执行匹配</button>
+                <button class="btn-mini" onclick="clearRegex()" style="flex:1;">🗑️ 清除</button>
+            </div>
+            <div id="regexResult" class="result-box">等待测试...</div>
+        </div>
+
+        <!-- 8. 颜色转换器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🎨</div>
+                <div class="card-title">色彩工坊 · 转换器</div>
+            </div>
+            <div class="tool-label">🔴 HEX / RGB 转换</div>
+            <div class="color-row">
+                <input type="text" id="colorInput" class="input-cosmic" placeholder="#2dd4bf 或 rgb(45,212,191)" style="flex:2;">
+                <button class="btn-mini" onclick="convertColor()">转换</button>
+            </div>
+            <div id="colorResult" class="result-box">输入颜色代码进行转换...</div>
+            <div id="colorPreview" class="color-preview"></div>
+            <div class="flex-row" style="margin-top: 8px;">
+                <button class="btn-mini" onclick="randomColor()" style="flex:1;">🎲 随机颜色</button>
+                <button class="btn-mini" onclick="copyColor()" style="flex:1;">📋 复制结果</button>
+            </div>
+        </div>
+
+        <!-- 9. 时间戳转换器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⏰</div>
@@ -558,27 +602,27 @@
             </div>
             <div class="tool-galaxy">
                 <div class="tool-label">🕐 时间戳 → 日期时间</div>
-                <div class="timestamp-row">
-                    <input type="text" id="timestampInput" class="timestamp-input" placeholder="输入时间戳 (秒 或 毫秒)">
+                <div class="flex-row">
+                    <input type="text" id="timestampInput" class="input-cosmic" placeholder="输入时间戳 (秒 或 毫秒)">
                     <button class="btn-mini" onclick="timestampToDate()">转换</button>
                 </div>
-                <div id="timestampResult" class="ip-result" style="margin-top: 8px;">等待转换...</div>
+                <div id="timestampResult" class="result-box">等待转换...</div>
             </div>
             <div class="tool-galaxy">
                 <div class="tool-label">📅 日期时间 → 时间戳</div>
-                <div class="timestamp-row">
-                    <input type="datetime-local" id="datetimeInput" class="timestamp-input" style="flex:1;">
+                <div class="flex-row">
+                    <input type="datetime-local" id="datetimeInput" class="input-cosmic">
                     <button class="btn-mini" onclick="dateToTimestamp()">转换</button>
                 </div>
-                <div id="datetimeResult" class="ip-result" style="margin-top: 8px;">等待转换...</div>
+                <div id="datetimeResult" class="result-box">等待转换...</div>
             </div>
-            <div class="flex-row" style="margin-top: 5px;">
+            <div class="flex-row">
                 <button class="btn-mini" onclick="getCurrentTimestamp()" style="flex:1;">📌 当前时间戳</button>
-                <button class="btn-mini" onclick="getCurrentDateTime()" style="flex:1;">🗓️ 当前日期时间</button>
+                <button class="btn-mini" onclick="getCurrentDateTime()" style="flex:1;">🗓️ 当前日期</button>
             </div>
         </div>
 
-        <!-- 8. IP 归属地查询 -->
+        <!-- 10. IP 归属地查询 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
@@ -586,34 +630,31 @@
             </div>
             <div class="desc-cosmic">查询当前设备公网IP及归属地信息（IPv4/IPv6 双栈支持）</div>
             <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
-            <div id="ipInfoBox" class="ip-result">
+            <div id="ipInfoBox" class="result-box">
                 <div class="ip-line"><span class="ip-label">🌍 IP 地址</span><span class="ip-value" id="ipAddr">点击查询</span></div>
                 <div class="ip-line"><span class="ip-label">🗺️ 国家/地区</span><span class="ip-value" id="ipCountry">--</span></div>
                 <div class="ip-line"><span class="ip-label">🏙️ 城市/区域</span><span class="ip-value" id="ipCity">--</span></div>
                 <div class="ip-line"><span class="ip-label">📡 运营商/ISP</span><span class="ip-value" id="ipOrg">--</span></div>
                 <div class="ip-line"><span class="ip-label">📍 坐标/时区</span><span class="ip-value" id="ipLoc">--</span></div>
             </div>
-            <button class="retry-btn" onclick="fetchIPInfo()" style="margin-top:8px; align-self:flex-start;">⟳ 重新查询</button>
+            <button class="retry-btn" onclick="fetchIPInfo()">⟳ 重新查询</button>
         </div>
 
-        <!-- 9. 二维码生成器 (新增) -->
+        <!-- 11. 二维码生成器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📱</div>
                 <div class="card-title">量子码 · 生成器</div>
             </div>
-            <div class="tool-galaxy">
-                <div class="tool-label">输入文本或链接</div>
-                <input type="text" id="qrText" class="input-cosmic" placeholder="https://github.com/BlueDriftHK 或任意文字" value="https://github.com/BlueDriftHK">
-                <div class="flex-row" style="margin-top: 10px;">
-                    <button class="btn-mini" onclick="generateQRCode()" style="flex:1;">✨ 生成二维码</button>
-                    <button class="btn-mini" onclick="clearQRCode()" style="flex:1;">🗑️ 清除</button>
-                </div>
+            <input type="text" id="qrText" class="input-cosmic" placeholder="https://github.com/BlueDriftHK" value="https://github.com/BlueDriftHK">
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="generateQRCode()" style="flex:1;">✨ 生成二维码</button>
+                <button class="btn-mini" onclick="clearQRCode()" style="flex:1;">🗑️ 清除</button>
             </div>
-            <div id="qrcode" class="qrcode-container" style="display: flex; justify-content: center; min-height: 140px;"></div>
+            <div id="qrcode" class="result-box" style="display: flex; justify-content: center;"></div>
         </div>
 
-        <!-- 10. 星轨运行状态 -->
+        <!-- 12. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
@@ -626,314 +667,101 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | JSON | 时间戳 | 二维码 | IP数据
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | 正则 | 色彩 | JSON | 时间戳 | 二维码 | IP数据
     </div>
 </div>
 
 <script>
-    // ---------- 动态粒子背景 ----------
+    // 动态粒子背景 (省略详细代码保持简洁，与之前相同)
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let width, height;
-
-    function resizeCanvas() {
-        width = window.innerWidth;
-        height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-    }
-    class Particle {
-        constructor() {
-            this.x = Math.random() * width;
-            this.y = Math.random() * height;
-            this.size = Math.random() * 2.5 + 0.8;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = (Math.random() - 0.5) * 0.2;
-            this.opacity = Math.random() * 0.5 + 0.2;
-            this.color = `rgba(90, 210, 230, ${this.opacity})`;
-        }
-        update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-            if (this.x < 0) this.x = width;
-            if (this.x > width) this.x = 0;
-            if (this.y < 0) this.y = height;
-            if (this.y > height) this.y = 0;
-        }
-        draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = this.color; ctx.fill(); }
-    }
-    function initParticles() {
-        particles = [];
-        const count = Math.min(120, Math.floor(width * height / 10000));
-        for (let i=0; i<count; i++) particles.push(new Particle());
-    }
-    function animateParticles() {
-        if(!ctx) return;
-        ctx.clearRect(0,0,width,height);
-        ctx.fillStyle='#0a0c14';
-        ctx.fillRect(0,0,width,height);
-        particles.forEach(p=>{ p.update(); p.draw(); });
-        requestAnimationFrame(animateParticles);
-    }
-    window.addEventListener('resize', ()=>{ resizeCanvas(); initParticles(); });
+    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
+    class Particle { constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 2.5 + 0.8; this.speedX = (Math.random() - 0.5) * 0.4; this.speedY = (Math.random() - 0.5) * 0.2; this.opacity = Math.random() * 0.5 + 0.2; this.color = `rgba(90, 210, 230, ${this.opacity})`; } update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); } }
+    function initParticles() { particles = []; const count = Math.min(120, Math.floor(width * height / 10000)); for (let i = 0; i < count; i++) particles.push(new Particle()); }
+    function animateParticles() { if (!ctx) return; ctx.clearRect(0, 0, width, height); ctx.fillStyle = '#0a0c14'; ctx.fillRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
     resizeCanvas(); initParticles(); animateParticles();
 
-    // ---------- GitHub 动态 ----------
+    // GitHub 动态
     async function fetchGalaxyStars() {
         const starsSpan = document.getElementById('starCount');
         const forksSpan = document.getElementById('forkCount');
         try {
             const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`, { headers: { 'Accept': 'application/vnd.github.v3+json' } });
-            if(resp.ok) {
-                const data = await resp.json();
-                starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString();
-                forksSpan.innerText = (data.forks_count ?? 0).toLocaleString();
-            } else { starsSpan.innerText='✨'; forksSpan.innerText='⚡'; }
-        } catch(e) { starsSpan.innerText='★'; forksSpan.innerText='⑂'; }
+            if (resp.ok) { const data = await resp.json(); starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString(); forksSpan.innerText = (data.forks_count ?? 0).toLocaleString(); }
+            else { starsSpan.innerText = '✨'; forksSpan.innerText = '⚡'; }
+        } catch (e) { starsSpan.innerText = '★'; forksSpan.innerText = '⑂'; }
     }
-    fetchGalaxyStars(); setInterval(fetchGalaxyStars, 35*60*1000);
+    fetchGalaxyStars(); setInterval(fetchGalaxyStars, 35 * 60 * 1000);
 
-    // ---------- 宇宙计时 ----------
-    function updateCosmicUptime() {
-        const startDate = new Date(2007,9,28);
-        const diffDays = Math.floor((new Date() - startDate) / (1000*60*60*24));
-        const years = Math.floor(diffDays/365), remain = diffDays%365;
-        document.getElementById('uptimeCosmic').innerHTML = (years>0? `${years}年 ${remain}天`: `${diffDays}天`) + ' 🌌';
-        document.getElementById('syncTime').innerText = new Date().toLocaleString('zh-CN',{hour12:false});
-    }
-    updateCosmicUptime(); setInterval(updateCosmicUptime,1000);
+    // 宇宙计时
+    function updateCosmicUptime() { const startDate = new Date(2007, 9, 28); const diffDays = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)); const years = Math.floor(diffDays / 365), remain = diffDays % 365; document.getElementById('uptimeCosmic').innerHTML = (years > 0 ? `${years}年 ${remain}天` : `${diffDays}天`) + ' 🌌'; document.getElementById('syncTime').innerText = new Date().toLocaleString('zh-CN', { hour12: false }); }
+    updateCosmicUptime(); setInterval(updateCosmicUptime, 1000);
 
-    // ---------- 原有工具函数 ----------
-    function genQuantumPassword() {
-        let len = parseInt(document.getElementById('pwdLength').value,10);
-        if(isNaN(len)) len=16; len = Math.min(48, Math.max(8,len));
-        const upper='ABCDEFGHJKLMNPQRSTUVWXYZ', lower='abcdefghijkmnopqrstuvwxyz', digits='23456789', special='!@#$%&*+?';
-        const all = upper+lower+digits+special;
-        let pwd = '';
-        pwd += upper[Math.floor(Math.random()*upper.length)] + lower[Math.floor(Math.random()*lower.length)] + digits[Math.floor(Math.random()*digits.length)] + special[Math.floor(Math.random()*special.length)];
-        for(let i=pwd.length; i<len; i++) pwd += all[Math.floor(Math.random()*all.length)];
-        pwd = pwd.split('').sort(()=>Math.random()-0.5).join('');
-        const resField = document.getElementById('passwordResult');
-        resField.value = pwd;
-        resField.style.borderColor='#2dd4bf';
-        setTimeout(()=>resField.style.borderColor='',400);
-    }
-    function encodeBase64Uni() {
-        const inputField = document.getElementById('base64Field');
-        if(!inputField.value) { alert('⛔ 输入文本'); return; }
-        try {
-            const utf8 = new TextEncoder().encode(inputField.value);
-            let binary=''; utf8.forEach(byte=>binary+=String.fromCharCode(byte));
-            inputField.value = btoa(binary);
-        } catch(e){ alert('编码异常'); }
-    }
-    function decodeBase64Uni() {
-        const inputField = document.getElementById('base64Field');
-        if(!inputField.value.trim()) { alert('⛔ 输入Base64'); return; }
-        try {
-            const binary = atob(inputField.value);
-            const uintArr = new Uint8Array(binary.length);
-            for(let i=0;i<binary.length;i++) uintArr[i]=binary.charCodeAt(i);
-            inputField.value = new TextDecoder().decode(uintArr);
-        } catch(e){ alert('解码失败'); }
-    }
-    document.getElementById('passwordResult')?.addEventListener('click', function(){ this.select(); });
+    // 密码生成
+    function genQuantumPassword() { let len = parseInt(document.getElementById('pwdLength').value, 10); if (isNaN(len)) len = 16; len = Math.min(48, Math.max(8, len)); const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?'; const all = upper + lower + digits + special; let pwd = ''; pwd += upper[Math.floor(Math.random() * upper.length)] + lower[Math.floor(Math.random() * lower.length)] + digits[Math.floor(Math.random() * digits.length)] + special[Math.floor(Math.random() * special.length)]; for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)]; pwd = pwd.split('').sort(() => Math.random() - 0.5).join(''); document.getElementById('passwordResult').value = pwd; }
+    function encodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value) { alert('⛔ 输入文本'); return; } try { const utf8 = new TextEncoder().encode(inputField.value); let binary = ''; utf8.forEach(byte => binary += String.fromCharCode(byte)); inputField.value = btoa(binary); } catch (e) { alert('编码异常'); } }
+    function decodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value.trim()) { alert('⛔ 输入Base64'); return; } try { const binary = atob(inputField.value); const uintArr = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); inputField.value = new TextDecoder().decode(uintArr); } catch (e) { alert('解码失败'); } }
 
-    // ---------- JSON 工具函数 ----------
-    function formatJSON() {
-        const input = document.getElementById('jsonInput').value;
-        if (!input.trim()) {
-            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
-            return;
-        }
-        try {
-            const obj = JSON.parse(input);
-            const formatted = JSON.stringify(obj, null, 2);
-            document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(formatted)}</pre>`;
-        } catch(e) {
-            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ JSON 解析错误: ${e.message}</span>`;
-        }
-    }
-    
-    function minifyJSON() {
-        const input = document.getElementById('jsonInput').value;
-        if (!input.trim()) {
-            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
-            return;
-        }
-        try {
-            const obj = JSON.parse(input);
-            const minified = JSON.stringify(obj);
-            document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(minified)}</span>`;
-        } catch(e) {
-            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ JSON 解析错误: ${e.message}</span>`;
-        }
-    }
-    
-    function validateJSON() {
-        const input = document.getElementById('jsonInput').value;
-        if (!input.trim()) {
-            document.getElementById('jsonResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入 JSON 数据</span>';
-            return;
-        }
-        try {
-            JSON.parse(input);
-            document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确，有效！</span>';
-        } catch(e) {
-            document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ 无效 JSON: ${e.message}</span>`;
-        }
-    }
-    
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+    // JSON 工具
+    function formatJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function minifyJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(JSON.stringify(obj))}</span>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function validateJSON() { try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确</span>'; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
 
-    // ---------- 时间戳转换函数 ----------
-    function timestampToDate() {
-        const input = document.getElementById('timestampInput').value.trim();
-        if (!input) {
-            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">⚠️ 请输入时间戳</span>';
-            return;
-        }
-        let ts = parseInt(input);
-        if (isNaN(ts)) {
-            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">❌ 请输入有效数字</span>';
-            return;
-        }
-        // 判断是秒还是毫秒 (10位数是秒，13位数是毫秒)
-        if (ts.toString().length === 10) {
-            ts = ts * 1000;
-        }
-        const date = new Date(ts);
-        if (isNaN(date.getTime())) {
-            document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">❌ 无效的时间戳</span>';
-            return;
-        }
-        document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`;
-    }
-    
-    function dateToTimestamp() {
-        const input = document.getElementById('datetimeInput').value;
-        if (!input) {
-            document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">⚠️ 请选择日期时间</span>';
-            return;
-        }
-        const date = new Date(input);
-        const tsSeconds = Math.floor(date.getTime() / 1000);
-        const tsMillis = date.getTime();
-        document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级时间戳: ${tsSeconds}<br>⚡ 毫秒级时间戳: ${tsMillis}`;
-    }
-    
-    function getCurrentTimestamp() {
-        const now = new Date();
-        const tsSeconds = Math.floor(now.getTime() / 1000);
-        const tsMillis = now.getTime();
-        document.getElementById('timestampInput').value = tsSeconds;
-        document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${tsMillis}<br>📅 ${now.toLocaleString('zh-CN')}`;
-    }
-    
-    function getCurrentDateTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const localDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-        document.getElementById('datetimeInput').value = localDateTime;
-        const tsSeconds = Math.floor(now.getTime() / 1000);
-        document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`;
-    }
-
-    // ---------- IP归属地查询 ----------
-    async function fetchIPInfo() {
-        const ipSpan = document.getElementById('ipAddr');
-        const countrySpan = document.getElementById('ipCountry');
-        const citySpan = document.getElementById('ipCity');
-        const orgSpan = document.getElementById('ipOrg');
-        const locSpan = document.getElementById('ipLoc');
-        
-        ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中';
-        countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--';
-        
+    // 正则测试
+    function testRegex() {
+        let pattern = document.getElementById('regexPattern').value;
+        if (!pattern) { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">请输入正则表达式</span>'; return; }
+        let flags = '';
+        if (document.getElementById('flagG').checked) flags += 'g';
+        if (document.getElementById('flagI').checked) flags += 'i';
+        if (document.getElementById('flagM').checked) flags += 'm';
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-            const resp = await fetch('https://ip-api.com/json/?fields=status,message,country,countryCode,region,regionName,city,lat,lon,isp,org,as,query,timezone', {
-                signal: controller.signal,
-                mode: 'cors'
-            });
-            clearTimeout(timeoutId);
-            if (resp.ok) {
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    ipSpan.innerText = data.query || '未知';
-                    countrySpan.innerText = `${data.country || '未知'} ${data.countryCode ? '('+data.countryCode+')' : ''}`;
-                    citySpan.innerText = `${data.city || '未知'} / ${data.regionName || data.region || ''}`;
-                    orgSpan.innerText = data.isp || data.org || '未知运营商';
-                    locSpan.innerText = data.lat && data.lon ? `${data.lat}, ${data.lon} | ${data.timezone || ''}` : '无坐标';
-                    return;
-                }
-            }
-            throw new Error('ip-api 失败');
-        } catch (err) {
-            try {
-                const resp2 = await fetch('https://api.ipify.org?format=json');
-                const data2 = await resp2.json();
-                ipSpan.innerText = data2.ip;
-                countrySpan.innerText = '无法获取地理位置';
-                citySpan.innerText = '请检查网络或稍后重试';
-                orgSpan.innerText = '--';
-                locSpan.innerText = '--';
-            } catch {
-                ipSpan.innerText = '获取失败';
-                countrySpan.innerText = '网络异常，请刷新重试';
-            }
-        }
+            const regex = new RegExp(pattern, flags);
+            const testText = document.getElementById('testText').value;
+            const matches = testText.match(regex);
+            if (matches && matches.length > 0) {
+                let resultHtml = `<span style="color:#4ade80;">✅ 找到 ${matches.length} 个匹配:</span><br>`;
+                matches.forEach((m, i) => { resultHtml += `<span style="color:#cffafe;">${i + 1}. "${escapeHtml(m)}"</span><br>`; });
+                document.getElementById('regexResult').innerHTML = resultHtml;
+            } else { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">❌ 未找到匹配项</span>'; }
+        } catch (e) { document.getElementById('regexResult').innerHTML = `<span style="color:#f87171;">❌ 正则错误: ${e.message}</span>`; }
     }
-    
-    setTimeout(() => { fetchIPInfo(); }, 500);
+    function clearRegex() { document.getElementById('regexPattern').value = ''; document.getElementById('testText').value = ''; document.getElementById('regexResult').innerHTML = '已清除'; }
 
-    // ---------- 二维码生成 ----------
+    // 颜色转换
+    function hexToRgb(hex) { let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null; }
+    function rgbToHex(r, g, b) { return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); }
+    function convertColor() {
+        let input = document.getElementById('colorInput').value.trim();
+        let hex = '', rgb = '';
+        if (input.startsWith('#')) { hex = input; const rgbObj = hexToRgb(hex); if (rgbObj) { rgb = `rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: ${rgb}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 HEX 格式</span>'; } }
+        else if (input.startsWith('rgb')) { const match = input.match(/\d+/g); if (match && match.length >= 3) { const r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]); hex = rgbToHex(r, g, b); document.getElementById('colorResult').innerHTML = `RGB: rgb(${r}, ${g}, ${b})<br>HEX: ${hex}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 RGB 格式</span>'; } }
+        else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB (rgb(r,g,b)) 格式</span>'; }
+    }
+    function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
+    function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); alert('已复制到剪贴板'); } else { alert('无有效颜色数据'); } }
+
+    // 时间戳函数
+    function timestampToDate() { const input = document.getElementById('timestampInput').value.trim(); if (!input) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入时间戳</span>'; return; } let ts = parseInt(input); if (isNaN(ts)) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入有效数字</span>'; return; } if (ts.toString().length === 10) ts = ts * 1000; const date = new Date(ts); if (isNaN(date.getTime())) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">无效的时间戳</span>'; return; } document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`; }
+    function dateToTimestamp() { const input = document.getElementById('datetimeInput').value; if (!input) { document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">请选择日期时间</span>'; return; } const date = new Date(input); const tsSeconds = Math.floor(date.getTime() / 1000); const tsMillis = date.getTime(); document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级: ${tsSeconds}<br>⚡ 毫秒级: ${tsMillis}`; }
+    function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
+    function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`; }
+
+    // IP 查询
+    async function fetchIPInfo() { const ipSpan = document.getElementById('ipAddr'), countrySpan = document.getElementById('ipCountry'), citySpan = document.getElementById('ipCity'), orgSpan = document.getElementById('ipOrg'), locSpan = document.getElementById('ipLoc'); ipSpan.innerHTML = '<span class="loading-spinner"></span>查询中'; countrySpan.innerText = '--'; citySpan.innerText = '--'; orgSpan.innerText = '--'; locSpan.innerText = '--'; try { const resp = await fetch('https://ip-api.com/json/?fields=status,country,countryCode,regionName,city,isp,query', { timeout: 8000 }); if (resp.ok) { const data = await resp.json(); if (data.status === 'success') { ipSpan.innerText = data.query; countrySpan.innerText = `${data.country || '未知'}`; citySpan.innerText = `${data.city || '未知'} / ${data.regionName || ''}`; orgSpan.innerText = data.isp || '未知'; locSpan.innerText = '已获取'; return; } } throw new Error(); } catch (err) { try { const resp2 = await fetch('https://api.ipify.org?format=json'); const data2 = await resp2.json(); ipSpan.innerText = data2.ip; countrySpan.innerText = '无法获取地理位置'; citySpan.innerText = '请检查网络'; } catch { ipSpan.innerText = '获取失败'; } } }
+    setTimeout(() => fetchIPInfo(), 500);
+
+    // 二维码
     let currentQR = null;
-    function generateQRCode() {
-        const text = document.getElementById('qrText').value.trim();
-        if (!text) {
-            alert('请输入文本或链接');
-            return;
-        }
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = '';
-        try {
-            currentQR = new QRCode(qrContainer, {
-                text: text,
-                width: 128,
-                height: 128,
-                colorDark: "#2dd4bf",
-                colorLight: "#0a0c14",
-                correctLevel: QRCode.CorrectLevel.M
-            });
-        } catch(e) {
-            qrContainer.innerHTML = '<span style="color:#f87171;">生成失败，请检查输入</span>';
-        }
-    }
-    function clearQRCode() {
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = '';
-        document.getElementById('qrText').value = '';
-    }
-    // 默认生成一个二维码
-    setTimeout(() => { generateQRCode(); }, 800);
-    
-    const styleInject = document.createElement('style');
-    styleInject.textContent = `.btn-mini, .btn-nebula, .social-badge { transition: all 0.2s; } .nova-card { animation: floatGlow 0.5s ease-out; } @keyframes floatGlow { 0% { opacity:0; transform: translateY(12px); } 100% { opacity:1; transform: translateY(0); } }`;
-    document.head.appendChild(styleInject);
+    function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
+    function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
+    setTimeout(() => generateQRCode(), 500);
+
+    document.getElementById('passwordResult')?.addEventListener('click', function () { this.select(); });
 </script>
 </body>
 </html>
