@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>BlueDriftHK · 极光幻域 | 全栈极客导航站</title>
-    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | URL编解码 | HTTP状态码">
+    <meta name="description" content="超现实极客面板 · 网络诊断 | 流媒体中枢 | 开发者工具箱 | JSON格式化 | 时间戳 | 二维码 | 正则测试 | 颜色转换 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成">
     <meta name="theme-color" content="#020617">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -323,7 +323,7 @@
             to { transform: rotate(360deg); }
         }
 
-        .json-textarea, .regex-textarea, .url-textarea {
+        .json-textarea, .regex-textarea, .url-textarea, .word-textarea {
             width: 100%;
             height: 100px;
             background: rgba(0, 0, 0, 0.5);
@@ -363,7 +363,6 @@
             flex-wrap: wrap;
         }
 
-        /* HTTP状态码表格样式 */
         .http-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -392,6 +391,49 @@
         .http-desc {
             color: #9dabcf;
             font-size: 0.65rem;
+        }
+
+        /* 字数统计样式 */
+        .word-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .stat-card {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1rem;
+            padding: 8px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2dd4bf;
+            font-family: monospace;
+        }
+        .stat-name {
+            font-size: 0.65rem;
+            color: #8b9bcf;
+        }
+
+        /* UUID样式 */
+        .uuid-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .uuid-value {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 1rem;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #cffafe;
+            word-break: break-all;
         }
 
         .status-rail {
@@ -429,6 +471,7 @@
             .grid-galaxy { gap: 1.2rem; }
             .ip-line { flex-direction: column; gap: 4px; }
             .ip-value { text-align: left; max-width: 100%; }
+            .word-stats { flex-direction: column; }
         }
 
         .wave-divider {
@@ -471,7 +514,7 @@
 <div class="universe-container">
     <div class="hero-space">
         <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
-        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊 | URL工具 | HTTP速查</div>
+        <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊 | URL工具 | HTTP速查 | 字数统计 | UUID生成</div>
         <div class="wave-divider"></div>
     </div>
 
@@ -620,7 +663,7 @@
             </div>
         </div>
 
-        <!-- 9. URL 编解码器 (新增) -->
+        <!-- 9. URL 编解码器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🔗</div>
@@ -629,14 +672,14 @@
             <div class="tool-label">📝 输入 URL 或文本</div>
             <textarea id="urlInput" class="url-textarea" placeholder="https://example.com/测试 或 %E6%B5%8B%E8%AF%95"></textarea>
             <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="urlEncode()" style="flex:1;">🔒 编码 (Encode)</button>
-                <button class="btn-mini" onclick="urlDecode()" style="flex:1;">🔓 解码 (Decode)</button>
+                <button class="btn-mini" onclick="urlEncode()" style="flex:1;">🔒 编码</button>
+                <button class="btn-mini" onclick="urlDecode()" style="flex:1;">🔓 解码</button>
                 <button class="btn-mini" onclick="clearUrl()" style="flex:1;">🗑️ 清除</button>
             </div>
             <div id="urlResult" class="result-box" style="max-height: 100px; overflow: auto;">等待操作...</div>
         </div>
 
-        <!-- 10. HTTP 状态码速查 (新增) -->
+        <!-- 10. HTTP 状态码速查 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📡</div>
@@ -647,7 +690,42 @@
             <div id="httpDetail" class="result-box" style="margin-top: 8px; font-size: 0.75rem;">点击任意状态码查看详情</div>
         </div>
 
-        <!-- 11. 时间戳转换器 -->
+        <!-- 11. 字数统计工具 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">📊</div>
+                <div class="card-title">字数统计 · 文本分析</div>
+            </div>
+            <textarea id="wordInput" class="word-textarea" placeholder="输入或粘贴文本，实时统计..."></textarea>
+            <div id="wordStats" class="word-stats">
+                <div class="stat-card"><div class="stat-number" id="charCount">0</div><div class="stat-name">字符数</div></div>
+                <div class="stat-card"><div class="stat-number" id="wordCount">0</div><div class="stat-name">单词数</div></div>
+                <div class="stat-card"><div class="stat-number" id="lineCount">0</div><div class="stat-name">行数</div></div>
+                <div class="stat-card"><div class="stat-number" id="chineseCount">0</div><div class="stat-name">中文字符</div></div>
+                <div class="stat-card"><div class="stat-number" id="spaceCount">0</div><div class="stat-name">空格数</div></div>
+            </div>
+            <button class="btn-mini" onclick="clearWordStats()" style="margin-top: 8px;">🗑️ 清空</button>
+        </div>
+
+        <!-- 12. UUID/GUID 生成器 (新增) -->
+        <div class="nova-card">
+            <div class="card-orbit">
+                <div class="orbit-icon">🆔</div>
+                <div class="card-title">UUID · 全局唯一标识</div>
+            </div>
+            <div class="tool-label">生成符合 RFC 4122 标准的 UUID v4</div>
+            <div class="uuid-box">
+                <div class="uuid-value" id="uuidDisplay">点击下方按钮生成</div>
+            </div>
+            <div class="flex-row" style="margin-top: 10px;">
+                <button class="btn-mini" onclick="generateUUID()" style="flex:1;">✨ 生成 UUID</button>
+                <button class="btn-mini" onclick="copyUUID()" style="flex:1;">📋 复制 UUID</button>
+                <button class="btn-mini" onclick="generateMultipleUUIDs()" style="flex:1;">🔢 生成多个</button>
+            </div>
+            <div id="uuidHistory" class="result-box" style="max-height: 120px; overflow: auto; font-size: 0.7rem;"></div>
+        </div>
+
+        <!-- 13. 时间戳转换器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⏰</div>
@@ -675,7 +753,7 @@
             </div>
         </div>
 
-        <!-- 12. IP 星际定位 -->
+        <!-- 14. IP 星际定位 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📍</div>
@@ -691,7 +769,7 @@
             <button class="retry-btn" onclick="fetchIPInfo()">⟳ 重新查询</button>
         </div>
 
-        <!-- 13. 二维码生成器 -->
+        <!-- 15. 二维码生成器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📱</div>
@@ -705,7 +783,7 @@
             <div id="qrcode" class="result-box" style="display: flex; justify-content: center;"></div>
         </div>
 
-        <!-- 14. 星轨运行状态 -->
+        <!-- 16. 星轨运行状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🪐</div>
@@ -718,7 +796,7 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | URL编解码 | HTTP状态码 | 正则 | 色彩 | JSON | 时间戳 | 二维码
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成 | 正则 | 色彩 | JSON | 时间戳 | 二维码
     </div>
 </div>
 
@@ -802,119 +880,101 @@
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
     function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${tsSeconds}<br>📅 ${now.toLocaleString('zh-CN')}`; }
 
-    // URL 编解码器 (新增)
-    function urlEncode() {
-        const input = document.getElementById('urlInput').value;
-        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要编码的内容</span>'; return; }
-        try {
-            const encoded = encodeURIComponent(input);
-            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(encoded)}</span>`;
-        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败: ${e.message}</span>`; }
-    }
-    function urlDecode() {
-        const input = document.getElementById('urlInput').value;
-        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; }
-        try {
-            const decoded = decodeURIComponent(input);
-            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`;
-        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; }
-    }
+    // URL 编解码器
+    function urlEncode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要编码的内容</span>'; return; } try { const encoded = encodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(encoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败: ${e.message}</span>`; } }
+    function urlDecode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; } try { const decoded = decodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; } }
     function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
 
-    // HTTP 状态码速查 (新增)
+    // HTTP 状态码
     const httpStatusCodes = [
-        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" },
-        { code: "100", name: "Continue", desc: "服务器已收到请求头，客户端应继续发送请求体" },
-        { code: "101", name: "Switching Protocols", desc: "服务器正在切换协议" },
-        { code: "2xx", name: "成功响应", desc: "请求成功完成" },
-        { code: "200", name: "OK", desc: "请求成功" },
-        { code: "201", name: "Created", desc: "请求成功且服务器创建了新资源" },
-        { code: "204", name: "No Content", desc: "请求成功，但没有返回内容" },
-        { code: "3xx", name: "重定向", desc: "需要进一步操作以完成请求" },
-        { code: "301", name: "Moved Permanently", desc: "资源已永久移动到新URL" },
-        { code: "302", name: "Found", desc: "资源临时移动到新URL" },
-        { code: "304", name: "Not Modified", desc: "资源未修改，可使用缓存" },
-        { code: "4xx", name: "客户端错误", desc: "请求包含错误或无法处理" },
-        { code: "400", name: "Bad Request", desc: "服务器无法理解请求" },
-        { code: "401", name: "Unauthorized", desc: "需要身份验证" },
-        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" },
-        { code: "404", name: "Not Found", desc: "请求的资源不存在" },
-        { code: "405", name: "Method Not Allowed", desc: "HTTP方法不允许" },
-        { code: "408", name: "Request Timeout", desc: "请求超时" },
-        { code: "429", name: "Too Many Requests", desc: "请求过于频繁" },
-        { code: "5xx", name: "服务端错误", desc: "服务器无法完成有效请求" },
-        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" },
-        { code: "502", name: "Bad Gateway", desc: "网关错误" },
-        { code: "503", name: "Service Unavailable", desc: "服务不可用" },
-        { code: "504", name: "Gateway Timeout", desc: "网关超时" }
+        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" }, { code: "100", name: "Continue", desc: "服务器已收到请求头，客户端应继续发送请求体" },
+        { code: "101", name: "Switching Protocols", desc: "服务器正在切换协议" }, { code: "2xx", name: "成功响应", desc: "请求成功完成" },
+        { code: "200", name: "OK", desc: "请求成功" }, { code: "201", name: "Created", desc: "请求成功且服务器创建了新资源" },
+        { code: "204", name: "No Content", desc: "请求成功，但没有返回内容" }, { code: "3xx", name: "重定向", desc: "需要进一步操作以完成请求" },
+        { code: "301", name: "Moved Permanently", desc: "资源已永久移动到新URL" }, { code: "302", name: "Found", desc: "资源临时移动到新URL" },
+        { code: "304", name: "Not Modified", desc: "资源未修改，可使用缓存" }, { code: "4xx", name: "客户端错误", desc: "请求包含错误或无法处理" },
+        { code: "400", name: "Bad Request", desc: "服务器无法理解请求" }, { code: "401", name: "Unauthorized", desc: "需要身份验证" },
+        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" }, { code: "404", name: "Not Found", desc: "请求的资源不存在" },
+        { code: "405", name: "Method Not Allowed", desc: "HTTP方法不允许" }, { code: "408", name: "Request Timeout", desc: "请求超时" },
+        { code: "429", name: "Too Many Requests", desc: "请求过于频繁" }, { code: "5xx", name: "服务端错误", desc: "服务器无法完成有效请求" },
+        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" }, { code: "502", name: "Bad Gateway", desc: "网关错误" },
+        { code: "503", name: "Service Unavailable", desc: "服务不可用" }, { code: "504", name: "Gateway Timeout", desc: "网关超时" }
     ];
-    function renderHttpCodes() {
-        const container = document.getElementById('httpList');
-        if (!container) return;
-        container.innerHTML = '';
-        httpStatusCodes.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'http-item';
-            div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`;
-            div.onclick = () => {
-                document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`;
-            };
-            container.appendChild(div);
-        });
-    }
+    function renderHttpCodes() { const container = document.getElementById('httpList'); if (!container) return; container.innerHTML = ''; httpStatusCodes.forEach(item => { const div = document.createElement('div'); div.className = 'http-item'; div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`; div.onclick = () => { document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`; }; container.appendChild(div); }); }
     renderHttpCodes();
 
-    // IP 归属地查询
+    // 字数统计工具 (新增)
+    function updateWordStats() {
+        const text = document.getElementById('wordInput').value;
+        const charCount = text.length;
+        const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        const lineCount = text === '' ? 0 : text.split(/\r\n|\r|\n/).length;
+        const chineseCount = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+        const spaceCount = (text.match(/\s/g) || []).length;
+        document.getElementById('charCount').innerText = charCount;
+        document.getElementById('wordCount').innerText = wordCount;
+        document.getElementById('lineCount').innerText = lineCount;
+        document.getElementById('chineseCount').innerText = chineseCount;
+        document.getElementById('spaceCount').innerText = spaceCount;
+    }
+    function clearWordStats() { document.getElementById('wordInput').value = ''; updateWordStats(); }
+    document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
+    updateWordStats();
+
+    // UUID 生成器 (新增)
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+    let uuidHistory = [];
+    function generateUUIDAndDisplay() {
+        const newUUID = generateUUID();
+        document.getElementById('uuidDisplay').innerHTML = newUUID;
+        uuidHistory.unshift(newUUID);
+        if (uuidHistory.length > 5) uuidHistory.pop();
+        const historyHtml = uuidHistory.map(u => `<div style="font-family:monospace; font-size:0.7rem; padding:4px 0; border-bottom:1px dashed #2dd4bf20;">${u}</div>`).join('');
+        document.getElementById('uuidHistory').innerHTML = historyHtml || '<span style="color:#8b9bcf;">暂无历史记录</span>';
+    }
+    function copyUUID() {
+        const uuidText = document.getElementById('uuidDisplay').innerText;
+        if (uuidText && uuidText !== '点击下方按钮生成') {
+            navigator.clipboard.writeText(uuidText);
+            alert('✅ UUID 已复制到剪贴板');
+        } else { alert('请先生成 UUID'); }
+    }
+    function generateMultipleUUIDs() {
+        for(let i = 0; i < 3; i++) { generateUUIDAndDisplay(); }
+    }
+    // 初始生成一个UUID
+    setTimeout(() => { generateUUIDAndDisplay(); }, 500);
+
+    // IP 查询
     function fetchIPInfo() {
-        const ipSpan = document.getElementById('ipAddr');
-        const methodSpan = document.getElementById('ipMethod');
-        const noteSpan = document.getElementById('ipNote');
-        ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中';
-        methodSpan.innerText = '--';
-        noteSpan.innerText = '正在尝试多种方式...';
+        const ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod'), noteSpan = document.getElementById('ipNote');
+        ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中'; methodSpan.innerText = '--'; noteSpan.innerText = '正在尝试...';
         let found = false;
-        // Cloudflare Trace
-        fetch('https://cloudflare.com/cdn-cgi/trace', { mode: 'cors' })
-            .then(res => res.text())
-            .then(text => {
-                if (found) return;
-                const match = text.match(/ip=([^\n]+)/);
-                if (match) {
-                    ipSpan.innerText = match[1];
-                    methodSpan.innerText = 'Cloudflare Trace';
-                    noteSpan.innerText = '✓ 公网IP';
-                    found = true;
-                }
-            }).catch(() => {});
-        // WebRTC
+        fetch('https://cloudflare.com/cdn-cgi/trace', { mode: 'cors' }).then(res => res.text()).then(text => {
+            if (found) return; const match = text.match(/ip=([^\n]+)/);
+            if (match) { ipSpan.innerText = match[1]; methodSpan.innerText = 'Cloudflare Trace'; noteSpan.innerText = '✓ 公网IP'; found = true; }
+        }).catch(() => {});
         setTimeout(() => {
             if (found) return;
             try {
                 const pc = new RTCPeerConnection({ iceServers: [] });
-                pc.createDataChannel('');
-                pc.createOffer().then(offer => pc.setLocalDescription(offer));
+                pc.createDataChannel(''); pc.createOffer().then(offer => pc.setLocalDescription(offer));
                 pc.onicecandidate = (event) => {
                     if (event.candidate) {
                         const ipMatch = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(event.candidate.candidate);
-                        if (ipMatch && !found) {
-                            ipSpan.innerText = ipMatch[0];
-                            methodSpan.innerText = 'WebRTC';
-                            noteSpan.innerText = '⚠️ 本地/局域网IP';
-                            found = true;
-                            pc.close();
-                        }
+                        if (ipMatch && !found) { ipSpan.innerText = ipMatch[0]; methodSpan.innerText = 'WebRTC'; noteSpan.innerText = '⚠️ 本地/局域网IP'; found = true; pc.close(); }
                     }
                 };
                 setTimeout(() => { if (!found) pc.close(); }, 3000);
             } catch(e) {}
         }, 500);
-        setTimeout(() => {
-            if (!found) {
-                ipSpan.innerText = '无法获取';
-                methodSpan.innerText = '--';
-                noteSpan.innerText = '请检查网络连接';
-            }
-        }, 5000);
+        setTimeout(() => { if (!found) { ipSpan.innerText = '无法获取'; methodSpan.innerText = '--'; noteSpan.innerText = '请检查网络连接'; } }, 5000);
     }
     setTimeout(() => { fetchIPInfo(); }, 500);
 
@@ -923,7 +983,6 @@
     function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
     function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
     setTimeout(() => generateQRCode(), 500);
-
     document.getElementById('passwordResult')?.addEventListener('click', function () { this.select(); });
 </script>
 </body>
