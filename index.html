@@ -34,7 +34,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.42;
         }
 
         .universe-container {
@@ -435,7 +435,6 @@
             word-break: break-all;
         }
 
-        /* 密码强度指示器 */
         .strength-meter {
             height: 6px;
             background: rgba(0,0,0,0.3);
@@ -743,7 +742,7 @@
             <div id="uuidHistory" class="result-box" style="max-height: 120px; overflow: auto; font-size: 0.7rem;"></div>
         </div>
 
-        <!-- 13. MD5 哈希生成器 (新增) -->
+        <!-- 13. MD5 哈希生成器 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🔐</div>
@@ -848,8 +847,7 @@
 
     // GitHub 动态
     async function fetchGalaxyStars() {
-        const starsSpan = document.getElementById('starCount');
-        const forksSpan = document.getElementById('forkCount');
+        const starsSpan = document.getElementById('starCount'), forksSpan = document.getElementById('forkCount');
         try {
             const resp = await fetch(`https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag`);
             if (resp.ok) { const data = await resp.json(); starsSpan.innerText = (data.stargazers_count ?? 0).toLocaleString(); forksSpan.innerText = (data.forks_count ?? 0).toLocaleString(); }
@@ -858,11 +856,9 @@
     }
     fetchGalaxyStars(); setInterval(fetchGalaxyStars, 35 * 60 * 1000);
 
-    // 宇宙计时
     function updateCosmicUptime() { const startDate = new Date(2007, 9, 28); const diffDays = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24)); const years = Math.floor(diffDays / 365), remain = diffDays % 365; document.getElementById('uptimeCosmic').innerHTML = (years > 0 ? `${years}年 ${remain}天` : `${diffDays}天`) + ' 🌌'; document.getElementById('syncTime').innerText = new Date().toLocaleString('zh-CN', { hour12: false }); }
     updateCosmicUptime(); setInterval(updateCosmicUptime, 1000);
 
-    // 增强版密码生成 + 强度检测
     function checkPasswordStrength(password) {
         let strength = 0;
         if (password.length >= 12) strength++;
@@ -879,31 +875,20 @@
         else { fill.className = 'strength-fill strength-very'; }
     }
     function genQuantumPassword() { 
-        let len = parseInt(document.getElementById('pwdLength').value, 10); 
-        if (isNaN(len)) len = 16; 
-        len = Math.min(48, Math.max(8, len)); 
+        let len = parseInt(document.getElementById('pwdLength').value, 10); if (isNaN(len)) len = 16; len = Math.min(48, Math.max(8, len)); 
         const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?'; 
-        const all = upper + lower + digits + special; 
-        let pwd = ''; 
+        const all = upper + lower + digits + special; let pwd = ''; 
         pwd += upper[Math.floor(Math.random() * upper.length)] + lower[Math.floor(Math.random() * lower.length)] + digits[Math.floor(Math.random() * digits.length)] + special[Math.floor(Math.random() * special.length)]; 
         for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)]; 
         pwd = pwd.split('').sort(() => Math.random() - 0.5).join(''); 
-        const resField = document.getElementById('passwordResult'); 
-        resField.value = pwd; 
-        resField.style.borderColor = '#2dd4bf'; 
-        setTimeout(() => resField.style.borderColor = '', 400);
-        checkPasswordStrength(pwd);
+        const resField = document.getElementById('passwordResult'); resField.value = pwd; checkPasswordStrength(pwd);
     }
     function encodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value) { alert('⛔ 输入文本'); return; } try { const utf8 = new TextEncoder().encode(inputField.value); let binary = ''; utf8.forEach(byte => binary += String.fromCharCode(byte)); inputField.value = btoa(binary); } catch (e) { alert('编码异常'); } }
     function decodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value.trim()) { alert('⛔ 输入Base64'); return; } try { const binary = atob(inputField.value); const uintArr = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); inputField.value = new TextDecoder().decode(uintArr); } catch (e) { alert('解码失败'); } }
-
-    // JSON 工具
     function formatJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
     function minifyJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(JSON.stringify(obj))}</span>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
     function validateJSON() { try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确</span>'; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
     function escapeHtml(str) { return str.replace(/[&<>]/g, function (m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); }
-
-    // 正则测试
     function testRegex() {
         let pattern = document.getElementById('regexPattern').value;
         if (!pattern) { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">请输入正则表达式</span>'; return; }
@@ -917,14 +902,12 @@
             const matches = testText.match(regex);
             if (matches && matches.length > 0) {
                 let resultHtml = `<span style="color:#4ade80;">✅ 找到 ${matches.length} 个匹配:</span><br>`;
-                matches.forEach((m, i) => { resultHtml += `<span style="color:#cffafe;">${i + 1}. "${escapeHtml(m)}"</span><br>`; });
+                matches.forEach((m, i) => { resultHtml += `<span style="color:#cffafe;">${i+1}. "${escapeHtml(m)}"</span><br>`; });
                 document.getElementById('regexResult').innerHTML = resultHtml;
             } else { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">❌ 未找到匹配项</span>'; }
         } catch (e) { document.getElementById('regexResult').innerHTML = `<span style="color:#f87171;">❌ 正则错误: ${e.message}</span>`; }
     }
     function clearRegex() { document.getElementById('regexPattern').value = ''; document.getElementById('testText').value = ''; document.getElementById('regexResult').innerHTML = '已清除'; }
-
-    // 颜色转换
     function hexToRgb(hex) { let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null; }
     function rgbToHex(r, g, b) { return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); }
     function convertColor() {
@@ -935,19 +918,13 @@
     }
     function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
     function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); alert('已复制到剪贴板'); } else { alert('无有效颜色数据'); } }
-
-    // 时间戳函数
     function timestampToDate() { const input = document.getElementById('timestampInput').value.trim(); if (!input) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入时间戳</span>'; return; } let ts = parseInt(input); if (isNaN(ts)) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入有效数字</span>'; return; } if (ts.toString().length === 10) ts = ts * 1000; const date = new Date(ts); if (isNaN(date.getTime())) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">无效的时间戳</span>'; return; } document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`; }
     function dateToTimestamp() { const input = document.getElementById('datetimeInput').value; if (!input) { document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">请选择日期时间</span>'; return; } const date = new Date(input); const tsSeconds = Math.floor(date.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级: ${tsSeconds}<br>⚡ 毫秒级: ${date.getTime()}`; }
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
     function getCurrentDateTime() { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${Math.floor(now.getTime() / 1000)}<br>📅 ${now.toLocaleString('zh-CN')}`; }
-
-    // URL 编解码器
     function urlEncode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要编码的内容</span>'; return; } try { const encoded = encodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(encoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败: ${e.message}</span>`; } }
     function urlDecode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; } try { const decoded = decodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; } }
     function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
-
-    // HTTP 状态码
     const httpStatusCodes = [
         { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" }, { code: "100", name: "Continue", desc: "服务器已收到请求头" },
         { code: "200", name: "OK", desc: "请求成功" }, { code: "301", name: "Moved Permanently", desc: "资源已永久移动" },
@@ -959,8 +936,6 @@
     ];
     function renderHttpCodes() { const container = document.getElementById('httpList'); if (!container) return; container.innerHTML = ''; httpStatusCodes.forEach(item => { const div = document.createElement('div'); div.className = 'http-item'; div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`; div.onclick = () => { document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`; }; container.appendChild(div); }); }
     renderHttpCodes();
-
-    // 字数统计
     function updateWordStats() {
         const text = document.getElementById('wordInput').value;
         document.getElementById('charCount').innerText = text.length;
@@ -972,26 +947,13 @@
     function clearWordStats() { document.getElementById('wordInput').value = ''; updateWordStats(); }
     document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
     updateWordStats();
-
-    // UUID 生成
     function generateUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); }
     let uuidHistory = [];
     function generateUUIDAndDisplay() { const newUUID = generateUUID(); document.getElementById('uuidDisplay').innerHTML = newUUID; uuidHistory.unshift(newUUID); if (uuidHistory.length > 5) uuidHistory.pop(); document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="font-family:monospace; font-size:0.7rem; padding:4px 0; border-bottom:1px dashed #2dd4bf20;">${u}</div>`).join('') || '<span style="color:#8b9bcf;">暂无历史记录</span>'; }
     function copyUUID() { const uuidText = document.getElementById('uuidDisplay').innerText; if (uuidText && uuidText !== '点击下方按钮生成') { navigator.clipboard.writeText(uuidText); alert('✅ UUID 已复制'); } else { alert('请先生成 UUID'); } }
     function generateMultipleUUIDs() { for(let i = 0; i < 3; i++) { generateUUIDAndDisplay(); } }
-
-    // MD5 哈希生成器 (新增)
-    function generateMD5() {
-        const input = document.getElementById('md5Input').value;
-        if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入要加密的文本</span>'; return; }
-        try {
-            const md5Hash = CryptoJS.MD5(input).toString();
-            document.getElementById('md5Result').innerHTML = `<span style="color:#4ade80;">✅ MD5 哈希值:</span><br><span style="font-family:monospace;word-break:break-all;">${md5Hash}</span>`;
-        } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败: ${e.message}</span>`; }
-    }
+    function generateMD5() { const input = document.getElementById('md5Input').value; if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入要加密的文本</span>'; return; } try { const md5Hash = CryptoJS.MD5(input).toString(); document.getElementById('md5Result').innerHTML = `<span style="color:#4ade80;">✅ MD5 哈希值:</span><br><span style="font-family:monospace;word-break:break-all;">${md5Hash}</span>`; } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败: ${e.message}</span>`; } }
     function clearMD5() { document.getElementById('md5Input').value = ''; document.getElementById('md5Result').innerHTML = '等待生成...'; }
-
-    // IP 查询
     function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod'), noteSpan = document.getElementById('ipNote');
         ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中'; methodSpan.innerText = '--'; noteSpan.innerText = '正在尝试...';
@@ -1017,13 +979,10 @@
         setTimeout(() => { if (!found) { ipSpan.innerText = '无法获取'; methodSpan.innerText = '--'; noteSpan.innerText = '请检查网络连接'; } }, 5000);
     }
     setTimeout(() => { fetchIPInfo(); }, 500);
-
-    // 二维码
     let currentQR = null;
     function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
     function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
     setTimeout(() => generateQRCode(), 500);
-    document.getElementById('passwordResult')?.addEventListener('click', function () { this.select(); });
     setTimeout(() => { generateUUIDAndDisplay(); }, 500);
 </script>
 </body>
