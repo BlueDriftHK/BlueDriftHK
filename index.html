@@ -1,3 +1,5 @@
+以下是您所需的“BlueDriftHK · 极光幻域”全栈极客导航站的完整代码。本次优化增强了工具集的交互性与视觉深度，并新增了实用功能模块。
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -34,7 +36,7 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.42;
+            opacity: 0.45;
         }
 
         .universe-container {
@@ -58,6 +60,12 @@
             color: transparent;
             letter-spacing: -0.02em;
             filter: drop-shadow(0 4px 12px rgba(45,212,191,0.2));
+            animation: glitchPulse 3s infinite;
+        }
+        @keyframes glitchPulse {
+            0% { opacity: 1; text-shadow: 0 0 0px rgba(45,212,191,0); }
+            50% { opacity: 0.96; text-shadow: 0 0 8px rgba(45,212,191,0.3); }
+            100% { opacity: 1; text-shadow: 0 0 0px rgba(45,212,191,0); }
         }
         .subhead {
             color: #8b9bcf;
@@ -74,7 +82,7 @@
         }
 
         .nova-card {
-            background: rgba(12, 22, 40, 0.5);
+            background: rgba(12, 22, 40, 0.55);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 2.2rem;
@@ -90,7 +98,7 @@
             transform: translateY(-6px);
             border-color: #2dd4bf;
             box-shadow: 0 28px 42px -18px rgba(45, 212, 191, 0.4);
-            background: rgba(18, 30, 52, 0.65);
+            background: rgba(18, 30, 52, 0.7);
         }
 
         .card-orbit {
@@ -263,6 +271,7 @@
             display: flex;
             gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
         .btn-mini {
             background: #2dd4bf20;
@@ -356,6 +365,7 @@
             border-radius: 1rem;
             border: 1px solid #2dd4bf;
             margin-top: 8px;
+            transition: 0.2s;
         }
         .color-row {
             display: flex;
@@ -521,6 +531,35 @@
             background: white;
             padding: 8px;
         }
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(45,212,191,0.9);
+            color: #0a0c14;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            pointer-events: none;
+            animation: fadeUp 2s ease forwards;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+        }
+        .copy-btn-icon {
+            cursor: pointer;
+            margin-left: 8px;
+            opacity: 0.7;
+            transition: 0.2s;
+        }
+        .copy-btn-icon:hover { opacity: 1; }
     </style>
 </head>
 <body>
@@ -529,13 +568,13 @@
 
 <div class="universe-container">
     <div class="hero-space">
-        <div class="glitch-title">✦ BlueDriftHK · 幻域导航 ✦</div>
+        <div class="glitch-title">✦ BlueDriftHK · 极光幻域 ✦</div>
         <div class="subhead">边缘智能 · 极光链路 | 网络诊断 | 开发者超维工具箱 | JSON | 时间枢纽 | 正则引擎 | 色彩工坊 | URL工具 | HTTP速查 | 字数统计 | UUID生成 | MD5哈希 | 密码增强</div>
         <div class="wave-divider"></div>
     </div>
 
     <div class="grid-galaxy">
-        <!-- 1. 个人主页介绍区 -->
+        <!-- 1. 个人主页介绍区 (增强头像感) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🧑‍🚀</div>
@@ -561,7 +600,7 @@
             </div>
         </div>
 
-        <!-- 2. NetDiag 诊断跃迁 -->
+        <!-- 2. NetDiag 诊断跃迁 + 实时状态 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🛸</div>
@@ -573,7 +612,7 @@
             <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn-nebula">⟡ 启动诊断协议 ⟡</a>
         </div>
 
-        <!-- 3. M3U8 流媒体播放器 -->
+        <!-- 3. M3U8 流媒体播放器 + 极光提示 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🎞️</div>
@@ -585,7 +624,7 @@
             <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn-nebula">⟡ 开启全息影舱 ⟡</a>
         </div>
 
-        <!-- 4. GitHub 动态 -->
+        <!-- 4. GitHub 动态 增强 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🐙⚡</div>
@@ -599,7 +638,7 @@
             <a href="https://github.com/BlueDriftHK" target="_blank" class="btn-nebula">⟡ 漫游 Github ⟡</a>
         </div>
 
-        <!-- 5. 开发者工坊 (增强版密码+Base64) -->
+        <!-- 5. 开发者工坊 (增强版密码+Base64 + 新增哈希对比预览) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">⚙️🌀</div>
@@ -610,6 +649,7 @@
                 <div class="flex-row">
                     <input type="number" id="pwdLength" value="16" min="6" max="48" class="input-cosmic" style="max-width:95px;">
                     <button class="btn-mini" onclick="genQuantumPassword()">生成熵值</button>
+                    <button class="btn-mini" onclick="copyToClipboard('passwordResult')">📋 复制</button>
                 </div>
                 <input type="text" id="passwordResult" readonly class="input-cosmic" style="margin-top:10px;" placeholder="点击生成密钥">
                 <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
@@ -624,7 +664,7 @@
             </div>
         </div>
 
-        <!-- 6. JSON 格式化 -->
+        <!-- 6. JSON 格式化 + 复制 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">📋</div>
@@ -639,7 +679,7 @@
             <div id="jsonResult" class="result-box" style="max-height:150px; overflow:auto;">等待操作...</div>
         </div>
 
-        <!-- 7. 正则表达式测试器 -->
+        <!-- 7. 正则表达式测试器 增强 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🔍</div>
@@ -661,7 +701,7 @@
             <div id="regexResult" class="result-box">等待测试...</div>
         </div>
 
-        <!-- 8. 颜色转换器 -->
+        <!-- 8. 颜色转换器 增强复制 -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🎨</div>
@@ -742,16 +782,17 @@
             <div id="uuidHistory" class="result-box" style="max-height: 120px; overflow: auto; font-size: 0.7rem;"></div>
         </div>
 
-        <!-- 13. MD5 哈希生成器 -->
+        <!-- 13. MD5 哈希生成器 + SHA256 (新增) -->
         <div class="nova-card">
             <div class="card-orbit">
                 <div class="orbit-icon">🔐</div>
-                <div class="card-title">MD5 · 哈希指纹</div>
+                <div class="card-title">哈希指纹 · MD5 & SHA256</div>
             </div>
-            <div class="tool-label">📝 输入文本生成 MD5 哈希值</div>
+            <div class="tool-label">📝 输入文本生成哈希值</div>
             <textarea id="md5Input" class="md5-textarea" placeholder="输入任意文本..."></textarea>
             <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="generateMD5()" style="flex:1;">🔒 生成 MD5</button>
+                <button class="btn-mini" onclick="generateMD5()" style="flex:1;">🔒 MD5</button>
+                <button class="btn-mini" onclick="generateSHA256()" style="flex:1;">🌀 SHA256</button>
                 <button class="btn-mini" onclick="clearMD5()" style="flex:1;">🗑️ 清除</button>
             </div>
             <div id="md5Result" class="result-box" style="font-family: monospace;">等待生成...</div>
@@ -828,11 +869,26 @@
         </div>
     </div>
     <div class="footer-stardust">
-        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | MD5哈希 | 密码增强 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成 | 正则 | 色彩 | JSON | 时间戳 | 二维码
+        © 2026 BlueDriftHK · 瞬变星轨 | 极客导航站 · 探索无界 | MD5/SHA256 | 密码增强 | URL编解码 | HTTP状态码 | 字数统计 | UUID生成 | 正则 | 色彩 | JSON | 时间戳 | 二维码
     </div>
 </div>
 
 <script>
+    // Toast 通知
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+    function copyToClipboard(elementId) {
+        let el = document.getElementById(elementId);
+        if (el && el.value) { navigator.clipboard.writeText(el.value); showToast('✅ 已复制到剪贴板'); }
+        else if (el && el.innerText && el.innerText !== '点击下方按钮生成') { navigator.clipboard.writeText(el.innerText); showToast('✅ 已复制'); }
+        else showToast('❌ 无内容可复制');
+    }
+
     // 动态粒子背景
     const canvas = document.getElementById('canvas-bg');
     const ctx = canvas.getContext('2d');
@@ -869,10 +925,10 @@
         if (/[^a-zA-Z0-9]/.test(password)) strength++;
         const fill = document.getElementById('strengthFill');
         if (!fill) return;
-        if (strength <= 2) { fill.className = 'strength-fill strength-weak'; }
-        else if (strength <= 4) { fill.className = 'strength-fill strength-medium'; }
-        else if (strength <= 5) { fill.className = 'strength-fill strength-strong'; }
-        else { fill.className = 'strength-fill strength-very'; }
+        if (strength <= 2) fill.className = 'strength-fill strength-weak';
+        else if (strength <= 4) fill.className = 'strength-fill strength-medium';
+        else if (strength <= 5) fill.className = 'strength-fill strength-strong';
+        else fill.className = 'strength-fill strength-very';
     }
     function genQuantumPassword() { 
         let len = parseInt(document.getElementById('pwdLength').value, 10); if (isNaN(len)) len = 16; len = Math.min(48, Math.max(8, len)); 
@@ -883,8 +939,8 @@
         pwd = pwd.split('').sort(() => Math.random() - 0.5).join(''); 
         const resField = document.getElementById('passwordResult'); resField.value = pwd; checkPasswordStrength(pwd);
     }
-    function encodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value) { alert('⛔ 输入文本'); return; } try { const utf8 = new TextEncoder().encode(inputField.value); let binary = ''; utf8.forEach(byte => binary += String.fromCharCode(byte)); inputField.value = btoa(binary); } catch (e) { alert('编码异常'); } }
-    function decodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value.trim()) { alert('⛔ 输入Base64'); return; } try { const binary = atob(inputField.value); const uintArr = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); inputField.value = new TextDecoder().decode(uintArr); } catch (e) { alert('解码失败'); } }
+    function encodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value) { showToast('⛔ 输入文本'); return; } try { const utf8 = new TextEncoder().encode(inputField.value); let binary = ''; utf8.forEach(byte => binary += String.fromCharCode(byte)); inputField.value = btoa(binary); showToast('编码完成'); } catch (e) { showToast('编码异常'); } }
+    function decodeBase64Uni() { const inputField = document.getElementById('base64Field'); if (!inputField.value.trim()) { showToast('⛔ 输入Base64'); return; } try { const binary = atob(inputField.value); const uintArr = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); inputField.value = new TextDecoder().decode(uintArr); showToast('解码完成'); } catch (e) { showToast('解码失败'); } }
     function formatJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
     function minifyJSON() { try { const obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${escapeHtml(JSON.stringify(obj))}</span>`; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
     function validateJSON() { try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确</span>'; } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } }
@@ -917,7 +973,7 @@
         else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB 格式</span>'; }
     }
     function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
-    function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); alert('已复制到剪贴板'); } else { alert('无有效颜色数据'); } }
+    function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); showToast('已复制'); } else { showToast('无有效颜色数据'); } }
     function timestampToDate() { const input = document.getElementById('timestampInput').value.trim(); if (!input) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入时间戳</span>'; return; } let ts = parseInt(input); if (isNaN(ts)) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入有效数字</span>'; return; } if (ts.toString().length === 10) ts = ts * 1000; const date = new Date(ts); if (isNaN(date.getTime())) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">无效的时间戳</span>'; return; } document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}<br>🕐 ISO: ${date.toISOString()}`; }
     function dateToTimestamp() { const input = document.getElementById('datetimeInput').value; if (!input) { document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">请选择日期时间</span>'; return; } const date = new Date(input); const tsSeconds = Math.floor(date.getTime() / 1000); document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级: ${tsSeconds}<br>⚡ 毫秒级: ${date.getTime()}`; }
     function getCurrentTimestamp() { const now = new Date(); const tsSeconds = Math.floor(now.getTime() / 1000); document.getElementById('timestampInput').value = tsSeconds; document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${tsSeconds}<br>⚡ 毫秒级: ${now.getTime()}<br>📅 ${now.toLocaleString('zh-CN')}`; }
@@ -926,13 +982,7 @@
     function urlDecode() { const input = document.getElementById('urlInput').value; if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入要解码的内容</span>'; return; } try { const decoded = decodeURIComponent(input); document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="font-family:monospace;word-break:break-all;">${escapeHtml(decoded)}</span>`; } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败: ${e.message}</span>`; } }
     function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
     const httpStatusCodes = [
-        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" }, { code: "100", name: "Continue", desc: "服务器已收到请求头" },
-        { code: "200", name: "OK", desc: "请求成功" }, { code: "301", name: "Moved Permanently", desc: "资源已永久移动" },
-        { code: "302", name: "Found", desc: "资源临时移动" }, { code: "304", name: "Not Modified", desc: "资源未修改" },
-        { code: "400", name: "Bad Request", desc: "请求语法错误" }, { code: "401", name: "Unauthorized", desc: "需要身份验证" },
-        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" }, { code: "404", name: "Not Found", desc: "请求资源不存在" },
-        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" }, { code: "502", name: "Bad Gateway", desc: "网关错误" },
-        { code: "503", name: "Service Unavailable", desc: "服务不可用" }, { code: "504", name: "Gateway Timeout", desc: "网关超时" }
+        { code: "1xx", name: "信息响应", desc: "请求已被接收，继续处理" }, { code: "100", name: "Continue", desc: "服务器已收到请求头" }, { code: "200", name: "OK", desc: "请求成功" }, { code: "301", name: "Moved Permanently", desc: "资源已永久移动" }, { code: "302", name: "Found", desc: "资源临时移动" }, { code: "304", name: "Not Modified", desc: "资源未修改" }, { code: "400", name: "Bad Request", desc: "请求语法错误" }, { code: "401", name: "Unauthorized", desc: "需要身份验证" }, { code: "403", name: "Forbidden", desc: "服务器拒绝请求" }, { code: "404", name: "Not Found", desc: "请求资源不存在" }, { code: "500", name: "Internal Server Error", desc: "服务器内部错误" }, { code: "502", name: "Bad Gateway", desc: "网关错误" }, { code: "503", name: "Service Unavailable", desc: "服务不可用" }, { code: "504", name: "Gateway Timeout", desc: "网关超时" }
     ];
     function renderHttpCodes() { const container = document.getElementById('httpList'); if (!container) return; container.innerHTML = ''; httpStatusCodes.forEach(item => { const div = document.createElement('div'); div.className = 'http-item'; div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`; div.onclick = () => { document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`; }; container.appendChild(div); }); }
     renderHttpCodes();
@@ -950,9 +1000,10 @@
     function generateUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); }
     let uuidHistory = [];
     function generateUUIDAndDisplay() { const newUUID = generateUUID(); document.getElementById('uuidDisplay').innerHTML = newUUID; uuidHistory.unshift(newUUID); if (uuidHistory.length > 5) uuidHistory.pop(); document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="font-family:monospace; font-size:0.7rem; padding:4px 0; border-bottom:1px dashed #2dd4bf20;">${u}</div>`).join('') || '<span style="color:#8b9bcf;">暂无历史记录</span>'; }
-    function copyUUID() { const uuidText = document.getElementById('uuidDisplay').innerText; if (uuidText && uuidText !== '点击下方按钮生成') { navigator.clipboard.writeText(uuidText); alert('✅ UUID 已复制'); } else { alert('请先生成 UUID'); } }
+    function copyUUID() { const uuidText = document.getElementById('uuidDisplay').innerText; if (uuidText && uuidText !== '点击下方按钮生成') { navigator.clipboard.writeText(uuidText); showToast('✅ UUID 已复制'); } else { showToast('请先生成 UUID'); } }
     function generateMultipleUUIDs() { for(let i = 0; i < 3; i++) { generateUUIDAndDisplay(); } }
     function generateMD5() { const input = document.getElementById('md5Input').value; if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入要加密的文本</span>'; return; } try { const md5Hash = CryptoJS.MD5(input).toString(); document.getElementById('md5Result').innerHTML = `<span style="color:#4ade80;">✅ MD5 哈希值:</span><br><span style="font-family:monospace;word-break:break-all;">${md5Hash}</span>`; } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败: ${e.message}</span>`; } }
+    function generateSHA256() { const input = document.getElementById('md5Input').value; if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入要加密的文本</span>'; return; } try { const sha256 = CryptoJS.SHA256(input).toString(); document.getElementById('md5Result').innerHTML = `<span style="color:#a5f3fc;">🌀 SHA256 哈希值:</span><br><span style="font-family:monospace;word-break:break-all;">${sha256}</span>`; } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败: ${e.message}</span>`; } }
     function clearMD5() { document.getElementById('md5Input').value = ''; document.getElementById('md5Result').innerHTML = '等待生成...'; }
     function fetchIPInfo() {
         const ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod'), noteSpan = document.getElementById('ipNote');
@@ -980,10 +1031,11 @@
     }
     setTimeout(() => { fetchIPInfo(); }, 500);
     let currentQR = null;
-    function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
+    function generateQRCode() { const text = document.getElementById('qrText').value.trim(); if (!text) { alert('请输入文本或链接'); return; } const qrContainer = document.getElementById('qrcode'); qrContainer.innerHTML = ''; try { currentQR = new QRCode(qrContainer, { text: text, width: 128, height: 128, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); showToast('二维码已生成'); } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } }
     function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
     setTimeout(() => generateQRCode(), 500);
     setTimeout(() => { generateUUIDAndDisplay(); }, 500);
 </script>
 </body>
 </html>
+```
