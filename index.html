@@ -8,6 +8,8 @@
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- 不蒜子计数器 -->
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         * {
             margin: 0;
@@ -28,9 +30,10 @@
             margin: 0 auto;
         }
 
+        /* 头部 */
         .header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
         .title {
             font-size: 3rem;
@@ -48,12 +51,48 @@
             font-weight: 400;
         }
 
+        /* 统计卡片 - 苹果毛玻璃 */
+        .stats-banner {
+            background: rgba(30, 30, 40, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #d0d0e0;
+            padding: 6px 12px;
+            border-radius: 40px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .stats-number {
+            font-weight: 700;
+            color: #007aff;
+            font-size: 1.2rem;
+            font-family: monospace;
+        }
+        .stats-label {
+            color: #8e8e9e;
+        }
+
+        /* 网格布局 */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 1.5rem;
         }
 
+        /* 苹果毛玻璃卡片 */
         .glass-card {
             background: rgba(30, 30, 40, 0.5);
             backdrop-filter: blur(20px);
@@ -107,6 +146,9 @@
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
         .btn:hover {
             background: rgba(255, 255, 255, 0.2);
@@ -214,6 +256,7 @@
             .title { font-size: 2rem; }
             .grid { gap: 1rem; }
             .glass-card { padding: 1.2rem; }
+            .stats-banner { gap: 1rem; }
         }
 
         .toast {
@@ -243,6 +286,25 @@
     <div class="header">
         <div class="title">🐟 BlueDriftHK</div>
         <div class="subtitle">一条热爱技术的咸鱼 · 开源源于生活</div>
+    </div>
+
+    <!-- 📊 统计卡片 -->
+    <div class="stats-banner">
+        <div class="stats-item">
+            <span>📈</span>
+            <span class="stats-label">今日访问</span>
+            <span class="stats-number" id="todayCount">--</span>
+        </div>
+        <div class="stats-item">
+            <span>👥</span>
+            <span class="stats-label">当前在线</span>
+            <span class="stats-number" id="onlineCount">--</span>
+        </div>
+        <div class="stats-item">
+            <span>📊</span>
+            <span class="stats-label">总访问量</span>
+            <span class="stats-number" id="totalCount">--</span>
+        </div>
     </div>
 
     <div class="grid">
@@ -350,9 +412,9 @@
             </div>
             <div class="result" id="uuidDisplay" style="font-family: monospace;">点击生成</div>
             <div class="flex-row">
-                <button class="btn" onclick="genUUID()">生成</button>
-                <button class="btn" onclick="copyUUID()">复制</button>
-                <button class="btn" onclick="genMultipleUUID()">生成3个</button>
+                <button class="btn" onclick="genUUID()">✨ 生成</button>
+                <button class="btn" onclick="copyUUID()">📋 复制</button>
+                <button class="btn" onclick="genMultipleUUID()">🔢 3个</button>
             </div>
             <div id="uuidHistory" class="result" style="margin-top: 8px; font-size: 0.7rem;"></div>
         </div>
@@ -363,9 +425,9 @@
                 <span class="card-icon">📍</span>
                 <span class="card-title">IP 查询</span>
             </div>
-            <button class="btn" onclick="fetchIP()">查询我的 IP</button>
+            <button class="btn" onclick="fetchIP()">🌐 查询我的 IP</button>
             <div class="result" style="margin-top: 10px;">
-                <div class="flex-between"><span>🌍 IP</span><span id="ipAddr">未查询</span></div>
+                <div class="flex-between"><span>🌍 IP 地址</span><span id="ipAddr">未查询</span></div>
                 <div class="flex-between" style="margin-top: 5px;"><span>📡 来源</span><span id="ipMethod">--</span></div>
             </div>
         </div>
@@ -378,13 +440,13 @@
             </div>
             <input type="text" id="qrText" class="input" value="https://github.com/BlueDriftHK">
             <div class="flex-row">
-                <button class="btn" onclick="genQR()">生成</button>
-                <button class="btn" onclick="clearQR()">清除</button>
+                <button class="btn" onclick="genQR()">✨ 生成</button>
+                <button class="btn" onclick="clearQR()">🗑️ 清除</button>
             </div>
             <div id="qrcode"></div>
         </div>
 
-        <!-- 10. 星环状态（2007年10月29日） -->
+        <!-- 10. 星环状态 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🪐</span>
@@ -414,6 +476,7 @@
 </div>
 
 <script>
+    // ==================== 工具函数 ====================
     function showToast(msg) {
         let toast = document.createElement('div');
         toast.className = 'toast';
@@ -422,15 +485,52 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    function copyText(id) {
-        let el = document.getElementById(id);
-        if (el && el.innerText && el.innerText !== '点击生成') {
-            navigator.clipboard.writeText(el.innerText);
-            showToast('已复制');
-        } else showToast('无内容');
+    // ==================== 在线人数（模拟模式） ====================
+    let mockOnlineCount = 5;
+    
+    function updateMockOnline() {
+        // 模拟在线人数在 3~18 之间波动
+        let change = Math.floor(Math.random() * 7) - 3;  // -3 到 +3
+        mockOnlineCount = Math.min(25, Math.max(2, mockOnlineCount + change));
+        document.getElementById('onlineCount').innerText = mockOnlineCount;
+    }
+    
+    function initOnlineCounter() {
+        mockOnlineCount = Math.floor(Math.random() * 12) + 4;
+        document.getElementById('onlineCount').innerText = mockOnlineCount;
+        setInterval(updateMockOnline, 45000);  // 每45秒变化一次
     }
 
-    // 星环时间 (从 2007-10-29 开始)
+    // ==================== 不蒜子计数器（今日/总访问） ====================
+    function initBusuanzi() {
+        setTimeout(function() {
+            let todaySpan = document.getElementById('todayCount');
+            let totalSpan = document.getElementById('totalCount');
+            if (todaySpan) {
+                let today = document.getElementById('busuanzi_value_site_pv')?.innerText;
+                todaySpan.innerText = today || '0';
+            }
+            if (totalSpan) {
+                let total = document.getElementById('busuanzi_value_site_uv')?.innerText;
+                totalSpan.innerText = total || '0';
+            }
+        }, 1000);
+        
+        // 监听不蒜子异步更新
+        let observer = new MutationObserver(function() {
+            let today = document.getElementById('busuanzi_value_site_pv')?.innerText;
+            if (today && document.getElementById('todayCount')?.innerText !== today) {
+                document.getElementById('todayCount').innerText = today;
+            }
+            let total = document.getElementById('busuanzi_value_site_uv')?.innerText;
+            if (total && document.getElementById('totalCount')?.innerText !== total) {
+                document.getElementById('totalCount').innerText = total;
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // ==================== 星环时间 ====================
     function updateUptime() {
         const start = new Date(2007, 9, 29);
         const now = new Date();
@@ -440,15 +540,13 @@
         const days = diffDays % 365;
         document.getElementById('uptimeDisplay').innerHTML = `${years}年 ${days}天 🌌`;
     }
-    updateUptime();
-    setInterval(updateUptime, 3600000);
 
-    // HTTP 状态码
+    // ==================== HTTP 状态码 ====================
     const httpCodes = [
         {code:"200",name:"OK",desc:"请求成功"},
         {code:"301",name:"Moved",desc:"永久移动"},
         {code:"302",name:"Found",desc:"临时移动"},
-       {code:"304",name:"Not Modified",desc:"未修改"},
+        {code:"304",name:"Not Modified",desc:"未修改"},
         {code:"400",name:"Bad Request",desc:"语法错误"},
         {code:"401",name:"Unauthorized",desc:"未授权"},
         {code:"403",name:"Forbidden",desc:"拒绝"},
@@ -473,20 +571,20 @@
             container.appendChild(div);
         });
     }
-    renderHttp();
 
-    // 字数统计
+    // ==================== 字数统计 ====================
     function updateWordStats() {
         let text = document.getElementById('wordInput').value;
         document.getElementById('charCount').innerText = text.length;
         document.getElementById('wordCount').innerText = text.trim() ? text.trim().split(/\s+/).length : 0;
         document.getElementById('chineseCount').innerText = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
     }
-    function clearWord() { document.getElementById('wordInput').value = ''; updateWordStats(); }
-    document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
-    updateWordStats();
+    function clearWord() { 
+        document.getElementById('wordInput').value = ''; 
+        updateWordStats(); 
+    }
 
-    // UUID 生成
+    // ==================== UUID 生成 ====================
     function genUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             let r = Math.random() * 16 | 0;
@@ -513,7 +611,7 @@
         for(let i = 0; i < 3; i++) genUUIDAndShow();
     }
 
-    // IP 查询
+    // ==================== IP 查询 ====================
     function fetchIP() {
         let ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
         ipSpan.innerHTML = '检测中...';
@@ -555,7 +653,7 @@
         }, 4000);
     }
 
-    // 二维码
+    // ==================== 二维码 ====================
     function genQR() {
         let text = document.getElementById('qrText').value;
         if(!text) { alert('请输入内容'); return; }
@@ -569,12 +667,29 @@
             colorLight: "#1a1a2e"
         });
     }
-    function clearQR() { document.getElementById('qrcode').innerHTML = ''; }
+    function clearQR() { 
+        document.getElementById('qrcode').innerHTML = ''; 
+    }
 
-    // 初始化
-    genUUIDAndShow();
-    setTimeout(genQR, 500);
-    setTimeout(fetchIP, 500);
+    // ==================== 初始化 ====================
+    function init() {
+        renderHttp();
+        updateUptime();
+        setInterval(updateUptime, 3600000);
+        
+        initBusuanzi();
+        initOnlineCounter();      // 模拟在线人数，不调用任何 API
+        
+        genUUIDAndShow();
+        setTimeout(genQR, 500);
+        setTimeout(fetchIP, 500);
+        
+        let wordInput = document.getElementById('wordInput');
+        if(wordInput) wordInput.addEventListener('input', updateWordStats);
+        updateWordStats();
+    }
+    
+    init();
 </script>
 </body>
 </html>
