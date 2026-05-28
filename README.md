@@ -135,7 +135,6 @@
 
 ![访客计数器](https://visitor-badge.laobi.icu/badge?page_id=BlueDriftHK.BlueDriftHK)
 
-> 💡 提示：如果统计图不显示，说明你的账号还没有公开活跃记录 —— 没关系，慢慢来 🐟
 
 </details>
 
