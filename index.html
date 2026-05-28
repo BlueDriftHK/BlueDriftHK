@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 咸鱼极光域 | 全栈极客导航站</title>
-    <meta name="description" content="咸鱼风格极客面板 · 工具链合集">
-    <meta name="theme-color" content="#020617">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>BlueDriftHK · 咸鱼工坊</title>
+    <meta name="description" content="开发者工具集 · 毛玻璃设计">
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
@@ -14,1042 +14,744 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #0a0c14;
-            font-family: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-            color: #edf2ff;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e, #0a0a0f);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #f5f5f7;
             min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+            padding: 2rem 1.5rem;
         }
 
-        #canvas-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .universe-container {
-            position: relative;
-            z-index: 10;
+        /* 主容器 - 苹果风格毛玻璃 */
+        .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem 1.8rem;
         }
 
-        .hero-space {
-            margin-bottom: 2rem;
+        /* 头部 */
+        .header {
             text-align: center;
+            margin-bottom: 3rem;
         }
-        .glitch-title {
-            font-size: 2.6rem;
+        .title {
+            font-size: 3rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #F0F9FF, #67e8f9, #2dd4bf);
+            background: linear-gradient(135deg, #ffffff, #a5a5b5);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
-            filter: drop-shadow(0 4px 12px rgba(45,212,191,0.2));
-            animation: glitchPulse 3s infinite;
+            margin-bottom: 0.5rem;
         }
-        @keyframes glitchPulse {
-            0% { opacity: 1; text-shadow: 0 0 0px rgba(45,212,191,0); }
-            50% { opacity: 0.96; text-shadow: 0 0 8px rgba(45,212,191,0.3); }
-            100% { opacity: 1; text-shadow: 0 0 0px rgba(45,212,191,0); }
-        }
-        .subhead {
-            color: #8b9bcf;
-            margin-top: 0.6rem;
+        .subtitle {
+            color: #8e8e9e;
+            font-size: 1rem;
             font-weight: 400;
-            letter-spacing: 0.3px;
-            backdrop-filter: blur(4px);
-        }
-        .wave-divider {
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #2dd4bf70, #38bdf8, transparent);
-            width: 60%;
-            margin: 1rem auto 0;
         }
 
-        .grid-galaxy {
+        /* 网格布局 */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 1.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 1.5rem;
         }
 
-        .nova-card {
-            background: rgba(12, 22, 40, 0.55);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 2rem;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 1.5rem 1.6rem;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
-            display: flex;
-            flex-direction: column;
+        /* 苹果毛玻璃卡片 */
+        .glass-card {
+            background: rgba(30, 30, 40, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
-        .nova-card:hover {
-            transform: translateY(-6px);
-            border-color: #2dd4bf;
-            box-shadow: 0 28px 42px -18px rgba(45, 212, 191, 0.4);
-            background: rgba(18, 30, 52, 0.7);
+        .glass-card:hover {
+            transform: translateY(-3px);
+            background: rgba(40, 40, 52, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
-        .card-orbit {
+        /* 卡片头部 */
+        .card-header {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
             margin-bottom: 1.2rem;
         }
-        .orbit-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(145deg, rgba(45,212,191,0.2), rgba(56,189,248,0.1));
-            border-radius: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.9rem;
-            border: 1px solid rgba(45,212,191,0.5);
-            transition: 0.2s;
-        }
-        .nova-card:hover .orbit-icon {
-            border-color: #2dd4bf;
-            box-shadow: 0 0 12px rgba(45,212,191,0.4);
+        .card-icon {
+            font-size: 1.8rem;
         }
         .card-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 600;
+            color: #ffffff;
             letter-spacing: -0.3px;
-            background: linear-gradient(145deg, #eef5ff, #a5f3fc);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
         }
 
-        .desc-cosmic {
-            color: #9dabcf;
-            font-size: 0.85rem;
-            line-height: 1.45;
-            margin-bottom: 1.2rem;
-            font-weight: 400;
-        }
-
-        .bio-text {
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.55;
-            color: #cbd5f0;
-        }
-
-        .status-badge {
-            background: #2dd4bf20;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #6ee7b7;
-            border: 0.5px solid #2dd4bf80;
+        /* 状态标签 */
+        .status-chip {
             display: inline-block;
-        }
-
-        .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 1rem 0 0.5rem;
-        }
-        .social-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(45, 212, 191, 0.1);
-            border: 1px solid #2dd4bf40;
-            border-radius: 2rem;
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            color: #e2f0ff;
-            text-decoration: none;
-            transition: 0.2s;
-            backdrop-filter: blur(4px);
-        }
-        .social-badge:hover {
-            background: rgba(45, 212, 191, 0.25);
-            border-color: #2dd4bf;
-            transform: translateY(-2px);
-        }
-
-        .btn-nebula {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            background: rgba(45, 212, 191, 0.08);
-            border: 1px solid #2dd4bf70;
-            padding: 0.7rem 1.5rem;
-            border-radius: 3rem;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
             font-weight: 500;
-            font-size: 0.85rem;
-            color: #d4f1ff;
-            text-decoration: none;
-            transition: 0.25s;
-            margin-top: auto;
-            width: fit-content;
-            backdrop-filter: blur(4px);
-        }
-        .btn-nebula:hover {
-            background: rgba(45, 212, 191, 0.25);
-            border-color: #2dd4bf;
-            color: white;
-            transform: scale(1.02);
-            box-shadow: 0 0 14px rgba(45,212,191,0.5);
+            color: #a5a5b5;
         }
 
-        .btn-mini {
-            background: #2dd4bf20;
-            border: 1px solid #2dd4bf70;
-            border-radius: 2rem;
-            padding: 6px 18px;
-            color: #d6f3ff;
+        /* 按钮 */
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 0.8rem;
             font-weight: 500;
+            color: #ffffff;
             cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.75rem;
+            transition: all 0.2s;
+            font-family: inherit;
         }
-        .btn-mini:hover {
-            background: #2dd4bf40;
-            border-color: #2dd4bf;
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(0.98);
+        }
+        .btn-primary {
+            background: rgba(0, 122, 255, 0.8);
+            border-color: rgba(0, 122, 255, 0.5);
+        }
+        .btn-primary:hover {
+            background: rgba(0, 122, 255, 1);
         }
 
         .flex-row {
             display: flex;
             gap: 10px;
-            align-items: center;
             flex-wrap: wrap;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .input-cosmic {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #2dd4bf50;
-            border-radius: 1.2rem;
-            padding: 0.7rem 1rem;
-            color: #f0f4ff;
+        /* 输入框 */
+        .input {
+            background: rgba(20, 20, 28, 0.8);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 10px 14px;
+            color: #ffffff;
+            font-size: 0.85rem;
             width: 100%;
             outline: none;
-            transition: 0.2s;
-            font-family: 'Space Grotesk', monospace;
+            font-family: 'Inter', monospace;
         }
-        .input-cosmic:focus {
-            border-color: #2dd4bf;
-            box-shadow: 0 0 8px rgba(45,212,191,0.4);
+        .input:focus {
+            border-color: rgba(0, 122, 255, 0.5);
+        }
+        textarea.input {
+            resize: vertical;
+            min-height: 80px;
         }
 
-        .result-box {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 1.2rem;
-            padding: 0.8rem;
+        /* 结果框 */
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 10px 14px;
             margin-top: 12px;
             font-size: 0.75rem;
-            border-left: 3px solid #2dd4bf;
+            border-left: 2px solid #007aff;
             word-break: break-all;
-        }
-
-        .json-textarea, .regex-textarea, .url-textarea, .word-textarea, .md5-textarea {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #2dd4bf50;
-            border-radius: 1rem;
-            color: #e2e8f0;
-            padding: 0.7rem;
             font-family: monospace;
-            font-size: 0.75rem;
-            resize: vertical;
         }
 
-        .regex-flags {
-            display: flex;
-            gap: 15px;
+        /* 状态条 */
+        .status-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 10px 14px;
             margin: 8px 0;
-            flex-wrap: wrap;
-        }
-        .regex-flags label {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 5px;
-            font-size: 0.7rem;
-            cursor: pointer;
         }
 
-        .color-preview {
-            width: 60px;
-            height: 60px;
-            border-radius: 1rem;
-            border: 1px solid #2dd4bf;
-            margin-top: 8px;
-            transition: 0.2s;
-        }
-
-        .http-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .http-item {
-            background: rgba(0,0,0,0.3);
-            border-radius: 0.8rem;
-            padding: 6px 10px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.2s;
-            border-left: 2px solid #2dd4bf;
-        }
-        .http-item:hover {
-            background: rgba(45,212,191,0.2);
-            transform: translateX(4px);
-        }
-
-        .word-stats {
+        /* 统计卡片 */
+        .stats-group {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
             margin-top: 10px;
         }
-        .stat-card {
+        .stat-item {
             flex: 1;
-            background: rgba(0,0,0,0.3);
-            border-radius: 1rem;
-            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 10px;
             text-align: center;
-            min-width: 70px;
         }
         .stat-number {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #2dd4bf;
-            font-family: monospace;
+            color: #007aff;
         }
-        .stat-name {
-            font-size: 0.6rem;
-            color: #8b9bcf;
+        .stat-label {
+            font-size: 0.65rem;
+            color: #8e8e9e;
         }
 
+        /* 密码强度条 */
         .strength-meter {
-            height: 6px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
             margin-top: 8px;
             overflow: hidden;
         }
         .strength-fill {
             width: 0%;
             height: 100%;
-            transition: width 0.3s;
+            transition: width 0.2s;
         }
-        .strength-weak { background: #f87171; width: 25%; }
-        .strength-medium { background: #fbbf24; width: 50%; }
-        .strength-strong { background: #4ade80; width: 75%; }
-        .strength-very { background: #2dd4bf; width: 100%; }
 
-        .status-rail {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 1.3rem;
-            padding: 0.7rem 1rem;
+        /* 二维码容器 */
+        #qrcode {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-left: 3px solid #2dd4bf;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        #qrcode img {
+            border-radius: 12px;
+            background: white;
+            padding: 6px;
         }
 
-        .footer-stardust {
+        /* 底部 */
+        .footer {
             text-align: center;
             margin-top: 3rem;
-            color: #5a6b97;
-            font-size: 0.75rem;
-            border-top: 1px dashed #2dd4bf40;
-            padding-top: 1.8rem;
+            padding-top: 1.5rem;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.7rem;
+            color: #6e6e7e;
         }
 
-        .toast-msg {
+        /* 响应式 */
+        @media (max-width: 780px) {
+            body { padding: 1rem; }
+            .title { font-size: 2rem; }
+            .grid { gap: 1rem; }
+            .glass-card { padding: 1.2rem; }
+        }
+
+        /* Toast */
+        .toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(45,212,191,0.9);
-            color: #0a0c14;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
             padding: 8px 20px;
             border-radius: 40px;
             font-size: 0.8rem;
-            font-weight: 500;
+            color: white;
             z-index: 1000;
-            backdrop-filter: blur(8px);
-            pointer-events: none;
-            animation: fadeUp 2s ease forwards;
+            animation: fadeOut 2s ease forwards;
         }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        @keyframes fadeOut {
+            0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
             15% { opacity: 1; transform: translateX(-50%) translateY(0); }
             85% { opacity: 1; transform: translateX(-50%) translateY(0); }
             100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
         }
-
-        @media (max-width: 760px) {
-            .universe-container { padding: 1rem; }
-            .glitch-title { font-size: 1.8rem; }
-            .nova-card { padding: 1.2rem; }
-            .grid-galaxy { gap: 1rem; }
-        }
-
-        .quote-text {
-            font-style: italic;
-            color: #a5f3fc;
-            border-left: 2px solid #2dd4bf;
-            padding-left: 12px;
-            margin: 8px 0;
-        }
-        .roadmap-list {
-            list-style: none;
-            padding: 0;
-        }
-        .roadmap-list li {
-            padding: 4px 0;
-            border-bottom: 1px dashed rgba(45,212,191,0.2);
-            font-size: 0.75rem;
-        }
     </style>
 </head>
 <body>
-
-<canvas id="canvas-bg"></canvas>
-
-<div class="universe-container">
-    <div class="hero-space">
-        <div class="glitch-title">🐟 BlueDriftHK · 咸鱼极光域 🐟</div>
-        <div class="subhead">一条热爱技术的咸鱼 · 开源源于生活 · 偶尔躺平偶尔扑腾</div>
-        <div class="wave-divider"></div>
+<div class="container">
+    <div class="header">
+        <div class="title">🐟 BlueDriftHK</div>
+        <div class="subtitle">一条热爱技术的咸鱼 · 开源源于生活</div>
     </div>
 
-    <div class="grid-galaxy">
-        <!-- 1. 咸鱼状态栏 + 关于我 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🐟</div>
-                <div class="card-title">咸鱼状态栏</div>
+    <div class="grid">
+        <!-- 1. 关于我 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🐟</span>
+                <span class="card-title">关于我</span>
             </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem;">
-                <span class="status-badge">🟢 在线扑腾</span>
-                <span class="status-badge">☕ 今日 3h 代码 / 2h 躺平</span>
-                <span class="status-badge">⭐ 累计 4 颗 Star</span>
+            <div class="flex-between" style="margin-bottom: 12px;">
+                <span class="status-chip">🟢 在线扑腾</span>
+                <span class="status-chip">☕ 今日 3h 代码</span>
+                <span class="status-chip">⭐ 4 Stars</span>
             </div>
-            <div class="bio-text">
-                ✦ 全栈极客 & 云原生探险者 ✦<br>
-                热衷于 Cloudflare Workers 生态、边缘计算与开源精神。<br>
-                我的项目来自真实需求：烦人的重复操作、想自动化的流程、觉得"应该有人做"的小工具。
-            </div>
-            <div class="social-links">
-                <a href="https://github.com/BlueDriftHK" target="_blank" class="social-badge">🐙 GitHub / BlueDriftHK</a>
-                <a href="mailto:asiacomk@gmail.com" class="social-badge">✉️ 加密邮局</a>
-            </div>
-            <div class="quote-text" style="margin-top: 12px;">
-                💡 不为了写代码而写代码 —— 这是我的原则。
+            <p style="font-size: 0.85rem; line-height: 1.5; color: #d0d0e0;">全栈极客 & 云原生探险者，热衷于 Cloudflare Workers 生态。项目源于真实需求：烦人的重复操作、想自动化的流程。</p>
+            <div class="flex-row" style="margin-top: 14px;">
+                <a href="https://github.com/BlueDriftHK" target="_blank" style="color: #007aff; text-decoration: none; font-size: 0.8rem;">🐙 GitHub</a>
+                <a href="mailto:asiacomk@gmail.com" style="color: #007aff; text-decoration: none; font-size: 0.8rem;">✉️ 邮箱</a>
             </div>
         </div>
 
-        <!-- 2. 精选推荐 + 项目展示 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🚀</div>
-                <div class="card-title">精选推荐</div>
-            </div>
-            <div class="bio-text" style="font-size: 0.9rem; font-weight: 500;">🎬 CF Worker M3U8 Player</div>
-            <div class="desc-cosmic">Cloudflare Workers 实现的全功能 HLS (m3u8) 视频流播放器 — 代理播放、实时监控、QoS评分</div>
-            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank" class="btn-nebula">⟡ 查看项目 ⟡</a>
-            <div style="margin-top: 1rem;">
-                <div class="bio-text" style="font-size: 0.9rem; font-weight: 500;">🔍 CF-workers-netdiag</div>
-                <div class="desc-cosmic">网络诊断工具：CDN节点探测 / Ping延迟 / 路由追踪</div>
-                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" class="btn-nebula" style="margin-top: 0;">⟡ 开发中 ⟡</a>
-            </div>
-        </div>
-
-        <!-- 3. NetDiag 诊断跃迁 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🛸</div>
-                <div class="card-title">NetDiag 星链诊断</div>
-            </div>
-            <div class="desc-cosmic">Cloudflare Workers 驱动的网络探针 — 毫秒级延迟测绘、边缘路由跟踪与带宽反演。</div>
-            <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn-nebula">⟡ 启动诊断协议 ⟡</a>
-        </div>
-
-        <!-- 4. M3U8 流媒体播放器 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🎞️</div>
-                <div class="card-title">M3U8 超感播放器</div>
-            </div>
-            <div class="desc-cosmic">零广告 · 低延迟 HLS 引擎，直接播放 .m3u8 链接，沉浸式影流体验。</div>
-            <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn-nebula">⟡ 开启全息影舱 ⟡</a>
-        </div>
-
-        <!-- 5. 项目 Roadmap -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📍</div>
-                <div class="card-title">项目 Roadmap</div>
+        <!-- 2. 精选项目 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🚀</span>
+                <span class="card-title">精选项目</span>
             </div>
             <div style="margin-bottom: 12px;">
-                <div style="color: #a5f3fc; font-size: 0.8rem; margin-bottom: 6px;">🎬 M3U8Player</div>
-                <ul class="roadmap-list">
+                <div style="font-weight: 600; margin-bottom: 4px;">🎬 M3U8 Player</div>
+                <p style="font-size: 0.75rem; color: #a0a0b0;">Cloudflare Workers HLS 播放器 · 代理/监控/QoS</p>
+                <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank" class="btn" style="margin-top: 8px; display: inline-block;">查看项目 →</a>
+            </div>
+            <div>
+                <div style="font-weight: 600; margin-bottom: 4px;">🔍 NetDiag</div>
+                <p style="font-size: 0.75rem; color: #a0a0b0;">网络诊断：CDN节点 / Ping / 路由追踪</p>
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" class="btn" style="margin-top: 8px; display: inline-block;">开发中 →</a>
+            </div>
+        </div>
+
+        <!-- 3. Roadmap -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📍</span>
+                <span class="card-title">Roadmap</span>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">🎬 M3U8Player</div>
+                <ul style="margin-left: 18px; font-size: 0.7rem; color: #b0b0c0;">
                     <li>✅ v2.0 完整优化版</li>
-                    <li>⏳ 播放列表收藏 (Workers KV)</li>
+                    <li>⏳ 播放列表收藏</li>
                     <li>⏳ 自定义请求头</li>
                 </ul>
             </div>
             <div>
-                <div style="color: #a5f3fc; font-size: 0.8rem; margin-bottom: 6px;">🔍 netdiag</div>
-                <ul class="roadmap-list">
-                    <li>✅ 基础框架搭建</li>
+                <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">🔍 NetDiag</div>
+                <ul style="margin-left: 18px; font-size: 0.7rem; color: #b0b0c0;">
+                    <li>✅ 基础框架</li>
                     <li>⏳ CDN 节点探测</li>
                     <li>⏳ Ping 延迟测试</li>
                 </ul>
             </div>
         </div>
 
-        <!-- 6. 咸鱼语录 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">💬</div>
-                <div class="card-title">咸鱼语录</div>
+        <!-- 4. 咸鱼语录 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">💬</span>
+                <span class="card-title">咸鱼语录</span>
             </div>
-            <div class="quote-text">「咸鱼不是摆烂，是换一种姿势努力。」</div>
-            <div class="quote-text" style="margin-top: 6px;">「代码如人生，bug 如日常 —— 修就完了。」</div>
-            <div class="quote-text" style="margin-top: 6px;">「每一个好用的工具，最初都是为了解决自己的麻烦。」</div>
-            <div class="quote-text" style="margin-top: 6px;">「开源的精神不是写出完美的代码，而是愿意分享不完美的代码。」</div>
-            <div class="desc-cosmic" style="margin-top: 12px; text-align: center;">✨ 今日咸鱼说：M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花 ✨</div>
+            <p style="font-size: 0.8rem; color: #c0c0d0; border-left: 2px solid #007aff; padding-left: 12px; margin: 8px 0;">「咸鱼不是摆烂，是换一种姿势努力。」</p>
+            <p style="font-size: 0.8rem; color: #c0c0d0; border-left: 2px solid #007aff; padding-left: 12px; margin: 8px 0;">「每一个好用的工具，都是为了解决自己的麻烦。」</p>
+            <p style="font-size: 0.75rem; text-align: center; margin-top: 10px; color: #8e8e9e;">✨ 今日咸鱼说：代码如人生，bug 如日常 ✨</p>
         </div>
 
-        <!-- 7. 异能工坊 (密码+Base64) -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">⚙️🌀</div>
-                <div class="card-title">异能工坊</div>
-            </div>
-            <div class="tool-galaxy">
-                <div class="desc-cosmic" style="margin-bottom: 6px;">🔐 量子密码生成</div>
-                <div class="flex-row">
-                    <input type="number" id="pwdLength" value="16" min="6" max="48" class="input-cosmic" style="max-width:95px;">
-                    <button class="btn-mini" onclick="genQuantumPassword()">生成熵值</button>
-                    <button class="btn-mini" onclick="copyToClipboard('passwordResult')">📋 复制</button>
-                </div>
-                <input type="text" id="passwordResult" readonly class="input-cosmic" style="margin-top:8px;" placeholder="点击生成密钥">
-                <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
-            </div>
-            <div class="tool-galaxy" style="margin-top: 12px;">
-                <div class="desc-cosmic" style="margin-bottom: 6px;">📡 Base64 编/解码器</div>
-                <input type="text" id="base64Field" class="input-cosmic" placeholder="文本 或 Base64 字符串" style="margin-bottom:8px;">
-                <div class="flex-row">
-                    <button class="btn-mini" style="flex:1;" onclick="encodeBase64Uni()">⟡ 编码 ⟡</button>
-                    <button class="btn-mini" style="flex:1;" onclick="decodeBase64Uni()">⟡ 解码 ⟡</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 8. JSON 星云格式化 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📋</div>
-                <div class="card-title">JSON 星云格式化</div>
-            </div>
-            <textarea id="jsonInput" class="json-textarea" style="height: 100px;" placeholder='输入 JSON 代码，例如：{"name":"BlueDriftHK"}'></textarea>
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="formatJSON()" style="flex:1;">✨ 格式化</button>
-                <button class="btn-mini" onclick="minifyJSON()" style="flex:1;">📦 压缩</button>
-                <button class="btn-mini" onclick="validateJSON()" style="flex:1;">✅ 验证</button>
-            </div>
-            <div id="jsonResult" class="result-box" style="max-height:120px; overflow:auto;">等待操作...</div>
-        </div>
-
-        <!-- 9. 正则引擎 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🔍</div>
-                <div class="card-title">正则引擎 · 测试器</div>
-            </div>
-            <div class="desc-cosmic" style="margin-bottom: 4px;">📐 正则表达式</div>
-            <input type="text" id="regexPattern" class="input-cosmic" placeholder="例如: \d+" value="\b\d{4}\b">
-            <div class="regex-flags">
-                <label><input type="checkbox" id="flagG"> global (g)</label>
-                <label><input type="checkbox" id="flagI"> ignoreCase (i)</label>
-                <label><input type="checkbox" id="flagM"> multiline (m)</label>
-            </div>
-            <div class="desc-cosmic" style="margin-top: 6px; margin-bottom: 4px;">📝 测试文本</div>
-            <textarea id="testText" class="regex-textarea" style="height: 80px;" placeholder="输入要匹配的文本...">2024年发布了 8 个工具，2025年将发布 15 个。</textarea>
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="testRegex()" style="flex:1;">🎯 执行匹配</button>
-                <button class="btn-mini" onclick="clearRegex()" style="flex:1;">🗑️ 清除</button>
-            </div>
-            <div id="regexResult" class="result-box">等待测试...</div>
-        </div>
-
-        <!-- 10. 色彩工坊 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🎨</div>
-                <div class="card-title">色彩工坊</div>
+        <!-- 5. 密码 + Base64 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🔐</span>
+                <span class="card-title">密码 & Base64</span>
             </div>
             <div class="flex-row">
-                <input type="text" id="colorInput" class="input-cosmic" placeholder="#2dd4bf 或 rgb(45,212,191)" style="flex:2;">
-                <button class="btn-mini" onclick="convertColor()">转换</button>
+                <input type="number" id="pwdLength" value="16" class="input" style="width: 80px;">
+                <button class="btn" onclick="genPassword()">生成密码</button>
+                <button class="btn" onclick="copyText('passwordResult')">复制</button>
             </div>
-            <div id="colorResult" class="result-box">输入颜色代码进行转换...</div>
-            <div id="colorPreview" class="color-preview"></div>
-            <div class="flex-row" style="margin-top: 8px;">
-                <button class="btn-mini" onclick="randomColor()" style="flex:1;">🎲 随机颜色</button>
-                <button class="btn-mini" onclick="copyColor()" style="flex:1;">📋 复制结果</button>
+            <input type="text" id="passwordResult" readonly class="input" style="margin-top: 8px;" placeholder="点击生成">
+            <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
+            <div class="flex-row" style="margin-top: 12px;">
+                <input type="text" id="base64Field" class="input" placeholder="文本或 Base64">
+                <button class="btn" onclick="encodeBase64()">编码</button>
+                <button class="btn" onclick="decodeBase64()">解码</button>
             </div>
         </div>
 
-        <!-- 11. URL 编解码器 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🔗</div>
-                <div class="card-title">URL 编解码器</div>
+        <!-- 6. JSON 工具 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📋</span>
+                <span class="card-title">JSON 工具</span>
             </div>
-            <textarea id="urlInput" class="url-textarea" style="height: 80px;" placeholder="https://example.com/测试 或 %E6%B5%8B%E8%AF%95"></textarea>
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="urlEncode()" style="flex:1;">🔒 编码</button>
-                <button class="btn-mini" onclick="urlDecode()" style="flex:1;">🔓 解码</button>
-                <button class="btn-mini" onclick="clearUrl()" style="flex:1;">🗑️ 清除</button>
+            <textarea id="jsonInput" class="input" placeholder='{"name":"BlueDriftHK"}' style="height: 90px;"></textarea>
+            <div class="flex-row">
+                <button class="btn" onclick="formatJSON()">格式化</button>
+                <button class="btn" onclick="minifyJSON()">压缩</button>
+                <button class="btn" onclick="validateJSON()">验证</button>
             </div>
-            <div id="urlResult" class="result-box" style="max-height: 80px; overflow: auto;">等待操作...</div>
+            <div id="jsonResult" class="result">等待操作</div>
         </div>
 
-        <!-- 12. HTTP 状态码速查 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📡</div>
-                <div class="card-title">HTTP 状态码速查</div>
+        <!-- 7. 正则测试 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🔍</span>
+                <span class="card-title">正则测试</span>
             </div>
-            <div id="httpList" class="http-grid"></div>
-            <div id="httpDetail" class="result-box" style="margin-top: 8px; font-size: 0.7rem;">点击任意状态码查看详情</div>
+            <input type="text" id="regexPattern" class="input" placeholder="正则表达式" value="\d+">
+            <div class="flex-row">
+                <label><input type="checkbox" id="flagG"> g</label>
+                <label><input type="checkbox" id="flagI"> i</label>
+                <label><input type="checkbox" id="flagM"> m</label>
+            </div>
+            <textarea id="testText" class="input" style="height: 70px;" placeholder="测试文本">2024年发布8个工具</textarea>
+            <div class="flex-row">
+                <button class="btn" onclick="testRegex()">匹配</button>
+                <button class="btn" onclick="clearRegex()">清除</button>
+            </div>
+            <div id="regexResult" class="result">等待测试</div>
         </div>
 
-        <!-- 13. 字数统计 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📊</div>
-                <div class="card-title">字数统计</div>
-            </div>
-            <textarea id="wordInput" class="word-textarea" style="height: 100px;" placeholder="输入或粘贴文本，实时统计..."></textarea>
-            <div id="wordStats" class="word-stats">
-                <div class="stat-card"><div class="stat-number" id="charCount">0</div><div class="stat-name">字符数</div></div>
-                <div class="stat-card"><div class="stat-number" id="wordCount">0</div><div class="stat-name">单词数</div></div>
-                <div class="stat-card"><div class="stat-number" id="chineseCount">0</div><div class="stat-name">中文字符</div></div>
-            </div>
-            <button class="btn-mini" onclick="clearWordStats()" style="margin-top: 8px;">🗑️ 清空</button>
-        </div>
-
-        <!-- 14. UUID 生成器 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🆔</div>
-                <div class="card-title">UUID 生成器</div>
-            </div>
-            <div class="uuid-value" id="uuidDisplay" style="background: rgba(0,0,0,0.5); border-radius: 1rem; padding: 8px 12px; font-family: monospace; font-size: 0.75rem;">点击下方按钮生成</div>
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="generateUUIDAndDisplay()" style="flex:1;">✨ 生成 UUID</button>
-                <button class="btn-mini" onclick="copyUUID()" style="flex:1;">📋 复制</button>
-            </div>
-            <div id="uuidHistory" class="result-box" style="max-height: 100px; overflow: auto; font-size: 0.7rem;"></div>
-        </div>
-
-        <!-- 15. 哈希指纹 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🔐</div>
-                <div class="card-title">哈希指纹</div>
-            </div>
-            <textarea id="md5Input" class="md5-textarea" style="height: 80px;" placeholder="输入任意文本..."></textarea>
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="generateMD5()" style="flex:1;">🔒 MD5</button>
-                <button class="btn-mini" onclick="generateSHA256()" style="flex:1;">🌀 SHA256</button>
-            </div>
-            <div id="md5Result" class="result-box" style="font-family: monospace;">等待生成...</div>
-        </div>
-
-        <!-- 16. 时间枢纽 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">⏰</div>
-                <div class="card-title">时间枢纽</div>
+        <!-- 8. 色彩转换 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🎨</span>
+                <span class="card-title">色彩转换</span>
             </div>
             <div class="flex-row">
-                <input type="text" id="timestampInput" class="input-cosmic" placeholder="时间戳 (秒/毫秒)" style="flex:2;">
-                <button class="btn-mini" onclick="timestampToDate()">→ 日期</button>
+                <input type="text" id="colorInput" class="input" placeholder="#007aff 或 rgb(0,122,255)">
+                <button class="btn" onclick="convertColor()">转换</button>
             </div>
-            <div id="timestampResult" class="result-box" style="margin-bottom: 8px;">等待转换...</div>
+            <div id="colorResult" class="result">等待输入</div>
+            <div id="colorPreview" style="width: 50px; height: 50px; border-radius: 12px; margin-top: 8px; background: #007aff;"></div>
+        </div>
+
+        <!-- 9. URL 编解码 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🔗</span>
+                <span class="card-title">URL 编解码</span>
+            </div>
+            <textarea id="urlInput" class="input" placeholder="https://example.com/测试"></textarea>
             <div class="flex-row">
-                <input type="datetime-local" id="datetimeInput" class="input-cosmic" style="flex:2;">
-                <button class="btn-mini" onclick="dateToTimestamp()">→ 戳</button>
+                <button class="btn" onclick="urlEncode()">编码</button>
+                <button class="btn" onclick="urlDecode()">解码</button>
+                <button class="btn" onclick="clearUrl()">清除</button>
             </div>
-            <div id="datetimeResult" class="result-box">等待转换...</div>
-            <div class="flex-row" style="margin-top: 8px;">
-                <button class="btn-mini" onclick="getCurrentTimestamp()" style="flex:1;">📌 当前时间戳</button>
-                <button class="btn-mini" onclick="getCurrentDateTime()" style="flex:1;">🗓️ 当前日期</button>
+            <div id="urlResult" class="result">等待操作</div>
+        </div>
+
+        <!-- 10. HTTP 状态码 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📡</span>
+                <span class="card-title">HTTP 状态码</span>
+            </div>
+            <div id="httpList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 150px; overflow-y: auto;"></div>
+            <div id="httpDetail" class="result" style="margin-top: 8px;">点击查看详情</div>
+        </div>
+
+        <!-- 11. 字数统计 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📊</span>
+                <span class="card-title">字数统计</span>
+            </div>
+            <textarea id="wordInput" class="input" placeholder="输入文本..."></textarea>
+            <div class="stats-group">
+                <div class="stat-item"><div class="stat-number" id="charCount">0</div><div class="stat-label">字符</div></div>
+                <div class="stat-item"><div class="stat-number" id="wordCount">0</div><div class="stat-label">单词</div></div>
+                <div class="stat-item"><div class="stat-number" id="chineseCount">0</div><div class="stat-label">中文</div></div>
+            </div>
+            <button class="btn" onclick="clearWord()" style="margin-top: 8px;">清空</button>
+        </div>
+
+        <!-- 12. UUID 生成 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🆔</span>
+                <span class="card-title">UUID 生成</span>
+            </div>
+            <div class="result" id="uuidDisplay" style="font-family: monospace;">点击生成</div>
+            <div class="flex-row">
+                <button class="btn" onclick="genUUID()">生成</button>
+                <button class="btn" onclick="copyUUID()">复制</button>
+                <button class="btn" onclick="genMultipleUUID()">生成3个</button>
+            </div>
+            <div id="uuidHistory" class="result" style="margin-top: 8px; font-size: 0.7rem;"></div>
+        </div>
+
+        <!-- 13. MD5/SHA256 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🔐</span>
+                <span class="card-title">哈希指纹</span>
+            </div>
+            <textarea id="hashInput" class="input" placeholder="输入文本..."></textarea>
+            <div class="flex-row">
+                <button class="btn" onclick="genMD5()">MD5</button>
+                <button class="btn" onclick="genSHA256()">SHA256</button>
+            </div>
+            <div id="hashResult" class="result">等待生成</div>
+        </div>
+
+        <!-- 14. 时间转换 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">⏰</span>
+                <span class="card-title">时间转换</span>
+            </div>
+            <div class="flex-row">
+                <input type="text" id="timestampInput" class="input" placeholder="时间戳">
+                <button class="btn" onclick="tsToDate()">→日期</button>
+            </div>
+            <div id="tsResult" class="result">等待</div>
+            <div class="flex-row">
+                <input type="datetime-local" id="datetimeInput" class="input">
+                <button class="btn" onclick="dateToTs()">→戳</button>
+            </div>
+            <div id="dateResult" class="result">等待</div>
+            <div class="flex-row">
+                <button class="btn" onclick="nowTs()">当前时间戳</button>
+                <button class="btn" onclick="nowDate()">当前日期</button>
             </div>
         </div>
 
-        <!-- 17. IP 星际定位 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📍</div>
-                <div class="card-title">IP 星际定位</div>
+        <!-- 15. IP 查询 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📍</span>
+                <span class="card-title">IP 查询</span>
             </div>
-            <button class="btn-mini" onclick="fetchIPInfo()" style="width:fit-content;">🌐 查询我的IP</button>
-            <div id="ipInfoBox" class="result-box">
-                <div class="flex-row" style="justify-content: space-between;"><span>🌍 IP 地址</span><span id="ipAddr">点击查询</span></div>
-                <div class="flex-row" style="justify-content: space-between; margin-top: 4px;"><span>📡 获取方式</span><span id="ipMethod">--</span></div>
+            <button class="btn" onclick="fetchIP()">查询我的 IP</button>
+            <div class="result" style="margin-top: 10px;">
+                <div class="flex-between"><span>🌍 IP</span><span id="ipAddr">未查询</span></div>
+                <div class="flex-between" style="margin-top: 5px;"><span>📡 来源</span><span id="ipMethod">--</span></div>
             </div>
         </div>
 
-        <!-- 18. 二维码生成器 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">📱</div>
-                <div class="card-title">量子码生成器</div>
+        <!-- 16. 二维码 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📱</span>
+                <span class="card-title">二维码</span>
             </div>
-            <input type="text" id="qrText" class="input-cosmic" placeholder="https://github.com/BlueDriftHK" value="https://github.com/BlueDriftHK">
-            <div class="flex-row" style="margin-top: 10px;">
-                <button class="btn-mini" onclick="generateQRCode()" style="flex:1;">✨ 生成二维码</button>
-                <button class="btn-mini" onclick="clearQRCode()" style="flex:1;">🗑️ 清除</button>
+            <input type="text" id="qrText" class="input" value="https://github.com/BlueDriftHK">
+            <div class="flex-row">
+                <button class="btn" onclick="genQR()">生成</button>
+                <button class="btn" onclick="clearQR()">清除</button>
             </div>
-            <div id="qrcode" style="display: flex; justify-content: center; margin-top: 8px;"></div>
+            <div id="qrcode"></div>
         </div>
 
-        <!-- 19. 星环状态 -->
-        <div class="nova-card">
-            <div class="card-orbit">
-                <div class="orbit-icon">🪐</div>
-                <div class="card-title">星环状态</div>
+        <!-- 17. 星环状态（2007年10月29日） -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">🪐</span>
+                <span class="card-title">星环状态</span>
             </div>
-            <div class="status-rail"><span>🟢 核心引擎</span><span class="status-badge">● 聚变运行中</span></div>
-            <div class="status-rail"><span>⏳ 时空存续</span><span style="font-family:monospace;" id="uptimeCosmic">计算中...</span></div>
-            <div class="desc-cosmic" style="margin-top:8px; text-align:center;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</div>
+            <div class="status-bar">
+                <span>🟢 核心引擎</span>
+                <span class="status-chip">聚变运行中</span>
+            </div>
+            <div class="status-bar">
+                <span>⏳ 时空存续</span>
+                <span id="uptimeDisplay" style="font-family: monospace;">计算中...</span>
+            </div>
+            <div class="status-bar">
+                <span>📅 起始纪元</span>
+                <span>2007年10月29日</span>
+            </div>
+            <p style="font-size: 0.7rem; text-align: center; margin-top: 10px; color: #6e6e7e;">基于 Cloudflare Workers 生态</p>
         </div>
     </div>
 
-    <div class="footer-stardust">
-        <div>Made with ❤️ by BlueDriftHK · 咸鱼极光域</div>
+    <div class="footer">
+        <div>Made with ❤️ by BlueDriftHK · 咸鱼工坊</div>
         <div style="margin-top: 6px;">GNU General Public License v3.0 · 开源自由 · 持续更新</div>
         <div style="margin-top: 6px;">📅 最后更新：2026年5月28日</div>
     </div>
 </div>
 
 <script>
-    // Toast 通知
     function showToast(msg) {
         let toast = document.createElement('div');
-        toast.className = 'toast-msg';
+        toast.className = 'toast';
         toast.innerText = msg;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2000);
     }
-    
-    function copyToClipboard(elementId) {
-        let el = document.getElementById(elementId);
-        if (el && el.value) { navigator.clipboard.writeText(el.value); showToast('✅ 已复制'); }
-        else if (el && el.innerText && el.innerText !== '点击下方按钮生成') { navigator.clipboard.writeText(el.innerText); showToast('✅ 已复制'); }
-        else showToast('❌ 无内容');
+
+    function copyText(id) {
+        let el = document.getElementById(id);
+        if (el && el.value) { navigator.clipboard.writeText(el.value); showToast('已复制'); }
+        else if (el && el.innerText && el.innerText !== '点击生成') { navigator.clipboard.writeText(el.innerText); showToast('已复制'); }
+        else showToast('无内容');
     }
 
-    // 粒子背景
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let width, height;
-    function resizeCanvas() { width = window.innerWidth; height = window.innerHeight; canvas.width = width; canvas.height = height; }
-    class Particle { constructor() { this.x = Math.random() * width; this.y = Math.random() * height; this.size = Math.random() * 2.5 + 0.8; this.speedX = (Math.random() - 0.5) * 0.4; this.speedY = (Math.random() - 0.5) * 0.2; this.opacity = Math.random() * 0.5 + 0.2; this.color = `rgba(90, 210, 230, ${this.opacity})`; } update() { this.x += this.speedX; this.y += this.speedY; if (this.x < 0) this.x = width; if (this.x > width) this.x = 0; if (this.y < 0) this.y = height; if (this.y > height) this.y = 0; } draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fillStyle = this.color; ctx.fill(); } }
-    function initParticles() { particles = []; const count = Math.min(100, Math.floor(width * height / 12000)); for (let i = 0; i < count; i++) particles.push(new Particle()); }
-    function animateParticles() { if (!ctx) return; ctx.clearRect(0, 0, width, height); ctx.fillStyle = '#0a0c14'; ctx.fillRect(0, 0, width, height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animateParticles); }
-    window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
-    resizeCanvas(); initParticles(); animateParticles();
+    // 星环时间 (从 2007-10-29 开始)
+    function updateUptime() {
+        const start = new Date(2007, 9, 29); // 10月 = 9
+        const now = new Date();
+        const diffMs = now - start;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        const years = Math.floor(diffDays / 365);
+        const days = diffDays % 365;
+        document.getElementById('uptimeDisplay').innerHTML = `${years}年 ${days}天 🌌`;
+    }
+    updateUptime();
+    setInterval(updateUptime, 3600000);
 
-    // 时间状态
-    function updateCosmicUptime() {
-        const startDate = new Date(2024, 0, 1);
-        const diffDays = Math.floor((new Date() - startDate) / (1000 * 60 * 60 * 24));
-        document.getElementById('uptimeCosmic').innerHTML = `${diffDays}天 🌌`;
+    // 密码生成
+    function checkStrength(pwd) {
+        let s = 0;
+        if (pwd.length >= 12) s++;
+        if (pwd.length >= 16) s++;
+        if (/[a-z]/.test(pwd)) s++;
+        if (/[A-Z]/.test(pwd)) s++;
+        if (/[0-9]/.test(pwd)) s++;
+        if (/[^a-zA-Z0-9]/.test(pwd)) s++;
+        let fill = document.getElementById('strengthFill');
+        if (s <= 2) fill.style.width = '25%', fill.style.background = '#ff3b30';
+        else if (s <= 4) fill.style.width = '50%', fill.style.background = '#ffcc00';
+        else if (s <= 5) fill.style.width = '75%', fill.style.background = '#34c759';
+        else fill.style.width = '100%', fill.style.background = '#007aff';
     }
-    updateCosmicUptime(); setInterval(updateCosmicUptime, 3600000);
-
-    // 密码生成与强度检测
-    function checkPasswordStrength(password) {
-        let strength = 0;
-        if (password.length >= 12) strength++;
-        if (password.length >= 16) strength++;
-        if (/[a-z]/.test(password)) strength++;
-        if (/[A-Z]/.test(password)) strength++;
-        if (/[0-9]/.test(password)) strength++;
-        if (/[^a-zA-Z0-9]/.test(password)) strength++;
-        const fill = document.getElementById('strengthFill');
-        if (!fill) return;
-        if (strength <= 2) fill.className = 'strength-fill strength-weak';
-        else if (strength <= 4) fill.className = 'strength-fill strength-medium';
-        else if (strength <= 5) fill.className = 'strength-fill strength-strong';
-        else fill.className = 'strength-fill strength-very';
-    }
-    function genQuantumPassword() { 
-        let len = parseInt(document.getElementById('pwdLength').value, 10); 
-        if (isNaN(len)) len = 16; 
-        len = Math.min(48, Math.max(8, len)); 
-        const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?'; 
-        const all = upper + lower + digits + special; 
-        let pwd = ''; 
-        pwd += upper[Math.floor(Math.random() * upper.length)] + lower[Math.floor(Math.random() * lower.length)] + digits[Math.floor(Math.random() * digits.length)] + special[Math.floor(Math.random() * special.length)]; 
-        for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)]; 
-        pwd = pwd.split('').sort(() => Math.random() - 0.5).join(''); 
-        const resField = document.getElementById('passwordResult'); 
-        if(resField) { resField.value = pwd; checkPasswordStrength(pwd); }
-    }
-    
-    function encodeBase64Uni() { 
-        const inputField = document.getElementById('base64Field'); 
-        if (!inputField.value) { showToast('⛔ 输入文本'); return; } 
-        try { 
-            const utf8 = new TextEncoder().encode(inputField.value); 
-            let binary = ''; 
-            utf8.forEach(byte => binary += String.fromCharCode(byte)); 
-            inputField.value = btoa(binary); 
-            showToast('编码完成'); 
-        } catch (e) { showToast('编码异常'); } 
-    }
-    function decodeBase64Uni() { 
-        const inputField = document.getElementById('base64Field'); 
-        if (!inputField.value.trim()) { showToast('⛔ 输入Base64'); return; } 
-        try { 
-            const binary = atob(inputField.value); 
-            const uintArr = new Uint8Array(binary.length); 
-            for (let i = 0; i < binary.length; i++) uintArr[i] = binary.charCodeAt(i); 
-            inputField.value = new TextDecoder().decode(uintArr); 
-            showToast('解码完成'); 
-        } catch (e) { showToast('解码失败'); } 
+    function genPassword() {
+        let len = parseInt(document.getElementById('pwdLength').value) || 16;
+        len = Math.min(48, Math.max(8, len));
+        const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?';
+        const all = upper + lower + digits + special;
+        let pwd = '';
+        pwd += upper[Math.floor(Math.random() * upper.length)];
+        pwd += lower[Math.floor(Math.random() * lower.length)];
+        pwd += digits[Math.floor(Math.random() * digits.length)];
+        pwd += special[Math.floor(Math.random() * special.length)];
+        for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)];
+        pwd = pwd.split('').sort(() => Math.random() - 0.5).join('');
+        document.getElementById('passwordResult').value = pwd;
+        checkStrength(pwd);
     }
 
-    function formatJSON() { 
-        try { 
-            const obj = JSON.parse(document.getElementById('jsonInput').value); 
-            document.getElementById('jsonResult').innerHTML = `<pre style="margin:0;color:#6ee7b7;">${JSON.stringify(obj, null, 2)}</pre>`; 
-        } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } 
+    function encodeBase64() {
+        let val = document.getElementById('base64Field').value;
+        if (!val) { showToast('请输入内容'); return; }
+        try { document.getElementById('base64Field').value = btoa(unescape(encodeURIComponent(val))); showToast('编码完成'); }
+        catch(e) { showToast('编码失败'); }
     }
-    function minifyJSON() { 
-        try { 
-            const obj = JSON.parse(document.getElementById('jsonInput').value); 
-            document.getElementById('jsonResult').innerHTML = `<span style="font-family:monospace;">${JSON.stringify(obj)}</span>`; 
-        } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } 
+    function decodeBase64() {
+        let val = document.getElementById('base64Field').value;
+        if (!val) { showToast('请输入Base64'); return; }
+        try { document.getElementById('base64Field').value = decodeURIComponent(escape(atob(val))); showToast('解码完成'); }
+        catch(e) { showToast('解码失败'); }
     }
-    function validateJSON() { 
-        try { 
-            JSON.parse(document.getElementById('jsonInput').value); 
-            document.getElementById('jsonResult').innerHTML = '<span style="color:#4ade80;">✅ JSON 格式正确</span>'; 
-        } catch (e) { document.getElementById('jsonResult').innerHTML = `<span style="color:#f87171;">❌ ${e.message}</span>`; } 
+
+    function formatJSON() {
+        try { let obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = JSON.stringify(obj, null, 2); }
+        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
+    }
+    function minifyJSON() {
+        try { let obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = JSON.stringify(obj); }
+        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
+    }
+    function validateJSON() {
+        try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '✅ 格式正确'; }
+        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
     }
 
     function testRegex() {
         let pattern = document.getElementById('regexPattern').value;
-        if (!pattern) { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">请输入正则表达式</span>'; return; }
+        if (!pattern) { document.getElementById('regexResult').innerHTML = '请输入正则'; return; }
         let flags = '';
         if (document.getElementById('flagG').checked) flags += 'g';
         if (document.getElementById('flagI').checked) flags += 'i';
         if (document.getElementById('flagM').checked) flags += 'm';
         try {
-            const regex = new RegExp(pattern, flags);
-            const testText = document.getElementById('testText').value;
-            const matches = testText.match(regex);
-            if (matches && matches.length > 0) {
-                let resultHtml = `<span style="color:#4ade80;">✅ 找到 ${matches.length} 个匹配:</span><br>`;
-                matches.forEach((m, i) => { resultHtml += `<span style="color:#cffafe;">${i+1}. ${m}</span><br>`; });
-                document.getElementById('regexResult').innerHTML = resultHtml;
-            } else { document.getElementById('regexResult').innerHTML = '<span style="color:#f87171;">❌ 未找到匹配项</span>'; }
-        } catch (e) { document.getElementById('regexResult').innerHTML = `<span style="color:#f87171;">❌ 正则错误: ${e.message}</span>`; }
+            let regex = new RegExp(pattern, flags);
+            let text = document.getElementById('testText').value;
+            let matches = text.match(regex);
+            if (matches) document.getElementById('regexResult').innerHTML = `✅ 找到 ${matches.length} 个: ${matches.join(', ')}`;
+            else document.getElementById('regexResult').innerHTML = '❌ 无匹配';
+        } catch(e) { document.getElementById('regexResult').innerHTML = '❌ ' + e.message; }
     }
     function clearRegex() { document.getElementById('regexPattern').value = ''; document.getElementById('testText').value = ''; document.getElementById('regexResult').innerHTML = '已清除'; }
 
-    function hexToRgb(hex) { let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex); return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null; }
-    function rgbToHex(r, g, b) { return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); }
     function convertColor() {
         let input = document.getElementById('colorInput').value.trim();
-        if (input.startsWith('#')) { const rgbObj = hexToRgb(input); if (rgbObj) { document.getElementById('colorResult').innerHTML = `HEX: ${input}<br>RGB: rgb(${rgbObj.r}, ${rgbObj.g}, ${rgbObj.b})`; document.getElementById('colorPreview').style.backgroundColor = input; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 HEX 格式</span>'; } }
-        else if (input.startsWith('rgb')) { const match = input.match(/\d+/g); if (match && match.length >= 3) { const r = parseInt(match[0]), g = parseInt(match[1]), b = parseInt(match[2]); const hex = rgbToHex(r, g, b); document.getElementById('colorResult').innerHTML = `RGB: rgb(${r}, ${g}, ${b})<br>HEX: ${hex}`; document.getElementById('colorPreview').style.backgroundColor = hex; } else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">无效的 RGB 格式</span>'; } }
-        else { document.getElementById('colorResult').innerHTML = '<span style="color:#f87171;">请输入 HEX (#RRGGBB) 或 RGB 格式</span>'; }
-    }
-    function randomColor() { const r = Math.floor(Math.random() * 256), g = Math.floor(Math.random() * 256), b = Math.floor(Math.random() * 256); const hex = rgbToHex(r, g, b); document.getElementById('colorInput').value = hex; document.getElementById('colorResult').innerHTML = `HEX: ${hex}<br>RGB: rgb(${r}, ${g}, ${b})`; document.getElementById('colorPreview').style.backgroundColor = hex; }
-    function copyColor() { const text = document.getElementById('colorResult').innerText; if (text && !text.includes('无效')) { navigator.clipboard.writeText(text.split('\n')[0]); showToast('已复制'); } else { showToast('无有效颜色数据'); } }
-
-    function timestampToDate() { 
-        const input = document.getElementById('timestampInput').value.trim(); 
-        if (!input) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入时间戳</span>'; return; } 
-        let ts = parseInt(input); 
-        if (isNaN(ts)) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">请输入有效数字</span>'; return; } 
-        if (ts.toString().length === 10) ts = ts * 1000; 
-        const date = new Date(ts); 
-        if (isNaN(date.getTime())) { document.getElementById('timestampResult').innerHTML = '<span style="color:#f87171;">无效的时间戳</span>'; return; } 
-        document.getElementById('timestampResult').innerHTML = `📅 ${date.toLocaleString('zh-CN')}`; 
-    }
-    function dateToTimestamp() { 
-        const input = document.getElementById('datetimeInput').value; 
-        if (!input) { document.getElementById('datetimeResult').innerHTML = '<span style="color:#f87171;">请选择日期时间</span>'; return; } 
-        const date = new Date(input); 
-        document.getElementById('datetimeResult').innerHTML = `⏱️ 秒级: ${Math.floor(date.getTime() / 1000)}<br>⚡ 毫秒级: ${date.getTime()}`; 
-    }
-    function getCurrentTimestamp() { 
-        const now = new Date(); 
-        document.getElementById('timestampInput').value = Math.floor(now.getTime() / 1000); 
-        document.getElementById('timestampResult').innerHTML = `⏱️ 当前秒级: ${Math.floor(now.getTime() / 1000)}<br>📅 ${now.toLocaleString('zh-CN')}`; 
-    }
-    function getCurrentDateTime() { 
-        const now = new Date(); 
-        const year = now.getFullYear(); 
-        const month = String(now.getMonth() + 1).padStart(2, '0'); 
-        const day = String(now.getDate()).padStart(2, '0'); 
-        const hours = String(now.getHours()).padStart(2, '0'); 
-        const minutes = String(now.getMinutes()).padStart(2, '0'); 
-        document.getElementById('datetimeInput').value = `${year}-${month}-${day}T${hours}:${minutes}`; 
-        document.getElementById('datetimeResult').innerHTML = `⏱️ 对应时间戳: ${Math.floor(now.getTime() / 1000)}`; 
+        let preview = document.getElementById('colorPreview');
+        let result = document.getElementById('colorResult');
+        if (input.startsWith('#')) {
+            preview.style.backgroundColor = input;
+            let r = parseInt(input.slice(1,3),16), g = parseInt(input.slice(3,5),16), b = parseInt(input.slice(5,7),16);
+            result.innerHTML = `HEX: ${input}<br>RGB: rgb(${r}, ${g}, ${b})`;
+        } else if (input.startsWith('rgb')) {
+            let match = input.match(/\d+/g);
+            if (match && match.length >= 3) {
+                let hex = '#' + ((1<<24)+(parseInt(match[0])<<16)+(parseInt(match[1])<<8)+parseInt(match[2])).toString(16).slice(1);
+                preview.style.backgroundColor = hex;
+                result.innerHTML = `RGB: ${input}<br>HEX: ${hex}`;
+            } else result.innerHTML = '无效格式';
+        } else result.innerHTML = '请输入 HEX 或 RGB';
     }
 
-    function urlEncode() { 
-        const input = document.getElementById('urlInput').value; 
-        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入内容</span>'; return; } 
-        try { 
-            const encoded = encodeURIComponent(input); 
-            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 编码结果:</span><br><span style="word-break:break-all;">${encoded}</span>`; 
-        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">编码失败</span>`; } 
-    }
-    function urlDecode() { 
-        const input = document.getElementById('urlInput').value; 
-        if (!input) { document.getElementById('urlResult').innerHTML = '<span style="color:#f87171;">请输入内容</span>'; return; } 
-        try { 
-            const decoded = decodeURIComponent(input); 
-            document.getElementById('urlResult').innerHTML = `<span style="color:#4ade80;">✅ 解码结果:</span><br><span style="word-break:break-all;">${decoded}</span>`; 
-        } catch(e) { document.getElementById('urlResult').innerHTML = `<span style="color:#f87171;">解码失败</span>`; } 
-    }
+    function urlEncode() { let val = document.getElementById('urlInput').value; if(val) document.getElementById('urlResult').innerHTML = encodeURIComponent(val); else showToast('请输入内容'); }
+    function urlDecode() { try { let val = document.getElementById('urlInput').value; if(val) document.getElementById('urlResult').innerHTML = decodeURIComponent(val); } catch(e) { document.getElementById('urlResult').innerHTML = '解码失败'; } }
     function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
 
-    const httpStatusCodes = [
-        { code: "200", name: "OK", desc: "请求成功" }, { code: "301", name: "Moved Permanently", desc: "资源已永久移动" },
-        { code: "302", name: "Found", desc: "资源临时移动" }, { code: "304", name: "Not Modified", desc: "资源未修改" },
-        { code: "400", name: "Bad Request", desc: "请求语法错误" }, { code: "401", name: "Unauthorized", desc: "需要身份验证" },
-        { code: "403", name: "Forbidden", desc: "服务器拒绝请求" }, { code: "404", name: "Not Found", desc: "资源不存在" },
-        { code: "500", name: "Internal Server Error", desc: "服务器内部错误" }, { code: "502", name: "Bad Gateway", desc: "网关错误" },
-        { code: "503", name: "Service Unavailable", desc: "服务不可用" }, { code: "504", name: "Gateway Timeout", desc: "网关超时" }
-    ];
-    function renderHttpCodes() { 
-        const container = document.getElementById('httpList'); 
-        if (!container) return; 
-        container.innerHTML = ''; 
-        httpStatusCodes.forEach(item => { 
-            const div = document.createElement('div'); 
-            div.className = 'http-item'; 
-            div.innerHTML = `<span class="http-code">${item.code}</span><br><span class="http-desc">${item.name}</span>`; 
-            div.onclick = () => { document.getElementById('httpDetail').innerHTML = `<span style="color:#2dd4bf;">📡 ${item.code} ${item.name}</span><br>${item.desc}`; }; 
-            container.appendChild(div); 
-        }); 
+    const httpCodes = [{code:"200",name:"OK",desc:"成功"},{code:"301",name:"Moved",desc:"永久移动"},{code:"302",name:"Found",desc:"临时移动"},{code:"400",name:"Bad Request",desc:"语法错误"},{code:"401",name:"Unauthorized",desc:"未授权"},{code:"403",name:"Forbidden",desc:"拒绝"},{code:"404",name:"Not Found",desc:"不存在"},{code:"500",name:"Server Error",desc:"服务器错误"},{code:"502",name:"Bad Gateway",desc:"网关错误"},{code:"503",name:"Unavailable",desc:"服务不可用"}];
+    function renderHttp() {
+        let container = document.getElementById('httpList');
+        if(!container) return;
+        container.innerHTML = '';
+        httpCodes.forEach(c => {
+            let div = document.createElement('div');
+            div.style.background = 'rgba(255,255,255,0.05)';
+            div.style.borderRadius = '10px';
+            div.style.padding = '6px';
+            div.style.cursor = 'pointer';
+            div.style.fontSize = '0.7rem';
+            div.innerHTML = `<b>${c.code}</b><br>${c.name}`;
+            div.onclick = () => document.getElementById('httpDetail').innerHTML = `${c.code} ${c.name}<br>${c.desc}`;
+            container.appendChild(div);
+        });
     }
-    renderHttpCodes();
+    renderHttp();
 
     function updateWordStats() {
-        const text = document.getElementById('wordInput').value;
+        let text = document.getElementById('wordInput').value;
         document.getElementById('charCount').innerText = text.length;
-        document.getElementById('wordCount').innerText = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+        document.getElementById('wordCount').innerText = text.trim() ? text.trim().split(/\s+/).length : 0;
         document.getElementById('chineseCount').innerText = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
     }
-    function clearWordStats() { document.getElementById('wordInput').value = ''; updateWordStats(); }
+    function clearWord() { document.getElementById('wordInput').value = ''; updateWordStats(); }
     document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
     updateWordStats();
 
-    function generateUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) { const r = Math.random() * 16 | 0; const v = c === 'x' ? r : (r & 0x3 | 0x8); return v.toString(16); }); }
+    function genUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { let r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8); return v.toString(16); }); }
     let uuidHistory = [];
-    function generateUUIDAndDisplay() { 
-        const newUUID = generateUUID(); 
-        document.getElementById('uuidDisplay').innerHTML = newUUID; 
-        uuidHistory.unshift(newUUID); 
-        if (uuidHistory.length > 5) uuidHistory.pop(); 
-        document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="border-bottom:1px dashed #2dd4bf20; padding:4px 0;">${u}</div>`).join('') || '<span style="color:#8b9bcf;">暂无历史</span>'; 
-    }
-    function copyUUID() { 
-        const uuidText = document.getElementById('uuidDisplay').innerText; 
-        if (uuidText && uuidText !== '点击下方按钮生成') { navigator.clipboard.writeText(uuidText); showToast('✅ UUID 已复制'); } 
-        else { showToast('请先生成 UUID'); } 
-    }
+    function genUUIDAndShow() { let u = genUUID(); document.getElementById('uuidDisplay').innerHTML = u; uuidHistory.unshift(u); if(uuidHistory.length>5) uuidHistory.pop(); document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div>${u}</div>`).join(''); }
+    function copyUUID() { let u = document.getElementById('uuidDisplay').innerText; if(u && u!=='点击生成') { navigator.clipboard.writeText(u); showToast('已复制'); } else showToast('请先生成'); }
+    function genMultipleUUID() { for(let i=0;i<3;i++) genUUIDAndShow(); }
 
-    function generateMD5() { 
-        const input = document.getElementById('md5Input').value; 
-        if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入文本</span>'; return; } 
-        try { 
-            const md5Hash = CryptoJS.MD5(input).toString(); 
-            document.getElementById('md5Result').innerHTML = `<span style="color:#4ade80;">✅ MD5:</span><br><span style="word-break:break-all;">${md5Hash}</span>`; 
-        } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败</span>`; } 
-    }
-    function generateSHA256() { 
-        const input = document.getElementById('md5Input').value; 
-        if (!input) { document.getElementById('md5Result').innerHTML = '<span style="color:#f87171;">请输入文本</span>'; return; } 
-        try { 
-            const sha256 = CryptoJS.SHA256(input).toString(); 
-            document.getElementById('md5Result').innerHTML = `<span style="color:#a5f3fc;">🌀 SHA256:</span><br><span style="word-break:break-all;">${sha256}</span>`; 
-        } catch(e) { document.getElementById('md5Result').innerHTML = `<span style="color:#f87171;">生成失败</span>`; } 
-    }
+    function genMD5() { let val = document.getElementById('hashInput').value; if(!val) { showToast('请输入文本'); return; } try { document.getElementById('hashResult').innerHTML = CryptoJS.MD5(val).toString(); } catch(e) { document.getElementById('hashResult').innerHTML = '生成失败'; } }
+    function genSHA256() { let val = document.getElementById('hashInput').value; if(!val) { showToast('请输入文本'); return; } try { document.getElementById('hashResult').innerHTML = CryptoJS.SHA256(val).toString(); } catch(e) { document.getElementById('hashResult').innerHTML = '生成失败'; } }
 
-    function fetchIPInfo() {
-        const ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
-        ipSpan.innerHTML = '<span class="loading-spinner"></span>检测中';
+    function tsToDate() { let ts = parseInt(document.getElementById('timestampInput').value); if(isNaN(ts)) { document.getElementById('tsResult').innerHTML = '无效'; return; } if(ts.toString().length===10) ts*=1000; document.getElementById('tsResult').innerHTML = new Date(ts).toLocaleString(); }
+    function dateToTs() { let val = document.getElementById('datetimeInput').value; if(!val) { document.getElementById('dateResult').innerHTML = '请选择日期'; return; } let ts = new Date(val).getTime(); document.getElementById('dateResult').innerHTML = `秒级: ${Math.floor(ts/1000)}`; }
+    function nowTs() { let now = Date.now(); document.getElementById('timestampInput').value = Math.floor(now/1000); document.getElementById('tsResult').innerHTML = new Date().toLocaleString(); }
+    function nowDate() { let now = new Date(); let val = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; document.getElementById('datetimeInput').value = val; document.getElementById('dateResult').innerHTML = `秒级: ${Math.floor(now/1000)}`; }
+
+    function fetchIP() {
+        let ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
+        ipSpan.innerHTML = '检测中...';
         let found = false;
-        fetch('https://cloudflare.com/cdn-cgi/trace', { mode: 'cors' }).then(res => res.text()).then(text => {
-            if (found) return; const match = text.match(/ip=([^\n]+)/);
-            if (match) { ipSpan.innerText = match[1]; methodSpan.innerText = 'Cloudflare'; found = true; }
-        }).catch(() => {});
-        setTimeout(() => {
-            if (found) return;
-            try {
-                const pc = new RTCPeerConnection({ iceServers: [] });
-                pc.createDataChannel(''); pc.createOffer().then(offer => pc.setLocalDescription(offer));
-                pc.onicecandidate = (event) => {
-                    if (event.candidate) {
-                        const ipMatch = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(event.candidate.candidate);
-                        if (ipMatch && !found) { ipSpan.innerText = ipMatch[0]; methodSpan.innerText = 'WebRTC'; found = true; pc.close(); }
-                    }
-                };
-                setTimeout(() => { if (!found) pc.close(); }, 3000);
-            } catch(e) {}
-        }, 500);
-        setTimeout(() => { if (!found) { ipSpan.innerText = '无法获取'; methodSpan.innerText = '--'; } }, 5000);
+        fetch('https://cloudflare.com/cdn-cgi/trace').then(res=>res.text()).then(text=>{ let m=text.match(/ip=([^\n]+)/); if(m && !found) { ipSpan.innerText=m[1]; methodSpan.innerText='Cloudflare'; found=true; } }).catch(()=>{});
+        setTimeout(()=>{ if(!found) try{ let pc=new RTCPeerConnection({iceServers:[]}); pc.createDataChannel(''); pc.createOffer().then(o=>pc.setLocalDescription(o)); pc.onicecandidate=e=>{ if(e.candidate){ let m=/([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate); if(m && !found){ ipSpan.innerText=m[0]; methodSpan.innerText='WebRTC'; found=true; pc.close(); } } }; setTimeout(()=>{ if(!found) pc.close(); },2000); }catch(e){} },500);
+        setTimeout(()=>{ if(!found){ ipSpan.innerText='无法获取'; methodSpan.innerText='--'; } },4000);
     }
-    setTimeout(() => { fetchIPInfo(); }, 500);
 
-    let currentQR = null;
-    function generateQRCode() { 
-        const text = document.getElementById('qrText').value.trim(); 
-        if (!text) { alert('请输入文本或链接'); return; } 
-        const qrContainer = document.getElementById('qrcode'); 
-        qrContainer.innerHTML = ''; 
-        try { 
-            new QRCode(qrContainer, { text: text, width: 120, height: 120, colorDark: "#2dd4bf", colorLight: "#0a0c14", correctLevel: QRCode.CorrectLevel.M }); 
-            showToast('二维码已生成'); 
-        } catch (e) { qrContainer.innerHTML = '<span style="color:#f87171;">生成失败</span>'; } 
-    }
-    function clearQRCode() { document.getElementById('qrcode').innerHTML = ''; document.getElementById('qrText').value = ''; }
-    setTimeout(() => generateQRCode(), 500);
-    setTimeout(() => generateUUIDAndDisplay(), 500);
+    function genQR() { let text = document.getElementById('qrText').value; if(!text){ alert('请输入内容'); return; } let container = document.getElementById('qrcode'); container.innerHTML = ''; new QRCode(container, { text: text, width: 120, height: 120, colorDark: "#007aff", colorLight: "#1a1a2e" }); }
+    function clearQR() { document.getElementById('qrcode').innerHTML = ''; }
+
+    genUUIDAndShow();
+    setTimeout(genQR, 500);
 </script>
 </body>
 </html>
