@@ -176,7 +176,7 @@
 
 [![GitHub](https://img.shields.io/badge/GitHub-BlueDriftHK-181717?style=for-the-badge&logo=github)](https://github.com/BlueDriftHK)
 [![个人主页](https://img.shields.io/badge/🌐_个人主页-点击访问-4CAF50?style=for-the-badge)](https://bluedrifthk.github.io/BlueDriftHK/)
-[![邮箱](https://img.shields.io/badge/📧_邮箱-联系我-D14836?style=for-the-badge)](mailto:your-email@example.com)
+[![邮箱](https://img.shields.io/badge/📧_邮箱-联系我-D14836?style=for-the-badge)](mailto:asiacomk@gmail.com)
 
 </div>
 
