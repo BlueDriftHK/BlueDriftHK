@@ -69,7 +69,7 @@
 | 项目 | 简介 | 状态 | 标签 | ⭐ 热度 |
 |------|------|------|------|--------|
 | 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器，支持代理、监控、多语言 | ✅ 稳定版 v2.0 | `HLS` `Cloudflare` `播放器` | ⭐ 4 |
-| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | Cloudflare Workers 网络诊断工具（CDN节点/Ping/路由追踪） | 🚧 开发中 | `网络诊断` `Cloudflare` | - |
+| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | Cloudflare Workers 网络诊断工具 —— 检测 CDN 节点、Ping 延迟、路由追踪 | 🚧 开发中 | `网络诊断` `Cloudflare` `工具` | - |
 
 > 💭 每一个项目都来自**真实需求**，如果你觉得有用，欢迎 ⭐ Star 支持～
 
@@ -113,7 +113,8 @@
   - 全新玻璃拟态设计 + 实时速度图表
   - 多语言完整支持 + QoS 质量评分
 - [x] 配置好了 GitHub Pages 个人站
-- [ ] 网络诊断工具增加更多测试端点
+- [x] 启动了 `CF-workers-netdiag` 项目
+- [ ] 网络诊断工具增加更多测试端点（进行中）
 
 ### 📡 正在追的技术/资讯
 
@@ -122,6 +123,30 @@
 - 前端实时图表性能优化
 
 ---
+
+## 📈 GitHub 数据（温柔的占位版）
+
+<details>
+<summary>📊 点击展开统计</summary>
+
+<br>
+
+> 🐟 *咸鱼正在努力扑腾中……*  
+> *当你看到这条消息，说明我的 GitHub 活跃记录还不够多，统计图暂时隐身～*  
+> *等我多写点代码、多 push 几次，它就会自动出现啦！*
+
+<div align="center">
+
+![GitHub last commit](https://img.shields.io/github/last-commit/BlueDriftHK/BlueDriftHK)
+![GitHub followers](https://img.shields.io/github/followers/BlueDriftHK)
+![GitHub stars](https://img.shields.io/github/stars/BlueDriftHK?label=总星星数)
+
+</div>
+
+</details>
+
+---
+
 ## 🐟 咸鱼语录 / 金句墙
 
 > 「咸鱼不是摆烂，是换一种姿势努力。」
@@ -135,6 +160,23 @@
 > 「开源的精神不是写出完美的代码，而是愿意分享不完美的代码。」
 
 **今日咸鱼说**：*M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样 —— 都是认真过的证明*
+
+---
+
+## 🎲 咸鱼小问答
+
+<details>
+<summary>🤔 点击展开：为什么叫「咸鱼」？</summary>
+
+<br>
+
+因为：
+- 🛌 **会躺平** —— 但躺够了会爬起来
+- 💻 **爱折腾** —— 但只折腾真实需要的东西
+- 🧂 **有点咸** —— 代码风格偶尔带点个人恶趣味
+- 🐟 **不孤单** —— 相信还有很多像我一样的开发者
+
+</details>
 
 ---
 
@@ -174,6 +216,7 @@
         ║                                       ║
         ║   "今天遇到的 bug 都很好修"            ║
         ║   "M3U8 流永不卡顿"                   ║
+        ║   "Ping 值永远低于 10ms"              ║
         ║                                       ║
         ║           —— 咸鱼之神                 ║
         ╚═══════════════════════════════════════╝
@@ -185,7 +228,7 @@
 
 ### 🎵 最近在听
 
-*写代码时适合听的轻音乐*
+*键盘声 + 风扇转 —— 白噪音最佳实践*
 
 </div>
 
