@@ -8,7 +8,6 @@
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -24,13 +23,11 @@
             padding: 2rem 1.5rem;
         }
 
-        /* 主容器 - 苹果风格毛玻璃 */
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* 头部 */
         .header {
             text-align: center;
             margin-bottom: 3rem;
@@ -51,14 +48,12 @@
             font-weight: 400;
         }
 
-        /* 网格布局 */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: 1.5rem;
         }
 
-        /* 苹果毛玻璃卡片 */
         .glass-card {
             background: rgba(30, 30, 40, 0.5);
             backdrop-filter: blur(20px);
@@ -75,7 +70,6 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* 卡片头部 */
         .card-header {
             display: flex;
             align-items: center;
@@ -92,7 +86,6 @@
             letter-spacing: -0.3px;
         }
 
-        /* 状态标签 */
         .status-chip {
             display: inline-block;
             background: rgba(255, 255, 255, 0.12);
@@ -103,7 +96,6 @@
             color: #a5a5b5;
         }
 
-        /* 按钮 */
         .btn {
             background: rgba(255, 255, 255, 0.1);
             border: 0.5px solid rgba(255, 255, 255, 0.15);
@@ -120,13 +112,6 @@
             background: rgba(255, 255, 255, 0.2);
             transform: scale(0.98);
         }
-        .btn-primary {
-            background: rgba(0, 122, 255, 0.8);
-            border-color: rgba(0, 122, 255, 0.5);
-        }
-        .btn-primary:hover {
-            background: rgba(0, 122, 255, 1);
-        }
 
         .flex-row {
             display: flex;
@@ -141,7 +126,6 @@
             align-items: center;
         }
 
-        /* 输入框 */
         .input {
             background: rgba(20, 20, 28, 0.8);
             border: 0.5px solid rgba(255, 255, 255, 0.1);
@@ -161,7 +145,6 @@
             min-height: 80px;
         }
 
-        /* 结果框 */
         .result {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
@@ -173,7 +156,6 @@
             font-family: monospace;
         }
 
-        /* 状态条 */
         .status-bar {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
@@ -184,7 +166,6 @@
             align-items: center;
         }
 
-        /* 统计卡片 */
         .stats-group {
             display: flex;
             gap: 12px;
@@ -208,21 +189,6 @@
             color: #8e8e9e;
         }
 
-        /* 密码强度条 */
-        .strength-meter {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .strength-fill {
-            width: 0%;
-            height: 100%;
-            transition: width 0.2s;
-        }
-
-        /* 二维码容器 */
         #qrcode {
             display: flex;
             justify-content: center;
@@ -234,7 +200,6 @@
             padding: 6px;
         }
 
-        /* 底部 */
         .footer {
             text-align: center;
             margin-top: 3rem;
@@ -244,7 +209,6 @@
             color: #6e6e7e;
         }
 
-        /* 响应式 */
         @media (max-width: 780px) {
             body { padding: 1rem; }
             .title { font-size: 2rem; }
@@ -252,7 +216,6 @@
             .glass-card { padding: 1.2rem; }
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -354,91 +317,7 @@
             <p style="font-size: 0.75rem; text-align: center; margin-top: 10px; color: #8e8e9e;">✨ 今日咸鱼说：代码如人生，bug 如日常 ✨</p>
         </div>
 
-        <!-- 5. 密码 + Base64 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🔐</span>
-                <span class="card-title">密码 & Base64</span>
-            </div>
-            <div class="flex-row">
-                <input type="number" id="pwdLength" value="16" class="input" style="width: 80px;">
-                <button class="btn" onclick="genPassword()">生成密码</button>
-                <button class="btn" onclick="copyText('passwordResult')">复制</button>
-            </div>
-            <input type="text" id="passwordResult" readonly class="input" style="margin-top: 8px;" placeholder="点击生成">
-            <div class="strength-meter"><div id="strengthFill" class="strength-fill"></div></div>
-            <div class="flex-row" style="margin-top: 12px;">
-                <input type="text" id="base64Field" class="input" placeholder="文本或 Base64">
-                <button class="btn" onclick="encodeBase64()">编码</button>
-                <button class="btn" onclick="decodeBase64()">解码</button>
-            </div>
-        </div>
-
-        <!-- 6. JSON 工具 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📋</span>
-                <span class="card-title">JSON 工具</span>
-            </div>
-            <textarea id="jsonInput" class="input" placeholder='{"name":"BlueDriftHK"}' style="height: 90px;"></textarea>
-            <div class="flex-row">
-                <button class="btn" onclick="formatJSON()">格式化</button>
-                <button class="btn" onclick="minifyJSON()">压缩</button>
-                <button class="btn" onclick="validateJSON()">验证</button>
-            </div>
-            <div id="jsonResult" class="result">等待操作</div>
-        </div>
-
-        <!-- 7. 正则测试 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🔍</span>
-                <span class="card-title">正则测试</span>
-            </div>
-            <input type="text" id="regexPattern" class="input" placeholder="正则表达式" value="\d+">
-            <div class="flex-row">
-                <label><input type="checkbox" id="flagG"> g</label>
-                <label><input type="checkbox" id="flagI"> i</label>
-                <label><input type="checkbox" id="flagM"> m</label>
-            </div>
-            <textarea id="testText" class="input" style="height: 70px;" placeholder="测试文本">2024年发布8个工具</textarea>
-            <div class="flex-row">
-                <button class="btn" onclick="testRegex()">匹配</button>
-                <button class="btn" onclick="clearRegex()">清除</button>
-            </div>
-            <div id="regexResult" class="result">等待测试</div>
-        </div>
-
-        <!-- 8. 色彩转换 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🎨</span>
-                <span class="card-title">色彩转换</span>
-            </div>
-            <div class="flex-row">
-                <input type="text" id="colorInput" class="input" placeholder="#007aff 或 rgb(0,122,255)">
-                <button class="btn" onclick="convertColor()">转换</button>
-            </div>
-            <div id="colorResult" class="result">等待输入</div>
-            <div id="colorPreview" style="width: 50px; height: 50px; border-radius: 12px; margin-top: 8px; background: #007aff;"></div>
-        </div>
-
-        <!-- 9. URL 编解码 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🔗</span>
-                <span class="card-title">URL 编解码</span>
-            </div>
-            <textarea id="urlInput" class="input" placeholder="https://example.com/测试"></textarea>
-            <div class="flex-row">
-                <button class="btn" onclick="urlEncode()">编码</button>
-                <button class="btn" onclick="urlDecode()">解码</button>
-                <button class="btn" onclick="clearUrl()">清除</button>
-            </div>
-            <div id="urlResult" class="result">等待操作</div>
-        </div>
-
-        <!-- 10. HTTP 状态码 -->
+        <!-- 5. HTTP 状态码 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📡</span>
@@ -448,7 +327,7 @@
             <div id="httpDetail" class="result" style="margin-top: 8px;">点击查看详情</div>
         </div>
 
-        <!-- 11. 字数统计 -->
+        <!-- 6. 字数统计 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📊</span>
@@ -463,7 +342,7 @@
             <button class="btn" onclick="clearWord()" style="margin-top: 8px;">清空</button>
         </div>
 
-        <!-- 12. UUID 生成 -->
+        <!-- 7. UUID 生成 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🆔</span>
@@ -478,43 +357,7 @@
             <div id="uuidHistory" class="result" style="margin-top: 8px; font-size: 0.7rem;"></div>
         </div>
 
-        <!-- 13. MD5/SHA256 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🔐</span>
-                <span class="card-title">哈希指纹</span>
-            </div>
-            <textarea id="hashInput" class="input" placeholder="输入文本..."></textarea>
-            <div class="flex-row">
-                <button class="btn" onclick="genMD5()">MD5</button>
-                <button class="btn" onclick="genSHA256()">SHA256</button>
-            </div>
-            <div id="hashResult" class="result">等待生成</div>
-        </div>
-
-        <!-- 14. 时间转换 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">⏰</span>
-                <span class="card-title">时间转换</span>
-            </div>
-            <div class="flex-row">
-                <input type="text" id="timestampInput" class="input" placeholder="时间戳">
-                <button class="btn" onclick="tsToDate()">→日期</button>
-            </div>
-            <div id="tsResult" class="result">等待</div>
-            <div class="flex-row">
-                <input type="datetime-local" id="datetimeInput" class="input">
-                <button class="btn" onclick="dateToTs()">→戳</button>
-            </div>
-            <div id="dateResult" class="result">等待</div>
-            <div class="flex-row">
-                <button class="btn" onclick="nowTs()">当前时间戳</button>
-                <button class="btn" onclick="nowDate()">当前日期</button>
-            </div>
-        </div>
-
-        <!-- 15. IP 查询 -->
+        <!-- 8. IP 查询 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📍</span>
@@ -527,7 +370,7 @@
             </div>
         </div>
 
-        <!-- 16. 二维码 -->
+        <!-- 9. 二维码 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📱</span>
@@ -541,7 +384,7 @@
             <div id="qrcode"></div>
         </div>
 
-        <!-- 17. 星环状态（2007年10月29日） -->
+        <!-- 10. 星环状态（2007年10月29日） -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🪐</span>
@@ -581,14 +424,15 @@
 
     function copyText(id) {
         let el = document.getElementById(id);
-        if (el && el.value) { navigator.clipboard.writeText(el.value); showToast('已复制'); }
-        else if (el && el.innerText && el.innerText !== '点击生成') { navigator.clipboard.writeText(el.innerText); showToast('已复制'); }
-        else showToast('无内容');
+        if (el && el.innerText && el.innerText !== '点击生成') {
+            navigator.clipboard.writeText(el.innerText);
+            showToast('已复制');
+        } else showToast('无内容');
     }
 
     // 星环时间 (从 2007-10-29 开始)
     function updateUptime() {
-        const start = new Date(2007, 9, 29); // 10月 = 9
+        const start = new Date(2007, 9, 29);
         const now = new Date();
         const diffMs = now - start;
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -599,103 +443,20 @@
     updateUptime();
     setInterval(updateUptime, 3600000);
 
-    // 密码生成
-    function checkStrength(pwd) {
-        let s = 0;
-        if (pwd.length >= 12) s++;
-        if (pwd.length >= 16) s++;
-        if (/[a-z]/.test(pwd)) s++;
-        if (/[A-Z]/.test(pwd)) s++;
-        if (/[0-9]/.test(pwd)) s++;
-        if (/[^a-zA-Z0-9]/.test(pwd)) s++;
-        let fill = document.getElementById('strengthFill');
-        if (s <= 2) fill.style.width = '25%', fill.style.background = '#ff3b30';
-        else if (s <= 4) fill.style.width = '50%', fill.style.background = '#ffcc00';
-        else if (s <= 5) fill.style.width = '75%', fill.style.background = '#34c759';
-        else fill.style.width = '100%', fill.style.background = '#007aff';
-    }
-    function genPassword() {
-        let len = parseInt(document.getElementById('pwdLength').value) || 16;
-        len = Math.min(48, Math.max(8, len));
-        const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ', lower = 'abcdefghijkmnopqrstuvwxyz', digits = '23456789', special = '!@#$%&*+?';
-        const all = upper + lower + digits + special;
-        let pwd = '';
-        pwd += upper[Math.floor(Math.random() * upper.length)];
-        pwd += lower[Math.floor(Math.random() * lower.length)];
-        pwd += digits[Math.floor(Math.random() * digits.length)];
-        pwd += special[Math.floor(Math.random() * special.length)];
-        for (let i = pwd.length; i < len; i++) pwd += all[Math.floor(Math.random() * all.length)];
-        pwd = pwd.split('').sort(() => Math.random() - 0.5).join('');
-        document.getElementById('passwordResult').value = pwd;
-        checkStrength(pwd);
-    }
-
-    function encodeBase64() {
-        let val = document.getElementById('base64Field').value;
-        if (!val) { showToast('请输入内容'); return; }
-        try { document.getElementById('base64Field').value = btoa(unescape(encodeURIComponent(val))); showToast('编码完成'); }
-        catch(e) { showToast('编码失败'); }
-    }
-    function decodeBase64() {
-        let val = document.getElementById('base64Field').value;
-        if (!val) { showToast('请输入Base64'); return; }
-        try { document.getElementById('base64Field').value = decodeURIComponent(escape(atob(val))); showToast('解码完成'); }
-        catch(e) { showToast('解码失败'); }
-    }
-
-    function formatJSON() {
-        try { let obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = JSON.stringify(obj, null, 2); }
-        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
-    }
-    function minifyJSON() {
-        try { let obj = JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = JSON.stringify(obj); }
-        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
-    }
-    function validateJSON() {
-        try { JSON.parse(document.getElementById('jsonInput').value); document.getElementById('jsonResult').innerHTML = '✅ 格式正确'; }
-        catch(e) { document.getElementById('jsonResult').innerHTML = '❌ ' + e.message; }
-    }
-
-    function testRegex() {
-        let pattern = document.getElementById('regexPattern').value;
-        if (!pattern) { document.getElementById('regexResult').innerHTML = '请输入正则'; return; }
-        let flags = '';
-        if (document.getElementById('flagG').checked) flags += 'g';
-        if (document.getElementById('flagI').checked) flags += 'i';
-        if (document.getElementById('flagM').checked) flags += 'm';
-        try {
-            let regex = new RegExp(pattern, flags);
-            let text = document.getElementById('testText').value;
-            let matches = text.match(regex);
-            if (matches) document.getElementById('regexResult').innerHTML = `✅ 找到 ${matches.length} 个: ${matches.join(', ')}`;
-            else document.getElementById('regexResult').innerHTML = '❌ 无匹配';
-        } catch(e) { document.getElementById('regexResult').innerHTML = '❌ ' + e.message; }
-    }
-    function clearRegex() { document.getElementById('regexPattern').value = ''; document.getElementById('testText').value = ''; document.getElementById('regexResult').innerHTML = '已清除'; }
-
-    function convertColor() {
-        let input = document.getElementById('colorInput').value.trim();
-        let preview = document.getElementById('colorPreview');
-        let result = document.getElementById('colorResult');
-        if (input.startsWith('#')) {
-            preview.style.backgroundColor = input;
-            let r = parseInt(input.slice(1,3),16), g = parseInt(input.slice(3,5),16), b = parseInt(input.slice(5,7),16);
-            result.innerHTML = `HEX: ${input}<br>RGB: rgb(${r}, ${g}, ${b})`;
-        } else if (input.startsWith('rgb')) {
-            let match = input.match(/\d+/g);
-            if (match && match.length >= 3) {
-                let hex = '#' + ((1<<24)+(parseInt(match[0])<<16)+(parseInt(match[1])<<8)+parseInt(match[2])).toString(16).slice(1);
-                preview.style.backgroundColor = hex;
-                result.innerHTML = `RGB: ${input}<br>HEX: ${hex}`;
-            } else result.innerHTML = '无效格式';
-        } else result.innerHTML = '请输入 HEX 或 RGB';
-    }
-
-    function urlEncode() { let val = document.getElementById('urlInput').value; if(val) document.getElementById('urlResult').innerHTML = encodeURIComponent(val); else showToast('请输入内容'); }
-    function urlDecode() { try { let val = document.getElementById('urlInput').value; if(val) document.getElementById('urlResult').innerHTML = decodeURIComponent(val); } catch(e) { document.getElementById('urlResult').innerHTML = '解码失败'; } }
-    function clearUrl() { document.getElementById('urlInput').value = ''; document.getElementById('urlResult').innerHTML = '已清除'; }
-
-    const httpCodes = [{code:"200",name:"OK",desc:"成功"},{code:"301",name:"Moved",desc:"永久移动"},{code:"302",name:"Found",desc:"临时移动"},{code:"400",name:"Bad Request",desc:"语法错误"},{code:"401",name:"Unauthorized",desc:"未授权"},{code:"403",name:"Forbidden",desc:"拒绝"},{code:"404",name:"Not Found",desc:"不存在"},{code:"500",name:"Server Error",desc:"服务器错误"},{code:"502",name:"Bad Gateway",desc:"网关错误"},{code:"503",name:"Unavailable",desc:"服务不可用"}];
+    // HTTP 状态码
+    const httpCodes = [
+        {code:"200",name:"OK",desc:"请求成功"},
+        {code:"301",name:"Moved",desc:"永久移动"},
+        {code:"302",name:"Found",desc:"临时移动"},
+       {code:"304",name:"Not Modified",desc:"未修改"},
+        {code:"400",name:"Bad Request",desc:"语法错误"},
+        {code:"401",name:"Unauthorized",desc:"未授权"},
+        {code:"403",name:"Forbidden",desc:"拒绝"},
+        {code:"404",name:"Not Found",desc:"不存在"},
+        {code:"500",name:"Server Error",desc:"服务器错误"},
+        {code:"502",name:"Bad Gateway",desc:"网关错误"},
+        {code:"503",name:"Unavailable",desc:"服务不可用"}
+    ];
     function renderHttp() {
         let container = document.getElementById('httpList');
         if(!container) return;
@@ -714,6 +475,7 @@
     }
     renderHttp();
 
+    // 字数统计
     function updateWordStats() {
         let text = document.getElementById('wordInput').value;
         document.getElementById('charCount').innerText = text.length;
@@ -724,34 +486,95 @@
     document.getElementById('wordInput')?.addEventListener('input', updateWordStats);
     updateWordStats();
 
-    function genUUID() { return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { let r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8); return v.toString(16); }); }
+    // UUID 生成
+    function genUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+            let r = Math.random() * 16 | 0;
+            let v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
     let uuidHistory = [];
-    function genUUIDAndShow() { let u = genUUID(); document.getElementById('uuidDisplay').innerHTML = u; uuidHistory.unshift(u); if(uuidHistory.length>5) uuidHistory.pop(); document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div>${u}</div>`).join(''); }
-    function copyUUID() { let u = document.getElementById('uuidDisplay').innerText; if(u && u!=='点击生成') { navigator.clipboard.writeText(u); showToast('已复制'); } else showToast('请先生成'); }
-    function genMultipleUUID() { for(let i=0;i<3;i++) genUUIDAndShow(); }
+    function genUUIDAndShow() {
+        let u = genUUID();
+        document.getElementById('uuidDisplay').innerHTML = u;
+        uuidHistory.unshift(u);
+        if(uuidHistory.length > 5) uuidHistory.pop();
+        document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="border-bottom:1px solid rgba(255,255,255,0.1); padding:4px 0;">${u}</div>`).join('');
+    }
+    function copyUUID() {
+        let u = document.getElementById('uuidDisplay').innerText;
+        if(u && u !== '点击生成') {
+            navigator.clipboard.writeText(u);
+            showToast('已复制');
+        } else showToast('请先生成');
+    }
+    function genMultipleUUID() {
+        for(let i = 0; i < 3; i++) genUUIDAndShow();
+    }
 
-    function genMD5() { let val = document.getElementById('hashInput').value; if(!val) { showToast('请输入文本'); return; } try { document.getElementById('hashResult').innerHTML = CryptoJS.MD5(val).toString(); } catch(e) { document.getElementById('hashResult').innerHTML = '生成失败'; } }
-    function genSHA256() { let val = document.getElementById('hashInput').value; if(!val) { showToast('请输入文本'); return; } try { document.getElementById('hashResult').innerHTML = CryptoJS.SHA256(val).toString(); } catch(e) { document.getElementById('hashResult').innerHTML = '生成失败'; } }
-
-    function tsToDate() { let ts = parseInt(document.getElementById('timestampInput').value); if(isNaN(ts)) { document.getElementById('tsResult').innerHTML = '无效'; return; } if(ts.toString().length===10) ts*=1000; document.getElementById('tsResult').innerHTML = new Date(ts).toLocaleString(); }
-    function dateToTs() { let val = document.getElementById('datetimeInput').value; if(!val) { document.getElementById('dateResult').innerHTML = '请选择日期'; return; } let ts = new Date(val).getTime(); document.getElementById('dateResult').innerHTML = `秒级: ${Math.floor(ts/1000)}`; }
-    function nowTs() { let now = Date.now(); document.getElementById('timestampInput').value = Math.floor(now/1000); document.getElementById('tsResult').innerHTML = new Date().toLocaleString(); }
-    function nowDate() { let now = new Date(); let val = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}T${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`; document.getElementById('datetimeInput').value = val; document.getElementById('dateResult').innerHTML = `秒级: ${Math.floor(now/1000)}`; }
-
+    // IP 查询
     function fetchIP() {
         let ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
         ipSpan.innerHTML = '检测中...';
         let found = false;
-        fetch('https://cloudflare.com/cdn-cgi/trace').then(res=>res.text()).then(text=>{ let m=text.match(/ip=([^\n]+)/); if(m && !found) { ipSpan.innerText=m[1]; methodSpan.innerText='Cloudflare'; found=true; } }).catch(()=>{});
-        setTimeout(()=>{ if(!found) try{ let pc=new RTCPeerConnection({iceServers:[]}); pc.createDataChannel(''); pc.createOffer().then(o=>pc.setLocalDescription(o)); pc.onicecandidate=e=>{ if(e.candidate){ let m=/([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate); if(m && !found){ ipSpan.innerText=m[0]; methodSpan.innerText='WebRTC'; found=true; pc.close(); } } }; setTimeout(()=>{ if(!found) pc.close(); },2000); }catch(e){} },500);
-        setTimeout(()=>{ if(!found){ ipSpan.innerText='无法获取'; methodSpan.innerText='--'; } },4000);
+        fetch('https://cloudflare.com/cdn-cgi/trace').then(res => res.text()).then(text => {
+            let m = text.match(/ip=([^\n]+)/);
+            if(m && !found) {
+                ipSpan.innerText = m[1];
+                methodSpan.innerText = 'Cloudflare';
+                found = true;
+            }
+        }).catch(() => {});
+        setTimeout(() => {
+            if(!found) {
+                try {
+                    let pc = new RTCPeerConnection({ iceServers: [] });
+                    pc.createDataChannel('');
+                    pc.createOffer().then(o => pc.setLocalDescription(o));
+                    pc.onicecandidate = e => {
+                        if(e.candidate) {
+                            let m = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
+                            if(m && !found) {
+                                ipSpan.innerText = m[0];
+                                methodSpan.innerText = 'WebRTC';
+                                found = true;
+                                pc.close();
+                            }
+                        }
+                    };
+                    setTimeout(() => { if(!found) pc.close(); }, 2000);
+                } catch(e) {}
+            }
+        }, 500);
+        setTimeout(() => {
+            if(!found) {
+                ipSpan.innerText = '无法获取';
+                methodSpan.innerText = '--';
+            }
+        }, 4000);
     }
 
-    function genQR() { let text = document.getElementById('qrText').value; if(!text){ alert('请输入内容'); return; } let container = document.getElementById('qrcode'); container.innerHTML = ''; new QRCode(container, { text: text, width: 120, height: 120, colorDark: "#007aff", colorLight: "#1a1a2e" }); }
+    // 二维码
+    function genQR() {
+        let text = document.getElementById('qrText').value;
+        if(!text) { alert('请输入内容'); return; }
+        let container = document.getElementById('qrcode');
+        container.innerHTML = '';
+        new QRCode(container, {
+            text: text,
+            width: 120,
+            height: 120,
+            colorDark: "#007aff",
+            colorLight: "#1a1a2e"
+        });
+    }
     function clearQR() { document.getElementById('qrcode').innerHTML = ''; }
 
+    // 初始化
     genUUIDAndShow();
     setTimeout(genQR, 500);
+    setTimeout(fetchIP, 500);
 </script>
 </body>
 </html>
