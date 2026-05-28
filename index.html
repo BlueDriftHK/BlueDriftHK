@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#0a0f1e">
     <title>BlueDriftHK · 咸鱼窝</title>
     <style>
         * {
@@ -12,27 +13,31 @@
         }
 
         body {
-            background: linear-gradient(145deg, #0a0f1e 0%, #0c1222 100%);
-            font-family: 'Segoe UI', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
-            color: #d9e0ee;
+            background: radial-gradient(circle at 10% 20%, #0a0f1e, #06090f);
+            font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Segoe UI', monospace;
+            color: #e2e8f0;
             padding: 2rem 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            min-height: 100vh;
         }
 
+        /* 主容器 - 玻璃拟态升级 */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(18, 25, 45, 0.65);
-            backdrop-filter: blur(2px);
-            border-radius: 2.5rem;
-            padding: 2rem 1.8rem;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(80, 180, 120, 0.2);
+            background: rgba(12, 18, 28, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(63, 224, 160, 0.25);
+            transition: all 0.3s ease;
         }
 
-        /* 咸鱼风格滚动条 */
+        /* 自定义滚动条 */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #0f1422;
@@ -42,115 +47,178 @@
             background: #2a7f4e;
             border-radius: 10px;
         }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3fe0a0;
+        }
 
         h1, h2, h3 {
             font-weight: 600;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.02em;
         }
 
         h2 {
-            border-left: 5px solid #3fe0a0;
+            background: linear-gradient(135deg, #3fe0a0, #2a7f4e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            border-left: 4px solid #3fe0a0;
             padding-left: 1rem;
-            margin: 2rem 0 1.2rem 0;
-            font-size: 1.7rem;
+            margin: 2.2rem 0 1.2rem 0;
+            font-size: 1.8rem;
         }
 
+        /* ASCII 艺术框 */
         .ascii-box {
             background: #0a0f18;
-            border-radius: 1.2rem;
-            padding: 1rem;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
             font-family: monospace;
-            white-space: pre-wrap;
-            font-size: 0.8rem;
-            border: 1px solid #2a3a3c;
+            font-size: 0.75rem;
+            border: 1px solid #2a3f3a;
             color: #b3f0d0;
             overflow-x: auto;
             margin: 1rem 0;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
         }
 
+        .ascii-box pre {
+            margin: 0;
+            font-family: monospace;
+        }
+
+        /* 徽章组 */
         .badge-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             margin: 1rem 0;
+            justify-content: center;
         }
 
         .badge-group img {
-            height: 28px;
-            border-radius: 6px;
+            height: 32px;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .badge-group img:hover {
+            transform: translateY(-2px);
         }
 
+        /* 表格 - 毛玻璃表格 */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #0f1625;
+            background: rgba(15, 22, 37, 0.7);
             border-radius: 1rem;
             overflow: hidden;
-            margin: 1rem 0;
+            margin: 1.2rem 0;
+            backdrop-filter: blur(4px);
         }
         th, td {
-            padding: 0.75rem;
+            padding: 0.9rem 0.8rem;
             text-align: left;
-            border-bottom: 1px solid #1f2a3e;
+            border-bottom: 1px solid rgba(63, 224, 160, 0.15);
         }
         th {
-            background: #19223b;
+            background: rgba(25, 34, 59, 0.8);
             color: #b7f0da;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: rgba(63, 224, 160, 0.05);
         }
 
+        /* 状态卡片 - 升级 */
         .status-card {
-            background: #0c1120;
+            background: linear-gradient(135deg, rgba(12, 20, 30, 0.9), rgba(8, 14, 22, 0.9));
             border-radius: 1.5rem;
-            padding: 1rem 1.5rem;
+            padding: 1.2rem 1.8rem;
             margin: 1rem 0;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            border: 1px solid #2b4f3a;
+            gap: 1rem;
+            border: 1px solid rgba(63, 224, 160, 0.4);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        .status-card span {
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
         }
 
-        .btn-like {
+        /* 按钮/链接样式 */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .btn {
             display: inline-block;
-            background: #1f2a3e;
-            border-radius: 30px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
+            background: linear-gradient(145deg, #1f2a3e, #162030);
+            border-radius: 60px;
+            padding: 0.5rem 1.3rem;
+            font-size: 0.9rem;
             color: #c0e0d0;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.25s;
+            border: 1px solid #2e7d5e;
+            font-weight: 500;
         }
-        .btn-like:hover {
+        .btn:hover {
             background: #2e7d5e;
             color: white;
+            box-shadow: 0 0 12px rgba(63,224,160,0.4);
+            border-color: #6ef0c0;
+            transform: translateY(-2px);
         }
 
         a {
             color: #6ef0c0;
             text-decoration: none;
+            transition: color 0.2s;
         }
         a:hover {
             text-decoration: underline;
-            color: #aaffdd;
+            color: #bbffe6;
         }
 
         hr {
             border: none;
-            height: 1px;
-            background: linear-gradient(90deg, #2e7d5e, transparent);
+            height: 2px;
+            background: linear-gradient(90deg, #2e7d5e, #3fe0a0, #2e7d5e);
             margin: 2rem 0;
+            border-radius: 5px;
         }
 
         details {
-            background: #0c1220;
-            border-radius: 1rem;
-            padding: 0.8rem 1.2rem;
+            background: rgba(12, 18, 32, 0.7);
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.5rem;
             margin: 1rem 0;
+            border-left: 3px solid #3fe0a0;
+            transition: all 0.2s;
         }
-
         summary {
             font-weight: bold;
             cursor: pointer;
-            color: #7cf9cf;
+            color: #8affd0;
+            font-size: 1rem;
+        }
+        summary:hover {
+            color: #c0ffe6;
+        }
+
+        blockquote {
+            border-left: 4px solid #3fe0a0;
+            background: rgba(0,0,0,0.2);
+            padding: 0.8rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 1rem 1rem 0;
+            font-style: normal;
         }
 
         footer {
@@ -158,24 +226,43 @@
             margin-top: 3rem;
             font-size: 0.85rem;
             color: #7f8a9e;
+            border-top: 1px dashed #2a3f4a;
+            padding-top: 2rem;
         }
 
-        @media (max-width: 680px) {
+        /* 响应式 */
+        @media (max-width: 700px) {
             .container {
                 padding: 1.2rem;
             }
             th, td {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
+                padding: 0.6rem;
             }
             h2 {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
+            .status-card {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* 浮动动画 */
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating-fish {
+            animation: gentleFloat 3s ease-in-out infinite;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- 🐟 头部 ASCII -->
+    <!-- 🐟 头部 ASCII + 浮动鱼 -->
     <div class="ascii-box">
         <pre>╭─────────────────────────────────────────────────────────────╮
 │                                                             │
@@ -189,11 +276,11 @@
     </div>
 
     <div align="center">
-        <p>🔗 <strong>个人小站</strong> · <a href="https://bluedrifthk.github.io/BlueDriftHK/">https://bluedrifthk.github.io/BlueDriftHK/</a></p>
-        <p><em>感谢你的到访～ 希望你能找到有用的东西，或者至少收获一点快乐</em> 🐟</p>
+        <p>🔗 <strong>个人小站</strong> · <a href="https://bluedrifthk.github.io/BlueDriftHK/" target="_blank">https://bluedrifthk.github.io/BlueDriftHK/</a></p>
+        <p><em>感谢你的到访～ 希望你能找到有用的东西，或者至少收获一点快乐</em> <span class="floating-fish">🐟</span></p>
     </div>
 
-    <!-- 状态栏 -->
+    <!-- 状态卡片 -->
     <div class="status-card">
         <span>🐟 咸鱼模式 🟢 在线扑腾</span>
         <span>☕ 今日进度 3h 代码 / 2h 躺平</span>
@@ -221,25 +308,31 @@
     <!-- 精选推荐 -->
     <h2>🌟 精选推荐</h2>
     <div align="center">
-        <h3>🚀 <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player">CF Worker M3U8 Player</a></h3>
+        <h3 style="margin-bottom: 0.2rem;">🚀 <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">CF Worker M3U8 Player</a></h3>
         <p><em>Cloudflare Workers 实现的全功能 HLS (m3u8) 视频流播放器</em></p>
-        <p><code>HLS.js</code> <code>实时监控</code> <code>代理播放</code> <code>多语言</code> <code>QoS评分</code></p>
+        <div class="badge-group">
+            <span class="btn" style="background: none; border: none;"><code>HLS.js</code></span>
+            <span class="btn" style="background: none; border: none;"><code>实时监控</code></span>
+            <span class="btn" style="background: none; border: none;"><code>代理播放</code></span>
+            <span class="btn" style="background: none; border: none;"><code>多语言</code></span>
+            <span class="btn" style="background: none; border: none;"><code>QoS评分</code></span>
+        </div>
         <p>
-            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player"><img src="https://img.shields.io/github/stars/BlueDriftHK/CF-Worker-M3U8Player?style=social" alt="stars"></a>
-            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player"><img src="https://img.shields.io/github/forks/BlueDriftHK/CF-Worker-M3U8Player?style=social" alt="forks"></a>
+            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank"><img src="https://img.shields.io/github/stars/BlueDriftHK/CF-Worker-M3U8Player?style=social" alt="stars"></a>
+            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank"><img src="https://img.shields.io/github/forks/BlueDriftHK/CF-Worker-M3U8Player?style=social" alt="forks"></a>
         </p>
     </div>
 
     <!-- 项目表格 -->
     <h2>🧩 我的小项目</h2>
     <table>
-        <thead><tr><th>项目</th><th>简介</th><th>状态</th><th>技术栈</th><th>⭐</th></tr>
-        </thead>
+        <thead><tr><th>项目</th><th>简介</th><th>状态</th><th>技术栈</th><th>⭐</th></tr></thead>
         <tbody>
-            <tr><td>🎬 <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player">CF-Worker-M3U8Player</a></td><td>全功能 HLS 播放器：代理/监控/QoS</td><td>✅ v2.0</td><td>JS / HLS.js / Chart.js</td><td>4</td></tr>
-            <tr><td>🔍 <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">CF-workers-netdiag</a></td><td>网络诊断: CDN节点 / Ping / 路由追踪</td><td>🚧 v0.1</td><td>JS / CF Workers</td><td>-</td></tr>
+            <tr><td>🎬 <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">CF-Worker-M3U8Player</a></td><td>全功能 HLS 播放器：代理/监控/QoS</td><td>✅ v2.0</td><td>JS / HLS.js / Chart.js</td><td>4</td></tr>
+            <tr><td>🔍 <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">CF-workers-netdiag</a></td><td>网络诊断: CDN节点 / Ping / 路由追踪</td><td>🚧 v0.1</td><td>JS / CF Workers</td><td>-</td></tr>
         </tbody>
     </table>
+    <blockquote>💭 每一个项目都来自真实需求，如果你觉得有用，欢迎 ⭐ Star 支持～</blockquote>
 
     <!-- Roadmap -->
     <h2>📍 项目 Roadmap</h2>
@@ -250,7 +343,7 @@
         <ul><li>✅ 基础框架</li><li>⏳ CDN 节点探测</li><li>⏳ Ping 延迟测试</li><li>⏳ 路由追踪模拟</li></ul>
     </details>
 
-    <!-- 咸鱼近况 / 技术栈 / 日常等 复用 README 核心内容 -->
+    <!-- 近况与日常 -->
     <h2>📣 咸鱼近况</h2>
     <ul>
         <li>2026-05-28 📝 README 全面优化 + 状态栏 + Roadmap</li>
@@ -266,6 +359,8 @@
         <img src="https://img.shields.io/badge/Cloudflare%20Workers-F38020?style=flat-square&logo=cloudflare" alt="Workers">
         <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python" alt="Python">
         <img src="https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go" alt="Go">
+        <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker" alt="Docker">
+        <img src="https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black" alt="Linux">
     </div>
 
     <h2>🐟 咸鱼语录</h2>
@@ -277,36 +372,45 @@
     </blockquote>
     <p><strong>今日咸鱼说</strong>：M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样 —— 都是认真过的证明。</p>
 
-    <!-- 支持与致谢 -->
+    <!-- 支持与互动 -->
     <h2>💝 支持这个小窝</h2>
-    <div align="center">
-        <a class="btn-like" href="#">爱发电 · 支持咸鱼</a>&nbsp;&nbsp;
-        <a class="btn-like" href="#">BuyMeACoffee</a>&nbsp;&nbsp;
-        <a class="btn-like" href="#">微信请我喝奶茶</a>
-        <p>☕ 一杯奶茶的能量，能让咸鱼多扑腾三天！</p>
+    <div class="btn-group">
+        <a class="btn" href="#">🌊 爱发电 · 支持咸鱼</a>
+        <a class="btn" href="#">☕ BuyMeACoffee</a>
+        <a class="btn" href="#">🧋 微信请我喝奶茶</a>
+    </div>
+    <div align="center"><p>☕ <em>一杯奶茶的能量，能让咸鱼多扑腾三天！</em></p></div>
+
+    <h2>🤝 互动方式</h2>
+    <div class="btn-group">
+        <span class="btn">⭐ Star 鼓励</span>
+        <span class="btn">🐛 Issue 反馈</span>
+        <span class="btn">🍴 Fork 一起玩</span>
+        <span class="btn">💬 咸鱼哲学交流</span>
     </div>
 
     <h2>📫 找到我</h2>
-    <div align="center">
-        <a href="https://github.com/BlueDriftHK">GitHub</a> · 
-        <a href="https://bluedrifthk.github.io/BlueDriftHK/">个人小站</a> · 
-        <a href="mailto:asiacomk@gmail.com">📧 邮箱联系</a>
+    <div align="center" class="btn-group">
+        <a class="btn" href="https://github.com/BlueDriftHK" target="_blank">GitHub</a>
+        <a class="btn" href="https://bluedrifthk.github.io/BlueDriftHK/" target="_blank">个人小站</a>
+        <a class="btn" href="mailto:asiacomk@gmail.com">📧 邮箱联系</a>
     </div>
 
     <!-- 彩蛋 -->
     <details>
         <summary>🐟 咸鱼彩蛋 · 暗号「咸鱼翻身」</summary>
-        <p>发邮件到 <strong>asiacomk@gmail.com</strong> 暗号「咸鱼翻身」，送你一句专属祝福 + 神秘小彩蛋 ✨</p>
+        <p>📧 发邮件到 <strong>asiacomk@gmail.com</strong> 暗号「咸鱼翻身」，送你一句专属祝福 + 神秘小彩蛋 ✨</p>
     </details>
 
     <hr>
+
     <div align="center">
         <p><strong>Made with ❤️ by NetSight Pro Team</strong><br>
         <img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="GPL v3">  · 开源自由 · 持续更新</p>
     </div>
 
     <footer>
-        ⭐️ 这个页面会显示在 GitHub 个人主页上，因为 BlueDriftHK/BlueDriftHK 是特殊的个人仓库<br>
+        ⭐️ 这个页面会显示在 GitHub 个人主页上，因为 <code>BlueDriftHK/BlueDriftHK</code> 是特殊的个人仓库<br>
         🐟 感谢你看到这里～ 如果你也是条咸鱼，欢迎一起扑腾 🌊<br>
         📅 最后更新：2026年5月28日
     </footer>
