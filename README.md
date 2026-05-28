@@ -52,7 +52,7 @@
 我的开源项目通常**不大**，但每一个都来自**真实的生活需求**：  
 一个烦人的重复操作、一个想自动化的流程、一个觉得“应该有人做但没人做”的小工具。
 
-> 💡 不为了写代码而写代码 —— 这是我的原则。
+> 💡 为了实用性而写代码 —— 这是我的原则。
 
 ---
 
@@ -258,6 +258,21 @@
 ### 🎵 最近在听
 
 *键盘声 + 风扇转 —— 白噪音最佳实践*
+
+</div>
+
+---
+
+## 📄 开源与致谢
+
+<div align="center">
+
+**Made with ❤️ by NetSight Pro Team**
+
+[![License](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+![Open Source](https://img.shields.io/badge/Open%20Source-Freedom-brightgreen)
+
+**GNU General Public License v3.0** · 开源自由 · 持续更新
 
 </div>
 
