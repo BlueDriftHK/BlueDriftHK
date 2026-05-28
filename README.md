@@ -122,24 +122,6 @@
 - 前端实时图表性能优化
 
 ---
-
-## 📈 GitHub 数据
-
-<details>
-<summary>📊 点击展开统计（需要 GitHub 账号验证）</summary>
-
-<br>
-
-![BlueDriftHK 的 GitHub 统计](https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=tokyonight&hide=contribs,prs&count_private=false)
-![常用语言](https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=tokyonight)
-
-![访客计数器](https://visitor-badge.laobi.icu/badge?page_id=BlueDriftHK.BlueDriftHK)
-
-
-</details>
-
----
-
 ## 🐟 咸鱼语录 / 金句墙
 
 > 「咸鱼不是摆烂，是换一种姿势努力。」
