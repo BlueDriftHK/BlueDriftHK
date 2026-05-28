@@ -288,17 +288,12 @@
         <div class="subtitle">一条热爱技术的咸鱼 · 开源源于生活</div>
     </div>
 
-    <!-- 📊 统计卡片 -->
+    <!-- 📊 统计卡片（仅今日/总访问） -->
     <div class="stats-banner">
         <div class="stats-item">
             <span>📈</span>
             <span class="stats-label">今日访问</span>
             <span class="stats-number" id="todayCount">--</span>
-        </div>
-        <div class="stats-item">
-            <span>👥</span>
-            <span class="stats-label">当前在线</span>
-            <span class="stats-number" id="onlineCount">--</span>
         </div>
         <div class="stats-item">
             <span>📊</span>
@@ -485,22 +480,6 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // ==================== 在线人数（模拟模式） ====================
-    let mockOnlineCount = 5;
-    
-    function updateMockOnline() {
-        // 模拟在线人数在 3~18 之间波动
-        let change = Math.floor(Math.random() * 7) - 3;  // -3 到 +3
-        mockOnlineCount = Math.min(25, Math.max(2, mockOnlineCount + change));
-        document.getElementById('onlineCount').innerText = mockOnlineCount;
-    }
-    
-    function initOnlineCounter() {
-        mockOnlineCount = Math.floor(Math.random() * 12) + 4;
-        document.getElementById('onlineCount').innerText = mockOnlineCount;
-        setInterval(updateMockOnline, 45000);  // 每45秒变化一次
-    }
-
     // ==================== 不蒜子计数器（今日/总访问） ====================
     function initBusuanzi() {
         setTimeout(function() {
@@ -677,8 +656,7 @@
         updateUptime();
         setInterval(updateUptime, 3600000);
         
-        initBusuanzi();
-        initOnlineCounter();      // 模拟在线人数，不调用任何 API
+        initBusuanzi();      // 仅今日/总访问，无在线人数
         
         genUUIDAndShow();
         setTimeout(genQR, 500);
