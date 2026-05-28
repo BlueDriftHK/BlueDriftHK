@@ -56,7 +56,25 @@
             gap: 1.5rem;
         }
 
-        /* 苹果毛玻璃卡片 */
+        /* 全宽卡片（用于星环状态） */
+        .glass-card-full {
+            background: rgba(30, 30, 40, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 28px;
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            grid-column: 1 / -1;  /* 跨所有列，拉长 */
+        }
+        .glass-card-full:hover {
+            transform: translateY(-3px);
+            background: rgba(40, 40, 52, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 普通卡片 */
         .glass-card {
             background: rgba(30, 30, 40, 0.5);
             backdrop-filter: blur(20px);
@@ -89,6 +107,39 @@
             letter-spacing: -0.3px;
         }
 
+        /* 星环状态内部横向布局 */
+        .status-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        .status-item {
+            text-align: center;
+            flex: 1;
+            min-width: 140px;
+        }
+        .status-label {
+            font-size: 0.75rem;
+            color: #8e8e9e;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .status-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .status-badge {
+            display: inline-block;
+            background: rgba(0, 122, 255, 0.2);
+            border-radius: 30px;
+            padding: 4px 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #007aff;
+        }
         .status-chip {
             display: inline-block;
             background: rgba(255, 255, 255, 0.12);
@@ -220,6 +271,8 @@
             .title { font-size: 2rem; }
             .grid { gap: 1rem; }
             .glass-card { padding: 1.2rem; }
+            .glass-card-full { padding: 1.2rem; }
+            .status-row { flex-direction: column; gap: 0.8rem; }
         }
 
         .toast {
@@ -390,25 +443,31 @@
             <div id="qrcode"></div>
         </div>
 
-        <!-- 10. 星环状态 -->
-        <div class="glass-card">
+        <!-- 10. 星环状态 - 全宽拉长版 -->
+        <div class="glass-card-full">
             <div class="card-header">
                 <span class="card-icon">🪐</span>
                 <span class="card-title">星环状态</span>
             </div>
-            <div class="status-bar">
-                <span>🟢 核心引擎</span>
-                <span class="status-chip">聚变运行中</span>
+            <div class="status-row">
+                <div class="status-item">
+                    <div class="status-label">🟢 核心引擎</div>
+                    <div class="status-value"><span class="status-badge">聚变运行中</span></div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">⏳ 时空存续</div>
+                    <div class="status-value" id="uptimeDisplay" style="font-family: monospace;">计算中...</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">📅 起始纪元</div>
+                    <div class="status-value">2007年10月29日</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">☁️ 运行平台</div>
+                    <div class="status-value">Cloudflare Workers</div>
+                </div>
             </div>
-            <div class="status-bar">
-                <span>⏳ 时空存续</span>
-                <span id="uptimeDisplay" style="font-family: monospace;">计算中...</span>
-            </div>
-            <div class="status-bar">
-                <span>📅 起始纪元</span>
-                <span>2007年10月29日</span>
-            </div>
-            <p style="font-size: 0.7rem; text-align: center; margin-top: 10px; color: #6e6e7e;">基于 Cloudflare Workers 生态</p>
+            <p style="font-size: 0.7rem; text-align: center; margin-top: 16px; color: #6e6e7e; letter-spacing: 0.5px;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</p>
         </div>
     </div>
 
