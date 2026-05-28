@@ -25,11 +25,11 @@
 ## 🐟 咸鱼状态栏
 
 | 项目 | 状态 |
-|------|------|
-| 🐟 咸鱼状态 | 🟢 在线扑腾 |
+|:---|:---|
+| 🐟 咸鱼模式 | 🟢 **在线扑腾**（偶尔摸鱼） |
 | ☕ 今日进度 | 写了 3 小时代码，躺了 2 小时 |
 | 📅 本周活跃 | ███████░░░░░░░░░ 4/7 天 |
-| ⭐ 累计星星 | 4 颗（感谢支持！） |
+| ⭐ 累计星星 | 4 颗 · 感谢每一位点 Star 的朋友 |
 
 ---
 
@@ -77,14 +77,43 @@
 
 ## 🧩 我的小项目
 
-| 项目 | 简介 | 状态 | 技术栈 | ⭐ 热度 |
-|------|------|------|--------|--------|
-| 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器，支持代理、监控、多语言 | ✅ v2.0 | `JavaScript` `HTML` `HLS.js` | ⭐ 4 |
-| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | 网络诊断工具：CDN节点、Ping延迟、路由追踪 | 🚧 开发中 | `JavaScript` `Cloudflare Workers` | - |
+| 项目 | 简介 | 状态 | 技术栈 | ⭐ |
+|:---|:---|:---|:---|:---:|
+| 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器：代理、监控、多语言、QoS | ✅ v2.0 | `JS` `HLS.js` `Chart.js` | 4 |
+| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | 网络诊断工具：CDN 节点 / Ping / 路由追踪 | 🚧 v0.1 | `JS` `CF Workers` | - |
 
 > 💭 每一个项目都来自**真实需求**，如果你觉得有用，欢迎 ⭐ Star 支持～
 
 ---
+
+## 📍 项目 Roadmap
+
+### 🎬 CF-Worker-M3U8Player
+- [x] v2.0 完整优化版（2026-05-27）
+- [ ] 播放列表收藏功能（Workers KV）
+- [ ] 自定义请求头（Referer/User-Agent）
+- [ ] WebVTT 字幕支持
+
+### 🔍 CF-workers-netdiag
+- [x] 基础框架搭建
+- [ ] CDN 节点信息探测
+- [ ] Ping 延迟测试（多趟平均）
+- [ ] 路由追踪（traceroute 模拟）
+- [ ] WebSocket 实时日志
+
+---
+
+## 📣 咸鱼近况
+
+| 日期 | 动态 |
+|:---|:---|
+| 2026-05-28 | 📝 README 全面优化 + 状态栏 + Roadmap |
+| 2026-05-27 | 🎉 M3U8 Player 发布 v2.0 |
+| 2026-05-26 | 🔍 新坑开挖：CF-workers-netdiag |
+| 2026-05-20 | 🌐 GitHub Pages 个人小站上线 |
+
+---
+
 ## 🛠️ 技术栈 & 工具
 
 ### 日常使用
@@ -114,28 +143,24 @@
 
 | 🌱 正在学 | 🔍 最近折腾 | 💬 想聊的话题 | 🎯 小目标 |
 |:---:|:---:|:---:|:---:|
-| 前端优化 / Workers 高级用法 | 完善 `CF-workers-netdiag` 的 Ping 和路由追踪功能 | 实用工具 / 效率技巧 / Cloudflare 生态 | M3U8 播放器冲到 10+ Star |
+| 前端优化 / Workers 高级用法 | 完善 `CF-workers-netdiag` 的 Ping 和路由追踪 | 实用工具 / 效率技巧 / CF 生态 | M3U8 播放器冲到 10+ Star |
 
-### ✅ 近期已完成的小事
+### ✅ 近期已完成
 
-- [x] M3U8 Player v2.0 完整优化版发布（2026-05-27）
-  - 新增代理播放路由、CDN节点探测、Ping延迟测试
-  - 全新玻璃拟态设计 + 实时速度图表
-  - 多语言完整支持 + QoS 质量评分
-- [x] 配置好了 GitHub Pages 个人站
-- [x] 启动了 `CF-workers-netdiag` 项目
-- [x] README 添加状态栏、赞助入口、技术栈徽章
-- [ ] 网络诊断工具增加更多测试端点（进行中）
+- [x] M3U8 Player v2.0 发布（代理/CDN探测/Ping/多语言/QoS）
+- [x] GitHub Pages 个人站上线
+- [x] `CF-workers-netdiag` 项目启动
+- [x] README 状态栏 + Roadmap + 近况时间线
 
-### 📡 正在追的技术/资讯
+### 📡 正在追
 
-- Cloudflare Workers 官方文档和最佳实践
-- HLS.js 最新版本特性
+- Cloudflare Workers 官方文档
+- HLS.js 最新特性
 - 前端实时图表性能优化
 
 ---
 
-## 📈 GitHub 数据（温柔的占位）
+## 📈 GitHub 数据
 
 <details>
 <summary>📊 点击展开统计</summary>
@@ -143,8 +168,7 @@
 <br>
 
 > 🐟 *咸鱼正在努力扑腾中……*  
-> *当你看到这条消息，说明我的 GitHub 活跃记录还不够多，统计图暂时隐身～*  
-> *等我多写点代码、多 push 几次，它就会自动出现啦！*
+> *统计图暂时隐身～ 等我多写点代码就会冒出来！*
 
 <div align="center">
 
@@ -158,16 +182,14 @@
 
 ---
 
-## 🐟 咸鱼语录 / 金句墙
+## 🐟 咸鱼语录
 
 > 「咸鱼不是摆烂，是换一种姿势努力。」
-
+> 
 > 「代码如人生，bug 如日常 —— 修就完了。」
-
-> 「今天多学一行代码，明天少躺一分钟沙发。」
-
+> 
 > 「每一个好用的工具，最初都是为了解决自己的麻烦。」
-
+> 
 > 「开源的精神不是写出完美的代码，而是愿意分享不完美的代码。」
 
 **今日咸鱼说**：*M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样 —— 都是认真过的证明*
@@ -177,11 +199,10 @@
 ## 🎲 咸鱼小问答
 
 <details>
-<summary>🤔 点击展开：为什么叫「咸鱼」？</summary>
+<summary>🤔 为什么叫「咸鱼」？</summary>
 
 <br>
 
-因为：
 - 🛌 **会躺平** —— 但躺够了会爬起来
 - 💻 **爱折腾** —— 但只折腾真实需要的东西
 - 🧂 **有点咸** —— 代码风格偶尔带点个人恶趣味
@@ -190,29 +211,12 @@
 </details>
 
 ---
+## 🤝 互动
 
-## 💝 支持这个小窝
-
-如果我的项目对你有帮助，可以考虑：
-
-<div align="center">
-
-[![爱发电](https://img.shields.io/badge/爱发电-支持咸鱼-ff69b4?style=for-the-badge)](https://afdian.com/#)
-[![BuyMeACoffee](https://img.shields.io/badge/BuyMeACoffee-支持-ffdd00?style=for-the-badge)](https://buymeacoffee.com/#)
-[![微信打赏](https://img.shields.io/badge/微信-请我喝奶茶-07C160?style=for-the-badge)](#)
-
-</div>
-
-> ☕ *一杯奶茶的能量，能让咸鱼多扑腾三天！*
-
----
-
-## 🤝 支持 / 互动
-
-- ⭐ 点个 **Star** 是最好的鼓励（M3U8 Player 已经有 4 个啦，欢迎成为下一个！）
-- 🐛 发现 bug 欢迎提 **Issue**
-- 💡 有想法可以 **Fork** 一起玩
-- 🗣️ 也想做 Cloudflare Workers 工具？欢迎来 **聊一聊**
+- ⭐ **Star** → 最好的鼓励（已有 4 个，欢迎下一个！）
+- 🐛 **Issue** → 发现 bug 或提建议
+- 🍴 **Fork** → 一起折腾新功能
+- 💬 **Discuss** → 聊技术、聊咸鱼哲学
 
 > 一个人扑腾没意思，一群人扑腾才有浪 🌊
 
@@ -237,17 +241,15 @@
         ║   🐟 咸鱼彩蛋 🐟                       ║
         ║                                       ║
         ║   恭喜你翻到了底部！                   ║
-        ║   奖励你一句祝福：                     ║
         ║                                       ║
-        ║   "今天遇到的 bug 都很好修"            ║
-        ║   "M3U8 流永不卡顿"                   ║
-        ║   "Ping 值永远低于 10ms"              ║
+        ║   🔑 暗号：「咸鱼翻身」                ║
+        ║                                       ║
+        ║   发邮件给我（asiacomk@gmail.com）    ║
+        ║   送一句专属祝福 + 神秘小彩蛋 ✨       ║
         ║                                       ║
         ║   —— 咸鱼之神                         ║
         ╚═══════════════════════════════════════╝
 ```
-
-**🎯 隐藏彩蛋**：找到这行字的朋友，发邮件告诉我暗号「咸鱼翻身」，送你一句专属祝福～
 
 ---
 
