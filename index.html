@@ -8,8 +8,6 @@
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <!-- 不蒜子计数器 -->
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <style>
         * {
             margin: 0;
@@ -49,40 +47,6 @@
             color: #8e8e9e;
             font-size: 1rem;
             font-weight: 400;
-        }
-
-        /* 统计卡片 - 苹果毛玻璃 */
-        .stats-banner {
-            background: rgba(30, 30, 40, 0.5);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            padding: 0.8rem 1.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 2.5rem;
-            flex-wrap: wrap;
-        }
-        .stats-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: #d0d0e0;
-            padding: 6px 12px;
-            border-radius: 40px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .stats-number {
-            font-weight: 700;
-            color: #007aff;
-            font-size: 1.2rem;
-            font-family: monospace;
-        }
-        .stats-label {
-            color: #8e8e9e;
         }
 
         /* 网格布局 */
@@ -256,7 +220,6 @@
             .title { font-size: 2rem; }
             .grid { gap: 1rem; }
             .glass-card { padding: 1.2rem; }
-            .stats-banner { gap: 1rem; }
         }
 
         .toast {
@@ -286,20 +249,6 @@
     <div class="header">
         <div class="title">🐟 BlueDriftHK</div>
         <div class="subtitle">一条热爱技术的咸鱼 · 开源源于生活</div>
-    </div>
-
-    <!-- 📊 统计卡片（仅今日/总访问） -->
-    <div class="stats-banner">
-        <div class="stats-item">
-            <span>📈</span>
-            <span class="stats-label">今日访问</span>
-            <span class="stats-number" id="todayCount">--</span>
-        </div>
-        <div class="stats-item">
-            <span>📊</span>
-            <span class="stats-label">总访问量</span>
-            <span class="stats-number" id="totalCount">--</span>
-        </div>
     </div>
 
     <div class="grid">
@@ -480,35 +429,6 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // ==================== 不蒜子计数器（今日/总访问） ====================
-    function initBusuanzi() {
-        setTimeout(function() {
-            let todaySpan = document.getElementById('todayCount');
-            let totalSpan = document.getElementById('totalCount');
-            if (todaySpan) {
-                let today = document.getElementById('busuanzi_value_site_pv')?.innerText;
-                todaySpan.innerText = today || '0';
-            }
-            if (totalSpan) {
-                let total = document.getElementById('busuanzi_value_site_uv')?.innerText;
-                totalSpan.innerText = total || '0';
-            }
-        }, 1000);
-        
-        // 监听不蒜子异步更新
-        let observer = new MutationObserver(function() {
-            let today = document.getElementById('busuanzi_value_site_pv')?.innerText;
-            if (today && document.getElementById('todayCount')?.innerText !== today) {
-                document.getElementById('todayCount').innerText = today;
-            }
-            let total = document.getElementById('busuanzi_value_site_uv')?.innerText;
-            if (total && document.getElementById('totalCount')?.innerText !== total) {
-                document.getElementById('totalCount').innerText = total;
-            }
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
     // ==================== 星环时间 ====================
     function updateUptime() {
         const start = new Date(2007, 9, 29);
@@ -655,8 +575,6 @@
         renderHttp();
         updateUptime();
         setInterval(updateUptime, 3600000);
-        
-        initBusuanzi();      // 仅今日/总访问，无在线人数
         
         genUUIDAndShow();
         setTimeout(genQR, 500);
