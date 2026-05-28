@@ -22,6 +22,17 @@
 
 ---
 
+## 🐟 咸鱼状态栏
+
+| 项目 | 状态 |
+|------|------|
+| 🐟 咸鱼状态 | 🟢 在线扑腾 |
+| ☕ 今日进度 | 写了 3 小时代码，躺了 2 小时 |
+| 📅 本周活跃 | ███████░░░░░░░░░ 4/7 天 |
+| ⭐ 累计星星 | 4 颗（感谢支持！） |
+
+---
+
 ## 📖 关于我 / 咸鱼自白
 
 ```text
@@ -66,12 +77,21 @@
 
 ## 🧩 我的小项目
 
-| 项目 | 简介 | 状态 | 标签 | ⭐ 热度 |
-|------|------|------|------|--------|
-| 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器，支持代理、监控、多语言 | ✅ 稳定版 v2.0 | `HLS` `Cloudflare` `播放器` | ⭐ 4 |
-| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | Cloudflare Workers 网络诊断工具 —— 检测 CDN 节点、Ping 延迟、路由追踪 | 🚧 开发中 | `网络诊断` `Cloudflare` `工具` | - |
+| 项目 | 简介 | 状态 | 技术栈 | ⭐ 热度 |
+|------|------|------|--------|--------|
+| 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器，支持代理、监控、多语言 | ✅ v2.0 | `JavaScript` `HTML` `HLS.js` | ⭐ 4 |
+| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | 网络诊断工具：CDN节点、Ping延迟、路由追踪 | 🚧 开发中 | `JavaScript` `Cloudflare Workers` | - |
 
 > 💭 每一个项目都来自**真实需求**，如果你觉得有用，欢迎 ⭐ Star 支持～
+
+---
+
+## 📣 咸鱼近况
+
+- [2026-05-28] 📝 README 大升级！加了状态栏、赞助入口、技术栈徽章
+- [2026-05-27] 🎉 M3U8 Player 发布 v2.0 完整优化版
+- [2026-05-26] 🔍 新坑开挖：CF-workers-netdiag
+- [2026-05-20] 🌐 GitHub Pages 个人小站上线
 
 ---
 
@@ -114,6 +134,7 @@
   - 多语言完整支持 + QoS 质量评分
 - [x] 配置好了 GitHub Pages 个人站
 - [x] 启动了 `CF-workers-netdiag` 项目
+- [x] README 添加状态栏、赞助入口、技术栈徽章
 - [ ] 网络诊断工具增加更多测试端点（进行中）
 
 ### 📡 正在追的技术/资讯
@@ -180,9 +201,23 @@
 
 ---
 
-## 🤝 支持 / 互动
+## 💝 支持这个小窝
 
-如果我的项目对你有帮助：
+如果我的项目对你有帮助，可以考虑：
+
+<div align="center">
+
+[![爱发电](https://img.shields.io/badge/爱发电-支持咸鱼-ff69b4?style=for-the-badge)](https://afdian.com/#)
+[![BuyMeACoffee](https://img.shields.io/badge/BuyMeACoffee-支持-ffdd00?style=for-the-badge)](https://buymeacoffee.com/#)
+[![微信打赏](https://img.shields.io/badge/微信-请我喝奶茶-07C160?style=for-the-badge)](#)
+
+</div>
+
+> ☕ *一杯奶茶的能量，能让咸鱼多扑腾三天！*
+
+---
+
+## 🤝 支持 / 互动
 
 - ⭐ 点个 **Star** 是最好的鼓励（M3U8 Player 已经有 4 个啦，欢迎成为下一个！）
 - 🐛 发现 bug 欢迎提 **Issue**
@@ -218,9 +253,11 @@
         ║   "M3U8 流永不卡顿"                   ║
         ║   "Ping 值永远低于 10ms"              ║
         ║                                       ║
-        ║           —— 咸鱼之神                 ║
+        ║   —— 咸鱼之神                         ║
         ╚═══════════════════════════════════════╝
 ```
+
+**🎯 隐藏彩蛋**：找到这行字的朋友，发邮件告诉我暗号「咸鱼翻身」，送你一句专属祝福～
 
 ---
 
