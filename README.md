@@ -51,11 +51,14 @@
 
 <div align="center">
 
-### 🚀 [推荐项目名称](https://github.com/BlueDriftHK/recommended-project)
+### 🚀 [CF Worker M3U8 Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)
 
-*一句话概括这个项目是做什么的，解决了什么痛点*
+*Cloudflare Workers 实现的全功能 HLS (m3u8) 视频流播放器*
 
-`推荐` `实用` `稳定`
+`HLS.js` `实时监控` `代理播放` `多语言` `QoS评分`
+
+[![GitHub stars](https://img.shields.io/github/stars/BlueDriftHK/CF-Worker-M3U8Player?style=social)](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)
+[![GitHub forks](https://img.shields.io/github/forks/BlueDriftHK/CF-Worker-M3U8Player?style=social)](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)
 
 </div>
 
@@ -65,10 +68,8 @@
 
 | 项目 | 简介 | 状态 | 标签 | ⭐ 热度 |
 |------|------|------|------|--------|
-| 🚧 [tool-name](https://github.com/BlueDriftHK/tool-name) | 解决某个具体小问题的工具 | 🚧 开发中 | `Python` | - |
-| 📦 [script-name](https://github.com/BlueDriftHK/script-name) | 一个让生活更便捷的小脚本 | ✅ 可用 | `自动化` | - |
-| 📝 [learning-lab](https://github.com/BlueDriftHK/learning-lab) | 学习/练手作品集 | 🌱 学习中 | `笔记` | - |
-| 💡 [your-idea](https://github.com/BlueDriftHK/your-idea) | 下一个想做的有趣东西 | 📋 规划中 | `灵感` | - |
+| 🎬 [CF-Worker-M3U8Player](https://github.com/BlueDriftHK/CF-Worker-M3U8Player) | 全功能 HLS 播放器，支持代理、监控、多语言 | ✅ 稳定版 v2.0 | `HLS` `Cloudflare` `播放器` | ⭐ 4 |
+| 🔍 [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | Cloudflare Workers 网络诊断工具（CDN节点/Ping/路由追踪） | 🚧 开发中 | `网络诊断` `Cloudflare` | - |
 
 > 💭 每一个项目都来自**真实需求**，如果你觉得有用，欢迎 ⭐ Star 支持～
 
@@ -83,19 +84,19 @@
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
 
 ### 正在探索
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 
 ### 感兴趣的方向
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=linux&logoColor=black)
 
 ### 未来想学 ✨
 ![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
 
 ---
 
@@ -103,18 +104,22 @@
 
 | 🌱 正在学 | 🔍 最近折腾 | 💬 想聊的话题 | 🎯 小目标 |
 |:---:|:---:|:---:|:---:|
-| 前端基础 / Python 小技巧 | 某个让生活更自动化的小脚本 | 实用工具 / 效率技巧 / 开源入门 | 让 1 个项目被 10+ 人真正用上 |
+| 前端优化 / Workers 高级用法 | 完善 `CF-workers-netdiag` 的 Ping 和路由追踪功能 | 实用工具 / 效率技巧 / Cloudflare 生态 | M3U8 播放器冲到 10+ Star |
 
 ### ✅ 近期已完成的小事
 
-- [x] 学会了用 Markdown 写漂亮文档
+- [x] M3U8 Player v2.0 完整优化版发布（2026-05-27）
+  - 新增代理播放路由、CDN节点探测、Ping延迟测试
+  - 全新玻璃拟态设计 + 实时速度图表
+  - 多语言完整支持 + QoS 质量评分
 - [x] 配置好了 GitHub Pages 个人站
-- [ ] 正在努力中...
+- [ ] 网络诊断工具增加更多测试端点
 
 ### 📡 正在追的技术/资讯
 
-- 跟着某个教程学前端基础
-- 关注几个有趣的开源项目
+- Cloudflare Workers 官方文档和最佳实践
+- HLS.js 最新版本特性
+- 前端实时图表性能优化
 
 ---
 
@@ -148,7 +153,7 @@
 
 > 「开源的精神不是写出完美的代码，而是愿意分享不完美的代码。」
 
-**今日咸鱼说**：*摸鱼一时爽，一直摸鱼一直爽 —— 但偶尔也要扑腾一下*
+**今日咸鱼说**：*M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样 —— 都是认真过的证明*
 
 ---
 
@@ -156,10 +161,10 @@
 
 如果我的项目对你有帮助：
 
-- ⭐ 点个 **Star** 是最好的鼓励
+- ⭐ 点个 **Star** 是最好的鼓励（M3U8 Player 已经有 4 个啦，欢迎成为下一个！）
 - 🐛 发现 bug 欢迎提 **Issue**
 - 💡 有想法可以 **Fork** 一起玩
-- 🗣️ 也想做开源？欢迎来 **聊一聊**
+- 🗣️ 也想做 Cloudflare Workers 工具？欢迎来 **聊一聊**
 
 > 一个人扑腾没意思，一群人扑腾才有浪 🌊
 
@@ -187,6 +192,7 @@
         ║   奖励你一句祝福：                     ║
         ║                                       ║
         ║   "今天遇到的 bug 都很好修"            ║
+        ║   "M3U8 流永不卡顿"                   ║
         ║                                       ║
         ║           —— 咸鱼之神                 ║
         ╚═══════════════════════════════════════╝
@@ -198,7 +204,7 @@
 
 ### 🎵 最近在听
 
-*可以手动更新你喜欢的歌名～*
+*写代码时适合听的轻音乐*
 
 </div>
 
@@ -210,7 +216,6 @@
 <br>
 🐟 感谢你看到这里～ 如果你也是条咸鱼，欢迎一起扑腾 🌊
 <br>
-📅 最后更新：2026年5月
+📅 最后更新：2026年5月28日
 </sub>
 </div>
----
