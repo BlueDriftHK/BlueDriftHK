@@ -66,7 +66,7 @@
             padding: 1.5rem 2rem;
             transition: all 0.3s ease;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            grid-column: 1 / -1;  /* 跨所有列，拉长 */
+            grid-column: 1 / -1;
         }
         .glass-card-full:hover {
             transform: translateY(-3px);
@@ -211,16 +211,6 @@
             border-left: 2px solid #007aff;
             word-break: break-all;
             font-family: monospace;
-        }
-
-        .status-bar {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 10px 14px;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .stats-group {
@@ -443,7 +433,7 @@
             <div id="qrcode"></div>
         </div>
 
-        <!-- 10. 星环状态 - 全宽拉长版 -->
+        <!-- 10. 星环状态 - 全宽拉长版，带时分秒 -->
         <div class="glass-card-full">
             <div class="card-header">
                 <span class="card-icon">🪐</span>
@@ -456,7 +446,7 @@
                 </div>
                 <div class="status-item">
                     <div class="status-label">⏳ 时空存续</div>
-                    <div class="status-value" id="uptimeDisplay" style="font-family: monospace;">计算中...</div>
+                    <div class="status-value" id="uptimeDisplay" style="font-family: monospace; font-size: 1.1rem;">计算中...</div>
                 </div>
                 <div class="status-item">
                     <div class="status-label">📅 起始纪元</div>
@@ -488,15 +478,31 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // ==================== 星环时间 ====================
+    // ==================== 星环时间（精确到秒） ====================
     function updateUptime() {
-        const start = new Date(2007, 9, 29);
+        const start = new Date(2007, 9, 29);  // 2007年10月29日
         const now = new Date();
-        const diffMs = now - start;
+        
+        // 计算总毫秒差
+        let diffMs = now - start;
+        
+        // 计算天数
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         const years = Math.floor(diffDays / 365);
         const days = diffDays % 365;
-        document.getElementById('uptimeDisplay').innerHTML = `${years}年 ${days}天 🌌`;
+        
+        // 计算剩余时间（今天零点之后的小时、分钟、秒）
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const msSinceMidnight = now - todayStart;
+        
+        const hours = Math.floor(msSinceMidnight / (1000 * 60 * 60));
+        const minutes = Math.floor((msSinceMidnight % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((msSinceMidnight % (1000 * 60)) / 1000);
+        
+        // 格式化显示
+        const timeStr = `${years}年 ${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        document.getElementById('uptimeDisplay').innerHTML = timeStr;
     }
 
     // ==================== HTTP 状态码 ====================
@@ -633,7 +639,7 @@
     function init() {
         renderHttp();
         updateUptime();
-        setInterval(updateUptime, 3600000);
+        setInterval(updateUptime, 1000);  // 每秒更新一次，达到时钟效果
         
         genUUIDAndShow();
         setTimeout(genQR, 500);
