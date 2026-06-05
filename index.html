@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 咸鱼工坊</title>
-    <meta name="description" content="开发者工具集 · 毛玻璃设计">
+    <title>BlueDriftHK · 咸鱼工坊 | 开发者工具集</title>
+    <meta name="description" content="开发者工具集 · 毛玻璃设计 · UUID · IP查询 · 二维码 · 状态码">
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -285,6 +285,23 @@
             85% { opacity: 1; transform: translateX(-50%) translateY(0); }
             100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
         }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #007aff;
+            border-radius: 8px;
+        }
+        .http-item-active {
+            background: rgba(0, 122, 255, 0.25) !important;
+            border-left: 2px solid #007aff;
+        }
     </style>
 </head>
 <body>
@@ -372,8 +389,8 @@
                 <span class="card-icon">📡</span>
                 <span class="card-title">HTTP 状态码</span>
             </div>
-            <div id="httpList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 150px; overflow-y: auto;"></div>
-            <div id="httpDetail" class="result" style="margin-top: 8px;">点击查看详情</div>
+            <div id="httpList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 150px; overflow-y: auto; padding: 2px;"></div>
+            <div id="httpDetail" class="result" style="margin-top: 8px;">点击状态码查看详情</div>
         </div>
 
         <!-- 6. 字数统计 -->
@@ -382,7 +399,7 @@
                 <span class="card-icon">📊</span>
                 <span class="card-title">字数统计</span>
             </div>
-            <textarea id="wordInput" class="input" placeholder="输入文本..."></textarea>
+            <textarea id="wordInput" class="input" placeholder="输入文本... 支持中英文混合统计"></textarea>
             <div class="stats-group">
                 <div class="stat-item"><div class="stat-number" id="charCount">0</div><div class="stat-label">字符</div></div>
                 <div class="stat-item"><div class="stat-number" id="wordCount">0</div><div class="stat-label">单词</div></div>
@@ -399,7 +416,7 @@
             </div>
             <div class="result" id="uuidDisplay" style="font-family: monospace;">点击生成</div>
             <div class="flex-row">
-                <button class="btn" onclick="genUUID()">✨ 生成</button>
+                <button class="btn" onclick="genUUIDAndShow()">✨ 生成</button>
                 <button class="btn" onclick="copyUUID()">📋 复制</button>
                 <button class="btn" onclick="genMultipleUUID()">🔢 3个</button>
             </div>
@@ -464,7 +481,7 @@
     <div class="footer">
         <div>Made with ❤️ by BlueDriftHK · 咸鱼工坊</div>
         <div style="margin-top: 6px;">GNU General Public License v3.0 · 开源自由 · 持续更新</div>
-        <div style="margin-top: 6px;">📅 最后更新：2026年5月28日</div>
+        <div style="margin-top: 6px;">📅 最后更新：2026年6月5日</div>
     </div>
 </div>
 
@@ -480,44 +497,35 @@
 
     // ==================== 星环时间（精确到秒） ====================
     function updateUptime() {
-        const start = new Date(2007, 9, 29);  // 2007年10月29日
+        const start = new Date(2007, 9, 29, 0, 0, 0);
         const now = new Date();
-        
-        // 计算总毫秒差
         let diffMs = now - start;
-        
-        // 计算天数
+        if (diffMs < 0) diffMs = 0;
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         const years = Math.floor(diffDays / 365);
         const days = diffDays % 365;
-        
-        // 计算剩余时间（今天零点之后的小时、分钟、秒）
-        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const msSinceMidnight = now - todayStart;
-        
-        const hours = Math.floor(msSinceMidnight / (1000 * 60 * 60));
-        const minutes = Math.floor((msSinceMidnight % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((msSinceMidnight % (1000 * 60)) / 1000);
-        
-        // 格式化显示
+        // 计算当天经过的毫秒数(相对起始日同时间点更精准，这里绝对差值已经包含时分秒，单独提取更优雅)
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
         const timeStr = `${years}年 ${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        
         document.getElementById('uptimeDisplay').innerHTML = timeStr;
     }
 
     // ==================== HTTP 状态码 ====================
     const httpCodes = [
-        {code:"200",name:"OK",desc:"请求成功"},
-        {code:"301",name:"Moved",desc:"永久移动"},
-        {code:"302",name:"Found",desc:"临时移动"},
-        {code:"304",name:"Not Modified",desc:"未修改"},
-        {code:"400",name:"Bad Request",desc:"语法错误"},
-        {code:"401",name:"Unauthorized",desc:"未授权"},
-        {code:"403",name:"Forbidden",desc:"拒绝"},
-        {code:"404",name:"Not Found",desc:"不存在"},
-        {code:"500",name:"Server Error",desc:"服务器错误"},
+        {code:"200",name:"OK",desc:"请求成功，资源已返回"},
+        {code:"301",name:"Moved Permanently",desc:"永久重定向，资源URI已变更"},
+        {code:"302",name:"Found",desc:"临时重定向"},
+        {code:"304",name:"Not Modified",desc:"资源未修改，使用缓存"},
+        {code:"400",name:"Bad Request",desc:"请求语法错误或无法理解"},
+        {code:"401",name:"Unauthorized",desc:"需要身份验证"},
+        {code:"403",name:"Forbidden",desc:"服务器拒绝请求"},
+        {code:"404",name:"Not Found",desc:"资源不存在"},
+        {code:"500",name:"Internal Server Error",desc:"服务器内部错误"},
         {code:"502",name:"Bad Gateway",desc:"网关错误"},
-        {code:"503",name:"Unavailable",desc:"服务不可用"}
+        {code:"503",name:"Service Unavailable",desc:"服务器过载或维护"}
     ];
     function renderHttp() {
         let container = document.getElementById('httpList');
@@ -526,12 +534,19 @@
         httpCodes.forEach(c => {
             let div = document.createElement('div');
             div.style.background = 'rgba(255,255,255,0.05)';
-            div.style.borderRadius = '10px';
-            div.style.padding = '6px';
+            div.style.borderRadius = '12px';
+            div.style.padding = '6px 4px';
             div.style.cursor = 'pointer';
             div.style.fontSize = '0.7rem';
-            div.innerHTML = `<b>${c.code}</b><br>${c.name}`;
-            div.onclick = () => document.getElementById('httpDetail').innerHTML = `${c.code} ${c.name}<br>${c.desc}`;
+            div.style.transition = '0.1s';
+            div.style.textAlign = 'center';
+            div.innerHTML = `<b>${c.code}</b><br><span style="font-size:0.6rem;">${c.name}</span>`;
+            div.onclick = () => {
+                document.getElementById('httpDetail').innerHTML = `<strong>${c.code} ${c.name}</strong><br>${c.desc}`;
+                // 高亮轻效果
+                document.querySelectorAll('#httpList > div').forEach(el => el.style.background = 'rgba(255,255,255,0.05)');
+                div.style.background = 'rgba(0,122,255,0.3)';
+            };
             container.appendChild(div);
         });
     }
@@ -540,8 +555,10 @@
     function updateWordStats() {
         let text = document.getElementById('wordInput').value;
         document.getElementById('charCount').innerText = text.length;
-        document.getElementById('wordCount').innerText = text.trim() ? text.trim().split(/\s+/).length : 0;
-        document.getElementById('chineseCount').innerText = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+        const words = text.trim() ? text.trim().split(/\s+/).filter(w => w.length > 0).length : 0;
+        document.getElementById('wordCount').innerText = words;
+        const chinese = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+        document.getElementById('chineseCount').innerText = chinese;
     }
     function clearWord() { 
         document.getElementById('wordInput').value = ''; 
@@ -562,92 +579,143 @@
         document.getElementById('uuidDisplay').innerHTML = u;
         uuidHistory.unshift(u);
         if(uuidHistory.length > 5) uuidHistory.pop();
-        document.getElementById('uuidHistory').innerHTML = uuidHistory.map(u => `<div style="border-bottom:1px solid rgba(255,255,255,0.1); padding:4px 0;">${u}</div>`).join('');
+        document.getElementById('uuidHistory').innerHTML = uuidHistory.map(uuid => `<div style="border-bottom:1px solid rgba(255,255,255,0.1); padding:4px 0; font-family: monospace;">${uuid}</div>`).join('');
+        if(uuidHistory.length === 0) document.getElementById('uuidHistory').innerHTML = '暂无历史';
     }
     function copyUUID() {
         let u = document.getElementById('uuidDisplay').innerText;
         if(u && u !== '点击生成') {
-            navigator.clipboard.writeText(u);
-            showToast('已复制');
-        } else showToast('请先生成');
+            navigator.clipboard.writeText(u).then(() => showToast('UUID 已复制')).catch(() => showToast('复制失败'));
+        } else showToast('请先生成UUID');
     }
     function genMultipleUUID() {
         for(let i = 0; i < 3; i++) genUUIDAndShow();
     }
 
-    // ==================== IP 查询 ====================
+    // ==================== IP 查询 (增强并发 + fallback) ====================
+    let ipFetchInProgress = false;
     function fetchIP() {
+        if(ipFetchInProgress) { showToast('查询中，稍后再试'); return; }
+        ipFetchInProgress = true;
         let ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
         ipSpan.innerHTML = '检测中...';
-        let found = false;
-        fetch('https://cloudflare.com/cdn-cgi/trace').then(res => res.text()).then(text => {
-            let m = text.match(/ip=([^\n]+)/);
-            if(m && !found) {
-                ipSpan.innerText = m[1];
-                methodSpan.innerText = 'Cloudflare';
-                found = true;
-            }
-        }).catch(() => {});
+        methodSpan.innerHTML = '--';
+        let resolved = false;
+        
+        const finish = (ip, source) => {
+            if(resolved) return;
+            resolved = true;
+            ipSpan.innerText = ip || '未知';
+            methodSpan.innerText = source || '--';
+            ipFetchInProgress = false;
+        };
+        
+        // Cloudflare trace 最快
+        fetch('https://cloudflare.com/cdn-cgi/trace', { cache: 'no-store' })
+            .then(res => res.text())
+            .then(text => {
+                let m = text.match(/ip=([^\n]+)/);
+                if(m && m[1] && !resolved) finish(m[1], 'Cloudflare');
+            }).catch(() => {});
+        
+        // ipify 备用
+        fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if(data.ip && !resolved) finish(data.ip, 'ipify');
+            }).catch(() => {});
+        
+        // WebRTC 最后回退 (异步收集)
         setTimeout(() => {
-            if(!found) {
-                try {
-                    let pc = new RTCPeerConnection({ iceServers: [] });
-                    pc.createDataChannel('');
-                    pc.createOffer().then(o => pc.setLocalDescription(o));
-                    pc.onicecandidate = e => {
-                        if(e.candidate) {
-                            let m = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
-                            if(m && !found) {
-                                ipSpan.innerText = m[0];
-                                methodSpan.innerText = 'WebRTC';
-                                found = true;
-                                pc.close();
-                            }
+            if(resolved) return;
+            try {
+                let pc = new RTCPeerConnection({ iceServers: [] });
+                pc.createDataChannel('');
+                pc.createOffer().then(o => pc.setLocalDescription(o));
+                pc.onicecandidate = e => {
+                    if(e.candidate && !resolved) {
+                        let m = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
+                        if(m && m[0]) {
+                            finish(m[0], 'WebRTC');
+                            pc.close();
                         }
-                    };
-                    setTimeout(() => { if(!found) pc.close(); }, 2000);
-                } catch(e) {}
-            }
-        }, 500);
+                    }
+                };
+                setTimeout(() => { if(!resolved) pc.close(); }, 1500);
+            } catch(e) { console.warn(e); }
+        }, 300);
+        
+        // 最终超时保护
         setTimeout(() => {
-            if(!found) {
-                ipSpan.innerText = '无法获取';
-                methodSpan.innerText = '--';
-            }
+            if(!resolved) finish('无法获取', 'timeout');
         }, 4000);
     }
 
     // ==================== 二维码 ====================
     function genQR() {
-        let text = document.getElementById('qrText').value;
-        if(!text) { alert('请输入内容'); return; }
+        let text = document.getElementById('qrText').value.trim();
+        if(!text) { showToast('请输入二维码内容'); return; }
         let container = document.getElementById('qrcode');
         container.innerHTML = '';
-        new QRCode(container, {
-            text: text,
-            width: 120,
-            height: 120,
-            colorDark: "#007aff",
-            colorLight: "#1a1a2e"
-        });
+        try {
+            new QRCode(container, {
+                text: text,
+                width: 128,
+                height: 128,
+                colorDark: "#007aff",
+                colorLight: "#1a1a2e",
+                correctLevel: QRCode.CorrectLevel.M
+            });
+            showToast('二维码已生成');
+        } catch(e) {
+            container.innerHTML = '<div style="color:#ff5e5e;">生成失败</div>';
+        }
     }
     function clearQR() { 
         document.getElementById('qrcode').innerHTML = ''; 
+        showToast('已清除');
     }
 
+    // ==================== 增强: 字数统计实时 + 示例数据预置 ====================
+    function setExampleText() {
+        const example = "Hello world! 咸鱼工坊正式启航。\nCloudflare Workers 是神器！\nHTTP/3 未来已来。";
+        let textarea = document.getElementById('wordInput');
+        if(textarea && !textarea.value) textarea.value = example;
+        updateWordStats();
+    }
+    
+    // ==================== 日期动态更新 ====================
+    function updateFooterDate() {
+        const footerDate = document.querySelector('.footer div:last-child');
+        if(footerDate) {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = (now.getMonth()+1).toString().padStart(2,'0');
+            const d = now.getDate().toString().padStart(2,'0');
+            footerDate.innerHTML = `📅 最后更新：${y}年${m}月${d}日`;
+        }
+    }
+    
     // ==================== 初始化 ====================
     function init() {
         renderHttp();
         updateUptime();
-        setInterval(updateUptime, 1000);  // 每秒更新一次，达到时钟效果
-        
+        setInterval(updateUptime, 1000);
+        // 生成首个UUID
         genUUIDAndShow();
-        setTimeout(genQR, 500);
+        // 二维码初始生成(默认github)
+        setTimeout(() => {
+            if(document.getElementById('qrcode').innerHTML === '') genQR();
+        }, 200);
         setTimeout(fetchIP, 500);
-        
         let wordInput = document.getElementById('wordInput');
-        if(wordInput) wordInput.addEventListener('input', updateWordStats);
-        updateWordStats();
+        if(wordInput) {
+            wordInput.addEventListener('input', updateWordStats);
+            setExampleText();
+        }
+        updateFooterDate();
+        // 点击http详情初始默认显示欢迎
+        document.getElementById('httpDetail').innerHTML = '✨ 点击上方状态码获取详细解释 ✨';
     }
     
     init();
