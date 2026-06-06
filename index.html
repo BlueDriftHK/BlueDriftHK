@@ -216,7 +216,6 @@
             margin-top: 12px;
         }
 
-        /* 设备信息卡片样式 */
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -241,7 +240,6 @@
             word-break: break-all;
         }
 
-        /* GitHub 动态卡片样式 */
         .repo-list {
             max-height: 200px;
             overflow-y: auto;
@@ -288,7 +286,6 @@
             padding: 20px 0;
         }
 
-        /* 咸鱼投喂区样式 */
         .feed-area {
             text-align: center;
             padding: 0.5rem 0;
@@ -321,7 +318,6 @@
             margin-top: 8px;
         }
 
-        /* 在线状态样式 */
         .online-status {
             text-align: center;
             padding: 0.5rem 0;
@@ -360,7 +356,6 @@
             margin-top: 10px;
         }
 
-        /* 波浪动画 */
         .wave-container {
             position: relative;
             width: 100%;
@@ -389,7 +384,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* 彩蛋区域 */
         .easter-egg-area {
             position: fixed;
             bottom: 15px;
@@ -488,6 +482,11 @@
             margin-top: 1.6rem;
         }
 
+        .single-card {
+            max-width: 500px;
+            margin: 1.6rem auto 0 auto;
+        }
+
         @media (max-width: 900px) {
             .three-cards {
                 grid-template-columns: 1fr;
@@ -500,6 +499,7 @@
             .glass-card-full { padding: 1.2rem; margin-top: 1.5rem; }
             .status-row { flex-direction: column; gap: 1rem; }
             .glass-card { padding: 1.2rem; }
+            .single-card { max-width: 100%; }
         }
 
         .toast {
@@ -619,8 +619,8 @@
         </div>
     </div>
 
-    <!-- 第三行：在线状态 + 预留 -->
-    <div class="three-cards">
+    <!-- 第三行：仅在线状态（居中） -->
+    <div class="single-card">
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📡</span>
@@ -635,24 +635,6 @@
                 <button class="toggle-status-btn" id="toggleStatusBtn">🐟 切换状态</button>
             </div>
             <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">⚡ 状态可手动切换 · 咸鱼也有忙碌和摸鱼时</div>
-        </div>
-
-        <!-- 预留卡片 -->
-        <div class="glass-card" style="opacity: 0.7;">
-            <div class="card-header">
-                <span class="card-icon">🌌</span>
-                <span class="card-title">星环回响</span>
-            </div>
-            <p style="font-size: 0.8rem; color: #94A3B8; text-align: center; padding: 1rem 0;">✨ 更多精彩 · 敬请期待 ✨</p>
-        </div>
-        
-        <!-- 预留卡片 -->
-        <div class="glass-card" style="opacity: 0.7;">
-            <div class="card-header">
-                <span class="card-icon">🎐</span>
-                <span class="card-title">闲时小憩</span>
-            </div>
-            <p style="font-size: 0.8rem; color: #94A3B8; text-align: center; padding: 1rem 0;">🌊 咸鱼也会做梦 · 梦里全是代码</p>
         </div>
     </div>
 
@@ -682,7 +664,6 @@
         </div>
         <div class="daily-quote" style="margin-top: 18px;">🌊 基于 Cloudflare Workers 生态 · 持续扑腾，从不放弃</div>
         
-        <!-- 波浪动画 -->
         <div class="wave-container">
             <div class="wave"></div>
             <div class="wave wave2"></div>
@@ -699,12 +680,10 @@
     </div>
 </div>
 
-<!-- 隐藏彩蛋区域（右下角小鱼） -->
 <div class="easter-egg-area" id="easterEggBtn">
     🐟
 </div>
 
-<!-- 彩蛋弹窗 -->
 <div id="easterModal" class="modal">
     <div class="modal-content">
         <h3>🐟 咸鱼彩蛋 🐟</h3>
@@ -718,7 +697,6 @@
 </div>
 
 <script>
-    // ==================== 星环计时 ====================
     function updateUptime() {
         const start = new Date(2007, 9, 29, 0, 0, 0);
         const now = new Date();
@@ -736,7 +714,6 @@
         if (uptimeElem) uptimeElem.innerHTML = timeStr;
     }
 
-    // ==================== 设备信息 ====================
     function getDeviceInfo() {
         const userAgent = navigator.userAgent;
         let os = "Unknown";
@@ -759,7 +736,6 @@
         document.getElementById('languageInfo').innerText = navigator.language || "zh-CN";
     }
 
-    // ==================== GitHub 动态（仓库列表） ====================
     async function fetchGitHubRepos() {
         const container = document.getElementById('githubRepos');
         container.innerHTML = '<div class="loading-text">加载中...</div>';
@@ -791,7 +767,6 @@
         }
     }
 
-    // ==================== 在线状态（localStorage + 手动切换） ====================
     let currentStatus = 'online';
     
     function loadOnlineStatus() {
@@ -840,7 +815,6 @@
         document.getElementById('onlineTime').innerHTML = '今日已在线 3 小时 · 咸鱼能量充足';
     }
 
-    // ==================== 咸鱼投喂区 ====================
     let feedCount = 0;
     
     function loadFeedData() {
@@ -883,7 +857,6 @@
         }
     }
 
-    // ==================== 语录库 ====================
     const quotes = [
         "「咸鱼不是摆烂，是换一种姿势努力。」",
         "「躺平是为了蓄力，扑腾才是常态。」",
@@ -985,7 +958,6 @@
         }
     }
 
-    // ==================== 隐藏彩蛋 ====================
     function initEasterEgg() {
         const modal = document.getElementById('easterModal');
         const eggBtn = document.getElementById('easterEggBtn');
