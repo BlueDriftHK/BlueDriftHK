@@ -781,6 +781,70 @@
         </div>
     </div>
 
+    <!-- 第四行：CF Worker 项目状态 + 快速导航（包含演示链接） -->
+    <div class="two-cards" style="margin-top: 1.3rem;">
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">☁️</span>
+                <span class="card-title">CF Worker 项目</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <!-- M3U8 Player 项目 -->
+                <div style="background: rgba(0,0,0,0.25); border-radius: 1rem; padding: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600;">🎬 M3U8 Player</span>
+                        <span class="status-chip">✅ 运行中</span>
+                    </div>
+                    <p style="font-size: 0.7rem; color: #94A3B8; margin-top: 4px;">HLS 视频流播放器 · 代理/监控/QoS</p>
+                    <div class="flex-row" style="margin-top: 8px;">
+                        <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank" class="btn" style="font-size: 0.65rem;">📦 GitHub</a>
+                        <a href="https://bluedrifthk.github.io/CF-Worker-M3U8Player/" target="_blank" class="btn" style="font-size: 0.65rem;">🔗 演示</a>
+                        <span class="status-chip" style="font-size: 0.6rem;">⭐ 4 Stars</span>
+                    </div>
+                </div>
+                <!-- NetDiag 项目 -->
+                <div style="background: rgba(0,0,0,0.25); border-radius: 1rem; padding: 10px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600;">🔍 NetDiag</span>
+                        <span class="status-chip">🔧 开发中</span>
+                    </div>
+                    <p style="font-size: 0.7rem; color: #94A3B8; margin-top: 4px;">网络诊断：CDN节点 / Ping / 路由追踪</p>
+                    <div class="flex-row" style="margin-top: 8px;">
+                        <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" class="btn" style="font-size: 0.65rem;">📦 GitHub</a>
+                        <a href="https://bluedrifthk.github.io/CF-workers-netdiag/" target="_blank" class="btn" style="font-size: 0.65rem;">🔗 演示</a>
+                        <span class="status-chip" style="font-size: 0.6rem;">🚧 v0.1</span>
+                    </div>
+                </div>
+            </div>
+            <div class="daily-quote" style="margin-top: 10px; font-size: 0.65rem;">⚡ 基于 Cloudflare Workers · 开源免费</div>
+        </div>
+
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📡</span>
+                <span class="card-title">快速导航</span>
+            </div>
+            <div class="tools-grid" style="grid-template-columns: 1fr;">
+                <div class="tool-item">
+                    <div class="tool-label">🐙 GitHub 主页</div>
+                    <div class="tool-value" style="font-size: 0.7rem;">BlueDriftHK</div>
+                    <a href="https://github.com/BlueDriftHK" target="_blank" class="tool-btn-small">前往 →</a>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-label">📧 联系咸鱼</div>
+                    <div class="tool-value" style="font-size: 0.65rem;">asiacomk@gmail.com</div>
+                    <a href="mailto:asiacomk@gmail.com" class="tool-btn-small">发送邮件</a>
+                </div>
+                <div class="tool-item">
+                    <div class="tool-label">📄 开源协议</div>
+                    <div class="tool-value" style="font-size: 0.65rem;">GNU GPL v3.0</div>
+                    <span class="status-chip" style="font-size: 0.55rem;">自由使用</span>
+                </div>
+            </div>
+            <div class="daily-quote" style="margin-top: 10px; font-size: 0.65rem;">🌊 欢迎 Star · 一起扑腾</div>
+        </div>
+    </div>
+
     <!-- 在线状态卡片 -->
     <div style="margin-top: 1.3rem;">
         <div class="glass-card">
@@ -1027,12 +1091,11 @@
         }
     }
 
-    // ==================== IP 获取（修复版） ====================
+    // ==================== IP 获取 ====================
     async function fetchQuickIP() {
         const ipElement = document.getElementById('quickIp');
         ipElement.innerText = '获取中...';
         
-        // 多个备用 API，提高成功率
         const apis = [
             'https://api.ipify.org?format=json',
             'https://api.my-ip.io/ip.json',
