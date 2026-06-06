@@ -1091,29 +1091,34 @@
         }
     }
 
-    // ==================== IP 获取（修复版） ====================
+    // ==================== IP 获取（国内可用版） ====================
     async function fetchQuickIP() {
         const ipElement = document.getElementById('quickIp');
         ipElement.innerText = '获取中...';
         
-        // 更稳定可靠的 API 列表
+        // 国内可用 IP 接口（按优先级排序）
         const apis = [
-            'https://api.ip.sb/ip',           // 返回纯文本 IP
-            'https://ipv4.cloudflare.com/cdn-cgi/trace' // Cloudflare 的 trace 页面
+            'https://api.ip.sb/ip',                      // 国内可用，返回纯文本
+            'https://ipv4.cloudflare.com/cdn-cgi/trace', // Cloudflare，解析 ip= 行
+            'https://myip.ipip.net'                      // 纯真 IP 库，国内备用
         ];
         
         for (const api of apis) {
             try {
                 const res = await fetch(api, { cache: 'no-store' });
-                let text = await res.text();
+                const text = await res.text();
                 let ip = null;
                 
                 if (api.includes('trace')) {
-                    // 解析 cf trace 格式，例如 "ip=1.2.3.4"
+                    // 解析 cf trace 格式: ip=1.2.3.4
                     const match = text.match(/ip=([\d.]+)/);
                     if (match) ip = match[1];
+                } else if (api.includes('myip.ipip.net')) {
+                    // 解析 "当前 IP：1.2.3.4 来自于：..."
+                    const match = text.match(/IP[：:]\s*([\d.]+)/);
+                    if (match) ip = match[1];
                 } else {
-                    // 直接返回的文本内容就是 IP
+                    // 纯文本 IP
                     if (text && text.match(/\d+\.\d+\.\d+\.\d+/)) {
                         ip = text.trim();
                     }
