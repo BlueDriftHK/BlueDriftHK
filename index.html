@@ -331,12 +331,8 @@
             gap: 1.6rem;
         }
 
-        /* 三卡片布局 */
-        .three-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.6rem;
-            margin-top: 1.6rem;
+        .devices-card {
+            grid-column: span 1;
         }
 
         @media (max-width: 780px) {
@@ -409,26 +405,9 @@
         </div>
     </div>
 
-    <!-- 第二行：在线时长徽章 + 设备信息 -->
-    <div class="three-cards">
-        <!-- 在线时长徽章卡片 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">⏱️</span>
-                <span class="card-title">在线时长徽章</span>
-            </div>
-            <div style="text-align: center; padding: 0.5rem 0;">
-                <div class="status-badge" id="onlineBadge" style="font-size: 0.9rem; padding: 8px 20px;">🐟 咸鱼工坊</div>
-                <div style="margin-top: 14px;">
-                    <div class="status-value" id="siteUptime" style="font-size: 1rem; font-family: monospace;">加载中...</div>
-                    <div class="status-label" style="margin-top: 5px;">站点已运行</div>
-                </div>
-            </div>
-            <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">📅 始于 2026年6月6日</div>
-        </div>
-
-        <!-- 设备信息卡片 -->
-        <div class="glass-card">
+    <!-- 第二行：设备信息卡片（单独一张，后面可扩展） -->
+    <div style="margin-top: 1.6rem;">
+        <div class="glass-card devices-card">
             <div class="card-header">
                 <span class="card-icon">🖥️</span>
                 <span class="card-title">设备信息</span>
@@ -452,15 +431,6 @@
                 </div>
             </div>
             <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">🔍 仅本地检测，不留存任何数据</div>
-        </div>
-
-        <!-- 占位空卡片保持对称（可选，或者留空） -->
-        <div class="glass-card" style="opacity: 0.6;">
-            <div class="card-header">
-                <span class="card-icon">🌊</span>
-                <span class="card-title">咸鱼水域</span>
-            </div>
-            <p style="font-size: 0.8rem; color: #94A3B8; text-align: center; padding: 1rem 0;">🌊 扑腾中 · 待续</p>
         </div>
     </div>
 
@@ -538,25 +508,8 @@
         if (uptimeElem) uptimeElem.innerHTML = timeStr;
     }
 
-    // ==================== 站点运行时长（始于2026年6月6日） ====================
-    function updateSiteUptime() {
-        const siteStart = new Date(2026, 5, 6, 0, 0, 0); // 6月6日
-        const now = new Date();
-        let diffMs = now - siteStart;
-        if (diffMs < 0) diffMs = 0;
-        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-        const totalSeconds = Math.floor(diffMs / 1000);
-        const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        const timeStr = `${diffDays}天 ${hours.toString().padStart(2, '0')}时 ${minutes.toString().padStart(2, '0')}分 ${seconds.toString().padStart(2, '0')}秒`;
-        const siteUptimeElem = document.getElementById('siteUptime');
-        if (siteUptimeElem) siteUptimeElem.innerHTML = timeStr;
-    }
-
     // ==================== 设备信息检测 ====================
     function getDeviceInfo() {
-        // 操作系统
         const userAgent = navigator.userAgent;
         let os = "Unknown";
         if (userAgent.indexOf("Win") !== -1) os = "Windows";
@@ -566,7 +519,6 @@
         else if (userAgent.indexOf("like Mac") !== -1) os = "iOS";
         document.getElementById('osInfo').innerText = os;
 
-        // 浏览器
         let browser = "Unknown";
         if (userAgent.indexOf("Edg") !== -1) browser = "Edge";
         else if (userAgent.indexOf("Chrome") !== -1) browser = "Chrome";
@@ -575,10 +527,7 @@
         else if (userAgent.indexOf("OPR") !== -1) browser = "Opera";
         document.getElementById('browserInfo').innerText = browser;
 
-        // 屏幕分辨率
         document.getElementById('screenInfo').innerText = `${window.screen.width} × ${window.screen.height}`;
-
-        // 语言
         document.getElementById('languageInfo').innerText = navigator.language || "zh-CN";
     }
 
@@ -702,7 +651,6 @@
             });
         }
 
-        // 点击模态框背景关闭
         if (modal) {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
@@ -713,16 +661,11 @@
     }
 
     let uptimeInterval = null;
-    let siteUptimeInterval = null;
     
     function init() {
         updateUptime();
         if (uptimeInterval) clearInterval(uptimeInterval);
         uptimeInterval = setInterval(updateUptime, 1000);
-        
-        updateSiteUptime();
-        if (siteUptimeInterval) clearInterval(siteUptimeInterval);
-        siteUptimeInterval = setInterval(updateSiteUptime, 1000);
         
         getDeviceInfo();
         updateFooterDate();
