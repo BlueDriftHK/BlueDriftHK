@@ -469,7 +469,7 @@
             100% { left: -10%; transform: scaleX(1); }
         }
 
-        /* 笔记模块样式 */
+        /* 笔记模块样式 - 修复滚动问题 */
         .note-item {
             margin-bottom: 8px;
             border-radius: 12px;
@@ -496,24 +496,38 @@
             padding: 0 12px;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.4s ease-out;
             background: rgba(0, 0, 0, 0.1);
             border-radius: 0 0 12px 12px;
         }
         .note-content-inner {
             padding: 12px 0;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             line-height: 1.5;
             color: #CBD5E1;
+            max-height: 500px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+        .note-content-inner::-webkit-scrollbar {
+            width: 4px;
+        }
+        .note-content-inner::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+        .note-content-inner::-webkit-scrollbar-thumb {
+            background: #60A5FA;
+            border-radius: 4px;
         }
         .note-content-inner h2 {
             font-size: 1rem;
-            margin: 10px 0 6px;
+            margin: 12px 0 6px;
             color: #60A5FA;
         }
         .note-content-inner h3 {
             font-size: 0.9rem;
-            margin: 8px 0 4px;
+            margin: 10px 0 4px;
             color: #60A5FA;
         }
         .note-content-inner strong {
@@ -522,7 +536,7 @@
         .note-content-inner blockquote {
             border-left: 2px solid #60A5FA;
             padding-left: 10px;
-            margin: 6px 0;
+            margin: 8px 0;
             color: #94A3B8;
         }
         .note-content-inner code {
@@ -530,6 +544,7 @@
             padding: 2px 4px;
             border-radius: 4px;
             font-family: monospace;
+            font-size: 0.75rem;
         }
         .note-content-inner pre {
             background: rgba(0, 0, 0, 0.4);
@@ -537,6 +552,21 @@
             border-radius: 8px;
             overflow-x: auto;
             margin: 8px 0;
+            font-size: 0.7rem;
+        }
+        .note-content-inner table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.7rem;
+        }
+        .note-content-inner th, .note-content-inner td {
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px;
+            text-align: left;
+        }
+        .note-content-inner th {
+            background: rgba(96,165,250,0.2);
         }
 
         .easter-egg-area {
@@ -647,6 +677,7 @@
             .glass-card { padding: 1rem; }
             .fish { font-size: 1.4rem; }
             .fish-container { height: 45px; }
+            .note-content-inner { max-height: 300px; }
         }
 
         .toast {
@@ -931,7 +962,7 @@
         </div>
     </div>
 
-    <!-- 咸鱼笔记模块（文章内嵌展开） -->
+    <!-- 咸鱼笔记模块（文章内嵌展开，可滚动） -->
     <div class="glass-card" style="margin-top: 1.3rem;">
         <div class="card-header">
             <span class="card-icon">📝</span>
@@ -1330,7 +1361,7 @@
         if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
     }
 
-    // ==================== 笔记系统核心 ====================
+    // ==================== 笔记系统核心（带滚动支持） ====================
     let notes = [];
     
     function loadNotes() {
@@ -1338,7 +1369,7 @@
         if (saved) {
             notes = JSON.parse(saved);
         } else {
-            // 默认示例笔记
+            // 默认示例笔记 - 包含完整的文章内容
             notes = [
                 {
                     id: Date.now() + 2,
@@ -1358,41 +1389,47 @@
 成功部署后，即可拥有全套专业网络诊断能力：
 
 ### 1. 网络身份信息展示
-页面打开自动加载用户网络信息，包含公网IP地址、IP归属城市、Cloudflare就近机房节点、客户端与机房直线距离。
+页面打开自动加载用户网络信息，包含公网IP地址、IP归属城市、Cloudflare就近机房节点、客户端与机房直线距离，直观掌握自身网络接入环境。
 
 ### 2. 实时网络质量监控（核心功能）
-系统每2秒自动检测一次网络状态，实时生成延迟趋势曲线图，核心检测指标：
-- 延迟（RTT）：30ms以内为优秀
-- 丢包率：0%为最佳
-- 网络抖动：数值越稳定越好
-- 综合连接质量：自动评级
+系统每2秒自动检测一次网络状态，无需手动操作，实时生成延迟趋势曲线图，精准展示网络稳定性，核心检测指标如下：
+- 延迟（RTT）：数据往返传输耗时，30ms以内为优秀水准
+- 丢包率：数据传输丢失比例，0%为最佳状态
+- 网络抖动：延迟波动幅度，数值越越稳定网络质量越好
+- 综合连接质量：自动评级优秀、良好、一般、较差、极差
 
 ### 3. 多功能手动测速工具
-- 带宽测速：多档位可选
-- CPU性能测试
-- 并发请求测试
-- 流式传输测试
+支持手动触发各类测试，满足不同场景检测需求：
+- 带宽测速：多档位可选，支持快速测速、标准测速、精准测速
+- CPU性能测试：通过高密度运算，检测设备硬件性能
+- 并发请求测试：模拟多人同时访问，测试网络承压能力
+- 流式传输测试：检测大文件传输的网络吞吐稳定性
 
 ### 4. 安全协议检测
-检测TLS加密版本、HTTP/2协议状态、WebSocket长连接稳定性。
+专为技术用户打造，精准检测网络传输配置：识别TLS加密版本、加密套件、HTTP/2协议状态、WebSocket长连接稳定性，快速排查HTTPS、网络协议配置异常问题。
 
 ### 5. 实用辅助工具
-DNS解析测速、一键导出完整网络检测报告。
+支持DNS解析测速，排查域名加载卡顿问题；支持一键导出完整网络检测报告，方便留存数据、求助他人排障。
 
 ## 🛠️ 三、超简单搭建教程（全程3分钟）
 
-**前期准备**：注册免费 Cloudflare 账号
+本次搭建无需购买服务器、无需编程基础、无需绑定信用卡，全程使用Cloudflare免费资源，零成本部署。
+
+**前期准备**：注册一个免费Cloudflare账号，仅需邮箱即可完成注册
 
 **详细步骤**：
-1. 登录 Cloudflare 控制台，左侧菜单点击【Workers & Pages】
-2. 点击【创建应用程序】，选择【创建 Worker】
-3. 自定义 Worker 名称（英文小写即可）
+1. 登录Cloudflare控制台，左侧菜单栏点击【Workers & Pages】
+2. 点击【创建应用程序】，选择【创建Worker】（请勿选择Pages）
+3. 自定义Worker名称（英文小写即可，自定义任意名称）
 4. 复制项目完整源码：\`https://raw.githubusercontent.com/BlueDriftHK/CF-workers-netdiag/main/_workers.js\`
-5. 粘贴源码，点击【保存并部署】
+5. 全选删除页面默认代码，粘贴复制好的源码
+6. 点击右下角【保存并部署】，等待10秒即可部署完成
 
 **专属访问链接**：\`https://自定义名称.账号用户名.workers.dev\`
 
-## 💻 四、命令行API使用教程
+## 💻 四、命令行API使用教程（技术专用）
+
+工具支持终端curl命令调用，所有接口返回标准JSON格式，可对接脚本、监控系统：
 
 \`\`\`bash
 # 服务健康检测
@@ -1415,12 +1452,19 @@ curl https://你的链接/concurrent-test?count=4&size=2048
 
 | 对比项 | 公共测速网站 | NetSight Pro |
 |--------|-------------|---------------|
-| 广告 | 泛滥 | 无 |
-| 费用 | 免费版有限制 | 永久免费 |
-| 隐私 | 记录IP | 数据私有 |
-| 功能 | 单一 | 全套诊断 |
+| 广告 | 泛滥弹窗 | 完全无广告 |
+| 费用 | 免费版有隐藏限制 | 永久免费 |
+| 隐私 | 记录IP并可能出售 | 数据完全私有 |
+| 功能 | 测速单一 | 全套专业诊断 |
+| 部署 | 无法自建 | 3分钟一键部署 |
 
-> 项目持续更新迭代，目前最新版本为2026年5月v3.3版本，稳定性和安全性持续优化！`,
+## 📝 六、使用注意事项
+
+1. 限流保护：单IP每分钟限制60次请求，满足个人日常使用
+2. 测试上限：带宽测速、并发测试均有合理上限
+3. 免费额度：Cloudflare免费版每日10万次请求，个人自用完全充足
+
+> 项目持续更新迭代，目前最新版本为2026年5月v3.3版本，稳定性和安全性持续优化，大家可以放心部署使用！`,
                     date: new Date().toLocaleDateString(),
                     expanded: false
                 },
@@ -1478,7 +1522,7 @@ Worker 的免费额度对于个人项目完全够用，每日10万次请求次�
                     </div>
                     <span class="note-expand-icon" style="font-size: 0.7rem; transition: transform 0.2s;">${note.expanded ? '▼' : '▶'}</span>
                 </div>
-                <div class="note-content" style="max-height: ${note.expanded ? '800px' : '0'};">
+                <div class="note-content" style="max-height: ${note.expanded ? '600px' : '0'};">
                     <div class="note-content-inner">
                         ${renderMarkdown(note.content)}
                     </div>
@@ -1580,6 +1624,13 @@ Worker 的免费额度对于个人项目完全够用，每日10万次请求次�
         html = html.replace(/`(.*?)`/g, '<code>$1</code>');
         // 代码块
         html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+        // 表格中的 | 分隔符（简单处理）
+        html = html.replace(/\|(.+)\|/g, function(match) {
+            const cells = match.split('|').filter(c => c.trim());
+            if (cells.length === 0) return match;
+            if (match.includes('---')) return '<tr style="background:rgba(96,165,250,0.2);">' + cells.map(() => '<th></th>').join('') + '</tr>';
+            return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
+        });
         // 换行
         html = html.replace(/\n/g, '<br>');
         return html;
