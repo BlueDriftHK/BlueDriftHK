@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 咸鱼工坊 | 开发者工具集</title>
-    <meta name="description" content="开发者工具集 · 毛玻璃设计 · UUID · IP查询 · 二维码 · 状态码">
-    <meta name="theme-color" content="#000000">
+    <title>BlueDriftHK · 星环工坊 | 咸鱼状态集</title>
+    <meta name="description" content="咸鱼开发者 · 星环状态 · 暮光蓝调">
+    <meta name="theme-color" content="#0F172A">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -16,79 +15,93 @@
         }
 
         body {
-            background: radial-gradient(circle at 20% 30%, #1a1a2e, #0a0a0f);
+            background: linear-gradient(145deg, #0F172A 0%, #1E293B 100%);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #f5f5f7;
+            color: #E2E8F0;
             min-height: 100vh;
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 1.8rem;
+            position: relative;
+        }
+
+        /* 科技感微光粒子背景 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 25% 40%, rgba(96, 165, 250, 0.08) 1px, transparent 1px);
+            background-size: 48px 48px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1100px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
 
-        /* 头部 */
+        /* 头部简洁 */
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
         .title {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #a5a5b5);
+            background: linear-gradient(125deg, #F1F5F9, #94A3B8, #60A5FA);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
         .subtitle {
-            color: #8e8e9e;
-            font-size: 1rem;
-            font-weight: 400;
+            color: #94A3B8;
+            font-size: 0.9rem;
+            font-weight: 450;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid rgba(96, 165, 250, 0.3);
+            display: inline-block;
+            padding-bottom: 0.3rem;
         }
 
-        /* 网格布局 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* 全宽卡片（用于星环状态） */
-        .glass-card-full {
-            background: rgba(30, 30, 40, 0.5);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem 2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            grid-column: 1 / -1;
-        }
-        .glass-card-full:hover {
-            transform: translateY(-3px);
-            background: rgba(40, 40, 52, 0.6);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* 普通卡片 */
+        /* 卡片通用样式 — 半透深蓝 + 玻璃模糊 */
         .glass-card {
-            background: rgba(30, 30, 40, 0.5);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 28px;
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
+            background: rgba(20, 30, 50, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            border: 0.5px solid rgba(96, 165, 250, 0.25);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            padding: 1.6rem;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
         .glass-card:hover {
             transform: translateY(-3px);
-            background: rgba(40, 40, 52, 0.6);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(25, 38, 60, 0.7);
+            border-color: rgba(96, 165, 250, 0.45);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 全宽星环卡片 */
+        .glass-card-full {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            padding: 1.6rem 2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.8rem;
+        }
+        .glass-card-full:hover {
+            transform: translateY(-2px);
+            border-color: rgba(96, 165, 250, 0.5);
+            background: rgba(20, 32, 55, 0.7);
         }
 
         .card-header {
@@ -98,12 +111,13 @@
             margin-bottom: 1.2rem;
         }
         .card-icon {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
+            filter: drop-shadow(0 0 4px rgba(96,165,250,0.3));
         }
         .card-title {
             font-size: 1.3rem;
             font-weight: 600;
-            color: #ffffff;
+            color: #F1F5F9;
             letter-spacing: -0.3px;
         }
 
@@ -113,156 +127,114 @@
             justify-content: space-around;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1.2rem;
         }
         .status-item {
             text-align: center;
             flex: 1;
-            min-width: 140px;
+            min-width: 150px;
         }
         .status-label {
-            font-size: 0.75rem;
-            color: #8e8e9e;
-            letter-spacing: 0.5px;
+            font-size: 0.7rem;
+            color: #94A3B8;
+            letter-spacing: 0.6px;
             margin-bottom: 6px;
+            text-transform: uppercase;
         }
         .status-value {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #ffffff;
+            color: #F1F5F9;
         }
         .status-badge {
             display: inline-block;
-            background: rgba(0, 122, 255, 0.2);
+            background: rgba(96, 165, 250, 0.2);
             border-radius: 30px;
             padding: 4px 16px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
-            color: #007aff;
+            color: #60A5FA;
+            border: 0.5px solid rgba(96,165,250,0.4);
         }
         .status-chip {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 30px;
             padding: 4px 12px;
             font-size: 0.7rem;
             font-weight: 500;
-            color: #a5a5b5;
+            color: #CBD5E1;
         }
 
-        .btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 0.5px solid rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            padding: 8px 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #ffffff;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(0.98);
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-            margin-top: 10px;
-        }
         .flex-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .input {
-            background: rgba(20, 20, 28, 0.8);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 10px 14px;
-            color: #ffffff;
-            font-size: 0.85rem;
-            width: 100%;
-            outline: none;
-            font-family: 'Inter', monospace;
-        }
-        .input:focus {
-            border-color: rgba(0, 122, 255, 0.5);
-        }
-        textarea.input {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .result {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 10px 14px;
-            margin-top: 12px;
-            font-size: 0.75rem;
-            border-left: 2px solid #007aff;
-            word-break: break-all;
-            font-family: monospace;
-        }
-
-        .stats-group {
+        .flex-row {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .stat-item {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 16px;
-            padding: 10px;
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #007aff;
-        }
-        .stat-label {
-            font-size: 0.65rem;
-            color: #8e8e9e;
+            margin-top: 14px;
         }
 
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
+        .btn {
+            background: rgba(96, 165, 250, 0.15);
+            border: 0.5px solid rgba(96, 165, 250, 0.4);
+            border-radius: 40px;
+            padding: 6px 18px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #E2E8F0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
-        #qrcode img {
-            border-radius: 12px;
-            background: white;
-            padding: 6px;
+        .btn:hover {
+            background: rgba(96, 165, 250, 0.3);
+            border-color: #60A5FA;
+            color: white;
+            transform: scale(0.98);
+        }
+
+        /* 语录区域 */
+        .quote-text {
+            font-size: 0.9rem;
+            color: #CBD5E1;
+            border-left: 2px solid #60A5FA;
+            padding-left: 14px;
+            margin: 8px 0;
+            line-height: 1.45;
+        }
+        .daily-quote {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 1rem;
+            padding: 10px 14px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94A3B8;
+            margin-top: 12px;
         }
 
         .footer {
             text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.7rem;
-            color: #6e6e7e;
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 0.5px solid rgba(96, 165, 250, 0.2);
+            font-size: 0.65rem;
+            color: #64748B;
         }
 
         @media (max-width: 780px) {
-            body { padding: 1rem; }
+            body { padding: 1.2rem; }
             .title { font-size: 2rem; }
-            .grid { gap: 1rem; }
-            .glass-card { padding: 1.2rem; }
             .glass-card-full { padding: 1.2rem; }
-            .status-row { flex-direction: column; gap: 0.8rem; }
+            .status-row { flex-direction: column; gap: 1rem; }
+            .glass-card { padding: 1.2rem; }
         }
 
         .toast {
@@ -271,13 +243,14 @@
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(12px);
             padding: 8px 20px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: white;
             z-index: 1000;
             animation: fadeOut 2s ease forwards;
+            border: 0.5px solid #60A5FA;
         }
         @keyframes fadeOut {
             0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
@@ -285,34 +258,45 @@
             85% { opacity: 1; transform: translateX(-50%) translateY(0); }
             100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
         }
-
-        /* 自定义滚动条 */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #007aff;
-            border-radius: 8px;
-        }
-        .http-item-active {
-            background: rgba(0, 122, 255, 0.25) !important;
-            border-left: 2px solid #007aff;
-        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="title">🐟 BlueDriftHK</div>
-        <div class="subtitle">一条热爱技术的咸鱼 · 开源源于生活</div>
+        <div class="subtitle">理性 · 沉静 · 星环回响</div>
     </div>
 
-    <div class="grid">
-        <!-- 1. 关于我 -->
+    <!-- 全宽星环状态卡片 -->
+    <div class="glass-card-full">
+        <div class="card-header">
+            <span class="card-icon">🪐</span>
+            <span class="card-title">星环状态</span>
+        </div>
+        <div class="status-row">
+            <div class="status-item">
+                <div class="status-label">⚡ 核心引擎</div>
+                <div class="status-value"><span class="status-badge">聚变运行中</span></div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">⏳ 时空存续</div>
+                <div class="status-value" id="uptimeDisplay" style="font-family: monospace; font-size: 1rem;">计算中...</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">📅 起始纪元</div>
+                <div class="status-value">2007年10月29日</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">☁️ 运行平台</div>
+                <div class="status-value">GitHub Pages</div>
+            </div>
+        </div>
+        <div class="daily-quote" style="margin-top: 18px;">🌊 基于 Cloudflare Workers 生态 · 持续扑腾，从不放弃</div>
+    </div>
+
+    <!-- 关于我 与 咸鱼语录 双卡片并列 -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.6rem;">
+        <!-- 关于我卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🐟</span>
@@ -323,178 +307,41 @@
                 <span class="status-chip">☕ 今日 3h 代码</span>
                 <span class="status-chip">⭐ 4 Stars</span>
             </div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: #d0d0e0;">全栈极客 & 云原生探险者，热衷于 Cloudflare Workers 生态。项目源于真实需求：烦人的重复操作、想自动化的流程。</p>
-            <div class="flex-row" style="margin-top: 14px;">
-                <a href="https://github.com/BlueDriftHK" target="_blank" style="color: #007aff; text-decoration: none; font-size: 0.8rem;">🐙 GitHub</a>
-                <a href="mailto:asiacomk@gmail.com" style="color: #007aff; text-decoration: none; font-size: 0.8rem;">✉️ 邮箱</a>
+            <p style="font-size: 0.85rem; line-height: 1.5; color: #CBD5E1;">全栈极客 & 云原生探险者，热衷于 Cloudflare Workers 生态。项目源于真实需求：烦人的重复操作、想自动化的流程。代码不完美，但每一个都认真对待。</p>
+            <div class="flex-row">
+                <a href="https://github.com/BlueDriftHK" target="_blank" class="btn">🐙 GitHub</a>
+                <a href="mailto:asiacomk@gmail.com" class="btn">✉️ 邮箱</a>
             </div>
         </div>
 
-        <!-- 2. 精选项目 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🚀</span>
-                <span class="card-title">精选项目</span>
-            </div>
-            <div style="margin-bottom: 12px;">
-                <div style="font-weight: 600; margin-bottom: 4px;">🎬 M3U8 Player</div>
-                <p style="font-size: 0.75rem; color: #a0a0b0;">Cloudflare Workers HLS 播放器 · 代理/监控/QoS</p>
-                <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank" class="btn" style="margin-top: 8px; display: inline-block;">查看项目 →</a>
-            </div>
-            <div>
-                <div style="font-weight: 600; margin-bottom: 4px;">🔍 NetDiag</div>
-                <p style="font-size: 0.75rem; color: #a0a0b0;">网络诊断：CDN节点 / Ping / 路由追踪</p>
-                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" class="btn" style="margin-top: 8px; display: inline-block;">开发中 →</a>
-            </div>
-        </div>
-
-        <!-- 3. Roadmap -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📍</span>
-                <span class="card-title">Roadmap</span>
-            </div>
-            <div style="margin-bottom: 10px;">
-                <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">🎬 M3U8Player</div>
-                <ul style="margin-left: 18px; font-size: 0.7rem; color: #b0b0c0;">
-                    <li>✅ v2.0 完整优化版</li>
-                    <li>⏳ 播放列表收藏</li>
-                    <li>⏳ 自定义请求头</li>
-                </ul>
-            </div>
-            <div>
-                <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;">🔍 NetDiag</div>
-                <ul style="margin-left: 18px; font-size: 0.7rem; color: #b0b0c0;">
-                    <li>✅ 基础框架</li>
-                    <li>⏳ CDN 节点探测</li>
-                    <li>⏳ Ping 延迟测试</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 4. 咸鱼语录 -->
+        <!-- 咸鱼语录卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">💬</span>
                 <span class="card-title">咸鱼语录</span>
             </div>
-            <p style="font-size: 0.8rem; color: #c0c0d0; border-left: 2px solid #007aff; padding-left: 12px; margin: 8px 0;">「咸鱼不是摆烂，是换一种姿势努力。」</p>
-            <p style="font-size: 0.8rem; color: #c0c0d0; border-left: 2px solid #007aff; padding-left: 12px; margin: 8px 0;">「每一个好用的工具，都是为了解决自己的麻烦。」</p>
-            <p style="font-size: 0.75rem; text-align: center; margin-top: 10px; color: #8e8e9e;">✨ 今日咸鱼说：代码如人生，bug 如日常 ✨</p>
-        </div>
-
-        <!-- 5. HTTP 状态码 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📡</span>
-                <span class="card-title">HTTP 状态码</span>
+            <div id="quoteContainer">
+                <p class="quote-text">「咸鱼不是摆烂，是换一种姿势努力。」</p>
+                <p class="quote-text">「每一个好用的工具，都是为了解决自己的麻烦。」</p>
+                <p class="quote-text">「代码如人生，bug 如日常 —— 修就完了。」</p>
             </div>
-            <div id="httpList" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-height: 150px; overflow-y: auto; padding: 2px;"></div>
-            <div id="httpDetail" class="result" style="margin-top: 8px;">点击状态码查看详情</div>
-        </div>
-
-        <!-- 6. 字数统计 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📊</span>
-                <span class="card-title">字数统计</span>
+            <div class="daily-quote" id="dailySaying">
+                ✨ 今日咸鱼说：M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样
             </div>
-            <textarea id="wordInput" class="input" placeholder="输入文本... 支持中英文混合统计"></textarea>
-            <div class="stats-group">
-                <div class="stat-item"><div class="stat-number" id="charCount">0</div><div class="stat-label">字符</div></div>
-                <div class="stat-item"><div class="stat-number" id="wordCount">0</div><div class="stat-label">单词</div></div>
-                <div class="stat-item"><div class="stat-number" id="chineseCount">0</div><div class="stat-label">中文</div></div>
+            <div class="flex-row" style="justify-content: flex-end;">
+                <button class="btn" id="refreshQuoteBtn">🔄 换一句</button>
             </div>
-            <button class="btn" onclick="clearWord()" style="margin-top: 8px;">清空</button>
-        </div>
-
-        <!-- 7. UUID 生成 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">🆔</span>
-                <span class="card-title">UUID 生成</span>
-            </div>
-            <div class="result" id="uuidDisplay" style="font-family: monospace;">点击生成</div>
-            <div class="flex-row">
-                <button class="btn" onclick="genUUIDAndShow()">✨ 生成</button>
-                <button class="btn" onclick="copyUUID()">📋 复制</button>
-                <button class="btn" onclick="genMultipleUUID()">🔢 3个</button>
-            </div>
-            <div id="uuidHistory" class="result" style="margin-top: 8px; font-size: 0.7rem;"></div>
-        </div>
-
-        <!-- 8. IP 查询 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📍</span>
-                <span class="card-title">IP 查询</span>
-            </div>
-            <button class="btn" onclick="fetchIP()">🌐 查询我的 IP</button>
-            <div class="result" style="margin-top: 10px;">
-                <div class="flex-between"><span>🌍 IP 地址</span><span id="ipAddr">未查询</span></div>
-                <div class="flex-between" style="margin-top: 5px;"><span>📡 来源</span><span id="ipMethod">--</span></div>
-            </div>
-        </div>
-
-        <!-- 9. 二维码 -->
-        <div class="glass-card">
-            <div class="card-header">
-                <span class="card-icon">📱</span>
-                <span class="card-title">二维码</span>
-            </div>
-            <input type="text" id="qrText" class="input" value="https://github.com/BlueDriftHK">
-            <div class="flex-row">
-                <button class="btn" onclick="genQR()">✨ 生成</button>
-                <button class="btn" onclick="clearQR()">🗑️ 清除</button>
-            </div>
-            <div id="qrcode"></div>
-        </div>
-
-        <!-- 10. 星环状态 - 全宽拉长版，带时分秒 -->
-        <div class="glass-card-full">
-            <div class="card-header">
-                <span class="card-icon">🪐</span>
-                <span class="card-title">星环状态</span>
-            </div>
-            <div class="status-row">
-                <div class="status-item">
-                    <div class="status-label">🟢 核心引擎</div>
-                    <div class="status-value"><span class="status-badge">聚变运行中</span></div>
-                </div>
-                <div class="status-item">
-                    <div class="status-label">⏳ 时空存续</div>
-                    <div class="status-value" id="uptimeDisplay" style="font-family: monospace; font-size: 1.1rem;">计算中...</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-label">📅 起始纪元</div>
-                    <div class="status-value">2007年10月29日</div>
-                </div>
-                <div class="status-item">
-                    <div class="status-label">☁️ 运行平台</div>
-                    <div class="status-value">GitHub Pages</div>
-                </div>
-            </div>
-            <p style="font-size: 0.7rem; text-align: center; margin-top: 16px; color: #6e6e7e; letter-spacing: 0.5px;">基于 Cloudflare Workers 生态 · 永不落幕的极客诗篇</p>
         </div>
     </div>
 
     <div class="footer">
-        <div>Made with ❤️ by BlueDriftHK · 咸鱼工坊</div>
-        <div style="margin-top: 6px;">GNU General Public License v3.0 · 开源自由 · 持续更新</div>
-        <div style="margin-top: 6px;">📅 最后更新：2026年6月5日</div>
+        <div>Made with ❤️ by BlueDriftHK · 星环工坊</div>
+        <div style="margin-top: 4px;">GNU General Public License v3.0 · 开源自由 · 持续更新</div>
+        <div style="margin-top: 4px;" id="footerDate"></div>
     </div>
 </div>
 
 <script>
-    // ==================== 工具函数 ====================
-    function showToast(msg) {
-        let toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerText = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    }
-
     // ==================== 星环时间（精确到秒） ====================
     function updateUptime() {
         const start = new Date(2007, 9, 29, 0, 0, 0);
@@ -504,220 +351,86 @@
         const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
         const years = Math.floor(diffDays / 365);
         const days = diffDays % 365;
-        // 计算当天经过的毫秒数(相对起始日同时间点更精准，这里绝对差值已经包含时分秒，单独提取更优雅)
         const totalSeconds = Math.floor(diffMs / 1000);
         const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
         const timeStr = `${years}年 ${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        document.getElementById('uptimeDisplay').innerHTML = timeStr;
+        const uptimeElem = document.getElementById('uptimeDisplay');
+        if (uptimeElem) uptimeElem.innerHTML = timeStr;
     }
 
-    // ==================== HTTP 状态码 ====================
-    const httpCodes = [
-        {code:"200",name:"OK",desc:"请求成功，资源已返回"},
-        {code:"301",name:"Moved Permanently",desc:"永久重定向，资源URI已变更"},
-        {code:"302",name:"Found",desc:"临时重定向"},
-        {code:"304",name:"Not Modified",desc:"资源未修改，使用缓存"},
-        {code:"400",name:"Bad Request",desc:"请求语法错误或无法理解"},
-        {code:"401",name:"Unauthorized",desc:"需要身份验证"},
-        {code:"403",name:"Forbidden",desc:"服务器拒绝请求"},
-        {code:"404",name:"Not Found",desc:"资源不存在"},
-        {code:"500",name:"Internal Server Error",desc:"服务器内部错误"},
-        {code:"502",name:"Bad Gateway",desc:"网关错误"},
-        {code:"503",name:"Service Unavailable",desc:"服务器过载或维护"}
+    // ==================== 咸鱼语录库 ====================
+    const quotes = [
+        "「咸鱼不是摆烂，是换一种姿势努力。」",
+        "「每一个好用的工具，都是为了解决自己的麻烦。」",
+        "「代码如人生，bug 如日常 —— 修就完了。」",
+        "「开源的精神不是写出完美的代码，而是愿意分享不完美的代码。」",
+        "「咸鱼也会梦见星辰大海，然后继续写下一行代码。」",
+        "「躺平是为了蓄力，扑腾才是常态。」"
     ];
-    function renderHttp() {
-        let container = document.getElementById('httpList');
-        if(!container) return;
-        container.innerHTML = '';
-        httpCodes.forEach(c => {
-            let div = document.createElement('div');
-            div.style.background = 'rgba(255,255,255,0.05)';
-            div.style.borderRadius = '12px';
-            div.style.padding = '6px 4px';
-            div.style.cursor = 'pointer';
-            div.style.fontSize = '0.7rem';
-            div.style.transition = '0.1s';
-            div.style.textAlign = 'center';
-            div.innerHTML = `<b>${c.code}</b><br><span style="font-size:0.6rem;">${c.name}</span>`;
-            div.onclick = () => {
-                document.getElementById('httpDetail').innerHTML = `<strong>${c.code} ${c.name}</strong><br>${c.desc}`;
-                // 高亮轻效果
-                document.querySelectorAll('#httpList > div').forEach(el => el.style.background = 'rgba(255,255,255,0.05)');
-                div.style.background = 'rgba(0,122,255,0.3)';
-            };
-            container.appendChild(div);
-        });
-    }
 
-    // ==================== 字数统计 ====================
-    function updateWordStats() {
-        let text = document.getElementById('wordInput').value;
-        document.getElementById('charCount').innerText = text.length;
-        const words = text.trim() ? text.trim().split(/\s+/).filter(w => w.length > 0).length : 0;
-        document.getElementById('wordCount').innerText = words;
-        const chinese = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-        document.getElementById('chineseCount').innerText = chinese;
-    }
-    function clearWord() { 
-        document.getElementById('wordInput').value = ''; 
-        updateWordStats(); 
-    }
+    const dailySayings = [
+        "✨ 今日咸鱼说：M3U8 Player 能播流畅的视频，就像咸鱼能扑腾起浪花一样",
+        "✨ 今日咸鱼说：今天多学一行代码，明天少躺一分钟沙发",
+        "✨ 今日咸鱼说：一条咸鱼的Cloudflare漂流记",
+        "✨ 今日咸鱼说：网络诊断工具写完了，离全栈又近了一步",
+        "✨ 今日咸鱼说：在键盘声和风扇转动中，找到了白噪音最佳实践"
+    ];
 
-    // ==================== UUID 生成 ====================
-    function genUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-            let r = Math.random() * 16 | 0;
-            let v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-    let uuidHistory = [];
-    function genUUIDAndShow() {
-        let u = genUUID();
-        document.getElementById('uuidDisplay').innerHTML = u;
-        uuidHistory.unshift(u);
-        if(uuidHistory.length > 5) uuidHistory.pop();
-        document.getElementById('uuidHistory').innerHTML = uuidHistory.map(uuid => `<div style="border-bottom:1px solid rgba(255,255,255,0.1); padding:4px 0; font-family: monospace;">${uuid}</div>`).join('');
-        if(uuidHistory.length === 0) document.getElementById('uuidHistory').innerHTML = '暂无历史';
-    }
-    function copyUUID() {
-        let u = document.getElementById('uuidDisplay').innerText;
-        if(u && u !== '点击生成') {
-            navigator.clipboard.writeText(u).then(() => showToast('UUID 已复制')).catch(() => showToast('复制失败'));
-        } else showToast('请先生成UUID');
-    }
-    function genMultipleUUID() {
-        for(let i = 0; i < 3; i++) genUUIDAndShow();
-    }
-
-    // ==================== IP 查询 (增强并发 + fallback) ====================
-    let ipFetchInProgress = false;
-    function fetchIP() {
-        if(ipFetchInProgress) { showToast('查询中，稍后再试'); return; }
-        ipFetchInProgress = true;
-        let ipSpan = document.getElementById('ipAddr'), methodSpan = document.getElementById('ipMethod');
-        ipSpan.innerHTML = '检测中...';
-        methodSpan.innerHTML = '--';
-        let resolved = false;
-        
-        const finish = (ip, source) => {
-            if(resolved) return;
-            resolved = true;
-            ipSpan.innerText = ip || '未知';
-            methodSpan.innerText = source || '--';
-            ipFetchInProgress = false;
-        };
-        
-        // Cloudflare trace 最快
-        fetch('https://cloudflare.com/cdn-cgi/trace', { cache: 'no-store' })
-            .then(res => res.text())
-            .then(text => {
-                let m = text.match(/ip=([^\n]+)/);
-                if(m && m[1] && !resolved) finish(m[1], 'Cloudflare');
-            }).catch(() => {});
-        
-        // ipify 备用
-        fetch('https://api.ipify.org?format=json', { cache: 'no-store' })
-            .then(res => res.json())
-            .then(data => {
-                if(data.ip && !resolved) finish(data.ip, 'ipify');
-            }).catch(() => {});
-        
-        // WebRTC 最后回退 (异步收集)
-        setTimeout(() => {
-            if(resolved) return;
-            try {
-                let pc = new RTCPeerConnection({ iceServers: [] });
-                pc.createDataChannel('');
-                pc.createOffer().then(o => pc.setLocalDescription(o));
-                pc.onicecandidate = e => {
-                    if(e.candidate && !resolved) {
-                        let m = /([0-9]{1,3}\.){3}[0-9]{1,3}/.exec(e.candidate.candidate);
-                        if(m && m[0]) {
-                            finish(m[0], 'WebRTC');
-                            pc.close();
-                        }
-                    }
-                };
-                setTimeout(() => { if(!resolved) pc.close(); }, 1500);
-            } catch(e) { console.warn(e); }
-        }, 300);
-        
-        // 最终超时保护
-        setTimeout(() => {
-            if(!resolved) finish('无法获取', 'timeout');
-        }, 4000);
-    }
-
-    // ==================== 二维码 ====================
-    function genQR() {
-        let text = document.getElementById('qrText').value.trim();
-        if(!text) { showToast('请输入二维码内容'); return; }
-        let container = document.getElementById('qrcode');
-        container.innerHTML = '';
-        try {
-            new QRCode(container, {
-                text: text,
-                width: 128,
-                height: 128,
-                colorDark: "#007aff",
-                colorLight: "#1a1a2e",
-                correctLevel: QRCode.CorrectLevel.M
-            });
-            showToast('二维码已生成');
-        } catch(e) {
-            container.innerHTML = '<div style="color:#ff5e5e;">生成失败</div>';
+    function refreshQuotes() {
+        // 随机替换三条语录（保持三条）
+        const shuffled = [...quotes];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-    }
-    function clearQR() { 
-        document.getElementById('qrcode').innerHTML = ''; 
-        showToast('已清除');
+        const selected = shuffled.slice(0, 3);
+        const container = document.getElementById('quoteContainer');
+        if (container) {
+            container.innerHTML = selected.map(q => `<p class="quote-text">${q}</p>`).join('');
+        }
+        // 随机更换今日咸鱼说
+        const randomDaily = dailySayings[Math.floor(Math.random() * dailySayings.length)];
+        const dailyElem = document.getElementById('dailySaying');
+        if (dailyElem) dailyElem.innerHTML = randomDaily;
+        
+        showToast('语录已更新 🌊');
     }
 
-    // ==================== 增强: 字数统计实时 + 示例数据预置 ====================
-    function setExampleText() {
-        const example = "Hello world! 咸鱼工坊正式启航。\nCloudflare Workers 是神器！\nHTTP/3 未来已来。";
-        let textarea = document.getElementById('wordInput');
-        if(textarea && !textarea.value) textarea.value = example;
-        updateWordStats();
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
     }
-    
-    // ==================== 日期动态更新 ====================
+
     function updateFooterDate() {
-        const footerDate = document.querySelector('.footer div:last-child');
-        if(footerDate) {
+        const footerDateSpan = document.getElementById('footerDate');
+        if (footerDateSpan) {
             const now = new Date();
             const y = now.getFullYear();
-            const m = (now.getMonth()+1).toString().padStart(2,'0');
-            const d = now.getDate().toString().padStart(2,'0');
-            footerDate.innerHTML = `📅 最后更新：${y}年${m}月${d}日`;
+            const m = (now.getMonth() + 1).toString().padStart(2, '0');
+            const d = now.getDate().toString().padStart(2, '0');
+            footerDateSpan.innerHTML = `📅 最后更新：${y}年${m}月${d}日`;
         }
     }
-    
+
     // ==================== 初始化 ====================
+    let uptimeInterval = null;
     function init() {
-        renderHttp();
         updateUptime();
-        setInterval(updateUptime, 1000);
-        // 生成首个UUID
-        genUUIDAndShow();
-        // 二维码初始生成(默认github)
-        setTimeout(() => {
-            if(document.getElementById('qrcode').innerHTML === '') genQR();
-        }, 200);
-        setTimeout(fetchIP, 500);
-        let wordInput = document.getElementById('wordInput');
-        if(wordInput) {
-            wordInput.addEventListener('input', updateWordStats);
-            setExampleText();
-        }
+        if (uptimeInterval) clearInterval(uptimeInterval);
+        uptimeInterval = setInterval(updateUptime, 1000);
         updateFooterDate();
-        // 点击http详情初始默认显示欢迎
-        document.getElementById('httpDetail').innerHTML = '✨ 点击上方状态码获取详细解释 ✨';
+
+        const refreshBtn = document.getElementById('refreshQuoteBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', refreshQuotes);
+        }
     }
-    
+
     init();
 </script>
 </body>
