@@ -93,6 +93,8 @@
             transition: all 0.3s ease;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             margin-top: 1.8rem;
+            position: relative;
+            overflow: hidden;
         }
         .glass-card-full:hover {
             transform: translateY(-2px);
@@ -319,6 +321,107 @@
             margin-top: 8px;
         }
 
+        /* 在线状态样式 */
+        .online-status {
+            text-align: center;
+            padding: 0.5rem 0;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+            animation: pulse 1.5s infinite;
+            margin-right: 8px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        .status-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #E2E8F0;
+        }
+        .status-time {
+            font-size: 0.7rem;
+            color: #94A3B8;
+            margin-top: 8px;
+        }
+        .toggle-status-btn {
+            background: rgba(96, 165, 250, 0.15);
+            border: 0.5px solid rgba(96, 165, 250, 0.4);
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* GitHub 活动日历样式 */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 12px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.2s;
+        }
+        .calendar-day[data-level="0"] { background: rgba(255, 255, 255, 0.05); }
+        .calendar-day[data-level="1"] { background: rgba(34, 197, 94, 0.3); }
+        .calendar-day[data-level="2"] { background: rgba(34, 197, 94, 0.5); }
+        .calendar-day[data-level="3"] { background: rgba(34, 197, 94, 0.7); }
+        .calendar-day[data-level="4"] { background: rgba(34, 197, 94, 0.9); }
+        .calendar-legend {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.6rem;
+            color: #94A3B8;
+        }
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        /* 波浪动画 */
+        .wave-container {
+            position: relative;
+            width: 100%;
+            height: 40px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,64L80,58.7C160,53,320,43,480,48C640,53,800,75,960,80C1120,85,1280,75,1360,69.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z' fill='rgba(96,165,250,0.15)'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+            background-size: 1200px 40px;
+            animation: waveMove 15s linear infinite;
+            opacity: 0.6;
+        }
+        .wave2 {
+            animation: waveMove 12s linear infinite reverse;
+            opacity: 0.3;
+            bottom: 5px;
+        }
+        @keyframes waveMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         /* 彩蛋区域 */
         .easter-egg-area {
             position: fixed;
@@ -496,7 +599,6 @@
 
     <!-- 第二行：设备信息 + GitHub 动态 + 咸鱼投喂区 -->
     <div class="three-cards">
-        <!-- 设备信息卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🖥️</span>
@@ -523,7 +625,6 @@
             <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">🔍 仅本地检测，不留存任何数据</div>
         </div>
 
-        <!-- GitHub 动态卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🐙</span>
@@ -535,7 +636,6 @@
             <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">📦 最近更新的项目 · 数据来自 GitHub API</div>
         </div>
 
-        <!-- 咸鱼投喂区 / 今日打卡 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🍱</span>
@@ -552,7 +652,48 @@
         </div>
     </div>
 
-    <!-- 星环状态卡片 — 底部全宽 -->
+    <!-- 第三行：在线状态 + GitHub 活动日历 + 预留 -->
+    <div class="three-cards">
+        <!-- 在线状态卡片 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📡</span>
+                <span class="card-title">在线状态</span>
+            </div>
+            <div class="online-status">
+                <div>
+                    <span class="status-dot"></span>
+                    <span class="status-text" id="onlineStatusText">在线扑腾中</span>
+                </div>
+                <div class="status-time" id="onlineTime">今日已在线 3 小时</div>
+                <button class="toggle-status-btn" id="toggleStatusBtn">🐟 切换状态</button>
+            </div>
+            <div class="daily-quote" style="margin-top: 8px; font-size: 0.7rem;">⚡ 状态可手动切换 · 咸鱼也有忙碌和摸鱼时</div>
+        </div>
+
+        <!-- GitHub 活动日历卡片 -->
+        <div class="glass-card">
+            <div class="card-header">
+                <span class="card-icon">📅</span>
+                <span class="card-title">GitHub 活动日历</span>
+            </div>
+            <div id="githubCalendar">
+                <div class="loading-text">加载贡献数据...</div>
+            </div>
+            <div class="daily-quote" style="margin-top: 12px; font-size: 0.7rem;">🌱 模拟贡献图 · 真实数据来自 GitHub API</div>
+        </div>
+
+        <!-- 预留卡片（后续可扩展） -->
+        <div class="glass-card" style="opacity: 0.7;">
+            <div class="card-header">
+                <span class="card-icon">🌌</span>
+                <span class="card-title">星环回响</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #94A3B8; text-align: center; padding: 1rem 0;">✨ 更多精彩 · 敬请期待 ✨</p>
+        </div>
+    </div>
+
+    <!-- 星环状态卡片 + 波浪动画 -->
     <div class="glass-card-full">
         <div class="card-header">
             <span class="card-icon">🪐</span>
@@ -577,6 +718,12 @@
             </div>
         </div>
         <div class="daily-quote" style="margin-top: 18px;">🌊 基于 Cloudflare Workers 生态 · 持续扑腾，从不放弃</div>
+        
+        <!-- 波浪动画 -->
+        <div class="wave-container">
+            <div class="wave"></div>
+            <div class="wave wave2"></div>
+        </div>
     </div>
 
     <div class="footer">
@@ -626,7 +773,7 @@
         if (uptimeElem) uptimeElem.innerHTML = timeStr;
     }
 
-    // ==================== 设备信息检测 ====================
+    // ==================== 设备信息 ====================
     function getDeviceInfo() {
         const userAgent = navigator.userAgent;
         let os = "Unknown";
@@ -681,7 +828,101 @@
         }
     }
 
-    // ==================== 咸鱼投喂区 (localStorage) ====================
+    // ==================== GitHub 活动日历（模拟贡献数据） ====================
+    async function fetchGitHubContributions() {
+        const container = document.getElementById('githubCalendar');
+        container.innerHTML = '<div class="loading-text">加载贡献数据...</div>';
+        
+        try {
+            // 使用 GitHub GraphQL API 获取真实贡献数据（需要 token，这里用模拟数据演示）
+            // 为了演示效果，生成最近 7x7 = 49 天的模拟贡献数据
+            const calendarHtml = generateMockCalendar();
+            container.innerHTML = calendarHtml;
+        } catch (error) {
+            console.error('日历加载失败:', error);
+            container.innerHTML = '<div class="loading-text">⚠️ 加载失败，使用模拟数据</div>' + generateMockCalendar();
+        }
+    }
+    
+    function generateMockCalendar() {
+        const days = [];
+        const levels = [0, 1, 2, 3, 4];
+        for (let i = 0; i < 49; i++) {
+            const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+            days.push(randomLevel);
+        }
+        
+        const weekdays = ['一', '二', '三', '四', '五', '六', '日'];
+        
+        return `
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                ${weekdays.map(d => `<div style="font-size: 0.6rem; color: #94A3B8; width: 30px; text-align: center;">${d}</div>`).join('')}
+            </div>
+            <div class="calendar-grid">
+                ${days.map(level => `<div class="calendar-day" data-level="${level}"></div>`).join('')}
+            </div>
+            <div class="calendar-legend">
+                <span><span class="legend-color" style="background: rgba(255,255,255,0.05);"></span> 无</span>
+                <span><span class="legend-color" style="background: rgba(34,197,94,0.3);"></span> 少</span>
+                <span><span class="legend-color" style="background: rgba(34,197,94,0.6);"></span> 中</span>
+                <span><span class="legend-color" style="background: rgba(34,197,94,0.9);"></span> 多</span>
+            </div>
+            <div class="status-time" style="margin-top: 8px; text-align: center;">📊 近7周贡献模拟 · 实际数据需 GitHub Token</div>
+        `;
+    }
+
+    // ==================== 在线状态（localStorage + 手动切换） ====================
+    let currentStatus = 'online';
+    let onlineHours = 3;
+    
+    function loadOnlineStatus() {
+        const saved = localStorage.getItem('bluedrifthk_status');
+        if (saved === 'offline') {
+            currentStatus = 'offline';
+        } else {
+            currentStatus = 'online';
+        }
+        updateOnlineDisplay();
+    }
+    
+    function updateOnlineDisplay() {
+        const statusText = document.getElementById('onlineStatusText');
+        const dot = document.querySelector('.status-dot');
+        if (currentStatus === 'online') {
+            statusText.innerText = '在线扑腾中 🐟';
+            dot.style.backgroundColor = '#22c55e';
+            dot.style.boxShadow = '0 0 8px #22c55e';
+        } else {
+            statusText.innerText = '摸鱼躺平中 😴';
+            dot.style.backgroundColor = '#94A3B8';
+            dot.style.boxShadow = 'none';
+        }
+    }
+    
+    function toggleStatus() {
+        if (currentStatus === 'online') {
+            currentStatus = 'offline';
+            localStorage.setItem('bluedrifthk_status', 'offline');
+            showToast('😴 咸鱼决定躺平一会儿...');
+        } else {
+            currentStatus = 'online';
+            localStorage.setItem('bluedrifthk_status', 'online');
+            showToast('🐟 咸鱼翻了个身，继续扑腾！');
+        }
+        updateOnlineDisplay();
+    }
+    
+    function initOnlineStatus() {
+        loadOnlineStatus();
+        const toggleBtn = document.getElementById('toggleStatusBtn');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', toggleStatus);
+        }
+        // 在线时间显示固定值（可后续扩展为真实计时）
+        document.getElementById('onlineTime').innerHTML = '今日已在线 3 小时 · 咸鱼能量充足';
+    }
+
+    // ==================== 咸鱼投喂区 ====================
     let feedCount = 0;
     
     function loadFeedData() {
@@ -862,7 +1103,9 @@
         
         getDeviceInfo();
         fetchGitHubRepos();
+        fetchGitHubContributions();
         initFeed();
+        initOnlineStatus();
         updateFooterDate();
         refreshQuotes();
         
