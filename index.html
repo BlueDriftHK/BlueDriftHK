@@ -349,7 +349,6 @@
             margin-top: 8px;
         }
 
-        /* 快捷工具样式 */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -398,7 +397,6 @@
             cursor: pointer;
         }
 
-        /* 咸鱼作息统计样式 */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -441,32 +439,35 @@
             font-size: 0.65rem;
         }
 
-        .wave-container {
+        /* 两条鱼的动画样式 */
+        .fish-container {
             position: relative;
             width: 100%;
-            height: 30px;
+            height: 60px;
             margin-top: 15px;
             overflow: hidden;
         }
-        .wave {
+        .fish {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,64L80,58.7C160,53,320,43,480,48C640,53,800,75,960,80C1120,85,1280,75,1360,69.3L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z' fill='rgba(96,165,250,0.15)'%3E%3C/path%3E%3C/svg%3E") repeat-x;
-            background-size: 1200px 30px;
-            animation: waveMove 15s linear infinite;
-            opacity: 0.6;
+            font-size: 1.8rem;
+            animation: swim 8s ease-in-out infinite;
+            filter: drop-shadow(0 0 4px rgba(96,165,250,0.4));
         }
-        .wave2 {
-            animation: waveMove 12s linear infinite reverse;
-            opacity: 0.3;
-            bottom: 3px;
+        .fish1 {
+            top: 5px;
+            animation-duration: 10s;
         }
-        @keyframes waveMove {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .fish2 {
+            top: 30px;
+            animation-duration: 7s;
+            animation-delay: -2s;
+        }
+        @keyframes swim {
+            0% { left: -10%; transform: scaleX(1); }
+            45% { left: 48%; transform: scaleX(1); }
+            50% { left: 50%; transform: scaleX(-1); }
+            95% { left: 110%; transform: scaleX(-1); }
+            100% { left: -10%; transform: scaleX(1); }
         }
 
         .easter-egg-area {
@@ -575,6 +576,8 @@
             .glass-card-full { padding: 1rem; margin-top: 1.2rem; }
             .status-row { flex-direction: column; gap: 0.8rem; }
             .glass-card { padding: 1rem; }
+            .fish { font-size: 1.4rem; }
+            .fish-container { height: 45px; }
         }
 
         .toast {
@@ -694,9 +697,8 @@
         </div>
     </div>
 
-    <!-- 第三行：快捷工具聚合 + 咸鱼作息统计 -->
+    <!-- 第三行：快捷工具 + 咸鱼作息统计 -->
     <div class="two-cards">
-        <!-- 快捷工具聚合卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">🔧</span>
@@ -741,7 +743,6 @@
             <div class="daily-quote" style="margin-top: 8px; font-size: 0.65rem;">⚡ 常用开发小工具 · 即开即用</div>
         </div>
 
-        <!-- 咸鱼作息统计卡片 -->
         <div class="glass-card">
             <div class="card-header">
                 <span class="card-icon">📊</span>
@@ -799,7 +800,7 @@
         </div>
     </div>
 
-    <!-- 星环状态卡片 + 波浪动画 -->
+    <!-- 星环状态卡片 + 两条鱼动画 -->
     <div class="glass-card-full">
         <div class="card-header">
             <span class="card-icon">🪐</span>
@@ -825,9 +826,10 @@
         </div>
         <div class="daily-quote" style="margin-top: 12px;">🌊 基于 Cloudflare Workers 生态 · 持续扑腾，从不放弃</div>
         
-        <div class="wave-container">
-            <div class="wave"></div>
-            <div class="wave wave2"></div>
+        <!-- 两条鱼的动画 -->
+        <div class="fish-container">
+            <div class="fish fish1">🐟</div>
+            <div class="fish fish2">🐡</div>
         </div>
     </div>
 
@@ -1025,16 +1027,39 @@
         }
     }
 
-    // ==================== 快捷工具函数 ====================
+    // ==================== IP 获取（修复版） ====================
     async function fetchQuickIP() {
-        try {
-            const res = await fetch('https://api.ipify.org?format=json');
-            const data = await res.json();
-            document.getElementById('quickIp').innerText = data.ip;
-            showToast('IP 已获取');
-        } catch(e) {
-            document.getElementById('quickIp').innerText = '获取失败';
+        const ipElement = document.getElementById('quickIp');
+        ipElement.innerText = '获取中...';
+        
+        // 多个备用 API，提高成功率
+        const apis = [
+            'https://api.ipify.org?format=json',
+            'https://api.my-ip.io/ip.json',
+            'https://ipapi.co/json/'
+        ];
+        
+        for (const api of apis) {
+            try {
+                const res = await fetch(api, { mode: 'cors', cache: 'no-store' });
+                const data = await res.json();
+                let ip = null;
+                if (data.ip) ip = data.ip;
+                else if (data.ip_address) ip = data.ip_address;
+                else if (typeof data === 'string') ip = data;
+                
+                if (ip && ip.match(/\d+\.\d+\.\d+\.\d+/)) {
+                    ipElement.innerText = ip;
+                    showToast('IP 已获取');
+                    return;
+                }
+            } catch(e) {
+                console.log('API 失败:', api);
+            }
         }
+        
+        ipElement.innerText = '获取失败';
+        showToast('IP 获取失败，请检查网络');
     }
     
     function genQuickUUID() {
@@ -1087,7 +1112,7 @@
         }
     }
 
-    // ==================== 咸鱼作息统计（打卡 + 累计小时） ====================
+    // ==================== 咸鱼作息统计 ====================
     let totalHours = 0;
     let checkinDays = [];
     
