@@ -1091,25 +1091,33 @@
         }
     }
 
-    // ==================== IP 获取 ====================
+    // ==================== IP 获取（修复版） ====================
     async function fetchQuickIP() {
         const ipElement = document.getElementById('quickIp');
         ipElement.innerText = '获取中...';
         
+        // 更稳定可靠的 API 列表
         const apis = [
-            'https://api.ipify.org?format=json',
-            'https://api.my-ip.io/ip.json',
-            'https://ipapi.co/json/'
+            'https://api.ip.sb/ip',           // 返回纯文本 IP
+            'https://ipv4.cloudflare.com/cdn-cgi/trace' // Cloudflare 的 trace 页面
         ];
         
         for (const api of apis) {
             try {
-                const res = await fetch(api, { mode: 'cors', cache: 'no-store' });
-                const data = await res.json();
+                const res = await fetch(api, { cache: 'no-store' });
+                let text = await res.text();
                 let ip = null;
-                if (data.ip) ip = data.ip;
-                else if (data.ip_address) ip = data.ip_address;
-                else if (typeof data === 'string') ip = data;
+                
+                if (api.includes('trace')) {
+                    // 解析 cf trace 格式，例如 "ip=1.2.3.4"
+                    const match = text.match(/ip=([\d.]+)/);
+                    if (match) ip = match[1];
+                } else {
+                    // 直接返回的文本内容就是 IP
+                    if (text && text.match(/\d+\.\d+\.\d+\.\d+/)) {
+                        ip = text.trim();
+                    }
+                }
                 
                 if (ip && ip.match(/\d+\.\d+\.\d+\.\d+/)) {
                     ipElement.innerText = ip;
@@ -1117,7 +1125,7 @@
                     return;
                 }
             } catch(e) {
-                console.log('API 失败:', api);
+                console.log('API 失败:', api, e);
             }
         }
         
