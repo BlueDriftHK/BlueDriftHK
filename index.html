@@ -469,7 +469,7 @@
             100% { left: -10%; transform: scaleX(1); }
         }
 
-        /* 笔记模块样式 - 修复滚动问题 */
+        /* 笔记模块样式 - 支持滚动 */
         .note-item {
             margin-bottom: 8px;
             border-radius: 12px;
@@ -553,20 +553,6 @@
             overflow-x: auto;
             margin: 8px 0;
             font-size: 0.7rem;
-        }
-        .note-content-inner table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-            font-size: 0.7rem;
-        }
-        .note-content-inner th, .note-content-inner td {
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 6px;
-            text-align: left;
-        }
-        .note-content-inner th {
-            background: rgba(96,165,250,0.2);
         }
 
         .easter-egg-area {
@@ -962,7 +948,7 @@
         </div>
     </div>
 
-    <!-- 咸鱼笔记模块（文章内嵌展开，可滚动） -->
+    <!-- 咸鱼笔记模块（包含两篇文章） -->
     <div class="glass-card" style="margin-top: 1.3rem;">
         <div class="card-header">
             <span class="card-icon">📝</span>
@@ -1361,7 +1347,7 @@
         if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
     }
 
-    // ==================== 笔记系统核心（带滚动支持） ====================
+    // ==================== 笔记系统核心（包含两篇文章） ====================
     let notes = [];
     
     function loadNotes() {
@@ -1369,8 +1355,89 @@
         if (saved) {
             notes = JSON.parse(saved);
         } else {
-            // 默认示例笔记 - 包含完整的文章内容
+            // 默认笔记 - 包含两篇完整文章
             notes = [
+                {
+                    id: Date.now() + 3,
+                    title: '零成本搭建！Cloudflare Worker M3U8播放器，完美解决跨域播放问题',
+                    content: `## 🎬 零成本搭建！Cloudflare Worker M3U8播放器，完美解决跨域播放问题
+
+做流媒体调试、日常观影、直播测试的朋友，大概率都遇到过一个致命问题：**复制的M3U8链接，浏览器直接打开无法播放、提示跨域报错、资源被拦截**。
+
+要么需要安装繁杂的客户端插件，要么需要配置复杂的代理环境，费时又费力。今天给大家分享一款**免费、极简、无广告、可私有化部署**的神器——**CF-Worker-M3U8Player**，彻底根治M3U8流媒体跨域无法播放的痛点。
+
+全程依托Cloudflare免费服务，零服务器成本、零配置门槛，新手也能3分钟快速搭建专属在线播放器！
+
+## 📌 01 项目核心介绍
+
+**CF-Worker-M3U8Player** 是开源轻量化HLS/M3U8在线播放项目，由BlueDriftHK开发，核心依托**Cloudflare Worker无服务器边缘算力**实现流媒体代理转发。
+
+不同于市面上普通的在线播放器，它的核心亮点不是播放界面，而是**自带跨域代理能力**。借助Cloudflare全球海量边缘节点，绕过浏览器同源策略限制、规避源站IP限流、地域拦截问题，让所有合规M3U8链接都能正常播放。
+
+整个项目采用「前端播放页面+后端Worker代理」分离架构，结构极简、部署轻便，支持私有化部署，完全不用担心第三方平台跑路、广告弹窗、链接失效等问题。
+
+## ✅ 02 核心优势，碾压普通播放器
+
+**✅ 彻底解决跨域报错**
+绝大多数M3U8播放失败，根源都是浏览器CORS跨域拦截。本项目通过CF Worker中转流媒体分片数据，改写资源请求地址，**一键破除跨域限制**，适配99%的合规HLS流媒体链接。
+
+**✅ 零成本永久使用**
+Cloudflare Worker提供永久免费额度，日常个人观影、流媒体调试、直播测试完全够用，无需服务器、无需付费、无需续费，真正的白嫖神器。
+
+**✅ 全能播放适配**
+基于hls.js内核开发，兼容**普通M3U8、AES加密M3U8、HLS、MP4、FLV**等主流流媒体格式；支持自适应码率，自动根据网速切换清晰度，PC、手机全浏览器适配，播放流畅不卡顿。
+
+**✅ 纯净无广告、无套路**
+开源项目无内置广告、无强制登录、无付费解锁、无后台偷跑流量，打开即用、用完即走，无论是自用还是搭建自用工具站都非常合适。
+
+**✅ 轻量化易部署**
+无需复杂环境配置，不用搭建服务器，仅需复制代码部署CF Worker，搭配静态页面即可使用，新手零基础也能快速上手。
+
+## 👥 03 适用人群与使用场景
+
+- **流媒体开发者/测试人员**：快速调试M3U8链接有效性，排查花屏、卡顿、加载失败问题
+- **直播运营从业者**：实时预览直播流、测试流媒体稳定性
+- **普通用户**：合规流媒体链接在线播放，无需下载臃肿播放器客户端
+- **站长爱好者**：私有化搭建专属无广告在线播放工具
+
+## 🛠️ 04 新手快速部署教程
+
+**第一步：部署Cloudflare Worker后端代理**
+1. 注册并登录Cloudflare官网，进入Worker & Pages控制台
+2. 新建Worker项目，自定义项目名称
+3. 替换默认代码为项目Worker源码，保存部署
+4. 获取系统默认二级域名，或绑定自有自定义域名
+
+**第二步：部署前端播放页面**
+1. 将项目静态HTML页面部署至CF Pages、Github Pages等任意静态平台
+2. 在页面配置中填入上一步获取的Worker代理地址
+3. 保存生效，专属M3U8播放器搭建完成
+
+**第三步：一键使用**
+打开部署好的网页，粘贴合规M3U8流媒体链接，点击播放即可，自动绕过跨域限制，秒加载播放。
+
+## ❓ 05 常见问题与注意事项
+
+**1. 为什么偶尔播放失败？**
+Cloudflare Worker有每日免费请求额度，超量后代理会临时失效；同时部分境外源站存在IP封禁限制。
+
+**2. 加密M3U8可以播放吗？**
+支持AES常规加密M3U8解密播放，部分高级DRM加密流媒体无法解析。
+
+**3. 部署后访问卡顿怎么办？**
+优先绑定自定义域名，相较于CF默认二级域名，访问稳定性和速度会大幅提升。
+
+## 📦 06 项目获取方式
+
+由于原GitHub仓库为境外站点，国内无法直接访问，可以通过以下方式获取源码：
+- Gitee等国内开源平台搜索 **CF-Worker-M3U8Player**
+- 使用GitHub镜像站点检索作者 BlueDriftHK
+- 搜索同类CF Worker M3U8播放器开源项目
+
+> CF-Worker-M3U8Player 是一款**小众但极致实用**的开源工具，用零成本的方式解决了流媒体播放最核心的跨域难题。需要完整源码、部署配置文件的朋友，可自行搜索，三分钟即可拥有专属无广告M3U8在线播放器！`,
+                    date: new Date().toLocaleDateString(),
+                    expanded: false
+                },
                 {
                     id: Date.now() + 2,
                     title: '告别测速网站广告！3分钟搭建专属免费网络体检中心',
@@ -1386,50 +1453,36 @@
 
 ## 🎯 二、工具完整核心功能
 
-成功部署后，即可拥有全套专业网络诊断能力：
-
 ### 1. 网络身份信息展示
-页面打开自动加载用户网络信息，包含公网IP地址、IP归属城市、Cloudflare就近机房节点、客户端与机房直线距离，直观掌握自身网络接入环境。
+页面打开自动加载用户网络信息，包含公网IP地址、IP归属城市、Cloudflare就近机房节点。
 
 ### 2. 实时网络质量监控（核心功能）
-系统每2秒自动检测一次网络状态，无需手动操作，实时生成延迟趋势曲线图，精准展示网络稳定性，核心检测指标如下：
-- 延迟（RTT）：数据往返传输耗时，30ms以内为优秀水准
-- 丢包率：数据传输丢失比例，0%为最佳状态
-- 网络抖动：延迟波动幅度，数值越越稳定网络质量越好
-- 综合连接质量：自动评级优秀、良好、一般、较差、极差
+系统每2秒自动检测一次网络状态，实时生成延迟趋势曲线图：
+- 延迟（RTT）：30ms以内为优秀
+- 丢包率：0%为最佳
+- 网络抖动：数值越稳定越好
 
 ### 3. 多功能手动测速工具
-支持手动触发各类测试，满足不同场景检测需求：
-- 带宽测速：多档位可选，支持快速测速、标准测速、精准测速
-- CPU性能测试：通过高密度运算，检测设备硬件性能
-- 并发请求测试：模拟多人同时访问，测试网络承压能力
-- 流式传输测试：检测大文件传输的网络吞吐稳定性
+- 带宽测速：多档位可选
+- CPU性能测试
+- 并发请求测试
+- 流式传输测试
 
 ### 4. 安全协议检测
-专为技术用户打造，精准检测网络传输配置：识别TLS加密版本、加密套件、HTTP/2协议状态、WebSocket长连接稳定性，快速排查HTTPS、网络协议配置异常问题。
-
-### 5. 实用辅助工具
-支持DNS解析测速，排查域名加载卡顿问题；支持一键导出完整网络检测报告，方便留存数据、求助他人排障。
+检测TLS加密版本、HTTP/2协议状态、WebSocket长连接稳定性。
 
 ## 🛠️ 三、超简单搭建教程（全程3分钟）
 
-本次搭建无需购买服务器、无需编程基础、无需绑定信用卡，全程使用Cloudflare免费资源，零成本部署。
-
-**前期准备**：注册一个免费Cloudflare账号，仅需邮箱即可完成注册
+**前期准备**：注册免费 Cloudflare 账号
 
 **详细步骤**：
-1. 登录Cloudflare控制台，左侧菜单栏点击【Workers & Pages】
-2. 点击【创建应用程序】，选择【创建Worker】（请勿选择Pages）
-3. 自定义Worker名称（英文小写即可，自定义任意名称）
+1. 登录 Cloudflare 控制台，点击【Workers & Pages】
+2. 点击【创建应用程序】，选择【创建 Worker】
+3. 自定义 Worker 名称
 4. 复制项目完整源码：\`https://raw.githubusercontent.com/BlueDriftHK/CF-workers-netdiag/main/_workers.js\`
-5. 全选删除页面默认代码，粘贴复制好的源码
-6. 点击右下角【保存并部署】，等待10秒即可部署完成
+5. 粘贴源码，点击【保存并部署】
 
-**专属访问链接**：\`https://自定义名称.账号用户名.workers.dev\`
-
-## 💻 四、命令行API使用教程（技术专用）
-
-工具支持终端curl命令调用，所有接口返回标准JSON格式，可对接脚本、监控系统：
+## 💻 四、命令行API使用
 
 \`\`\`bash
 # 服务健康检测
@@ -1440,58 +1493,9 @@ curl https://你的链接/speedtest?size=102400
 
 # CPU性能测试
 curl https://你的链接/cpu-test?n=500000
-
-# HTTP/2协议检测
-curl https://你的链接/http2-test
-
-# 并发压力测试
-curl https://你的链接/concurrent-test?count=4&size=2048
 \`\`\`
 
-## ✅ 五、工具优势对比
-
-| 对比项 | 公共测速网站 | NetSight Pro |
-|--------|-------------|---------------|
-| 广告 | 泛滥弹窗 | 完全无广告 |
-| 费用 | 免费版有隐藏限制 | 永久免费 |
-| 隐私 | 记录IP并可能出售 | 数据完全私有 |
-| 功能 | 测速单一 | 全套专业诊断 |
-| 部署 | 无法自建 | 3分钟一键部署 |
-
-## 📝 六、使用注意事项
-
-1. 限流保护：单IP每分钟限制60次请求，满足个人日常使用
-2. 测试上限：带宽测速、并发测试均有合理上限
-3. 免费额度：Cloudflare免费版每日10万次请求，个人自用完全充足
-
-> 项目持续更新迭代，目前最新版本为2026年5月v3.3版本，稳定性和安全性持续优化，大家可以放心部署使用！`,
-                    date: new Date().toLocaleDateString(),
-                    expanded: false
-                },
-                {
-                    id: Date.now() + 1,
-                    title: '咸鱼笔记示例：Cloudflare Workers 入门踩坑',
-                    content: `## Cloudflare Workers 入门踩坑
-
-### 遇到的问题
-- 环境变量配置方式
-- 跨域问题解决方案
-- 免费版每日10万次请求限制说明
-
-### 解决方案
-使用 Wrangler CLI 本地调试，配置 \`wrangler.toml\` 文件：
-
-\`\`\`toml
-name = "my-worker"
-main = "src/index.js"
-compatibility_date = "2024-01-01"
-
-[vars]
-API_KEY = "your-api-key"
-\`\`\`
-
-### 小贴士
-Worker 的免费额度对于个人项目完全够用，每日10万次请求次日自动重置。`,
+> 项目持续更新迭代，目前最新版本为2026年5月v3.3版本，稳定性和安全性持续优化！`,
                     date: new Date().toLocaleDateString(),
                     expanded: false
                 }
@@ -1520,7 +1524,7 @@ Worker 的免费额度对于个人项目完全够用，每日10万次请求次�
                         <span style="font-weight: 500; font-size: 0.85rem;">${escapeHtml(note.title)}</span>
                         <span style="font-size: 0.6rem; color: #94A3B8;">${note.date || ''}</span>
                     </div>
-                    <span class="note-expand-icon" style="font-size: 0.7rem; transition: transform 0.2s;">${note.expanded ? '▼' : '▶'}</span>
+                    <span class="note-expand-icon" style="font-size: 0.7rem;">${note.expanded ? '▼' : '▶'}</span>
                 </div>
                 <div class="note-content" style="max-height: ${note.expanded ? '600px' : '0'};">
                     <div class="note-content-inner">
@@ -1609,29 +1613,14 @@ Worker 的免费额度对于个人项目完全够用，每日10万次请求次�
     function renderMarkdown(md) {
         if (!md) return '';
         let html = md;
-        // 标题
         html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
         html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-        // 粗体
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        // 斜体
         html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-        // 列表项
         html = html.replace(/^- (.*$)/gm, '<li>$1</li>');
-        // 引用
         html = html.replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>');
-        // 行内代码
         html = html.replace(/`(.*?)`/g, '<code>$1</code>');
-        // 代码块
         html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-        // 表格中的 | 分隔符（简单处理）
-        html = html.replace(/\|(.+)\|/g, function(match) {
-            const cells = match.split('|').filter(c => c.trim());
-            if (cells.length === 0) return match;
-            if (match.includes('---')) return '<tr style="background:rgba(96,165,250,0.2);">' + cells.map(() => '<th></th>').join('') + '</tr>';
-            return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
-        });
-        // 换行
         html = html.replace(/\n/g, '<br>');
         return html;
     }
