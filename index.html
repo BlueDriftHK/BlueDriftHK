@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 边缘计算开发者</title>
-    <meta name="description" content="Cloudflare Workers 生态开发者，专注于 HLS 流媒体播放器和网络诊断工具">
-    <meta name="keywords" content="Cloudflare Workers, HLS, M3U8, 网络诊断, 边缘计算">
+    <title>BlueDriftHK · 边缘计算开发者 | Cloudflare Workers 生态</title>
+    <meta name="description" content="Cloudflare Workers 生态开发者，专注于 HLS 流媒体播放器和网络诊断工具。开源项目 Master M3U8 Terminal Pro 和 NetSight Pro。">
+    <meta name="keywords" content="Cloudflare Workers, HLS, M3U8, 网络诊断, 边缘计算, BlueDriftHK">
     <meta name="author" content="BlueDriftHK">
     <meta property="og:title" content="BlueDriftHK · 边缘计算开发者">
-    <meta property="og:type" content="website">
     <meta property="og:description" content="Cloudflare Workers 生态开发者，专注于边缘计算工具">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://avatars.githubusercontent.com/u/BlueDriftHK">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome 6 (免费图标库) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS 动画库 -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         * {
@@ -26,28 +30,40 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0a0a0a 0%, #0d1117 50%, #0a0a0a 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            background: #0a0a0a;
             color: #e8e8e8;
             line-height: 1.5;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 动态玻璃效果背景 */
-        .glow-orb {
+        /* ========== 动态玻璃效果背景 ========== */
+        .glow-container {
             position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             z-index: 0;
-            animation: float 20s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
+            pointer-events: none;
+            animation: floatOrb 25s infinite ease-in-out;
         }
 
         .orb-1 {
             width: 60vw;
             height: 60vw;
-            background: radial-gradient(circle, rgba(0,255,65,0.3), rgba(0,255,65,0));
+            background: radial-gradient(circle, rgba(0, 255, 65, 0.35), rgba(0, 255, 65, 0));
             top: -30vw;
             right: -20vw;
             animation-delay: 0s;
@@ -56,25 +72,49 @@
         .orb-2 {
             width: 50vw;
             height: 50vw;
-            background: radial-gradient(circle, rgba(0,136,255,0.25), rgba(0,136,255,0));
+            background: radial-gradient(circle, rgba(0, 136, 255, 0.3), rgba(0, 136, 255, 0));
             bottom: -25vw;
             left: -20vw;
             animation-delay: -5s;
         }
 
         .orb-3 {
-            width: 40vw;
-            height: 40vw;
-            background: radial-gradient(circle, rgba(168,85,247,0.2), rgba(168,85,247,0));
-            top: 40%;
-            right: 10%;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0));
+            top: 50%;
+            left: 30%;
             animation-delay: -10s;
         }
 
-        @keyframes float {
+        .orb-4 {
+            width: 35vw;
+            height: 35vw;
+            background: radial-gradient(circle, rgba(255, 68, 68, 0.2), rgba(255, 68, 68, 0));
+            bottom: 10%;
+            right: 15%;
+            animation-delay: -15s;
+        }
+
+        @keyframes floatOrb {
             0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(5%, -5%) scale(1.05); }
-            66% { transform: translate(-5%, 3%) scale(0.95); }
+            33% { transform: translate(3%, -4%) scale(1.08); }
+            66% { transform: translate(-4%, 3%) scale(0.92); }
+        }
+
+        /* 网格纹理 */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
@@ -82,22 +122,33 @@
             margin: 0 auto;
             padding: 0 24px;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
-        /* 导航栏 - 苹果风格玻璃效果 */
+        /* ========== 苹果风格导航栏 ========== */
         .navbar {
             position: sticky;
-            top: 20px;
+            top: 16px;
             z-index: 100;
-            backdrop-filter: blur(20px);
-            background: rgba(15, 15, 20, 0.7);
-            border-radius: 48px;
-            padding: 8px 24px;
-            margin: 20px auto;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            background: rgba(20, 22, 27, 0.6);
+            border-radius: 56px;
+            padding: 8px 28px;
+            margin: 16px auto 0;
+            border: 0.5px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            width: calc(100% - 32px);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .navbar.scrolled {
+            background: rgba(12, 14, 18, 0.85);
+            backdrop-filter: blur(30px) saturate(200%);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .navbar-content {
@@ -112,12 +163,20 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #00ff41, #00ccff);
+            background: linear-gradient(135deg, #ffffff, #00ff41, #00ccff);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            animation: logoGradient 6s ease infinite;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes logoGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .logo i {
@@ -125,81 +184,98 @@
             -webkit-background-clip: unset;
             background-clip: unset;
             color: #00ff41;
+            font-size: 1.6rem;
+            animation: iconPulse 2s ease infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { text-shadow: 0 0 0 rgba(0, 255, 65, 0); }
+            50% { text-shadow: 0 0 10px rgba(0, 255, 65, 0.5); }
         }
 
         .nav-links {
             display: flex;
-            gap: 28px;
+            gap: 32px;
             align-items: center;
             flex-wrap: wrap;
         }
 
         .nav-links a {
-            color: #c0c0c0;
+            color: #e0e0e0;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 500;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             padding: 6px 0;
             border-bottom: 2px solid transparent;
+            letter-spacing: -0.2px;
         }
 
         .nav-links a:hover {
             color: #00ff41;
             border-bottom-color: #00ff41;
+            transform: translateY(-1px);
         }
 
         .github-btn {
             background: rgba(255, 255, 255, 0.08);
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 40px;
             color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
 
         .github-btn:hover {
             background: #00ff41;
             border-color: #00ff41;
             color: #0a0a0a !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 8px 20px rgba(0, 255, 65, 0.2);
         }
 
-        /* Hero 区域 */
+        /* ========== Hero 区域 ========== */
         .hero {
-            min-height: 80vh;
+            min-height: 85vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 60px 0 40px;
+            padding: 80px 0 60px;
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 900px;
         }
 
         .badge {
-            display: inline-block;
-            background: rgba(0, 255, 65, 0.15);
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 255, 65, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 255, 65, 0.25);
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-size: 0.85rem;
             color: #00ff41;
-            margin-bottom: 24px;
-            backdrop-filter: blur(4px);
+            margin-bottom: 28px;
+            letter-spacing: 0.3px;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #ffffff, #a0a0a0, #00ff41);
-            background-size: 200% 200%;
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff, #d0d0d0, #00ff41, #00ccff);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: gradientShift 8s ease infinite;
+            animation: gradientShift 10s ease infinite;
+            letter-spacing: -1.5px;
+            line-height: 1.2;
         }
 
         @keyframes gradientShift {
@@ -208,101 +284,170 @@
         }
 
         .hero .tagline {
-            font-size: 1.2rem;
-            color: #a0a0a0;
-            margin-bottom: 32px;
+            font-size: 1.25rem;
+            color: #b0b0b0;
+            margin-bottom: 40px;
             line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
+        /* 统计卡片 */
         .stats-grid {
             display: flex;
             justify-content: center;
-            gap: 40px;
+            gap: 24px;
             flex-wrap: wrap;
-            margin: 40px 0;
+            margin: 48px 0 32px;
         }
 
         .stat-card {
-            background: rgba(20, 25, 35, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 20px 28px;
+            background: rgba(18, 22, 30, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 20px 32px;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            min-width: 120px;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
             border-color: rgba(0, 255, 65, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.1);
+            background: rgba(30, 35, 45, 0.7);
+            box-shadow: 0 15px 35px rgba(0, 255, 65, 0.1);
         }
 
         .stat-number {
-            font-size: 2.5rem;
+            font-size: 2.6rem;
             font-weight: 700;
             color: #00ff41;
+            letter-spacing: -1px;
         }
 
         .stat-label {
-            font-size: 0.85rem;
-            color: #888;
+            font-size: 0.8rem;
+            color: #aaa;
             margin-top: 8px;
+            font-weight: 500;
         }
 
         .lang-badge {
-            display: inline-block;
-            background: rgba(0, 255, 65, 0.1);
-            padding: 12px 24px;
-            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(15, 20, 28, 0.5);
+            backdrop-filter: blur(12px);
+            padding: 14px 28px;
+            border-radius: 60px;
             margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .lang-badge span {
-            margin: 0 12px;
+            margin: 0 4px;
         }
 
-        /* 通用区块样式 */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #00ff41, #00cc33);
+            color: #0a0a0a;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 255, 65, 0.3);
+            filter: brightness(1.05);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            border: 1.5px solid rgba(0, 255, 65, 0.5);
+            background: rgba(0, 255, 65, 0.05);
+            backdrop-filter: blur(8px);
+            color: #00ff41;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 255, 65, 0.15);
+            border-color: #00ff41;
+            transform: translateY(-3px);
+        }
+
+        /* ========== 通用区块样式 ========== */
         section {
-            padding: 80px 0;
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        section:last-of-type {
+            border-bottom: none;
         }
 
         .section-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 48px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 56px;
             text-align: center;
             position: relative;
+            letter-spacing: -0.8px;
         }
 
         .section-title:after {
             content: '';
             position: absolute;
-            bottom: -12px;
+            bottom: -16px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
+            width: 70px;
             height: 3px;
-            background: linear-gradient(90deg, #00ff41, #00ccff);
+            background: linear-gradient(90deg, #00ff41, #00ccff, #a855f7);
             border-radius: 3px;
         }
 
-        /* 项目卡片网格 */
+        /* ========== 项目卡片（玻璃效果） ========== */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
         }
 
         .project-card {
-            background: rgba(15, 20, 30, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            overflow: hidden;
+            background: rgba(18, 22, 30, 0.55);
+            backdrop-filter: blur(20px);
+            border-radius: 36px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             position: relative;
+            overflow: hidden;
         }
 
         .project-card::before {
@@ -312,15 +457,16 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #00ff41, #00ccff);
+            background: linear-gradient(90deg, #00ff41, #00ccff, #a855f7);
             transform: scaleX(0);
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
         }
 
         .project-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px);
             border-color: rgba(0, 255, 65, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(25, 30, 40, 0.7);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
         }
 
         .project-card:hover::before {
@@ -331,137 +477,170 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .project-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #00ff41, #00ccff);
-            border-radius: 18px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 204, 51, 0.1));
+            border-radius: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            color: #0a0a0a;
+            font-size: 2rem;
+            color: #00ff41;
+            border: 1px solid rgba(0, 255, 65, 0.2);
         }
 
         .project-version {
-            background: rgba(0, 255, 65, 0.15);
-            padding: 4px 12px;
-            border-radius: 20px;
+            background: rgba(0, 255, 65, 0.12);
+            backdrop-filter: blur(4px);
+            padding: 5px 14px;
+            border-radius: 24px;
             font-size: 0.7rem;
             color: #00ff41;
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
         .project-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 12px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
         }
 
         .project-desc {
-            color: #a0a0a0;
+            color: #b0b0b0;
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             line-height: 1.6;
         }
 
         .tech-stack {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 28px;
         }
 
         .tech-tag {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 4px 12px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+            padding: 5px 14px;
+            border-radius: 24px;
             font-size: 0.7rem;
             color: #ccc;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .tech-tag:hover {
+            background: rgba(0, 255, 65, 0.15);
+            color: #00ff41;
         }
 
         .project-links {
             display: flex;
-            gap: 16px;
+            gap: 20px;
         }
 
         .project-links a {
             color: #ccc;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .project-links a:hover {
             color: #00ff41;
+            transform: translateX(2px);
         }
 
-        /* 功能特性网格 */
+        /* ========== 功能特性网格 ========== */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
         }
 
         .feature-item {
-            background: rgba(20, 25, 35, 0.5);
-            border-radius: 24px;
-            padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.3s ease;
+            background: rgba(18, 22, 30, 0.4);
+            backdrop-filter: blur(16px);
+            border-radius: 28px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
         }
 
         .feature-item:hover {
-            background: rgba(30, 35, 45, 0.6);
+            background: rgba(30, 35, 45, 0.55);
             border-color: rgba(0, 255, 65, 0.2);
+            transform: translateY(-5px);
         }
 
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 16px;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
         }
 
         .feature-title {
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .feature-desc {
             font-size: 0.85rem;
             color: #999;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        /* 代码块 */
+        /* ========== 代码块 ========== */
         .code-block {
-            background: #0a0c10;
-            border-radius: 20px;
-            padding: 24px;
+            background: rgba(8, 10, 14, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 28px;
             margin: 30px 0;
-            border: 1px solid #1a1f2a;
+            border: 1px solid rgba(0, 255, 65, 0.15);
             overflow-x: auto;
-            font-family: 'Monaco', 'Menlo', monospace;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
             font-size: 0.85rem;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '$';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00ff41;
+            font-weight: 600;
         }
 
         .code-block pre {
-            color: #00ff41;
+            padding-left: 28px;
+            color: #e0e0e0;
+            font-family: inherit;
         }
 
-        /* 更新日志 */
+        /* ========== 更新日志 ========== */
         .changelog {
             background: rgba(10, 12, 16, 0.5);
-            border-radius: 24px;
-            padding: 24px;
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .changelog-item {
-            padding: 16px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .changelog-item:last-child {
@@ -470,56 +649,118 @@
 
         .changelog-version {
             color: #00ff41;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
         }
 
         .changelog-date {
             font-size: 0.75rem;
             color: #666;
-            margin-left: 12px;
+            font-weight: normal;
         }
 
         .changelog-list {
             list-style: none;
-            padding-left: 20px;
+            padding-left: 24px;
         }
 
         .changelog-list li {
-            font-size: 0.85rem;
-            color: #aaa;
-            margin: 6px 0;
+            font-size: 0.9rem;
+            color: #bbb;
+            margin: 8px 0;
             position: relative;
         }
 
         .changelog-list li::before {
             content: '▹';
             position: absolute;
-            left: -18px;
+            left: -20px;
             color: #00ff41;
         }
 
-        /* 贡献指南 */
+        /* ========== 统计数据仪表盘 ========== */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat-dash-item {
+            background: rgba(18, 22, 30, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .stat-dash-item:hover {
+            border-color: rgba(0, 255, 65, 0.2);
+            transform: scale(1.02);
+        }
+
+        .stat-dash-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00ff41;
+        }
+
+        .stat-dash-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* ========== 贡献指南卡片 ========== */
         .contributing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
         }
 
         .contrib-card {
-            background: rgba(0, 255, 65, 0.05);
-            border-radius: 20px;
-            padding: 20px;
+            background: rgba(0, 255, 65, 0.04);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 28px 20px;
             text-align: center;
-            border: 1px solid rgba(0, 255, 65, 0.15);
+            border: 1px solid rgba(0, 255, 65, 0.12);
+            transition: all 0.3s;
         }
 
-        /* 页脚 */
+        .contrib-card:hover {
+            background: rgba(0, 255, 65, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 65, 0.3);
+        }
+
+        .contrib-card i {
+            font-size: 2.2rem;
+            color: #00ff41;
+        }
+
+        .contrib-card h4 {
+            margin: 16px 0 10px;
+            font-size: 1.1rem;
+        }
+
+        .contrib-card p {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        /* ========== 页脚 ========== */
         .footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 48px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 60px 0 40px;
             text-align: center;
             margin-top: 40px;
         }
@@ -527,19 +768,20 @@
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 32px;
-            margin-bottom: 24px;
+            gap: 36px;
+            margin-bottom: 28px;
         }
 
         .social-links a {
-            color: #888;
-            font-size: 1.4rem;
-            transition: all 0.2s;
+            color: #aaa;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            display: inline-block;
         }
 
         .social-links a:hover {
             color: #00ff41;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
         }
 
         .footer-text {
@@ -547,7 +789,26 @@
             color: #666;
         }
 
-        /* 响应式 */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #777;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #00ff41;
+        }
+
+        /* ========== 响应式 ========== */
         @media (max-width: 768px) {
             .container {
                 padding: 0 20px;
@@ -559,16 +820,21 @@
                 font-size: 1rem;
             }
             .stats-grid {
-                gap: 16px;
+                gap: 12px;
             }
             .stat-card {
                 padding: 12px 20px;
+                min-width: 90px;
             }
             .stat-number {
                 font-size: 1.8rem;
             }
             .projects-grid {
                 grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .project-card {
+                padding: 24px;
             }
             .navbar-content {
                 flex-direction: column;
@@ -577,63 +843,74 @@
                 justify-content: center;
             }
             section {
-                padding: 50px 0;
+                padding: 60px 0;
             }
             .section-title {
                 font-size: 1.6rem;
             }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            .code-block pre {
+                font-size: 0.7rem;
+            }
         }
 
-        /* 工具类 */
-        .text-green {
-            color: #00ff41;
+        @media (max-width: 480px) {
+            .stats-grid {
+                gap: 8px;
+            }
+            .stat-card {
+                padding: 10px 16px;
+            }
+            .stat-number {
+                font-size: 1.4rem;
+            }
+            .stat-label {
+                font-size: 0.65rem;
+            }
         }
 
-        .mt-4 {
-            margin-top: 20px;
-        }
-
-        .btn-outline {
-            display: inline-block;
-            padding: 10px 24px;
-            border-radius: 40px;
-            border: 1px solid rgba(0, 255, 65, 0.5);
-            color: #00ff41;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .btn-outline:hover {
-            background: #00ff41;
-            color: #0a0a0a;
-            border-color: #00ff41;
-        }
-
-        /* 滚动条 */
+        /* 滚动条美化 */
         ::-webkit-scrollbar {
             width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #1a1a1a;
+            background: #141414;
         }
         ::-webkit-scrollbar-thumb {
-            background: #00ff41;
-            border-radius: 4px;
+            background: #2a2a2a;
+            border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #00cc33;
+            background: #00ff41;
+        }
+
+        /* 选中文本颜色 */
+        ::selection {
+            background: rgba(0, 255, 65, 0.3);
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-<div class="glow-orb orb-1"></div>
-<div class="glow-orb orb-2"></div>
-<div class="glow-orb orb-3"></div>
+<div class="glow-container">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="glow-orb orb-4"></div>
+</div>
+<div class="grid-pattern"></div>
 
 <div class="container">
     <!-- 导航栏 -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="navbar-content">
             <div class="logo">
                 <i class="fas fa-bolt"></i>
@@ -643,6 +920,7 @@
                 <a href="#home">首页</a>
                 <a href="#projects">项目</a>
                 <a href="#features">特性</a>
+                <a href="#stats">数据</a>
                 <a href="#changelog">更新</a>
                 <a href="#contributing">贡献</a>
                 <a href="https://github.com/BlueDriftHK" class="github-btn" target="_blank">
@@ -654,44 +932,48 @@
 
     <!-- Hero 区域 -->
     <section id="home" class="hero">
-        <div class="hero-content">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
             <div class="badge">
-                <i class="fas fa-cloud"></i> Cloudflare Workers 生态开发者
+                <i class="fas fa-cloud-arrow-up"></i> Cloudflare Workers 生态开发者
             </div>
-            <h1>让边缘计算<br>更强大、更易用</h1>
+            <h1>构建边缘计算<br>的未来</h1>
             <p class="tagline">
-                专注于构建高性能的 HLS 流媒体播放器和网络诊断工具，<br>
+                专注于高性能 HLS 流媒体播放器和网络诊断工具，<br>
                 让复杂的技术变得简单，让强大的功能触手可及。
             </p>
 
             <!-- GitHub 统计 -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
                     <div class="stat-number">22</div>
                     <div class="stat-label"><i class="fas fa-star"></i> Stars Earned</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
                     <div class="stat-number">351</div>
-                    <div class="stat-label"><i class="fas fa-code-branch"></i> Commits (Last Year)</div>
+                    <div class="stat-label"><i class="fas fa-code-branch"></i> Commits (Year)</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
                     <div class="stat-number">1</div>
                     <div class="stat-label"><i class="fas fa-code-pull-request"></i> PRs</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-aos="zoom-in" data-aos-delay="400">
                     <div class="stat-number">1</div>
                     <div class="stat-label"><i class="fas fa-circle-info"></i> Issues</div>
                 </div>
             </div>
 
-            <div class="lang-badge">
-                <i class="fab fa-js"></i> JavaScript <span>54.26%</span>
-                <i class="fab fa-html5"></i> HTML <span>45.74%</span>
+            <div class="lang-badge" data-aos="fade-up" data-aos-delay="500">
+                <span><i class="fab fa-js"></i> JavaScript 54.26%</span>
+                <span><i class="fab fa-html5"></i> HTML 45.74%</span>
+                <span><i class="fas fa-cloud"></i> Cloudflare Workers</span>
             </div>
 
-            <div class="mt-4">
-                <a href="#projects" class="btn-outline">
-                    <i class="fas fa-arrow-down"></i> 查看项目
+            <div class="btn-group" data-aos="fade-up" data-aos-delay="600">
+                <a href="#projects" class="btn-primary">
+                    <i class="fas fa-arrow-down"></i> 探索项目
+                </a>
+                <a href="https://github.com/BlueDriftHK" class="btn-outline" target="_blank">
+                    <i class="fab fa-github"></i> GitHub 主页
                 </a>
             </div>
         </div>
@@ -699,10 +981,10 @@
 
     <!-- 核心项目 -->
     <section id="projects">
-        <h2 class="section-title">⚡ 核心项目</h2>
+        <h2 class="section-title" data-aos="fade-up">⚡ 核心项目</h2>
         <div class="projects-grid">
             <!-- Master M3U8 Terminal Pro -->
-            <div class="project-card">
+            <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-video"></i>
@@ -713,11 +995,12 @@
                 <p class="project-desc">
                     专业级 HLS 视频流播放器，部署在 Cloudflare Workers 边缘节点。
                     支持代理播放、多语言、实时监控、编码检测和 QoS 质量评估。
+                    彻底解决 CORS 和 IP 限制问题。
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">HLS.js</span>
                     <span class="tech-tag">Chart.js</span>
-                    <span class="tech-tag">Workers</span>
+                    <span class="tech-tag">Cloudflare Workers</span>
                     <span class="tech-tag">Web Crypto API</span>
                 </div>
                 <div class="project-links">
@@ -727,11 +1010,14 @@
                     <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player#readme" target="_blank">
                         <i class="fas fa-book"></i> README
                     </a>
+                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">
+                        <i class="fas fa-rocket"></i> 一键部署
+                    </a>
                 </div>
             </div>
 
             <!-- NetSight Pro -->
-            <div class="project-card">
+            <div class="project-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="project-header">
                     <div class="project-icon">
                         <i class="fas fa-chart-line"></i>
@@ -742,12 +1028,13 @@
                 <p class="project-desc">
                     强大的边缘网络诊断工具，提供实时延迟监控、带宽/CPU 测试、
                     WebSocket 测试、安全协议检测和地理位置追踪。
+                    企业级安全防护，IP 级别限流。
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">WebSocket</span>
                     <span class="tech-tag">Canvas API</span>
                     <span class="tech-tag">Streams API</span>
-                    <span class="tech-tag">Workers</span>
+                    <span class="tech-tag">Cloudflare Workers</span>
                 </div>
                 <div class="project-links">
                     <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
@@ -756,6 +1043,9 @@
                     <a href="https://github.com/BlueDriftHK/CF-workers-netdiag#readme" target="_blank">
                         <i class="fas fa-book"></i> README
                     </a>
+                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
+                        <i class="fas fa-rocket"></i> 一键部署
+                    </a>
                 </div>
             </div>
         </div>
@@ -763,45 +1053,86 @@
 
     <!-- 功能特性 -->
     <section id="features">
-        <h2 class="section-title">✨ 功能特性</h2>
+        <h2 class="section-title" data-aos="fade-up">✨ 功能特性</h2>
         <div class="features-grid">
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="50">
                 <div class="feature-icon">🎬</div>
                 <div class="feature-title">HLS 播放引擎</div>
-                <div class="feature-desc">多清晰度自适应，支持标准 HLS 协议，自动切换码率</div>
+                <div class="feature-desc">多清晰度自适应，支持标准 HLS 协议，自动切换码率，启用 Web Worker 多线程解码</div>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-icon">🔄</div>
                 <div class="feature-title">代理播放</div>
-                <div class="feature-desc">Base64 地址代理，绕过 CORS 限制和 IP 封锁</div>
+                <div class="feature-desc">Base64 地址代理，绕过 CORS 限制和 IP 封锁，利用 Cloudflare 全球网络加速</div>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="150">
                 <div class="feature-icon">📊</div>
                 <div class="feature-title">实时监控</div>
-                <div class="feature-desc">下载速度、缓冲健康度、帧率、卡顿次数实时展示</div>
+                <div class="feature-desc">下载速度、缓冲健康度、帧率、卡顿次数实时展示，Chart.js 平滑曲线图表</div>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-icon">🌐</div>
                 <div class="feature-title">网络诊断</div>
-                <div class="feature-desc">CDN 节点探测、Ping 延迟、地理位置追踪</div>
+                <div class="feature-desc">CDN 节点探测、Ping 延迟测试、地理位置追踪、DNS 解析测试</div>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="250">
                 <div class="feature-icon">🔒</div>
                 <div class="feature-title">安全检测</div>
-                <div class="feature-desc">TLS 版本、加密套件、HTTP/2/3、ECH 状态</div>
+                <div class="feature-desc">TLS 版本、加密套件、HTTP/2/3、ECH 状态、ALPN 协商检测</div>
             </div>
-            <div class="feature-item">
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-icon">🎮</div>
                 <div class="feature-title">键盘控制</div>
-                <div class="feature-desc">空格播放/暂停，←/→快退/快进，F 全屏</div>
+                <div class="feature-desc">空格播放/暂停，←/→快退/快进，F 全屏，沉浸式观看体验</div>
+            </div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="350">
+                <div class="feature-icon">🌍</div>
+                <div class="feature-title">多语言支持</div>
+                <div class="feature-desc">简体中文、繁体中文、英文三语界面，URL 参数持久化语言偏好</div>
+            </div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">响应式设计</div>
+                <div class="feature-desc">完美适配桌面端和移动端，侧边栏抽屉菜单，触摸手势支持</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目统计数据 -->
+    <section id="stats">
+        <h2 class="section-title" data-aos="fade-up">📊 项目统计</h2>
+        <div class="stats-dashboard">
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="50">
+                <div class="stat-dash-number">~2700</div>
+                <div class="stat-dash-label">总代码行数</div>
+            </div>
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="100">
+                <div class="stat-dash-number">14+</div>
+                <div class="stat-dash-label">API 端点</div>
+            </div>
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="150">
+                <div class="stat-dash-number">3</div>
+                <div class="stat-dash-label">支持语言</div>
+            </div>
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="200">
+                <div class="stat-dash-number">100+</div>
+                <div class="stat-dash-label">全球边缘节点</div>
+            </div>
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="250">
+                <div class="stat-dash-number">60/min</div>
+                <div class="stat-dash-label">限流保护</div>
+            </div>
+            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="300">
+                <div class="stat-dash-number">10万/天</div>
+                <div class="stat-dash-label">免费请求配额</div>
             </div>
         </div>
     </section>
 
     <!-- 快速部署 -->
     <section>
-        <h2 class="section-title">🚀 快速部署</h2>
-        <div class="code-block">
+        <h2 class="section-title" data-aos="fade-up">🚀 快速部署</h2>
+        <div class="code-block" data-aos="fade-up">
             <pre>
 # 1. 安装 Wrangler CLI
 npm install -g wrangler
@@ -809,30 +1140,32 @@ npm install -g wrangler
 # 2. 登录 Cloudflare
 wrangler login
 
-# 3. 克隆项目
+# 3. 克隆项目（选择一个）
 git clone https://github.com/BlueDriftHK/CF-Worker-M3U8Player.git
+# 或
+git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
 
-# 4. 部署
+# 4. 进入目录并部署
 cd CF-Worker-M3U8Player
 wrangler deploy --main _workers.js
 
-# 5. 设置环境变量密码（推荐）
+# 5. （可选）设置环境变量密码（仅 M3U8 项目）
 wrangler secret put ADMIN_PASSWORD</pre>
         </div>
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" class="btn-outline" target="_blank">
+        <div class="btn-group" data-aos="fade-up">
+            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" class="btn-primary" target="_blank">
                 <i class="fas fa-rocket"></i> 一键部署 M3U8 Player
             </a>
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" class="btn-outline" style="margin-left: 16px;" target="_blank">
-                <i class="fas fa-rocket"></i> 一键部署 NetSight
+            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" class="btn-outline" target="_blank">
+                <i class="fas fa-rocket"></i> 一键部署 NetSight Pro
             </a>
         </div>
     </section>
 
     <!-- 更新日志 -->
     <section id="changelog">
-        <h2 class="section-title">📋 更新日志</h2>
-        <div class="changelog">
+        <h2 class="section-title" data-aos="fade-up">📋 更新日志</h2>
+        <div class="changelog" data-aos="fade-up">
             <div class="changelog-item">
                 <div class="changelog-version">
                     NetSight Pro v3.5
@@ -851,11 +1184,12 @@ wrangler secret put ADMIN_PASSWORD</pre>
                     <span class="changelog-date">2026-05-27</span>
                 </div>
                 <ul class="changelog-list">
-                    <li>新增代理播放路由 /proxy/</li>
+                    <li>新增代理播放路由 /proxy/，支持 Base64 编码地址代理</li>
                     <li>新增 CDN 节点探测和 Ping 延迟测试</li>
                     <li>新增三语支持（简中/繁中/英文）</li>
-                    <li>新增 QoS 五星质量评分</li>
+                    <li>新增 QoS 五星质量评分算法</li>
                     <li>新增键盘快捷键和编码格式智能识别</li>
+                    <li>全新玻璃拟态 UI 设计</li>
                 </ul>
             </div>
             <div class="changelog-item">
@@ -867,6 +1201,21 @@ wrangler secret put ADMIN_PASSWORD</pre>
                     <li>新增 /health 健康检查端点</li>
                     <li>新增 IP 级别请求限流保护（60次/分钟）</li>
                     <li>新增完整安全响应头（CSP、HSTS、X-Frame-Options）</li>
+                    <li>WebSocket 增加 30 秒心跳机制</li>
+                </ul>
+            </div>
+            <div class="changelog-item">
+                <div class="changelog-version">
+                    NetSight Pro v3.0
+                    <span class="changelog-date">2026-05-10</span>
+                </div>
+                <ul class="changelog-list">
+                    <li>实时延迟监控模块，每2秒自动测量 RTT</li>
+                    <li>Canvas 实时趋势图表绘制</li>
+                    <li>多档位带宽测速功能</li>
+                    <li>CPU 密集型性能测试</li>
+                    <li>WebSocket 双向延迟测试</li>
+                    <li>全新蓝色玻璃态毛玻璃效果主题</li>
                 </ul>
             </div>
         </div>
@@ -874,27 +1223,30 @@ wrangler secret put ADMIN_PASSWORD</pre>
 
     <!-- 贡献指南 -->
     <section id="contributing">
-        <h2 class="section-title">🤝 贡献指南</h2>
+        <h2 class="section-title" data-aos="fade-up">🤝 贡献指南</h2>
+        <p style="text-align: center; color: #aaa; max-width: 600px; margin: 0 auto 20px;" data-aos="fade-up">
+            欢迎任何形式的贡献！无论是代码、文档、Issue 还是想法。
+        </p>
         <div class="contributing-grid">
-            <div class="contrib-card">
-                <i class="fas fa-code-branch" style="font-size: 2rem; color: #00ff41;"></i>
-                <h4 style="margin: 12px 0;">Fork 项目</h4>
-                <p style="font-size: 0.8rem; color: #aaa;">点击 GitHub 上的 Fork 按钮</p>
+            <div class="contrib-card" data-aos="fade-up" data-aos-delay="50">
+                <i class="fas fa-code-branch"></i>
+                <h4>Fork 项目</h4>
+                <p>点击 GitHub 上的 Fork 按钮</p>
             </div>
-            <div class="contrib-card">
-                <i class="fas fa-code" style="font-size: 2rem; color: #00ff41;"></i>
-                <h4 style="margin: 12px 0;">创建分支</h4>
-                <p style="font-size: 0.8rem; color: #aaa;">git checkout -b feature/AmazingFeature</p>
+            <div class="contrib-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-code"></i>
+                <h4>创建分支</h4>
+                <p>git checkout -b feature/AmazingFeature</p>
             </div>
-            <div class="contrib-card">
-                <i class="fas fa-check-circle" style="font-size: 2rem; color: #00ff41;"></i>
-                <h4 style="margin: 12px 0;">提交 PR</h4>
-                <p style="font-size: 0.8rem; color: #aaa;">确保代码符合规范并通过测试</p>
+            <div class="contrib-card" data-aos="fade-up" data-aos-delay="150">
+                <i class="fas fa-check-circle"></i>
+                <h4>提交 PR</h4>
+                <p>确保代码符合规范并通过测试</p>
             </div>
-            <div class="contrib-card">
-                <i class="fas fa-comment" style="font-size: 2rem; color: #00ff41;"></i>
-                <h4 style="margin: 12px 0;">提交信息格式</h4>
-                <p style="font-size: 0.8rem; color: #aaa;">✨ feat / 🐛 fix / 📝 docs</p>
+            <div class="contrib-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-comment"></i>
+                <h4>提交信息格式</h4>
+                <p>✨ feat / 🐛 fix / 📝 docs / 🎨 style</p>
             </div>
         </div>
     </section>
@@ -903,37 +1255,56 @@ wrangler secret put ADMIN_PASSWORD</pre>
     <footer class="footer">
         <div class="social-links">
             <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://X.com/BlueDriftHK" target="_blank"><i class="fab fa-X"></i></a>
-            <a href="mailto:asiacomk@gmail.com/"><i class="fas fa-envelope"></i></a>
+            <a href="mailto:asiacomk@gmail.com"><i class="fas fa-envelope"></i></a>
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player">M3U8 Player</a>
+            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">NetSight Pro</a>
+            <a href="https://github.com/BlueDriftHK">GitHub</a>
         </div>
         <div class="footer-text">
-            <p>© 2026 BlueDriftHK · 开源自由 · 持续更新</p>
+            <p>© 2025 BlueDriftHK · 开源自由 · 持续更新</p>
             <p style="margin-top: 8px;">
-                <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" style="color: #666; text-decoration: none;">M3U8 Player</a> · 
-                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" style="color: #666; text-decoration: none;">NetSight Pro</a>
-            </p>
-            <p style="margin-top: 12px;">
                 <i class="fas fa-code"></i> 边缘计算 · HLS 流媒体 · 网络诊断
             </p>
         </div>
     </footer>
 </div>
 
+<!-- AOS 初始化 -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 50
+    });
+
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
     // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            const target = document.querySelector(href);
             if (target) {
+                e.preventDefault();
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         });
     });
 
-    // 动态年份
+    // 动态更新年份
     document.querySelector('.footer-text p').innerHTML = `© ${new Date().getFullYear()} BlueDriftHK · 开源自由 · 持续更新`;
 </script>
-
 </body>
 </html>
