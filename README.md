@@ -29,31 +29,26 @@
 
 <div align="center">
   
-| 指标 | 数据 |
-|------|------|
-| ⭐ **Total Stars Earned** | **22** |
-| 📝 **Total Commits (last year)** | **351** |
-| 🔀 **Total PRs** | **0** |
-| 🐛 **Total Issues** | **1** |
-| 🤝 **Contributed to (last year)** | **1** |
+<!-- 主统计卡片 -->
+![BlueDriftHK's GitHub Stats](https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=default&hide=contribs&count_private=true)
 
-</div>
+<!-- 编程语言占比 -->
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=default)
 
-### 主要编程语言
+---
 
+<!-- 贡献日历热力图 -->
+![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=default&area=true&hide_border=true)
+
+---
+
+<!-- 核心项目卡片 -->
 <div align="center">
   
-| 语言 | 占比 |
-|------|------|
-| **JavaScript** | 54.26% |
-| **HTML** | 45.74% |
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=BlueDriftHK&repo=CF-Worker-M3U8Player&theme=default)](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=BlueDriftHK&repo=CF-workers-netdiag&theme=default)](https://github.com/BlueDriftHK/CF-workers-netdiag)
 
 </div>
-
-<div align="center">
-  
-![JavaScript](https://img.shields.io/badge/JavaScript-54.26%25-F7DF1E?logo=javascript&logoColor=black)
-![HTML](https://img.shields.io/badge/HTML-45.74%25-E34F26?logo=html5&logoColor=white)
 
 </div>
 
