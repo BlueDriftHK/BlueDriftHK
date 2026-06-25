@@ -37,7 +37,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ========== 动态玻璃效果背景 ========== */
         .glow-container {
             position: fixed;
             top: 0;
@@ -100,7 +99,6 @@
             66% { transform: translate(-4%, 3%) scale(0.92); }
         }
 
-        /* 网格纹理 */
         .grid-pattern {
             position: fixed;
             top: 0;
@@ -123,7 +121,6 @@
             z-index: 2;
         }
 
-        /* ========== 苹果风格导航栏 ========== */
         .navbar {
             position: sticky;
             top: 16px;
@@ -227,7 +224,6 @@
             box-shadow: 0 8px 20px rgba(0, 255, 65, 0.2);
         }
 
-        /* 导航栏内的徽章 */
         .nav-badge {
             display: inline-flex;
             align-items: center;
@@ -247,7 +243,6 @@
             font-size: 0.7rem;
         }
 
-        /* ========== Hero 区域 ========== */
         .hero {
             min-height: 85vh;
             display: flex;
@@ -290,7 +285,6 @@
             margin-right: auto;
         }
 
-        /* 统计卡片 */
         .stats-grid {
             display: flex;
             justify-content: center;
@@ -398,7 +392,6 @@
             transform: translateY(-3px);
         }
 
-        /* ========== 通用区块样式 ========== */
         section {
             padding: 100px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -429,7 +422,6 @@
             border-radius: 3px;
         }
 
-        /* ========== 项目卡片 ========== */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -557,7 +549,6 @@
             transform: translateX(2px);
         }
 
-        /* ========== 功能特性网格 ========== */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -596,7 +587,6 @@
             line-height: 1.6;
         }
 
-        /* ========== 代码块 ========== */
         .code-block {
             background: rgba(8, 10, 14, 0.8);
             backdrop-filter: blur(8px);
@@ -626,7 +616,6 @@
             margin: 0;
         }
 
-        /* ========== 统计数据仪表盘 ========== */
         .stats-dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -661,7 +650,6 @@
             margin-top: 8px;
         }
 
-        /* ========== 更新日志 ========== */
         .changelog {
             background: rgba(10, 12, 16, 0.5);
             backdrop-filter: blur(12px);
@@ -715,7 +703,6 @@
             color: #00ff41;
         }
 
-        /* ========== 贡献指南卡片 ========== */
         .contributing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -754,7 +741,6 @@
             color: #999;
         }
 
-        /* ========== 页脚 ========== */
         .footer {
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             padding: 60px 0 40px;
@@ -805,7 +791,6 @@
             color: #00ff41;
         }
 
-        /* ========== 响应式 ========== */
         @media (max-width: 900px) {
             .navbar-content {
                 flex-direction: column;
@@ -882,7 +867,6 @@
             }
         }
 
-        /* 滚动条美化 */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -915,7 +899,6 @@
 <div class="grid-pattern"></div>
 
 <div class="container">
-    <!-- 导航栏（包含徽章） -->
     <nav class="navbar" id="navbar">
         <div class="navbar-content">
             <div class="logo">
@@ -939,7 +922,6 @@
         </div>
     </nav>
 
-    <!-- Hero 区域（移除徽章） -->
     <section id="home" class="hero">
         <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
             <h1>构建边缘计算<br>的未来</h1>
@@ -948,7 +930,6 @@
                 让复杂的技术变得简单，让强大的功能触手可及。
             </p>
 
-            <!-- GitHub 统计 -->
             <div class="stats-grid">
                 <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
                     <div class="stat-number">22</div>
@@ -985,11 +966,9 @@
         </div>
     </section>
 
-    <!-- 核心项目 -->
     <section id="projects">
         <h2 class="section-title" data-aos="fade-up">⚡ 核心项目</h2>
         <div class="projects-grid">
-            <!-- Master M3U8 Terminal Pro -->
             <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="project-header">
                     <div class="project-icon">
@@ -1022,7 +1001,6 @@
                 </div>
             </div>
 
-            <!-- NetSight Pro -->
             <div class="project-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="project-header">
                     <div class="project-icon">
@@ -1057,7 +1035,6 @@
         </div>
     </section>
 
-    <!-- 功能特性 -->
     <section id="features">
         <h2 class="section-title" data-aos="fade-up">✨ 功能特性</h2>
         <div class="features-grid">
@@ -1094,7 +1071,6 @@
         </div>
     </section>
 
-    <!-- 项目统计数据 -->
     <section id="stats">
         <h2 class="section-title" data-aos="fade-up">📊 项目统计</h2>
         <div class="stats-dashboard">
@@ -1125,7 +1101,6 @@
         </div>
     </section>
 
-    <!-- 快速部署 -->
     <section>
         <h2 class="section-title" data-aos="fade-up">🚀 快速部署</h2>
         <div class="code-block" data-aos="fade-up">
@@ -1158,7 +1133,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         </div>
     </section>
 
-    <!-- 更新日志 -->
     <section id="changelog">
         <h2 class="section-title" data-aos="fade-up">📋 更新日志</h2>
         <div class="changelog" data-aos="fade-up">
@@ -1202,7 +1176,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         </div>
     </section>
 
-    <!-- 贡献指南 -->
     <section id="contributing">
         <h2 class="section-title" data-aos="fade-up">🤝 贡献指南</h2>
         <p style="text-align: center; color: #aaa; max-width: 600px; margin: 0 auto 20px;" data-aos="fade-up">
@@ -1232,7 +1205,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         </div>
     </section>
 
-    <!-- 页脚 -->
     <footer class="footer">
         <div class="social-links">
             <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i></a>
@@ -1252,7 +1224,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
     </footer>
 </div>
 
-<!-- AOS 初始化 -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init({
@@ -1261,7 +1232,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         offset: 50
     });
 
-    // 导航栏滚动效果
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -1271,7 +1241,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         }
     });
 
-    // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -1284,7 +1253,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
         });
     });
 
-    // 动态更新年份
     document.querySelector('.footer-text p').innerHTML = `© ${new Date().getFullYear()} BlueDriftHK · 开源自由 · 持续更新`;
 </script>
 </body>
