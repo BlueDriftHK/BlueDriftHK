@@ -532,6 +532,7 @@
         .project-links {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .project-links a {
@@ -969,6 +970,7 @@
     <section id="projects">
         <h2 class="section-title" data-aos="fade-up">⚡ 核心项目</h2>
         <div class="projects-grid">
+            <!-- Master M3U8 Terminal Pro -->
             <div class="project-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="project-header">
                     <div class="project-icon">
@@ -1001,6 +1003,7 @@
                 </div>
             </div>
 
+            <!-- NetSight Pro -->
             <div class="project-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="project-header">
                     <div class="project-icon">
@@ -1028,6 +1031,39 @@
                         <i class="fas fa-book"></i> README
                     </a>
                     <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
+                        <i class="fas fa-rocket"></i> 一键部署
+                    </a>
+                </div>
+            </div>
+
+            <!-- 新增：极简导航 · Cloudflare Worker -->
+            <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+                <div class="project-header">
+                    <div class="project-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <div class="project-version">v2.0</div>
+                </div>
+                <h3 class="project-title">极简导航 · Cloudflare Worker</h3>
+                <p class="project-desc">
+                    部署在 Cloudflare Workers 上的个人导航页，可作为浏览器起始页。
+                    融合毛玻璃设计语言，集成实时时钟、天气、书签管理、待办事项、
+                    便签和番茄钟等实用工具，开箱即用，数据本地存储。
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-tag">Vanilla JS</span>
+                    <span class="tech-tag">Open-Meteo API</span>
+                    <span class="tech-tag">localStorage</span>
+                    <span class="tech-tag">毛玻璃效果</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/BlueDriftHK/CF-workers-homepage" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://homepage.bjhr.space" target="_blank">
+                        <i class="fas fa-globe"></i> 在线演示
+                    </a>
+                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-homepage" target="_blank">
                         <i class="fas fa-rocket"></i> 一键部署
                     </a>
                 </div>
@@ -1115,6 +1151,8 @@ wrangler login
 git clone https://github.com/BlueDriftHK/CF-Worker-M3U8Player.git
 # 或
 git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
+# 或
+git clone https://github.com/BlueDriftHK/CF-workers-homepage.git
 
 # 4. 进入目录并部署
 cd CF-Worker-M3U8Player
@@ -1130,12 +1168,28 @@ wrangler secret put ADMIN_PASSWORD</pre>
             <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" class="btn-outline" target="_blank">
                 <i class="fas fa-rocket"></i> 一键部署 NetSight Pro
             </a>
+            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-homepage" class="btn-outline" target="_blank">
+                <i class="fas fa-rocket"></i> 一键部署 极简导航
+            </a>
         </div>
     </section>
 
     <section id="changelog">
         <h2 class="section-title" data-aos="fade-up">📋 更新日志</h2>
         <div class="changelog" data-aos="fade-up">
+            <div class="changelog-item">
+                <div class="changelog-version">
+                    极简导航 v2.0
+                    <span class="changelog-date">2026-06-25</span>
+                </div>
+                <ul class="changelog-list">
+                    <li>🎨 融合 NetSight Pro 设计语言，毛玻璃和极光渐变效果</li>
+                    <li>✨ 全新壁纸系统：Bing 每日、Unsplash 随机、自定义上传</li>
+                    <li>✨ 新增番茄钟进度条和音效提醒</li>
+                    <li>✨ 支持快捷键：/ 搜索、Space 番茄钟、Ctrl+S 保存</li>
+                    <li>🐛 修复天气显示乱码和 IP 获取跨域问题</li>
+                </ul>
+            </div>
             <div class="changelog-item">
                 <div class="changelog-version">
                     NetSight Pro v3.5
@@ -1159,18 +1213,6 @@ wrangler secret put ADMIN_PASSWORD</pre>
                     <li>新增三语支持（简中/繁中/英文）</li>
                     <li>新增 QoS 五星质量评分算法</li>
                     <li>新增键盘快捷键和编码格式智能识别</li>
-                </ul>
-            </div>
-            <div class="changelog-item">
-                <div class="changelog-version">
-                    NetSight Pro v3.3
-                    <span class="changelog-date">2026-05-28</span>
-                </div>
-                <ul class="changelog-list">
-                    <li>新增 /health 健康检查端点</li>
-                    <li>新增 IP 级别请求限流保护（60次/分钟）</li>
-                    <li>新增完整安全响应头（CSP、HSTS、X-Frame-Options）</li>
-                    <li>WebSocket 增加 30 秒心跳机制</li>
                 </ul>
             </div>
         </div>
@@ -1213,12 +1255,13 @@ wrangler secret put ADMIN_PASSWORD</pre>
         <div class="footer-links">
             <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player">M3U8 Player</a>
             <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">NetSight Pro</a>
+            <a href="https://github.com/BlueDriftHK/CF-workers-homepage">极简导航</a>
             <a href="https://github.com/BlueDriftHK">GitHub</a>
         </div>
         <div class="footer-text">
             <p>© 2025 BlueDriftHK · 开源自由 · 持续更新</p>
             <p style="margin-top: 8px;">
-                <i class="fas fa-code"></i> 边缘计算 · HLS 流媒体 · 网络诊断
+                <i class="fas fa-code"></i> 边缘计算 · HLS 流媒体 · 网络诊断 · 极简导航
             </p>
         </div>
     </footer>
