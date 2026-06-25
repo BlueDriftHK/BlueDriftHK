@@ -981,8 +981,8 @@
                 <h3 class="project-title">Master M3U8 Terminal Pro</h3>
                 <p class="project-desc">
                     专业级 HLS 视频流播放器，部署在 Cloudflare Workers 边缘节点。
-                    支持代理播放、多语言、实时监控、编码检测和 QoS 质量评估。
-                    彻底解决 CORS 和 IP 限制问题。
+                    支持代理播放、多语言切换、实时监控、编码检测和 QoS 质量评估。
+                    彻底解决 CORS 跨域和 IP 访问限制问题。
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">HLS.js</span>
@@ -995,7 +995,7 @@
                         <i class="fab fa-github"></i> GitHub
                     </a>
                     <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player#readme" target="_blank">
-                        <i class="fas fa-book"></i> README
+                        <i class="fas fa-book"></i> 文档
                     </a>
                     <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">
                         <i class="fas fa-rocket"></i> 一键部署
@@ -1013,9 +1013,9 @@
                 </div>
                 <h3 class="project-title">NetSight Pro</h3>
                 <p class="project-desc">
-                    强大的边缘网络诊断工具，提供实时延迟监控、带宽/CPU 测试、
-                    WebSocket 测试、安全协议检测和地理位置追踪。
-                    企业级安全防护，IP 级别限流。
+                    强大的边缘网络诊断工具，提供实时延迟监控、带宽和 CPU 性能测试、
+                    WebSocket 连接测试、安全协议检测和地理位置追踪。
+                    内置企业级安全防护，支持 IP 级别限流。
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">WebSocket</span>
@@ -1028,7 +1028,7 @@
                         <i class="fab fa-github"></i> GitHub
                     </a>
                     <a href="https://github.com/BlueDriftHK/CF-workers-netdiag#readme" target="_blank">
-                        <i class="fas fa-book"></i> README
+                        <i class="fas fa-book"></i> 文档
                     </a>
                     <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
                         <i class="fas fa-rocket"></i> 一键部署
@@ -1036,7 +1036,7 @@
                 </div>
             </div>
 
-            <!-- 新增：极简导航 · Cloudflare Worker -->
+            <!-- 极简导航 · Cloudflare Worker -->
             <div class="project-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="project-header">
                     <div class="project-icon">
@@ -1047,8 +1047,8 @@
                 <h3 class="project-title">极简导航 · Cloudflare Worker</h3>
                 <p class="project-desc">
                     部署在 Cloudflare Workers 上的个人导航页，可作为浏览器起始页。
-                    融合毛玻璃设计语言，集成实时时钟、天气、书签管理、待办事项、
-                    便签和番茄钟等实用工具，开箱即用，数据本地存储。
+                    融合毛玻璃设计语言，集成实时时钟、天气信息、书签管理、待办事项、
+                    便签和番茄钟等实用工具，开箱即用，所有数据本地存储。
                 </p>
                 <div class="tech-stack">
                     <span class="tech-tag">Vanilla JS</span>
@@ -1141,35 +1141,33 @@
         <h2 class="section-title" data-aos="fade-up">🚀 快速部署</h2>
         <div class="code-block" data-aos="fade-up">
             <pre>
-# 1. 安装 Wrangler CLI
+# 安装 Wrangler CLI
 npm install -g wrangler
 
-# 2. 登录 Cloudflare
+# 登录 Cloudflare
 wrangler login
 
-# 3. 克隆项目（选择一个）
+# 克隆项目（任选其一）
 git clone https://github.com/BlueDriftHK/CF-Worker-M3U8Player.git
-# 或
 git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
-# 或
 git clone https://github.com/BlueDriftHK/CF-workers-homepage.git
 
-# 4. 进入目录并部署
+# 进入项目目录并部署
 cd CF-Worker-M3U8Player
 wrangler deploy --main _workers.js
 
-# 5. （可选）设置环境变量密码（仅 M3U8 项目）
+# （可选）设置环境变量密码（仅 M3U8 项目需要）
 wrangler secret put ADMIN_PASSWORD</pre>
         </div>
         <div class="btn-group" data-aos="fade-up">
             <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" class="btn-primary" target="_blank">
-                <i class="fas fa-rocket"></i> 一键部署 M3U8 Player
+                <i class="fas fa-rocket"></i> 部署 M3U8 Player
             </a>
             <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" class="btn-outline" target="_blank">
-                <i class="fas fa-rocket"></i> 一键部署 NetSight Pro
+                <i class="fas fa-rocket"></i> 部署 NetSight Pro
             </a>
             <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-homepage" class="btn-outline" target="_blank">
-                <i class="fas fa-rocket"></i> 一键部署 极简导航
+                <i class="fas fa-rocket"></i> 部署 极简导航
             </a>
         </div>
     </section>
@@ -1183,10 +1181,10 @@ wrangler secret put ADMIN_PASSWORD</pre>
                     <span class="changelog-date">2026-06-25</span>
                 </div>
                 <ul class="changelog-list">
-                    <li>🎨 融合 NetSight Pro 设计语言，毛玻璃和极光渐变效果</li>
+                    <li>🎨 融合 NetSight Pro 设计语言，采用毛玻璃和极光渐变效果</li>
                     <li>✨ 全新壁纸系统：Bing 每日、Unsplash 随机、自定义上传</li>
                     <li>✨ 新增番茄钟进度条和音效提醒</li>
-                    <li>✨ 支持快捷键：/ 搜索、Space 番茄钟、Ctrl+S 保存</li>
+                    <li>✨ 支持快捷键：/ 搜索、Space 番茄钟、Ctrl+S 保存便签</li>
                     <li>🐛 修复天气显示乱码和 IP 获取跨域问题</li>
                 </ul>
             </div>
@@ -1210,7 +1208,7 @@ wrangler secret put ADMIN_PASSWORD</pre>
                 <ul class="changelog-list">
                     <li>新增代理播放路由 /proxy/，支持 Base64 编码地址代理</li>
                     <li>新增 CDN 节点探测和 Ping 延迟测试</li>
-                    <li>新增三语支持（简中/繁中/英文）</li>
+                    <li>新增三语支持（简体中文 / 繁体中文 / 英文）</li>
                     <li>新增 QoS 五星质量评分算法</li>
                     <li>新增键盘快捷键和编码格式智能识别</li>
                 </ul>
@@ -1221,7 +1219,7 @@ wrangler secret put ADMIN_PASSWORD</pre>
     <section id="contributing">
         <h2 class="section-title" data-aos="fade-up">🤝 贡献指南</h2>
         <p style="text-align: center; color: #aaa; max-width: 600px; margin: 0 auto 20px;" data-aos="fade-up">
-            欢迎任何形式的贡献！无论是代码、文档、Issue 还是想法。
+            欢迎任何形式的贡献！无论是代码、文档、Issue 还是想法，都热忱期待。
         </p>
         <div class="contributing-grid">
             <div class="contrib-card" data-aos="fade-up" data-aos-delay="50">
