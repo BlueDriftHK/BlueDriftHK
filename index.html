@@ -1,284 +1,903 @@
-<!-- ========== 顶部炫酷横幅 ========== -->
-<p align="center">
-  <img src="https://github.com/BlueDriftHK.png" width="120" height="120" style="border-radius: 50%; border: 3px solid #F38020;" alt="Avatar" />
-</p>
-
-<h1 align="center">👋 你好，我是 <a href="https://github.com/BlueDriftHK" style="color: #F38020;">BlueDriftHK</a></h1>
-
-<!-- 炫酷动态打字 -->
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&duration=2800&pause=800&color=F38020&center=true&vCenter=true&width=600&lines=%E2%9A%A1+Edge+Computing+Builder;%F0%9F%9B%B8%EF%B8%8F+Cloudflare+Workers+Expert;%F0%9F%93%8A+Network+Diagnostics+Developer;%F0%9F%94%A5+Open+Source+Enthusiast;%F0%9F%9A%80+Building+the+Future+of+Web" alt="Typing SVG" />
-</p>
-
-<!-- 访客计数器（保留，通常稳定） -->
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=BlueDriftHK&label=🌟+Profile+Views&color=F38020&style=for-the-badge" alt="访客计数器" />
-</p>
-
-<!-- ========== 项目实时状态徽章 ========== -->
-<p align="center">
-  <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">
-    <img src="https://img.shields.io/github/stars/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=F38020" alt="Stars" />
-    <img src="https://img.shields.io/github/forks/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=orange" alt="Forks" />
-    <img src="https://img.shields.io/github/issues/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=green" alt="Issues" />
-    <img src="https://img.shields.io/github/last-commit/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=git&color=purple" alt="Last Commit" />
-    <img src="https://img.shields.io/github/license/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=gnu&color=blue" alt="License" />
-  </a>
-</p>
-
----
-
-<!-- ========== 关于我 ========== -->
-## 🧑‍💻 关于我 · About Me
-
-我是一名 **边缘计算架构师** 与 **全栈工具开发者**，热衷于利用 Cloudflare Workers 将复杂的网络诊断能力封装成开箱即用的轻量级工具。
-
-- 🔭 **当前专注**：全力打磨主力项目 **[CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag)** —— 基于 **WebSocket + HLS.js** 的毫秒级全球网络延迟透视仪。
-- 🌱 **技术探索**：深入 HLS 流媒体协议、边缘节点智能路由、实时数据可视化。
-- 🎯 **项目愿景**：让每一位开发者都能在 5 分钟内拥有自己的全球网络质量监控面板。
-- ⚡ **极客信条**：代码即艺术，性能即正义。
-- 💬 **技术话题**：边缘计算、Serverless、实时通信、开源生态。
-
----
-
-<!-- ========== 我的日常开发环境 ========== -->
-## 🛠️ 日常开发环境 · Daily Toolchain
-
-<p align="left">
-  <img src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" />
-  <img src="https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=webstorm&logoColor=white" />
-  <img src="https://img.shields.io/badge/iTerm2-000000?style=for-the-badge&logo=iterm2&logoColor=white" />
-  <img src="https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white" />
-  <img src="https://img.shields.io/badge/Wrangler-FF6C37?style=for-the-badge&logo=cloudflare&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
-</p>
-
----
-
-<!-- ========== 项目核心架构图（Mermaid） ========== -->
-## 🏗️ 项目核心架构 · Architecture
-
-> 下图展示了 `CF-workers-netdiag` 在全球边缘节点中的工作流。
-
-```mermaid
-graph TD
-    User((🌐 用户访问)) -->|HTTP/WebSocket| Worker[⚡ Cloudflare Worker 边缘节点]
-    
-    subgraph Cloudflare 全球边缘网络
-        Worker -->|测速指令| Node1[🗼 北美节点]
-        Worker -->|测速指令| Node2[🗼 欧洲节点]
-        Worker -->|测速指令| Node3[🗼 亚太节点]
-        Worker -->|测速指令| Node4[🗼 南美节点]
-    end
-
-    Node1 -->|实时延迟数据| Agg[📊 数据聚合层]
-    Node2 -->|实时延迟数据| Agg
-    Node3 -->|实时延迟数据| Agg
-    Node4 -->|实时延迟数据| Agg
-    
-    Agg -->|WebSocket 推送| Frontend[🖥️ 前端 HLS.js / Chart.js]
-    Frontend -->|动态渲染| Chart[📈 多维度延迟折线图]
-    Frontend -->|状态展示| Status[📋 节点健康状态看板]
-    
-    style Worker fill:#F38020,stroke:#333,stroke-width:2px,color:#fff
-    style Frontend fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
-    style Chart fill:#2196F3,stroke:#333,stroke-width:2px,color:#fff
-```
-
----
-
-<!-- ========== 核心功能亮点 ========== -->
-## ✨ 功能矩阵 · Features
-
-| 模块 | 核心能力 | 技术实现 |
-| :--- | :--- | :--- |
-| 🚀 **极速测速** | 并行探测全球 10+ 边缘节点，延迟数据 < 200ms 返回 | Cloudflare Workers + 边缘函数 |
-| 📈 **实时图表** | 毫秒级动态曲线，支持拖拽缩放与多节点对比 | Chart.js + WebSocket 全双工 |
-| 🔔 **智能告警** | 延迟阈值自定义，异常节点自动高亮提醒 | 内置规则引擎（v2.5 规划中） |
-| 🌍 **全球覆盖** | 自动就近选择节点，真实模拟用户访问链路 | Cloudflare Anycast 网络 |
-| 🧩 **零成本部署** | 无需购买服务器，部署即用，按调用计费 | Wrangler + Free Tier |
-
----
-
-<!-- ========== 技术栈 ========== -->
-## 🛠️ 技术栈 · Tech Stack
-
-### ☁️ 基础设施与运行时
-![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
-
-### 🎨 前端与可视化
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
-![HLS.js](https://img.shields.io/badge/HLS.js-000000?style=for-the-badge&logo=hls&logoColor=white)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-
-### 🔧 开发者工具
-![Wrangler](https://img.shields.io/badge/Wrangler-FF6C37?style=for-the-badge&logo=cloudflare&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
-![NPM](https://img.shields.io/badge/NPM-CB3837?style=for-the-badge&logo=npm&logoColor=white)
-
----
-
-<!-- ========== 快速开始 ========== -->
-## 🚀 一键部署 & 本地运行
-
-想自己搭建一个？只需几步：
-
-```bash
-# 1. 克隆项目
-git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
-cd CF-workers-netdiag
-
-# 2. 安装依赖
-npm install
-
-# 3. 本地开发（热更新）
-npx wrangler dev
-
-# 4. 部署到全球边缘（需 Cloudflare 账号）
-npx wrangler login
-npx wrangler publish
-```
-
-> 💡 **提示**：部署后你会获得一个 `*.workers.dev` 域名，即刻拥有自己的全球延迟监控面板！
-
----
-
-<!-- ========== 环境变量配置 ========== -->
-## 🔧 环境变量配置 · Environment Variables
-
-为了正常运行，你需要在 Cloudflare Workers 中设置以下环境变量：
-
-| 变量名 | 说明 | 示例值 |
-| :--- | :--- | :--- |
-| `NODE_LIST` | 测速节点列表（JSON 数组） | `["node1.example.com", "node2.example.com"]` |
-| `REFRESH_INTERVAL` | 数据刷新间隔（毫秒） | `1000` |
-
-详细配置请参考项目中的 [`.env.example`](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/.env.example) 文件。
-
----
-
-<!-- ========== GitHub 数据墙 ========== -->
-## 📊 GitHub 数据墙
-
-<p align="center">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=radical&include_all_commits=true&count_private=true&hide_border=true" />
-  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=radical&langs_count=6&hide_border=true" />
-</p>
-
-<!-- 稳定贡献图（ghchart.rshah.org 在国内访问更好） -->
-<p align="center">
-  <img src="https://ghchart.rshah.org/BlueDriftHK?theme=gruvbox&border_radius=8" alt="GitHub Contributions Chart" />
-</p>
-
-<!-- 3D 贡献图（如果访问慢可以注释掉，保留上面那张） -->
-<p align="center">
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=react-dark&area=true&hide_border=true&bg_color=0d1117&color=F38020&line=F38020&point=FFFFFF" alt="GitHub Activity Graph" />
-</p>
-
-<!-- GitHub 成就奖杯 -->
-<p align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=BlueDriftHK&theme=radical&no-frame=true&row=2&column=4&margin-w=10&margin-h=10" alt="GitHub Trophies" />
-</p>
-
----
-
-<!-- ========== 我的开源贡献 ========== -->
-## 🏆 我的开源贡献 · Open Source Contributions
-
-虽然目前我的主要精力集中在 **[CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag)**，但我也会为其他感兴趣的项目贡献代码和想法。以下是我参与或发起的项目：
-
-| 项目 | 角色 | 状态 |
-| :--- | :--- | :--- |
-| [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | 作者 / 维护者 | 🔥 活跃开发中 |
-
-未来我计划参与更多边缘计算和网络工具的开源项目，敬请期待！
-
----
-
-<!-- ========== 最近在学/读 ========== -->
-## 📚 最近在学 · Currently Learning
-
-- 📖 **《HTTP/2 in Action》** —— 深入理解下一代网络协议
-- 🎥 **Cloudflare Workers 官方教程** —— 边缘计算最佳实践
-- 📝 **WebSocket 协议 RFC 6455** —— 夯实实时通信基础
-
----
-
-<!-- ========== 更新日志速览 ========== -->
-## 📰 近期更新 · Changelog
-
-| 日期 | 版本 | 更新亮点 |
-| :--- | :--- | :--- |
-| 2026-06-01 | **v2.4.1** | 🐛 修复极端弱网下 WebSocket 死循环重连 |
-| 2026-05-29 | **v2.4.0** | 🚀 优化断线重连机制，图表内存泄漏全面修复 |
-| 2026-05-20 | **v2.3.0** | 🌍 新增欧洲中部节点测速支持，界面毛玻璃效果 |
-| 2026-05-10 | **v2.2.0** | 💾 增加测速历史记录（IndexedDB 本地持久化） |
-| 2026-04-28 | **v2.1.0** | 🎉 首个公开版本发布，基础测速与双端适配 |
-
-> 📌 完整变更记录请查阅：[CHANGELOG.md](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md)
-
----
-
-<!-- ========== 贡献指南 ========== -->
-## 🤝 共建生态 · Contribution
-
-> **“独行快，众行远。”** 欢迎所有形式的贡献！
-
-1. **Fork** 本仓库并创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-2. **提交** 你的改动 (`git commit -m '✨ feat: 增加某炫酷功能'`)
-3. **推送** 到远程 (`git push origin feature/AmazingFeature`)
-4. 开启一个 **Pull Request**，描述你的改动与测试情况。
-
-### 📝 Commit 规范
-为了保持日志清晰，请遵循以下前缀：
-
-| 类型 | 图标 | 说明 |
-| :--- | :--- | :--- |
-| `feat` | ✨ | 新增功能 |
-| `fix` | 🐛 | 修复 Bug |
-| `docs` | 📚 | 文档更新 |
-| `style` | 💄 | 代码格式调整 |
-| `refactor` | ♻️ | 重构（不改变功能） |
-| `perf` | 🚀 | 性能优化 |
-| `test` | ✅ | 增加测试 |
-| `chore` | 🔧 | 构建/工具配置变动 |
-
----
-
-<!-- ========== 联系与支持 ========== -->
-## 📫 连接我 · Connect
-
-<p align="left">
-  <a href="mailto:asiacomk@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
-  <a href="https://twitter.com/BlueDriftHK"><img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" /></a>
-  <a href="https://t.me/BlueDriftHK"><img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" /></a>
-  <a href="https://github.com/BlueDriftHK"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" /></a>
-</p>
-
-> 或者直接在 GitHub Issues 中 @我，秒回！
-
----
-
-## 💖 支持项目
-
-- ⭐ **Star** 这个仓库 —— 让更多开发者发现它。
-- 🐛 提交 **Issue** —— 反馈问题或提出脑洞需求。
-- ☕ **赞助** —— 点击 [GitHub Sponsors](https://github.com/sponsors/BlueDriftHK) 支持持续迭代。
-
-所有代码遵循 **GNU GPL v3.0** 开源协议，自由使用，共同进步。
-
----
-
-<!-- ========== 炫酷页脚 ========== -->
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=F38020&height=100&section=footer" />
-</p>
-
-<p align="center">
-  <i>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊</i>
-  <br />
-  <i>🔮 保持好奇，保持创新。</i>
-</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlueDriftHK · 边缘计算架构师</title>
+
+    <!-- ====== 字体与图标库 ====== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* ====== 全局重置 & 变量 ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #F38020;
+            --primary-dark: #d96e1a;
+            --primary-light: #ffa04a;
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --radius: 12px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            padding: 0 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 0 60px;
+        }
+
+        /* ====== 滚动条 ====== */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* ====== 链接 ====== */
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        a:hover {
+            color: var(--primary-light);
+        }
+
+        /* ====== 头部 ====== */
+        .header {
+            text-align: center;
+            padding: 50px 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 0 40px rgba(243, 128, 32, 0.15);
+            transition: var(--transition);
+        }
+        .avatar:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 60px rgba(243, 128, 32, 0.25);
+        }
+
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .header h1 a {
+            color: var(--primary);
+        }
+        .header h1 a:hover {
+            color: var(--primary-light);
+        }
+
+        /* 动态标签行 —— 用徽章模拟 */
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 16px 0 20px;
+        }
+        .badge-row .badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .badge-row .badge i {
+            margin-right: 6px;
+        }
+        .badge-row .badge:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        /* 统计徽章行（访客计数器） */
+        .stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .stats-row .stat-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .stats-row .stat-item i {
+            color: var(--primary);
+        }
+        .stats-row .stat-item .num {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ====== 项目状态徽章行 ====== */
+        .project-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 24px 0 10px;
+        }
+        .project-badges .pbadge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .project-badges .pbadge i {
+            font-size: 0.9rem;
+        }
+        .project-badges .pbadge:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+        .project-badges .pbadge .label {
+            color: var(--text-secondary);
+        }
+
+        /* ====== 通用卡片 ====== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            margin-bottom: 32px;
+            transition: var(--transition);
+        }
+        .card:hover {
+            border-color: rgba(243, 128, 32, 0.3);
+        }
+
+        .card h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card h2 i {
+            color: var(--primary);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0 10px;
+            color: var(--text-primary);
+        }
+
+        .card p,
+        .card li {
+            color: var(--text-secondary);
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .card ul li {
+            padding: 6px 0 6px 28px;
+            position: relative;
+        }
+        .card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 4px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ====== 架构图（Mermaid 风格纯 CSS 模拟） ====== */
+        .mermaid-box {
+            background: var(--bg-dark);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            overflow-x: auto;
+            font-family: 'Inter', monospace;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            margin: 12px 0 4px;
+        }
+        .mermaid-box pre {
+            color: var(--text-secondary);
+            white-space: pre;
+            line-height: 1.9;
+        }
+        .mermaid-box .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .mermaid-box .node-label {
+            color: #58a6ff;
+        }
+        .mermaid-box .arrow {
+            color: var(--text-secondary);
+        }
+
+        /* ====== 功能矩阵表格 ====== */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .feature-table th,
+        .feature-table td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .feature-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-dark);
+        }
+        .feature-table tr:hover td {
+            background: rgba(243, 128, 32, 0.04);
+        }
+        .feature-table td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ====== 技术栈徽章 ====== */
+        .tech-group {
+            margin-bottom: 18px;
+        }
+        .tech-group .group-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tech-stack .tech {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .tech-stack .tech i {
+            font-size: 1rem;
+        }
+        .tech-stack .tech:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        /* ====== 代码块 ====== */
+        .code-block {
+            background: var(--bg-dark);
+            border-radius: 8px;
+            padding: 18px 22px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            margin: 10px 0;
+        }
+        .code-block .cmd {
+            color: var(--primary);
+        }
+        .code-block .comment {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        /* ====== 更新日志表格 ====== */
+        .changelog-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+        .changelog-table th,
+        .changelog-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .changelog-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-dark);
+        }
+        .changelog-table .version {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .changelog-table .date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* ====== 贡献规范表格 ====== */
+        .commit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .commit-table th,
+        .commit-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .commit-table th {
+            font-weight: 600;
+            color: var(--text-primary);
+            background: var(--bg-dark);
+        }
+
+        /* ====== 社交链接 ====== */
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border-radius: 24px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .social-links a i {
+            font-size: 1.1rem;
+        }
+        .social-links a:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        /* ====== 页脚 ====== */
+        .footer {
+            text-align: center;
+            padding: 40px 0 20px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .footer .wave {
+            display: block;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0,30 C300,0 600,60 900,30 C1050,15 1150,30 1200,30 L1200,60 L0,60Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath d='M0,30 C300,0 600,60 900,30 C1050,15 1150,30 1200,30 L1200,60 L0,60Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+        .footer .quote {
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* ====== 响应式 ====== */
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px 0 40px;
+            }
+            .card {
+                padding: 20px 18px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .feature-table th,
+            .feature-table td,
+            .changelog-table th,
+            .changelog-table td,
+            .commit-table th,
+            .commit-table td {
+                padding: 10px 10px;
+                font-size: 0.82rem;
+            }
+            .badge-row .badge {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
+            .project-badges .pbadge {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
+            .social-links a {
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+            .mermaid-box {
+                font-size: 0.7rem;
+                padding: 16px 12px;
+            }
+            .code-block {
+                font-size: 0.75rem;
+                padding: 14px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 30px 0 24px;
+            }
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .stats-row .stat-item {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
+            .card h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ============================================================ -->
+        <!-- 头部 -->
+        <!-- ============================================================ -->
+        <header class="header">
+            <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像" />
+
+            <h1>👋 你好，我是 <a href="https://github.com/BlueDriftHK" target="_blank">BlueDriftHK</a></h1>
+
+            <!-- 动态标签（静态徽章模拟） -->
+            <div class="badge-row">
+                <span class="badge"><i class="fas fa-bolt" style="color:var(--primary);"></i> Edge Computing Builder</span>
+                <span class="badge"><i class="fas fa-rocket" style="color:#5865F2;"></i> Cloudflare Workers Expert</span>
+                <span class="badge"><i class="fas fa-chart-line" style="color:#4CAF50;"></i> Network Diagnostics Developer</span>
+                <span class="badge"><i class="fas fa-fire" style="color:#FF5722;"></i> Open Source Enthusiast</span>
+                <span class="badge"><i class="fas fa-globe" style="color:var(--primary);"></i> Building the Future of Web</span>
+            </div>
+
+            <!-- 访客计数器 -->
+            <div class="stats-row">
+                <span class="stat-item">
+                    <i class="fas fa-eye"></i>
+                    <span class="num">—</span> Profile Views
+                </span>
+                <!-- 粉丝 & 星标已移除（按你的要求） -->
+            </div>
+
+            <!-- 项目实时状态徽章 -->
+            <div class="project-badges">
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
+                    <span class="pbadge"><i class="fas fa-star" style="color:var(--primary);"></i> <span class="label">Stars</span> 13</span>
+                </a>
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
+                    <span class="pbadge"><i class="fas fa-code-fork" style="color:orange;"></i> <span class="label">Forks</span> —</span>
+                </a>
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/issues" target="_blank">
+                    <span class="pbadge"><i class="fas fa-exclamation-circle" style="color:green;"></i> <span class="label">Issues</span> 0 Open</span>
+                </a>
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
+                    <span class="pbadge"><i class="fas fa-clock" style="color:purple;"></i> <span class="label">Last Commit</span> Today</span>
+                </a>
+                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/LICENSE" target="_blank">
+                    <span class="pbadge"><i class="fas fa-balance-scale" style="color:blue;"></i> <span class="label">License</span> GPL-3.0</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- ============================================================ -->
+        <!-- 关于我 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-user-astronaut"></i> 关于我 · About Me</h2>
+            <p style="font-size:1.05rem; margin-bottom:14px;">
+                我是一名 <strong style="color:var(--text-primary);">边缘计算架构师</strong> 与 <strong style="color:var(--text-primary);">全栈工具开发者</strong>，
+                热衷于利用 Cloudflare Workers 将复杂的网络诊断能力封装成开箱即用的轻量级工具。
+            </p>
+            <ul>
+                <li><strong style="color:var(--text-primary);">当前专注：</strong>全力打磨主力项目 <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank"><strong>CF-workers-netdiag</strong></a> —— 基于 WebSocket + HLS.js 的毫秒级全球网络延迟透视仪。</li>
+                <li><strong style="color:var(--text-primary);">技术探索：</strong>深入 HLS 流媒体协议、边缘节点智能路由、实时数据可视化。</li>
+                <li><strong style="color:var(--text-primary);">项目愿景：</strong>让每一位开发者都能在 5 分钟内拥有自己的全球网络质量监控面板。</li>
+                <li><strong style="color:var(--text-primary);">极客信条：</strong>代码即艺术，性能即正义。</li>
+                <li><strong style="color:var(--text-primary);">技术话题：</strong>边缘计算、Serverless、实时通信、开源生态。</li>
+            </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 日常开发环境 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-laptop-code"></i> 日常开发环境 · Daily Toolchain</h2>
+            <div class="tech-stack">
+                <span class="tech"><i class="fas fa-code" style="color:#007ACC;"></i> VS Code</span>
+                <span class="tech"><i class="fas fa-code" style="color:#000;"></i> WebStorm</span>
+                <span class="tech"><i class="fas fa-terminal" style="color:#000;"></i> iTerm2</span>
+                <span class="tech"><i class="fab fa-apple" style="color:#fff;"></i> macOS</span>
+                <span class="tech"><i class="fas fa-cloud" style="color:#FF6C37;"></i> Wrangler</span>
+                <span class="tech"><i class="fab fa-docker" style="color:#2496ED;"></i> Docker</span>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 项目架构图（Mermaid 风格模拟） -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-project-diagram"></i> 项目核心架构 · Architecture</h2>
+            <p style="color:var(--text-secondary); margin-bottom:12px;">下图展示了 <code>CF-workers-netdiag</code> 在全球边缘节点中的工作流。</p>
+
+            <div class="mermaid-box">
+                <pre>
+<span class="highlight">用户访问</span> <span class="arrow">──►</span> <span class="node-label">[⚡ Cloudflare Worker 边缘节点]</span>
+                          │
+                          ▼
+    ┌─────────────────────────────────────────────┐
+    │        Cloudflare 全球边缘网络               │
+    │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+    │  │ 🗼 北美节点 │  │ 🗼 欧洲节点 │  │ 🗼 亚太节点 │  │
+    │  └────┬─────┘  └────┬─────┘  └────┬─────┘  │
+    │       │             │             │         │
+    │       └─────────────┼─────────────┘         │
+    │                     ▼                       │
+    │          ┌─────────────────────┐            │
+    │          │  📊 数据聚合层       │            │
+    │          └──────────┬──────────┘            │
+    └─────────────────────┼───────────────────────┘
+                          ▼
+              <span class="node-label">[🖥️ 前端 HLS.js / Chart.js]</span>
+                   ┌──────────┴──────────┐
+                   ▼                     ▼
+        <span class="node-label">[📈 多维度延迟折线图]</span>   <span class="node-label">[📋 节点健康状态看板]</span>
+                </pre>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:8px;">
+                <i class="fas fa-arrow-right" style="color:var(--primary);"></i> 用户通过 HTTP/WebSocket 访问 Worker，Worker 并行向全球多个边缘节点发起测速，聚合后通过 WebSocket 推送至前端渲染。
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 功能矩阵 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-list-check"></i> 功能矩阵 · Features</h2>
+            <table class="feature-table">
+                <thead>
+                    <tr>
+                        <th>模块</th>
+                        <th>核心能力</th>
+                        <th>技术实现</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🚀 极速测速</td>
+                        <td>并行探测全球 10+ 边缘节点，延迟数据 &lt; 200ms 返回</td>
+                        <td>Cloudflare Workers + 边缘函数</td>
+                    </tr>
+                    <tr>
+                        <td>📈 实时图表</td>
+                        <td>毫秒级动态曲线，支持拖拽缩放与多节点对比</td>
+                        <td>Chart.js + WebSocket 全双工</td>
+                    </tr>
+                    <tr>
+                        <td>🔔 智能告警</td>
+                        <td>延迟阈值自定义，异常节点自动高亮提醒</td>
+                        <td>内置规则引擎（v2.5 规划中）</td>
+                    </tr>
+                    <tr>
+                        <td>🌍 全球覆盖</td>
+                        <td>自动就近选择节点，真实模拟用户访问链路</td>
+                        <td>Cloudflare Anycast 网络</td>
+                    </tr>
+                    <tr>
+                        <td>🧩 零成本部署</td>
+                        <td>无需购买服务器，部署即用，按调用计费</td>
+                        <td>Wrangler + Free Tier</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 技术栈 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-cubes"></i> 技术栈 · Tech Stack</h2>
+
+            <div class="tech-group">
+                <span class="group-title">☁️ 基础设施与运行时</span>
+                <div class="tech-stack">
+                    <span class="tech"><i class="fas fa-cloud" style="color:var(--primary);"></i> Cloudflare Workers</span>
+                    <span class="tech"><i class="fab fa-js" style="color:#F7DF1E;"></i> JavaScript ES6+</span>
+                    <span class="tech"><i class="fas fa-exchange-alt" style="color:#010101;"></i> WebSocket</span>
+                </div>
+            </div>
+
+            <div class="tech-group">
+                <span class="group-title">🎨 前端与可视化</span>
+                <div class="tech-stack">
+                    <span class="tech"><i class="fas fa-chart-pie" style="color:#FF6384;"></i> Chart.js</span>
+                    <span class="tech"><i class="fas fa-video" style="color:#000;"></i> HLS.js</span>
+                    <span class="tech"><i class="fab fa-html5" style="color:#E34F26;"></i> HTML5</span>
+                    <span class="tech"><i class="fab fa-css3-alt" style="color:#1572B6;"></i> CSS3</span>
+                </div>
+            </div>
+
+            <div class="tech-group">
+                <span class="group-title">🔧 开发者工具</span>
+                <div class="tech-stack">
+                    <span class="tech"><i class="fas fa-cloud-upload-alt" style="color:#FF6C37;"></i> Wrangler</span>
+                    <span class="tech"><i class="fab fa-git-alt" style="color:#F05032;"></i> Git</span>
+                    <span class="tech"><i class="fab fa-npm" style="color:#CB3837;"></i> NPM</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 快速开始 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-rocket"></i> 一键部署 &amp; 本地运行</h2>
+            <p style="color:var(--text-secondary); margin-bottom:10px;">想自己搭建一个？只需几步：</p>
+            <div class="code-block">
+                <span class="comment"># 1. 克隆项目</span><br />
+                <span class="cmd">git clone</span> https://github.com/BlueDriftHK/CF-workers-netdiag.git<br />
+                <span class="cmd">cd</span> CF-workers-netdiag<br /><br />
+
+                <span class="comment"># 2. 安装依赖</span><br />
+                <span class="cmd">npm install</span><br /><br />
+
+                <span class="comment"># 3. 本地开发（热更新）</span><br />
+                <span class="cmd">npx wrangler dev</span><br /><br />
+
+                <span class="comment"># 4. 部署到全球边缘（需 Cloudflare 账号）</span><br />
+                <span class="cmd">npx wrangler login</span><br />
+                <span class="cmd">npx wrangler publish</span>
+            </div>
+            <p style="color:var(--text-secondary); font-size:0.92rem; margin-top:10px;">
+                💡 部署后你会获得一个 <code>*.workers.dev</code> 域名，即刻拥有自己的全球延迟监控面板！
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 环境变量 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-sliders-h"></i> 环境变量配置 · Environment Variables</h2>
+            <p style="color:var(--text-secondary); margin-bottom:12px;">在 Cloudflare Workers 中设置以下变量：</p>
+            <table class="feature-table">
+                <thead>
+                    <tr>
+                        <th>变量名</th>
+                        <th>说明</th>
+                        <th>示例值</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>NODE_LIST</code></td>
+                        <td>测速节点列表（JSON 数组）</td>
+                        <td><code>["node1.example.com", "node2.example.com"]</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>REFRESH_INTERVAL</code></td>
+                        <td>数据刷新间隔（毫秒）</td>
+                        <td><code>1000</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:8px;">
+                <i class="fas fa-file-alt" style="color:var(--primary);"></i>
+                详细配置参考 <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/.env.example" target="_blank">.env.example</a>
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 更新日志 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-history"></i> 近期更新 · Changelog</h2>
+            <table class="changelog-table">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>版本</th>
+                        <th>更新亮点</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="date">2026-06-01</td>
+                        <td class="version">v2.4.1</td>
+                        <td>🐛 修复极端弱网下 WebSocket 死循环重连</td>
+                    </tr>
+                    <tr>
+                        <td class="date">2026-05-29</td>
+                        <td class="version">v2.4.0</td>
+                        <td>🚀 优化断线重连机制，图表内存泄漏全面修复</td>
+                    </tr>
+                    <tr>
+                        <td class="date">2026-05-20</td>
+                        <td class="version">v2.3.0</td>
+                        <td>🌍 新增欧洲中部节点测速支持，界面毛玻璃效果</td>
+                    </tr>
+                    <tr>
+                        <td class="date">2026-05-10</td>
+                        <td class="version">v2.2.0</td>
+                        <td>💾 增加测速历史记录（IndexedDB 本地持久化）</td>
+                    </tr>
+                    <tr>
+                        <td class="date">2026-04-28</td>
+                        <td class="version">v2.1.0</td>
+                        <td>🎉 首个公开版本发布，基础测速与双端适配</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:10px;">
+                📌 完整变更记录：<a href="https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md" target="_blank">CHANGELOG.md</a>
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 贡献指南 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-handshake"></i> 共建生态 · Contribution</h2>
+            <p style="color:var(--text-secondary); font-style:italic; margin-bottom:14px;">“独行快，众行远。” 欢迎所有形式的贡献！</p>
+            <ol style="color:var(--text-secondary); padding-left:22px; margin-bottom:18px;">
+                <li><strong style="color:var(--text-primary);">Fork</strong> 本仓库并创建特性分支 (<code>git checkout -b feature/AmazingFeature</code>)</li>
+                <li><strong style="color:var(--text-primary);">提交</strong> 改动 (<code>git commit -m '✨ feat: 增加某炫酷功能'</code>)</li>
+                <li><strong style="color:var(--text-primary);">推送</strong> 到远程 (<code>git push origin feature/AmazingFeature</code>)</li>
+                <li>开启一个 <strong style="color:var(--text-primary);">Pull Request</strong>，描述改动与测试情况</li>
+            </ol>
+
+            <h3 style="margin-top:0;">📝 Commit 规范</h3>
+            <table class="commit-table">
+                <thead>
+                    <tr>
+                        <th>类型</th>
+                        <th>图标</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>feat</code></td><td>✨</td><td>新增功能</td></tr>
+                    <tr><td><code>fix</code></td><td>🐛</td><td>修复 Bug</td></tr>
+                    <tr><td><code>docs</code></td><td>📚</td><td>文档更新</td></tr>
+                    <tr><td><code>style</code></td><td>💄</td><td>代码格式调整</td></tr>
+                    <tr><td><code>refactor</code></td><td>♻️</td><td>重构（不改变功能）</td></tr>
+                    <tr><td><code>perf</code></td><td>🚀</td><td>性能优化</td></tr>
+                    <tr><td><code>test</code></td><td>✅</td><td>增加测试</td></tr>
+                    <tr><td><code>chore</code></td><td>🔧</td><td>构建/工具配置变动</td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 联系与支持 -->
+        <!-- ============================================================ -->
+        <section class="card">
+            <h2><i class="fas fa-paper-plane"></i> 连接我 · Connect</h2>
+            <div class="social-links">
+                <a href="mailto:asiacomk@gmail.com" target="_blank"><i class="fas fa-envelope" style="color:#D14836;"></i> Email</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank"><i class="fab fa-twitter" style="color:#1DA1F2;"></i> Twitter</a>
+                <a href="https://t.me/BlueDriftHK" target="_blank"><i class="fab fa-telegram-plane" style="color:#26A5E4;"></i> Telegram</a>
+                <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github" style="color:#fff;"></i> GitHub</a>
+            </div>
+            <p style="color:var(--text-secondary); margin-top:12px;">或者直接在 GitHub Issues 中 @我，秒回！</p>
+
+            <hr style="border-color:var(--border-color); margin:24px 0;" />
+
+            <h2 style="margin-bottom:8px;"><i class="fas fa-heart" style="color:#e74c3c;"></i> 支持项目</h2>
+            <ul>
+                <li>⭐ <strong style="color:var(--text-primary);">Star</strong> 这个仓库 —— 让更多开发者发现它。</li>
+                <li>🐛 提交 <strong style="color:var(--text-primary);">Issue</strong> —— 反馈问题或提出脑洞需求。</li>
+                <li>☕ <strong style="color:var(--text-primary);">赞助</strong> —— 点击 <a href="https://github.com/sponsors/BlueDriftHK" target="_blank">GitHub Sponsors</a> 支持持续迭代。</li>
+            </ul>
+            <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:10px;">
+                所有代码遵循 <strong style="color:var(--text-primary);">GNU GPL v3.0</strong> 开源协议。
+            </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 页脚 -->
+        <!-- ============================================================ -->
+        <footer class="footer">
+            <div class="wave"></div>
+            <p>
+                ⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊
+                <br />
+                <span class="quote">🔮 保持好奇，保持创新。</span>
+            </p>
+            <p style="font-size:0.8rem; margin-top:12px; color:var(--text-secondary);">
+                &copy; 2026 BlueDriftHK · 基于 Cloudflare Workers 构建
+            </p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
