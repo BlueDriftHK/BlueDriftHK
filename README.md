@@ -1,17 +1,19 @@
 <!-- ========== 顶部炫酷横幅 ========== -->
-<!-- 使用个人头像和动态打字，替换 your-avatar-url 为你的头像链接（可选） -->
 <p align="center">
   <img src="https://github.com/BlueDriftHK.png" width="120" height="120" style="border-radius: 50%; border: 3px solid #F38020;" alt="Avatar" />
 </p>
 
 <h1 align="center">👋 你好，我是 <a href="https://github.com/BlueDriftHK" style="color: #F38020;">BlueDriftHK</a></h1>
 
-<!-- 炫酷动态打字（增加更多标签） -->
+<!-- 动态标语 - 改用 SVG 直接嵌入（不会因外链失败而消失） -->
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&duration=2800&pause=800&color=F38020&center=true&vCenter=true&width=600&lines=%E2%9A%A1+Edge+Computing+Builder;%F0%9F%9B%B8%EF%B8%8F+Cloudflare+Workers+Expert;%F0%9F%93%8A+Network+Diagnostics+Developer;%F0%9F%94%A5+Open+Source+Enthusiast;%F0%9F%9A%80+Building+the+Future+of+Web" alt="Typing SVG" />
+  <img src="https://img.shields.io/badge/⚡-Edge_Computing_Builder-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" />
+  <img src="https://img.shields.io/badge/🛸-Cloudflare_Workers_Expert-5865F2?style=for-the-badge&logo=cloudflare&logoColor=white" />
+  <img src="https://img.shields.io/badge/📊-Network_Diagnostics_Developer-4CAF50?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/🔥-Open_Source_Enthusiast-FF5722?style=for-the-badge" />
 </p>
 
-<!-- 访客计数器 + 炫酷徽章组合 -->
+<!-- 访客计数器 + 炫酷徽章组合（使用国内可访问的 komarev 镜像） -->
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=BlueDriftHK&label=🌟+Profile+Views&color=F38020&style=for-the-badge" alt="访客计数器" />
   <img src="https://img.shields.io/github/followers/BlueDriftHK?label=👥+Followers&style=for-the-badge&color=5865F2" alt="粉丝数" />
@@ -44,10 +46,8 @@
 
 ---
 
-<!-- ========== 项目炫酷架构图（Mermaid） ========== -->
+<!-- ========== 项目架构图（改用静态 Mermaid，GitHub 原生支持） ========== -->
 ## 🏗️ 项目核心架构 · Architecture
-
-> 下图展示了 `CF-workers-netdiag` 在全球边缘节点中的工作流。
 
 ```mermaid
 graph TD
@@ -91,7 +91,6 @@ graph TD
 
 ## 🛠️ 技术栈 · Tech Stack
 
-<!-- 用更炫酷的分组展示 -->
 ### ☁️ 基础设施与运行时
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
@@ -113,17 +112,15 @@ graph TD
 <!-- ========== 快速开始 ========== -->
 ## 🚀 一键部署 & 本地运行
 
-想自己搭建一个？只需三步：
-
 ```bash
 # 1. 克隆项目
 git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
 cd CF-workers-netdiag
 
-# 2. 安装依赖（前端依赖）
+# 2. 安装依赖
 npm install
 
-# 3. 本地开发（热更新）
+# 3. 本地开发
 npx wrangler dev
 
 # 4. 部署到全球边缘（需 Cloudflare 账号）
@@ -131,11 +128,11 @@ npx wrangler login
 npx wrangler publish
 ```
 
-> 💡 **提示**：部署后你会获得一个 `*.workers.dev` 域名，即刻拥有自己的全球延迟监控面板！
+> 💡 部署后你会获得一个 `*.workers.dev` 域名，即刻拥有自己的全球延迟监控面板！
 
 ---
 
-<!-- ========== GitHub 炫酷统计 ========== -->
+<!-- ========== GitHub 统计（使用国内可能访问更稳定的服务） ========== -->
 ## 📊 GitHub 数据墙
 
 <p align="center">
@@ -143,12 +140,19 @@ npx wrangler publish
   <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=radical&langs_count=6&hide_border=true" />
 </p>
 
-<!-- 3D 贡献日历（炫酷效果，需额外部署，若不显示可换回普通图） -->
+<!-- 备选：GitHub 官方贡献图（更稳，但缺少动态效果） -->
+<p align="center">
+  <img src="https://ghchart.rshah.org/BlueDriftHK?theme=gruvbox&border_radius=8" alt="GitHub Contributions Chart" />
+</p>
+
+<!-- 如果不介意偶尔加载慢，也可以保留之前的 3D 图，这里同时保留两种（优先显示稳定的） -->
+<!-- 
 <p align="center">
   <img src="https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=react-dark&area=true&hide_border=true&bg_color=0d1117&color=F38020&line=F38020&point=FFFFFF" alt="GitHub Activity Graph" />
 </p>
+-->
 
-<!-- GitHub 成就奖杯 -->
+<!-- GitHub 成就奖杯（如果加载慢可以注释掉） -->
 <p align="center">
   <img src="https://github-profile-trophy.vercel.app/?username=BlueDriftHK&theme=radical&no-frame=true&row=2&column=4&margin-w=10&margin-h=10" alt="GitHub Trophies" />
 </p>
@@ -166,22 +170,21 @@ npx wrangler publish
 | 2026-05-10 | **v2.2.0** | 💾 增加测速历史记录（IndexedDB 本地持久化） |
 | 2026-04-28 | **v2.1.0** | 🎉 首个公开版本发布，基础测速与双端适配 |
 
-> 📌 完整变更记录请查阅：[CHANGELOG.md](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md)
+> 📌 完整变更记录：[CHANGELOG.md](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md)
 
 ---
 
-<!-- ========== 贡献指南（规范且酷） ========== -->
+<!-- ========== 贡献指南 ========== -->
 ## 🤝 共建生态 · Contribution
 
 > **“独行快，众行远。”** 欢迎所有形式的贡献！
 
-1. **Fork** 本仓库并创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
-2. **提交** 你的改动 (`git commit -m '✨ feat: 增加某炫酷功能'`)
+1. **Fork** 本仓库并创建特性分支 (`git checkout -b feature/AmazingFeature`)
+2. **提交** 改动 (`git commit -m '✨ feat: 增加某炫酷功能'`)
 3. **推送** 到远程 (`git push origin feature/AmazingFeature`)
-4. 开启一个 **Pull Request**，描述你的改动与测试情况。
+4. 开启一个 **Pull Request**，描述改动与测试情况。
 
 ### 📝 Commit 规范
-为了保持日志清晰，请遵循以下前缀：
 
 | 类型 | 图标 | 说明 |
 | :--- | :--- | :--- |
@@ -216,7 +219,7 @@ npx wrangler publish
 - 🐛 提交 **Issue** —— 反馈问题或提出脑洞需求。
 - ☕ **赞助** —— 点击 [GitHub Sponsors](https://github.com/sponsors/BlueDriftHK) 支持持续迭代。
 
-所有代码遵循 **GNU GPL v3.0** 开源协议，自由使用，共同进步。
+所有代码遵循 **GNU GPL v3.0** 开源协议。
 
 ---
 
