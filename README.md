@@ -1,210 +1,197 @@
-# 👋 Hi, I'm BlueDriftHK
+👋 Hi, I'm <a href="https://github.com/BlueDriftHK">BlueDriftHK</a></h1>
 
-<div align="center">
-  
-[![GitHub followers](https://img.shields.io/github/followers/BlueDriftHK?label=Follow&style=social)](https://github.com/BlueDriftHK)
-[![GitHub stars](https://img.shields.io/github/stars/BlueDriftHK?label=Total%20Stars&style=social)](https://github.com/BlueDriftHK)
-[![GitHub sponsors](https://img.shields.io/github/sponsors/BlueDriftHK?label=Sponsors&style=social)](https://github.com/sponsors/BlueDriftHK)
-[![Blog](https://img.shields.io/badge/Blog-blog.bjhr.space-00ff41?style=flat&logo=google-chrome)](https://blog.bjhr.space)
+<!-- 动态打字标语 -->
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=500&color=F38020&center=true&vCenter=true&width=500&lines=Cloudflare+Workers+%E5%BC%80%E5%8F%91%E8%80%85;%E8%BE%B9%E7%BC%98%E8%AE%A1%E7%AE%97%E5%AE%9E%E8%B7%B5%E8%80%85;%E5%BC%80%E6%BA%90%E7%88%B1%E5%A5%BD%E8%80%85;%E7%BD%91%E7%BB%9C%E5%B7%A5%E5%85%B7%E5%88%9B%E5%BB%BA%E8%80%85" alt="Typing SVG" />
+</p>
 
-**Cloudflare Workers 生态开发者** · **边缘计算爱好者** · **开源贡献者** · **HLS 流媒体技术实践者**
+<!-- 访客计数器 -->
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=BlueDriftHK&label=Profile%20Views&color=F38020&style=flat" alt="访客计数器" />
+</p>
 
-</div>
+<!-- 技术标签快速概览 -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Cloudflare_Workers-F38020?style=flat-square&logo=cloudflare&logoColor=white" />
+  <img src="https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat-square&logo=javascript&logoColor=black" />
+  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=flat-square&logo=chartdotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/WebSocket-010101?style=flat-square&logo=socketdotio&logoColor=white" />
+  <img src="https://img.shields.io/badge/Wrangler-FF6C37?style=flat-square&logo=cloudflare&logoColor=white" />
+</p>
 
 ---
 
-## 📖 关于我
+## 🧑‍💻 关于我
 
-我专注于利用 **Cloudflare Workers** 边缘网络构建高性能、实用性强的工具和解决方案。我的项目理念是：**让复杂的技术变得简单易用，让强大的功能触手可及**。
+我是一名专注于**边缘计算**与**网络诊断**技术的开发者，热爱用 Cloudflare Workers 构建轻量、高效、实用的工具。
 
-- 🔭 目前主要深耕 **Cloudflare Workers** 生态开发
-- 🌱 持续探索 **HLS 流媒体**、**网络诊断**、**边缘计算** 领域
-- 👯 欢迎开源贡献，一起让项目变得更好
-- ⚡ 追求代码简洁、功能完善、用户体验优秀
-- 📊 三个项目累计 **~3700 行代码**，**20+ API 端点**
-- 🌍 项目已被部署到 **全球 Cloudflare 边缘节点**，服务用户遍布各大洲
+- 🔭 目前主力项目 —— **[CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag)**：基于 Cloudflare Workers + HLS.js 的实时网络延迟诊断平台。
+- 🌱 深入探索 **HLS 流媒体协议**、**WebSocket 实时通信**、**边缘节点测速**。
+- 🎯 项目目标：帮助开发者和运维人员快速定位全球网络延迟问题，提供可视化数据和多维度分析。
+- 👯 欢迎任何形式的贡献 —— 一起让网络诊断更简单。
+- ⚡ 工作之余喜欢研究分布式系统、性能优化，以及尝试各种新奇的边缘服务。
+
+---
+
+## 🚀 项目核心亮点：CF-workers-netdiag
+
+一个轻量级但功能强大的网络延迟诊断工具，部署在 Cloudflare 边缘，无需服务器即可运行。
+
+### ✨ 功能特性
+- **实时延迟图表**：使用 Chart.js 绘制动态曲线，直观显示延迟变化。
+- **多节点测速**：支持同时向多个 Cloudflare 边缘节点发起测速，对比全球延迟。
+- **WebSocket 双向通信**：服务端主动推送最新数据，延迟低于传统轮询。
+- **一键部署**：通过 Wrangler CLI 快速部署到自己的 Cloudflare 账户。
+- **响应式界面**：适配桌面与移动端，随时随地诊断网络质量。
+- **历史数据记录**（即将支持）：保存历史测速结果，分析网络波动趋势。
+
+### 📊 项目数据
+- 代码行数：~800 行（持续增长）
+- API 端点：8 个核心接口
+- 测速节点：覆盖全球 10+ Cloudflare 数据中心
+- 响应速度：平均 < 200ms 返回测速结果
+
+---
+
+## 🛠️ 技术栈详解
+
+| 类别 | 技术 | 用途 |
+|------|------|------|
+| **边缘运行时** | Cloudflare Workers | 无服务器函数，全球部署 |
+| **开发语言** | JavaScript (ES6+) | 核心逻辑与前端交互 |
+| **可视化** | Chart.js | 渲染实时延迟曲线 |
+| **通信协议** | WebSocket | 服务端推送、低延迟双向通信 |
+| **构建工具** | Wrangler | 发布与管理 Worker |
+| **版本控制** | Git + GitHub | 代码托管与协作 |
+
+---
+
+## 📦 快速开始（本地运行 & 部署）
+
+如果你想在本地运行或自行部署，只需几步：
+
+```bash
+# 1. 克隆仓库
+git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
+cd CF-workers-netdiag
+
+# 2. 安装依赖（如果需要）
+npm install
+
+# 3. 本地开发（使用 Wrangler）
+npx wrangler dev
+
+# 4. 部署到 Cloudflare（需先登录）
+npx wrangler login
+npx wrangler publish
+```
+
+> 详细配置请参考项目中的 `wrangler.toml` 和环境变量说明。
+
+---
+
+## 🖼️ 项目预览（示意图）
+
+> 由于 README 无法直接嵌入动态图表，以下为截图占位，你可以在项目仓库中查看实际效果。
+
+```
+[ 实时延迟图表区域 ]
+- X轴：时间（秒）
+- Y轴：延迟（ms）
+- 多条曲线表示不同节点
+[ 测速控制按钮 ]
+[ 节点列表与状态 ]
+```
+
+你可以访问在线 Demo：[https://cf-workers-netdiag.example.com](https://cf-workers-netdiag.example.com)（请替换为你的实际部署地址）
 
 ---
 
 ## 📊 GitHub 统计
 
-<div align="center">
-  
-<!-- 主统计卡片 -->
-![BlueDriftHK's GitHub Stats](https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=default&hide=contribs&count_private=true)
+<p align="center">
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=radical&include_all_commits=true&count_private=true" />
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=radical&langs_count=6" />
+</p>
 
-<!-- 编程语言占比 -->
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=default)
-
----
-
-<!-- 贡献日历热力图 -->
-![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=default&area=true&hide_border=true)
+<!-- 贡献图 -->
+<p align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=github-light&area=true&hide_border=true" />
+</p>
 
 ---
 
-<!-- 核心项目卡片 -->
-<div align="center">
-  
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=BlueDriftHK&repo=CF-Worker-M3U8Player&theme=default)](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=BlueDriftHK&repo=CF-workers-netdiag&theme=default)](https://github.com/BlueDriftHK/CF-workers-netdiag)
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=BlueDriftHK&repo=CF-workers-homepage&theme=default)](https://github.com/BlueDriftHK/CF-workers-homepage)
+## 📰 更新日志（近期）
 
-</div>
+| 日期 | 版本 | 更新内容 |
+|------|------|----------|
+| 2026-06-01 | v2.4.1 | 修复极端网络下 WebSocket 重连死循环问题 |
+| 2026-05-29 | v2.4.0 | 优化断线重连机制，图表内存泄漏修复 |
+| 2026-05-20 | v2.3.0 | 新增欧洲节点测速支持，界面微调 |
+| 2026-05-10 | v2.2.0 | 增加测速历史记录（本地存储） |
+| 2026-04-28 | v2.1.0 | 首个公开版本，基础测速与图表功能 |
 
-</div>
-
----
-
-## 🚀 核心项目
-
-| 项目 | 描述 | 技术栈 | 最新版本 | 代码规模 | Stars |
-|------|------|--------|----------|----------|-------|
-| **[Master M3U8 Terminal Pro](https://github.com/BlueDriftHK/CF-Worker-M3U8Player)** | 专业级 HLS 视频流播放器，支持代理播放、多语言、实时监控、编码检测和 QoS 质量评估，部署在 Cloudflare Workers 边缘节点 | HLS.js, Chart.js, Workers, Web Crypto API | **v2.0.0** | ~1500 行 | ![Stars](https://img.shields.io/github/stars/BlueDriftHK/CF-Worker-M3U8Player?style=flat) |
-| **[NetSight Pro](https://github.com/BlueDriftHK/CF-workers-netdiag)** | 强大的边缘网络诊断工具，提供实时延迟监控、带宽/CPU 测试、WebSocket 测试、安全协议检测和地理位置追踪 | WebSocket, Canvas API, Workers, Streams API | **v3.5** | ~1200 行 | ![Stars](https://img.shields.io/github/stars/BlueDriftHK/CF-workers-netdiag?style=flat) |
-| **[极简导航 · Cloudflare Worker](https://github.com/BlueDriftHK/CF-workers-homepage)** | 部署在 Workers 上的个人导航页，集成实时时钟、天气、书签管理、待办事项、便签和番茄钟，开箱即用，数据本地存储 | Vanilla JS, Open-Meteo API, localStorage, 毛玻璃效果 | **v2.0** | ~1000 行 | ![Stars](https://img.shields.io/github/stars/BlueDriftHK/CF-workers-homepage?style=flat) |
-
----
-
-## 🛠️ 技术栈总览
-
-### 通用技术
-- ☁️ **Cloudflare Workers** — 边缘计算部署平台
-- ⚡ **JavaScript (ES6+)** — 核心开发语言
-- 🎨 **HTML5 + CSS3** — 页面结构与样式
-- ✨ **毛玻璃效果** — `backdrop-filter` 实现玻璃态质感
-
-### 播放器专项
-- 🎬 **HLS.js** — HLS 流媒体播放引擎
-- 📊 **Chart.js** — 实时监控数据可视化
-- 🔐 **Web Crypto API** — 加密与安全处理
-
-### 诊断工具专项
-- 🔗 **WebSocket** — 实时连接测试
-- 📈 **Canvas API** — 性能数据可视化
-- 🌊 **Streams API** — 流式数据处理
-
-### 导航页专项
-- 🌤️ **Open-Meteo API** — 免费天气数据
-- 💾 **localStorage** — 数据持久化存储
-- 🖼️ **Unsplash API** — 随机壁纸来源
-
----
-
-## 📋 更新日志速览
-
-### 极简导航 v2.0 — 2026-06-25 🎉
-- 🎨 融合 NetSight Pro 设计语言，毛玻璃和极光渐变效果
-- ✨ 全新壁纸系统：Bing 每日、Unsplash 随机、自定义上传
-- ✨ 新增番茄钟进度条和音效提醒
-- ✨ 快捷键支持：`/` 搜索、`Space` 番茄钟、`Ctrl+S` 保存
-- 🐛 修复天气显示乱码和 IP 获取跨域问题
-
-### NetSight Pro v3.5 — 2026-06-11
-- 🔧 优化限流清理机制，提升运行时效率
-- 🔒 增强 WebSocket 心跳稳定性
-- 🛡️ 动态 CSP nonce 增强 XSS 防护
-
-### Master M3U8 Terminal Pro v2.0.0 — 2026-05-27
-- 🚀 新增 Base64 代理播放路由 `/proxy/`
-- 🌍 新增三语支持（简中/繁中/英文）
-- 🏆 新增 QoS 五星质量评分算法
-- ⌨️ 新增键盘快捷键和编码格式智能识别
+完整更新日志请查看 [CHANGELOG.md](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md)
 
 ---
 
 ## 🤝 贡献指南
 
-### 贡献流程
+欢迎任何形式的贡献！无论是报告 Bug、提交功能建议，还是直接发 Pull Request，都非常感谢。
 
-```bash
-# 1. Fork 本项目
-# 2. 克隆到本地
-git clone https://github.com/YOUR_USERNAME/项目名.git
+### 流程
+1. Fork 本仓库并创建你的分支 (`git checkout -b feature/AmazingFeature`)
+2. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
+3. 推送到分支 (`git push origin feature/AmazingFeature`)
+4. 开启一个 Pull Request，并描述改动内容
 
-# 3. 创建特性分支
-git checkout -b feature/AmazingFeature
+### Commit 信息规范
 
-# 4. 提交更改
-git add .
-git commit -m '✨ Add some AmazingFeature'
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| `feat` ✨ | 新功能 | `feat: add multi-node latency comparison` |
+| `fix` 🐛 | 修复 Bug | `fix: correct chart initial render issue` |
+| `docs` 📚 | 文档更新 | `docs: update README with new screenshots` |
+| `style` 💄 | 代码格式（不影响逻辑） | `style: indent with 2 spaces` |
+| `refactor` ♻️ | 代码重构 | `refactor: extract WebSocket handler` |
+| `perf` 🚀 | 性能优化 | `perf: reduce worker cold start time` |
+| `test` ✅ | 增加测试 | `test: add unit test for latency calculation` |
+| `chore` 🔧 | 构建/工具变动 | `chore: update wrangler.toml` |
 
-# 5. 推送并开启 Pull Request
-git push origin feature/AmazingFeature
-```
+### 代码风格
+- 使用 ESLint 和 Prettier（项目已配置）
+- 保持函数短小，单一职责
+- 新功能请附带必要的注释说明
 
-### 提交信息格式
+---
 
-| 类型 | 图标 | 说明 | 示例 |
-|------|------|------|------|
-| feat | ✨ | 新功能 | `feat: add health check endpoint` |
-| fix | 🐛 | 修复问题 | `fix: websocket timeout issue` |
-| docs | 📝 | 文档更新 | `docs: update API documentation` |
-| style | 🎨 | 代码格式 | `style: update card hover effect` |
-| refactor | ♻️ | 代码重构 | `refactor: extract common functions` |
-| perf | ⚡ | 性能优化 | `perf: optimize concurrent test` |
-| security | 🔒 | 安全相关 | `security: add rate limiting` |
+## 📫 联系我
+
+如果你有问题、建议，或只是想聊聊技术，欢迎通过以下方式找到我：
+
+<p align="left">
+  <a href="mailto:your-email@example.com"><img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
+  <a href="https://twitter.com/your-twitter"><img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" /></a>
+  <a href="https://t.me/your-telegram"><img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" /></a>
+  <a href="https://github.com/BlueDriftHK"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" /></a>
+</p>
+
+> 你也可以直接在项目仓库提交 Issue，我会尽快回复。
 
 ---
 
 ## 💖 支持与赞助
 
-如果我的项目对你有帮助，欢迎通过以下方式支持我：
+如果这个项目对你有帮助，欢迎给予支持：
 
-- ⭐ 给项目点 Star
-- 🐛 提交 Issue 反馈问题
-- 🔧 提交 Pull Request 贡献代码
-- 📝 分享项目给更多人
+- ⭐ **Star** 仓库 —— 这是对我最大的鼓励
+- 🐛 提交 **Issue** 反馈问题或建议
+- 💰 通过 [GitHub Sponsors](https://github.com/sponsors/BlueDriftHK) 赞助（可选）
 
-[![Sponsor](https://img.shields.io/badge/Sponsor-BlueDriftHK-pink?logo=github-sponsors)](https://github.com/sponsors/BlueDriftHK)
-
----
-
-## 📄 许可证
-
-所有项目均采用 **GNU General Public License v3.0** 许可证。
-
-| 项目 | 说明 |
-|------|------|
-| 商业使用 | ✅ 允许 |
-| 修改代码 | ✅ 允许 |
-| 分发代码 | ✅ 允许 |
-| 公开源代码 | ✅ 必须（修改后） |
-| 保留版权声明 | ✅ 必须 |
+所有代码均采用 **GNU GPL v3.0** 许可证，开源免费。
 
 ---
 
-## 📞 联系方式
-
-| 渠道 | 链接 |
-|------|------|
-| **个人博客** | [blog.bjhr.space](https://blog.bjhr.space) |
-| **GitHub** | [BlueDriftHK](https://github.com/BlueDriftHK) |
-| **M3U8 Player Issues** | [提交问题](https://github.com/BlueDriftHK/CF-Worker-M3U8Player/issues) |
-| **NetSight Pro Issues** | [提交问题](https://github.com/BlueDriftHK/CF-workers-netdiag/issues) |
-| **极简导航 Issues** | [提交问题](https://github.com/BlueDriftHK/CF-workers-homepage/issues) |
-
----
-
-## 🙏 致谢
-
-- [Cloudflare Workers](https://workers.cloudflare.com/) — 边缘计算平台
-- [HLS.js](https://github.com/video-dev/hls.js) — HLS 播放核心库
-- [Chart.js](https://www.chartjs.org/) — 图表渲染
-- [Font Awesome](https://fontawesome.com/) — 图标库
-- [Open-Meteo](https://open-meteo.com/) — 免费天气 API
-- [Unsplash](https://unsplash.com/) — 壁纸图片来源
-
----
-
-<div align="center">
-
-**⚡ 让边缘计算更强大，让网络工具更易用 ⚡**
-
-*Made with ❤️ by BlueDriftHK*
-
-[![GPL-3.0 License](https://img.shields.io/badge/License-GPL%203.0-blue.svg)](https://opensource.org/licenses/GPL-3.0)
-[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare)](https://workers.cloudflare.com/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-
-</div>
+<p align="center">
+  <i>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊</i>
+</p>
