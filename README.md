@@ -102,27 +102,6 @@ graph TD
 
 ---
 
-<!-- ========== 项目预览（截图占位） ========== -->
-## 📸 项目预览 · Screenshots
-
-> 以下为示意图，你可以在项目仓库中查看实际界面。
-
-<p align="center">
-  <img src="https://via.placeholder.com/800x400/1e1e2f/F38020?text=实时延迟图表" width="80%" alt="Dashboard Preview" />
-  <br />
-  <i>实时延迟曲线图（多节点对比）</i>
-</p>
-
-<p align="center">
-  <img src="https://via.placeholder.com/800x400/1e1e2f/4CAF50?text=节点健康状态看板" width="80%" alt="Node Status" />
-  <br />
-  <i>节点在线状态与延迟统计</i>
-</p>
-
-> 🔗 在线体验地址：[https://cf-workers-netdiag.example.com](https://cf-workers-netdiag.example.com)（请替换为你的实际部署域名）
-
----
-
 <!-- ========== 技术栈 ========== -->
 ## 🛠️ 技术栈 · Tech Stack
 
