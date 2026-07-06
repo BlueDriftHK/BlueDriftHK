@@ -1,1300 +1,284 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>BlueDriftHK · 边缘计算开发者 | Cloudflare Workers 生态</title>
-    <meta name="description" content="Cloudflare Workers 生态开发者，专注于 HLS 流媒体播放器和网络诊断工具。">
-    <meta name="keywords" content="Cloudflare Workers, HLS, M3U8, 网络诊断, 边缘计算">
-    <meta name="author" content="BlueDriftHK">
-    <meta property="og:title" content="BlueDriftHK · 边缘计算开发者">
-    <meta property="og:type" content="website">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E">
+<!-- ========== 顶部炫酷横幅 ========== -->
+<p align="center">
+  <img src="https://github.com/BlueDriftHK.png" width="120" height="120" style="border-radius: 50%; border: 3px solid #F38020;" alt="Avatar" />
+</p>
+
+<h1 align="center">👋 你好，我是 <a href="https://github.com/BlueDriftHK" style="color: #F38020;">BlueDriftHK</a></h1>
+
+<!-- 炫酷动态打字 -->
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=26&duration=2800&pause=800&color=F38020&center=true&vCenter=true&width=600&lines=%E2%9A%A1+Edge+Computing+Builder;%F0%9F%9B%B8%EF%B8%8F+Cloudflare+Workers+Expert;%F0%9F%93%8A+Network+Diagnostics+Developer;%F0%9F%94%A5+Open+Source+Enthusiast;%F0%9F%9A%80+Building+the+Future+of+Web" alt="Typing SVG" />
+</p>
+
+<!-- 访客计数器（保留，通常稳定） -->
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=BlueDriftHK&label=🌟+Profile+Views&color=F38020&style=for-the-badge" alt="访客计数器" />
+</p>
+
+<!-- ========== 项目实时状态徽章 ========== -->
+<p align="center">
+  <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">
+    <img src="https://img.shields.io/github/stars/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=F38020" alt="Stars" />
+    <img src="https://img.shields.io/github/forks/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=orange" alt="Forks" />
+    <img src="https://img.shields.io/github/issues/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=green" alt="Issues" />
+    <img src="https://img.shields.io/github/last-commit/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=git&color=purple" alt="Last Commit" />
+    <img src="https://img.shields.io/github/license/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=gnu&color=blue" alt="License" />
+  </a>
+</p>
+
+---
+
+<!-- ========== 关于我 ========== -->
+## 🧑‍💻 关于我 · About Me
+
+我是一名 **边缘计算架构师** 与 **全栈工具开发者**，热衷于利用 Cloudflare Workers 将复杂的网络诊断能力封装成开箱即用的轻量级工具。
+
+- 🔭 **当前专注**：全力打磨主力项目 **[CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag)** —— 基于 **WebSocket + HLS.js** 的毫秒级全球网络延迟透视仪。
+- 🌱 **技术探索**：深入 HLS 流媒体协议、边缘节点智能路由、实时数据可视化。
+- 🎯 **项目愿景**：让每一位开发者都能在 5 分钟内拥有自己的全球网络质量监控面板。
+- ⚡ **极客信条**：代码即艺术，性能即正义。
+- 💬 **技术话题**：边缘计算、Serverless、实时通信、开源生态。
+
+---
+
+<!-- ========== 我的日常开发环境 ========== -->
+## 🛠️ 日常开发环境 · Daily Toolchain
+
+<p align="left">
+  <img src="https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white" />
+  <img src="https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=webstorm&logoColor=white" />
+  <img src="https://img.shields.io/badge/iTerm2-000000?style=for-the-badge&logo=iterm2&logoColor=white" />
+  <img src="https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white" />
+  <img src="https://img.shields.io/badge/Wrangler-FF6C37?style=for-the-badge&logo=cloudflare&logoColor=white" />
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" />
+</p>
+
+---
+
+<!-- ========== 项目核心架构图（Mermaid） ========== -->
+## 🏗️ 项目核心架构 · Architecture
+
+> 下图展示了 `CF-workers-netdiag` 在全球边缘节点中的工作流。
+
+```mermaid
+graph TD
+    User((🌐 用户访问)) -->|HTTP/WebSocket| Worker[⚡ Cloudflare Worker 边缘节点]
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    subgraph Cloudflare 全球边缘网络
+        Worker -->|测速指令| Node1[🗼 北美节点]
+        Worker -->|测速指令| Node2[🗼 欧洲节点]
+        Worker -->|测速指令| Node3[🗼 亚太节点]
+        Worker -->|测速指令| Node4[🗼 南美节点]
+    end
+
+    Node1 -->|实时延迟数据| Agg[📊 数据聚合层]
+    Node2 -->|实时延迟数据| Agg
+    Node3 -->|实时延迟数据| Agg
+    Node4 -->|实时延迟数据| Agg
     
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    Agg -->|WebSocket 推送| Frontend[🖥️ 前端 HLS.js / Chart.js]
+    Frontend -->|动态渲染| Chart[📈 多维度延迟折线图]
+    Frontend -->|状态展示| Status[📋 节点健康状态看板]
     
-    <!-- AOS 动画库 -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    style Worker fill:#F38020,stroke:#333,stroke-width:2px,color:#fff
+    style Frontend fill:#4CAF50,stroke:#333,stroke-width:2px,color:#fff
+    style Chart fill:#2196F3,stroke:#333,stroke-width:2px,color:#fff
+```
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
-            background: #0a0a0a;
-            color: #e8e8e8;
-            line-height: 1.5;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+---
 
-        .glow-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-            pointer-events: none;
-        }
+<!-- ========== 核心功能亮点 ========== -->
+## ✨ 功能矩阵 · Features
 
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.5;
-            pointer-events: none;
-            animation: floatOrb 25s infinite ease-in-out;
-        }
+| 模块 | 核心能力 | 技术实现 |
+| :--- | :--- | :--- |
+| 🚀 **极速测速** | 并行探测全球 10+ 边缘节点，延迟数据 < 200ms 返回 | Cloudflare Workers + 边缘函数 |
+| 📈 **实时图表** | 毫秒级动态曲线，支持拖拽缩放与多节点对比 | Chart.js + WebSocket 全双工 |
+| 🔔 **智能告警** | 延迟阈值自定义，异常节点自动高亮提醒 | 内置规则引擎（v2.5 规划中） |
+| 🌍 **全球覆盖** | 自动就近选择节点，真实模拟用户访问链路 | Cloudflare Anycast 网络 |
+| 🧩 **零成本部署** | 无需购买服务器，部署即用，按调用计费 | Wrangler + Free Tier |
 
-        .orb-1 {
-            width: 60vw;
-            height: 60vw;
-            background: radial-gradient(circle, rgba(0, 255, 65, 0.35), rgba(0, 255, 65, 0));
-            top: -30vw;
-            right: -20vw;
-            animation-delay: 0s;
-        }
+---
 
-        .orb-2 {
-            width: 50vw;
-            height: 50vw;
-            background: radial-gradient(circle, rgba(0, 136, 255, 0.3), rgba(0, 136, 255, 0));
-            bottom: -25vw;
-            left: -20vw;
-            animation-delay: -5s;
-        }
+<!-- ========== 技术栈 ========== -->
+## 🛠️ 技术栈 · Tech Stack
 
-        .orb-3 {
-            width: 45vw;
-            height: 45vw;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.25), rgba(168, 85, 247, 0));
-            top: 50%;
-            left: 30%;
-            animation-delay: -10s;
-        }
+### ☁️ 基础设施与运行时
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6%2B-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
 
-        .orb-4 {
-            width: 35vw;
-            height: 35vw;
-            background: radial-gradient(circle, rgba(255, 68, 68, 0.2), rgba(255, 68, 68, 0));
-            bottom: 10%;
-            right: 15%;
-            animation-delay: -15s;
-        }
+### 🎨 前端与可视化
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![HLS.js](https://img.shields.io/badge/HLS.js-000000?style=for-the-badge&logo=hls&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
-        @keyframes floatOrb {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(3%, -4%) scale(1.08); }
-            66% { transform: translate(-4%, 3%) scale(0.92); }
-        }
+### 🔧 开发者工具
+![Wrangler](https://img.shields.io/badge/Wrangler-FF6C37?style=for-the-badge&logo=cloudflare&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![NPM](https://img.shields.io/badge/NPM-CB3837?style=for-the-badge&logo=npm&logoColor=white)
 
-        .grid-pattern {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-        }
+---
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 2;
-        }
+<!-- ========== 快速开始 ========== -->
+## 🚀 一键部署 & 本地运行
 
-        .navbar {
-            position: sticky;
-            top: 16px;
-            z-index: 100;
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            background: rgba(20, 22, 27, 0.6);
-            border-radius: 56px;
-            padding: 8px 28px;
-            margin: 16px auto 0;
-            border: 0.5px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            width: calc(100% - 32px);
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+想自己搭建一个？只需几步：
 
-        .navbar.scrolled {
-            background: rgba(12, 14, 18, 0.85);
-            backdrop-filter: blur(30px) saturate(200%);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .navbar-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #00ff41, #00ccff);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: logoGradient 6s ease infinite;
-            letter-spacing: -0.5px;
-        }
-
-        @keyframes logoGradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .logo i {
-            background: none;
-            -webkit-background-clip: unset;
-            background-clip: unset;
-            color: #00ff41;
-            font-size: 1.6rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.25s ease;
-            padding: 6px 0;
-            border-bottom: 2px solid transparent;
-            letter-spacing: -0.2px;
-        }
-
-        .nav-links a:hover {
-            color: #00ff41;
-            border-bottom-color: #00ff41;
-            transform: translateY(-1px);
-        }
-
-        .github-btn {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 8px 22px;
-            border-radius: 40px;
-            color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(4px);
-        }
-
-        .github-btn:hover {
-            background: #00ff41;
-            border-color: #00ff41;
-            color: #0a0a0a !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 8px 20px rgba(0, 255, 65, 0.2);
-        }
-
-        .nav-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0, 255, 65, 0.12);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(0, 255, 65, 0.2);
-            padding: 5px 14px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            color: #00ff41;
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-        }
-
-        .nav-badge i {
-            font-size: 0.7rem;
-        }
-
-        .hero {
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 60px 0 60px;
-        }
-
-        .hero-content {
-            max-width: 900px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, #ffffff, #d0d0d0, #00ff41, #00ccff);
-            background-size: 300% 300%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradientShift 10s ease infinite;
-            letter-spacing: -1.5px;
-            line-height: 1.2;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero .tagline {
-            font-size: 1.2rem;
-            color: #b0b0b0;
-            margin-bottom: 40px;
-            line-height: 1.6;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .stats-grid {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin: 48px 0 32px;
-        }
-
-        .stat-card {
-            background: rgba(18, 22, 30, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 20px 32px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            min-width: 120px;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-6px);
-            border-color: rgba(0, 255, 65, 0.3);
-            background: rgba(30, 35, 45, 0.7);
-            box-shadow: 0 15px 35px rgba(0, 255, 65, 0.1);
-        }
-
-        .stat-number {
-            font-size: 2.6rem;
-            font-weight: 700;
-            color: #00ff41;
-            letter-spacing: -1px;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #aaa;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        .lang-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 20px;
-            background: rgba(15, 20, 28, 0.5);
-            backdrop-filter: blur(12px);
-            padding: 14px 28px;
-            border-radius: 60px;
-            margin-top: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .lang-badge span {
-            margin: 0 4px;
-        }
-
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #00ff41, #00cc33);
-            color: #0a0a0a;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 255, 65, 0.3);
-            filter: brightness(1.05);
-        }
-
-        .btn-outline {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 32px;
-            border-radius: 50px;
-            border: 1.5px solid rgba(0, 255, 65, 0.5);
-            background: rgba(0, 255, 65, 0.05);
-            backdrop-filter: blur(8px);
-            color: #00ff41;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline:hover {
-            background: rgba(0, 255, 65, 0.15);
-            border-color: #00ff41;
-            transform: translateY(-3px);
-        }
-
-        section {
-            padding: 100px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        section:last-of-type {
-            border-bottom: none;
-        }
-
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 56px;
-            text-align: center;
-            position: relative;
-            letter-spacing: -0.8px;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70px;
-            height: 3px;
-            background: linear-gradient(90deg, #00ff41, #00ccff, #a855f7);
-            border-radius: 3px;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-            gap: 32px;
-        }
-
-        .project-card {
-            background: rgba(18, 22, 30, 0.55);
-            backdrop-filter: blur(20px);
-            border-radius: 36px;
-            padding: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ff41, #00ccff, #a855f7);
-            transform: scaleX(0);
-            transition: transform 0.5s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(0, 255, 65, 0.2);
-            background: rgba(25, 30, 40, 0.7);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
-        }
-
-        .project-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 24px;
-        }
-
-        .project-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 204, 51, 0.1));
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #00ff41;
-            border: 1px solid rgba(0, 255, 65, 0.2);
-        }
-
-        .project-version {
-            background: rgba(0, 255, 65, 0.12);
-            backdrop-filter: blur(4px);
-            padding: 5px 14px;
-            border-radius: 24px;
-            font-size: 0.7rem;
-            color: #00ff41;
-            font-weight: 600;
-        }
-
-        .project-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 14px;
-            letter-spacing: -0.5px;
-        }
-
-        .project-desc {
-            color: #b0b0b0;
-            font-size: 0.9rem;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-
-        .tech-tag {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(4px);
-            padding: 5px 14px;
-            border-radius: 24px;
-            font-size: 0.7rem;
-            color: #ccc;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .tech-tag:hover {
-            background: rgba(0, 255, 65, 0.15);
-            color: #00ff41;
-        }
-
-        .project-links {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .project-links a {
-            color: #ccc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .project-links a:hover {
-            color: #00ff41;
-            transform: translateX(2px);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-item {
-            background: rgba(18, 22, 30, 0.4);
-            backdrop-filter: blur(16px);
-            border-radius: 28px;
-            padding: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s ease;
-        }
-
-        .feature-item:hover {
-            background: rgba(30, 35, 45, 0.55);
-            border-color: rgba(0, 255, 65, 0.2);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .feature-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .feature-desc {
-            font-size: 0.85rem;
-            color: #999;
-            line-height: 1.6;
-        }
-
-        .code-block {
-            background: rgba(8, 10, 14, 0.8);
-            backdrop-filter: blur(8px);
-            border-radius: 28px;
-            padding: 28px;
-            margin: 30px 0;
-            border: 1px solid rgba(0, 255, 65, 0.15);
-            overflow-x: auto;
-            font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
-            font-size: 0.85rem;
-            position: relative;
-        }
-
-        .code-block::before {
-            content: '$';
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #00ff41;
-            font-weight: 600;
-        }
-
-        .code-block pre {
-            padding-left: 28px;
-            color: #e0e0e0;
-            font-family: inherit;
-            margin: 0;
-        }
-
-        .stats-dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .stat-dash-item {
-            background: rgba(18, 22, 30, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s;
-        }
-
-        .stat-dash-item:hover {
-            border-color: rgba(0, 255, 65, 0.2);
-            transform: scale(1.02);
-        }
-
-        .stat-dash-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #00ff41;
-        }
-
-        .stat-dash-label {
-            font-size: 0.75rem;
-            color: #888;
-            margin-top: 8px;
-        }
-
-        .changelog {
-            background: rgba(10, 12, 16, 0.5);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            padding: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .changelog-item {
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .changelog-item:last-child {
-            border-bottom: none;
-        }
-
-        .changelog-version {
-            color: #00ff41;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .changelog-date {
-            font-size: 0.75rem;
-            color: #666;
-            font-weight: normal;
-        }
-
-        .changelog-list {
-            list-style: none;
-            padding-left: 24px;
-        }
-
-        .changelog-list li {
-            font-size: 0.9rem;
-            color: #bbb;
-            margin: 8px 0;
-            position: relative;
-        }
-
-        .changelog-list li::before {
-            content: '▹';
-            position: absolute;
-            left: -20px;
-            color: #00ff41;
-        }
-
-        .contributing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin-top: 40px;
-        }
-
-        .contrib-card {
-            background: rgba(0, 255, 65, 0.04);
-            backdrop-filter: blur(12px);
-            border-radius: 28px;
-            padding: 28px 20px;
-            text-align: center;
-            border: 1px solid rgba(0, 255, 65, 0.12);
-            transition: all 0.3s;
-        }
-
-        .contrib-card:hover {
-            background: rgba(0, 255, 65, 0.08);
-            transform: translateY(-5px);
-            border-color: rgba(0, 255, 65, 0.3);
-        }
-
-        .contrib-card i {
-            font-size: 2.2rem;
-            color: #00ff41;
-        }
-
-        .contrib-card h4 {
-            margin: 16px 0 10px;
-            font-size: 1.1rem;
-        }
-
-        .contrib-card p {
-            font-size: 0.75rem;
-            color: #999;
-        }
-
-        .footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 60px 0 40px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 36px;
-            margin-bottom: 28px;
-        }
-
-        .social-links a {
-            color: #aaa;
-            font-size: 1.5rem;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .social-links a:hover {
-            color: #00ff41;
-            transform: translateY(-4px);
-        }
-
-        .footer-text {
-            font-size: 0.8rem;
-            color: #666;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: #777;
-            text-decoration: none;
-            font-size: 0.8rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links a:hover {
-            color: #00ff41;
-        }
-
-        @media (max-width: 900px) {
-            .navbar-content {
-                flex-direction: column;
-            }
-            .nav-links {
-                justify-content: center;
-            }
-            .nav-badge {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            .hero .tagline {
-                font-size: 1rem;
-            }
-            .stats-grid {
-                gap: 12px;
-            }
-            .stat-card {
-                padding: 12px 20px;
-                min-width: 90px;
-            }
-            .stat-number {
-                font-size: 1.8rem;
-            }
-            .projects-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            .project-card {
-                padding: 24px;
-            }
-            section {
-                padding: 60px 0;
-            }
-            .section-title {
-                font-size: 1.6rem;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .btn-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            .code-block pre {
-                font-size: 0.7rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                gap: 8px;
-            }
-            .stat-card {
-                padding: 10px 16px;
-            }
-            .stat-number {
-                font-size: 1.4rem;
-            }
-            .stat-label {
-                font-size: 0.65rem;
-            }
-            .lang-badge {
-                flex-direction: column;
-                gap: 8px;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #141414;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a2a;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00ff41;
-        }
-
-        ::selection {
-            background: rgba(0, 255, 65, 0.3);
-            color: #fff;
-        }
-    </style>
-</head>
-<body>
-
-<div class="glow-container">
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
-    <div class="glow-orb orb-3"></div>
-    <div class="glow-orb orb-4"></div>
-</div>
-<div class="grid-pattern"></div>
-
-<div class="container">
-    <nav class="navbar" id="navbar">
-        <div class="navbar-content">
-            <div class="logo">
-                <i class="fas fa-bolt"></i>
-                <span>BlueDriftHK</span>
-            </div>
-            <div class="nav-links">
-                <a href="#home">首页</a>
-                <a href="#projects">项目</a>
-                <a href="#features">特性</a>
-                <a href="#stats">数据</a>
-                <a href="#changelog">更新</a>
-                <a href="#contributing">贡献</a>
-                <span class="nav-badge">
-                    <i class="fas fa-cloud-arrow-up"></i> Cloudflare Workers 生态开发者
-                </span>
-                <a href="https://github.com/BlueDriftHK" class="github-btn" target="_blank">
-                    <i class="fab fa-github"></i> GitHub
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <section id="home" class="hero">
-        <div class="hero-content" data-aos="fade-up" data-aos-duration="1000">
-            <h1>构建边缘计算<br>的未来</h1>
-            <p class="tagline">
-                专注于高性能 HLS 流媒体播放器和网络诊断工具，<br>
-                让复杂的技术变得简单，让强大的功能触手可及。
-            </p>
-
-            <div class="stats-grid">
-                <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
-                    <div class="stat-number">22</div>
-                    <div class="stat-label"><i class="fas fa-star"></i> Stars Earned</div>
-                </div>
-                <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
-                    <div class="stat-number">351</div>
-                    <div class="stat-label"><i class="fas fa-code-branch"></i> Commits (Year)</div>
-                </div>
-                <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label"><i class="fas fa-code-pull-request"></i> PRs</div>
-                </div>
-                <div class="stat-card" data-aos="zoom-in" data-aos-delay="400">
-                    <div class="stat-number">1</div>
-                    <div class="stat-label"><i class="fas fa-circle-info"></i> Issues</div>
-                </div>
-            </div>
-
-            <div class="lang-badge" data-aos="fade-up" data-aos-delay="500">
-                <span><i class="fab fa-js"></i> JavaScript 54.26%</span>
-                <span><i class="fab fa-html5"></i> HTML 45.74%</span>
-                <span><i class="fas fa-cloud"></i> Cloudflare Workers</span>
-            </div>
-
-            <div class="btn-group" data-aos="fade-up" data-aos-delay="600">
-                <a href="#projects" class="btn-primary">
-                    <i class="fas fa-arrow-down"></i> 探索项目
-                </a>
-                <a href="https://github.com/BlueDriftHK" class="btn-outline" target="_blank">
-                    <i class="fab fa-github"></i> GitHub 主页
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects">
-        <h2 class="section-title" data-aos="fade-up">⚡ 核心项目</h2>
-        <div class="projects-grid">
-            <!-- Master M3U8 Terminal Pro -->
-            <div class="project-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="project-header">
-                    <div class="project-icon">
-                        <i class="fas fa-video"></i>
-                    </div>
-                    <div class="project-version">v2.0.0</div>
-                </div>
-                <h3 class="project-title">Master M3U8 Terminal Pro</h3>
-                <p class="project-desc">
-                    专业级 HLS 视频流播放器，部署在 Cloudflare Workers 边缘节点。
-                    支持代理播放、多语言切换、实时监控、编码检测和 QoS 质量评估。
-                    彻底解决 CORS 跨域和 IP 访问限制问题。
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">HLS.js</span>
-                    <span class="tech-tag">Chart.js</span>
-                    <span class="tech-tag">Cloudflare Workers</span>
-                    <span class="tech-tag">Web Crypto API</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player#readme" target="_blank">
-                        <i class="fas fa-book"></i> 文档
-                    </a>
-                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" target="_blank">
-                        <i class="fas fa-rocket"></i> 一键部署
-                    </a>
-                </div>
-            </div>
-
-            <!-- NetSight Pro -->
-            <div class="project-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="project-header">
-                    <div class="project-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <div class="project-version">v3.5</div>
-                </div>
-                <h3 class="project-title">NetSight Pro</h3>
-                <p class="project-desc">
-                    强大的边缘网络诊断工具，提供实时延迟监控、带宽和 CPU 性能测试、
-                    WebSocket 连接测试、安全协议检测和地理位置追踪。
-                    内置企业级安全防护，支持 IP 级别限流。
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">WebSocket</span>
-                    <span class="tech-tag">Canvas API</span>
-                    <span class="tech-tag">Streams API</span>
-                    <span class="tech-tag">Cloudflare Workers</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="https://github.com/BlueDriftHK/CF-workers-netdiag#readme" target="_blank">
-                        <i class="fas fa-book"></i> 文档
-                    </a>
-                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">
-                        <i class="fas fa-rocket"></i> 一键部署
-                    </a>
-                </div>
-            </div>
-
-            <!-- 极简导航 · Cloudflare Worker -->
-            <div class="project-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="project-header">
-                    <div class="project-icon">
-                        <i class="fas fa-compass"></i>
-                    </div>
-                    <div class="project-version">v2.0</div>
-                </div>
-                <h3 class="project-title">极简导航 · Cloudflare Worker</h3>
-                <p class="project-desc">
-                    部署在 Cloudflare Workers 上的个人导航页，可作为浏览器起始页。
-                    融合毛玻璃设计语言，集成实时时钟、天气信息、书签管理、待办事项、
-                    便签和番茄钟等实用工具，开箱即用，所有数据本地存储。
-                </p>
-                <div class="tech-stack">
-                    <span class="tech-tag">Vanilla JS</span>
-                    <span class="tech-tag">Open-Meteo API</span>
-                    <span class="tech-tag">localStorage</span>
-                    <span class="tech-tag">毛玻璃效果</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/BlueDriftHK/CF-workers-homepage" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="https://homepage.bjhr.space" target="_blank">
-                        <i class="fas fa-globe"></i> 在线演示
-                    </a>
-                    <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-homepage" target="_blank">
-                        <i class="fas fa-rocket"></i> 一键部署
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="features">
-        <h2 class="section-title" data-aos="fade-up">✨ 功能特性</h2>
-        <div class="features-grid">
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="50">
-                <div class="feature-icon">🎬</div>
-                <div class="feature-title">HLS 播放引擎</div>
-                <div class="feature-desc">多清晰度自适应，支持标准 HLS 协议，自动切换码率，启用 Web Worker 多线程解码</div>
-            </div>
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="100">
-                <div class="feature-icon">🔄</div>
-                <div class="feature-title">代理播放</div>
-                <div class="feature-desc">Base64 地址代理，绕过 CORS 限制和 IP 封锁，利用 Cloudflare 全球网络加速</div>
-            </div>
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="150">
-                <div class="feature-icon">📊</div>
-                <div class="feature-title">实时监控</div>
-                <div class="feature-desc">下载速度、缓冲健康度、帧率、卡顿次数实时展示，Chart.js 平滑曲线图表</div>
-            </div>
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="200">
-                <div class="feature-icon">🌐</div>
-                <div class="feature-title">网络诊断</div>
-                <div class="feature-desc">CDN 节点探测、Ping 延迟测试、地理位置追踪、DNS 解析测试</div>
-            </div>
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="250">
-                <div class="feature-icon">🔒</div>
-                <div class="feature-title">安全检测</div>
-                <div class="feature-desc">TLS 版本、加密套件、HTTP/2/3、ECH 状态、ALPN 协商检测</div>
-            </div>
-            <div class="feature-item" data-aos="fade-up" data-aos-delay="300">
-                <div class="feature-icon">🎮</div>
-                <div class="feature-title">键盘控制</div>
-                <div class="feature-desc">空格播放/暂停，←/→快退/快进，F 全屏，沉浸式观看体验</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="stats">
-        <h2 class="section-title" data-aos="fade-up">📊 项目统计</h2>
-        <div class="stats-dashboard">
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="50">
-                <div class="stat-dash-number">~2700</div>
-                <div class="stat-dash-label">总代码行数</div>
-            </div>
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="100">
-                <div class="stat-dash-number">14+</div>
-                <div class="stat-dash-label">API 端点</div>
-            </div>
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="150">
-                <div class="stat-dash-number">3</div>
-                <div class="stat-dash-label">支持语言</div>
-            </div>
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="200">
-                <div class="stat-dash-number">100+</div>
-                <div class="stat-dash-label">全球边缘节点</div>
-            </div>
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="250">
-                <div class="stat-dash-number">60/min</div>
-                <div class="stat-dash-label">限流保护</div>
-            </div>
-            <div class="stat-dash-item" data-aos="zoom-in" data-aos-delay="300">
-                <div class="stat-dash-number">10万/天</div>
-                <div class="stat-dash-label">免费请求配额</div>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <h2 class="section-title" data-aos="fade-up">🚀 快速部署</h2>
-        <div class="code-block" data-aos="fade-up">
-            <pre>
-# 安装 Wrangler CLI
-npm install -g wrangler
-
-# 登录 Cloudflare
-wrangler login
-
-# 克隆项目（任选其一）
-git clone https://github.com/BlueDriftHK/CF-Worker-M3U8Player.git
+```bash
+# 1. 克隆项目
 git clone https://github.com/BlueDriftHK/CF-workers-netdiag.git
-git clone https://github.com/BlueDriftHK/CF-workers-homepage.git
+cd CF-workers-netdiag
 
-# 进入项目目录并部署
-cd CF-Worker-M3U8Player
-wrangler deploy --main _workers.js
+# 2. 安装依赖
+npm install
 
-# （可选）设置环境变量密码（仅 M3U8 项目需要）
-wrangler secret put ADMIN_PASSWORD</pre>
-        </div>
-        <div class="btn-group" data-aos="fade-up">
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-Worker-M3U8Player" class="btn-primary" target="_blank">
-                <i class="fas fa-rocket"></i> 部署 M3U8 Player
-            </a>
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-netdiag" class="btn-outline" target="_blank">
-                <i class="fas fa-rocket"></i> 部署 NetSight Pro
-            </a>
-            <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/BlueDriftHK/CF-workers-homepage" class="btn-outline" target="_blank">
-                <i class="fas fa-rocket"></i> 部署 极简导航
-            </a>
-        </div>
-    </section>
+# 3. 本地开发（热更新）
+npx wrangler dev
 
-    <section id="changelog">
-        <h2 class="section-title" data-aos="fade-up">📋 更新日志</h2>
-        <div class="changelog" data-aos="fade-up">
-            <div class="changelog-item">
-                <div class="changelog-version">
-                    极简导航 v2.0
-                    <span class="changelog-date">2026-06-25</span>
-                </div>
-                <ul class="changelog-list">
-                    <li>🎨 融合 NetSight Pro 设计语言，采用毛玻璃和极光渐变效果</li>
-                    <li>✨ 全新壁纸系统：Bing 每日、Unsplash 随机、自定义上传</li>
-                    <li>✨ 新增番茄钟进度条和音效提醒</li>
-                    <li>✨ 支持快捷键：/ 搜索、Space 番茄钟、Ctrl+S 保存便签</li>
-                    <li>🐛 修复天气显示乱码和 IP 获取跨域问题</li>
-                </ul>
-            </div>
-            <div class="changelog-item">
-                <div class="changelog-version">
-                    NetSight Pro v3.5
-                    <span class="changelog-date">2026-06-11</span>
-                </div>
-                <ul class="changelog-list">
-                    <li>优化限流清理机制（随机抽样，提升运行时效率）</li>
-                    <li>修复全局作用域异步操作问题</li>
-                    <li>增强 WebSocket 心跳稳定性</li>
-                    <li>动态 CSP nonce 增强 XSS 防护</li>
-                </ul>
-            </div>
-            <div class="changelog-item">
-                <div class="changelog-version">
-                    Master M3U8 Terminal Pro v2.0.0
-                    <span class="changelog-date">2026-05-27</span>
-                </div>
-                <ul class="changelog-list">
-                    <li>新增代理播放路由 /proxy/，支持 Base64 编码地址代理</li>
-                    <li>新增 CDN 节点探测和 Ping 延迟测试</li>
-                    <li>新增三语支持（简体中文 / 繁体中文 / 英文）</li>
-                    <li>新增 QoS 五星质量评分算法</li>
-                    <li>新增键盘快捷键和编码格式智能识别</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+# 4. 部署到全球边缘（需 Cloudflare 账号）
+npx wrangler login
+npx wrangler publish
+```
 
-    <section id="contributing">
-        <h2 class="section-title" data-aos="fade-up">🤝 贡献指南</h2>
-        <p style="text-align: center; color: #aaa; max-width: 600px; margin: 0 auto 20px;" data-aos="fade-up">
-            欢迎任何形式的贡献！无论是代码、文档、Issue 还是想法，都热忱期待。
-        </p>
-        <div class="contributing-grid">
-            <div class="contrib-card" data-aos="fade-up" data-aos-delay="50">
-                <i class="fas fa-code-branch"></i>
-                <h4>Fork 项目</h4>
-                <p>点击 GitHub 上的 Fork 按钮</p>
-            </div>
-            <div class="contrib-card" data-aos="fade-up" data-aos-delay="100">
-                <i class="fas fa-code"></i>
-                <h4>创建分支</h4>
-                <p>git checkout -b feature/AmazingFeature</p>
-            </div>
-            <div class="contrib-card" data-aos="fade-up" data-aos-delay="150">
-                <i class="fas fa-check-circle"></i>
-                <h4>提交 PR</h4>
-                <p>确保代码符合规范并通过测试</p>
-            </div>
-            <div class="contrib-card" data-aos="fade-up" data-aos-delay="200">
-                <i class="fas fa-comment"></i>
-                <h4>提交信息格式</h4>
-                <p>✨ feat / 🐛 fix / 📝 docs / 🎨 style</p>
-            </div>
-        </div>
-    </section>
+> 💡 **提示**：部署后你会获得一个 `*.workers.dev` 域名，即刻拥有自己的全球延迟监控面板！
 
-    <footer class="footer">
-        <div class="social-links">
-            <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="mailto:asiacomk@gmail.com"><i class="fas fa-envelope"></i></a>
-        </div>
-        <div class="footer-links">
-            <a href="https://github.com/BlueDriftHK/CF-Worker-M3U8Player">M3U8 Player</a>
-            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag">NetSight Pro</a>
-            <a href="https://github.com/BlueDriftHK/CF-workers-homepage">极简导航</a>
-            <a href="https://github.com/BlueDriftHK">GitHub</a>
-        </div>
-        <div class="footer-text">
-            <p>© 2025 BlueDriftHK · 开源自由 · 持续更新</p>
-            <p style="margin-top: 8px;">
-                <i class="fas fa-code"></i> 边缘计算 · HLS 流媒体 · 网络诊断 · 极简导航
-            </p>
-        </div>
-    </footer>
-</div>
+---
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init({
-        duration: 800,
-        once: true,
-        offset: 50
-    });
+<!-- ========== 环境变量配置 ========== -->
+## 🔧 环境变量配置 · Environment Variables
 
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
+为了正常运行，你需要在 Cloudflare Workers 中设置以下环境变量：
 
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href === '#') return;
-            const target = document.querySelector(href);
-            if (target) {
-                e.preventDefault();
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
+| 变量名 | 说明 | 示例值 |
+| :--- | :--- | :--- |
+| `NODE_LIST` | 测速节点列表（JSON 数组） | `["node1.example.com", "node2.example.com"]` |
+| `REFRESH_INTERVAL` | 数据刷新间隔（毫秒） | `1000` |
 
-    document.querySelector('.footer-text p').innerHTML = `© ${new Date().getFullYear()} BlueDriftHK · 开源自由 · 持续更新`;
-</script>
-</body>
-</html>
+详细配置请参考项目中的 [`.env.example`](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/.env.example) 文件。
+
+---
+
+<!-- ========== GitHub 数据墙 ========== -->
+## 📊 GitHub 数据墙
+
+<p align="center">
+  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=BlueDriftHK&show_icons=true&theme=radical&include_all_commits=true&count_private=true&hide_border=true" />
+  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=BlueDriftHK&layout=compact&theme=radical&langs_count=6&hide_border=true" />
+</p>
+
+<!-- 稳定贡献图（ghchart.rshah.org 在国内访问更好） -->
+<p align="center">
+  <img src="https://ghchart.rshah.org/BlueDriftHK?theme=gruvbox&border_radius=8" alt="GitHub Contributions Chart" />
+</p>
+
+<!-- 3D 贡献图（如果访问慢可以注释掉，保留上面那张） -->
+<p align="center">
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=BlueDriftHK&theme=react-dark&area=true&hide_border=true&bg_color=0d1117&color=F38020&line=F38020&point=FFFFFF" alt="GitHub Activity Graph" />
+</p>
+
+<!-- GitHub 成就奖杯 -->
+<p align="center">
+  <img src="https://github-profile-trophy.vercel.app/?username=BlueDriftHK&theme=radical&no-frame=true&row=2&column=4&margin-w=10&margin-h=10" alt="GitHub Trophies" />
+</p>
+
+---
+
+<!-- ========== 我的开源贡献 ========== -->
+## 🏆 我的开源贡献 · Open Source Contributions
+
+虽然目前我的主要精力集中在 **[CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag)**，但我也会为其他感兴趣的项目贡献代码和想法。以下是我参与或发起的项目：
+
+| 项目 | 角色 | 状态 |
+| :--- | :--- | :--- |
+| [CF-workers-netdiag](https://github.com/BlueDriftHK/CF-workers-netdiag) | 作者 / 维护者 | 🔥 活跃开发中 |
+
+未来我计划参与更多边缘计算和网络工具的开源项目，敬请期待！
+
+---
+
+<!-- ========== 最近在学/读 ========== -->
+## 📚 最近在学 · Currently Learning
+
+- 📖 **《HTTP/2 in Action》** —— 深入理解下一代网络协议
+- 🎥 **Cloudflare Workers 官方教程** —— 边缘计算最佳实践
+- 📝 **WebSocket 协议 RFC 6455** —— 夯实实时通信基础
+
+---
+
+<!-- ========== 更新日志速览 ========== -->
+## 📰 近期更新 · Changelog
+
+| 日期 | 版本 | 更新亮点 |
+| :--- | :--- | :--- |
+| 2026-06-01 | **v2.4.1** | 🐛 修复极端弱网下 WebSocket 死循环重连 |
+| 2026-05-29 | **v2.4.0** | 🚀 优化断线重连机制，图表内存泄漏全面修复 |
+| 2026-05-20 | **v2.3.0** | 🌍 新增欧洲中部节点测速支持，界面毛玻璃效果 |
+| 2026-05-10 | **v2.2.0** | 💾 增加测速历史记录（IndexedDB 本地持久化） |
+| 2026-04-28 | **v2.1.0** | 🎉 首个公开版本发布，基础测速与双端适配 |
+
+> 📌 完整变更记录请查阅：[CHANGELOG.md](https://github.com/BlueDriftHK/CF-workers-netdiag/blob/main/CHANGELOG.md)
+
+---
+
+<!-- ========== 贡献指南 ========== -->
+## 🤝 共建生态 · Contribution
+
+> **“独行快，众行远。”** 欢迎所有形式的贡献！
+
+1. **Fork** 本仓库并创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+2. **提交** 你的改动 (`git commit -m '✨ feat: 增加某炫酷功能'`)
+3. **推送** 到远程 (`git push origin feature/AmazingFeature`)
+4. 开启一个 **Pull Request**，描述你的改动与测试情况。
+
+### 📝 Commit 规范
+为了保持日志清晰，请遵循以下前缀：
+
+| 类型 | 图标 | 说明 |
+| :--- | :--- | :--- |
+| `feat` | ✨ | 新增功能 |
+| `fix` | 🐛 | 修复 Bug |
+| `docs` | 📚 | 文档更新 |
+| `style` | 💄 | 代码格式调整 |
+| `refactor` | ♻️ | 重构（不改变功能） |
+| `perf` | 🚀 | 性能优化 |
+| `test` | ✅ | 增加测试 |
+| `chore` | 🔧 | 构建/工具配置变动 |
+
+---
+
+<!-- ========== 联系与支持 ========== -->
+## 📫 连接我 · Connect
+
+<p align="left">
+  <a href="mailto:asiacomk@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" /></a>
+  <a href="https://twitter.com/BlueDriftHK"><img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" /></a>
+  <a href="https://t.me/BlueDriftHK"><img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" /></a>
+  <a href="https://github.com/BlueDriftHK"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" /></a>
+</p>
+
+> 或者直接在 GitHub Issues 中 @我，秒回！
+
+---
+
+## 💖 支持项目
+
+- ⭐ **Star** 这个仓库 —— 让更多开发者发现它。
+- 🐛 提交 **Issue** —— 反馈问题或提出脑洞需求。
+- ☕ **赞助** —— 点击 [GitHub Sponsors](https://github.com/sponsors/BlueDriftHK) 支持持续迭代。
+
+所有代码遵循 **GNU GPL v3.0** 开源协议，自由使用，共同进步。
+
+---
+
+<!-- ========== 炫酷页脚 ========== -->
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=F38020&height=100&section=footer" />
+</p>
+
+<p align="center">
+  <i>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊</i>
+  <br />
+  <i>🔮 保持好奇，保持创新。</i>
+</p>
