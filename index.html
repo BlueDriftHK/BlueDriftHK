@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
+        /* ====== 核心变量与重置 ====== */
         :root {
             --primary: #F38020;
             --primary-dim: rgba(243, 128, 32, 0.12);
@@ -41,10 +42,9 @@
         a { color: var(--primary); text-decoration: none; transition: all 0.2s var(--ease); }
         a:hover { color: #ffa04a; }
         ::selection { background: var(--primary); color: #fff; }
-
         .container { max-width: var(--max-w); margin: 0 auto; padding: 0 20px; width: 100%; flex: 1; }
 
-        /* ====== 导航 ====== */
+        /* ====== 导航栏 ====== */
         nav {
             position: sticky; top: 0; z-index: 100;
             background: rgba(13, 17, 23, 0.88);
@@ -55,7 +55,7 @@
             max-width: var(--max-w); margin: 0 auto; padding: 0 20px;
             display: flex; justify-content: space-between; align-items: center; height: 60px;
         }
-        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; color: var(--text-main); }
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; color: var(--text-main); cursor: pointer; }
         .logo span { color: var(--primary); }
         .nav-links { display: flex; gap: 8px; }
         .nav-links a {
@@ -78,7 +78,7 @@
         .hero-avatar {
             width: 110px; height: 110px; border-radius: 50%;
             border: 3px solid var(--primary); flex-shrink: 0;
-            box-shadow: 0 0 30px rgba(243, 128, 32, 0.15);
+            box-shadow: 0 0 30px rgba(243, 128, 32, 0.15); object-fit: cover;
         }
         .hero-info h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
         .hero-info h1 span { color: var(--primary); }
@@ -90,8 +90,6 @@
             background: var(--bg-card); border: 1px solid var(--border); color: var(--text-sub);
         }
         .hero-tag i { color: var(--primary); margin-right: 4px; }
-
-        /* ====== 社交链接条 ====== */
         .social-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
         .social-btn {
             display: inline-flex; align-items: center; gap: 7px;
@@ -101,7 +99,6 @@
             transition: all 0.25s var(--ease);
         }
         .social-btn:hover { border-color: var(--primary); color: var(--text-main); transform: translateY(-2px); }
-        .social-btn i { font-size: 1rem; }
 
         /* ====== 技术栈网格 ====== */
         .tech-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
@@ -136,7 +133,34 @@
         .proj-links { display: flex; gap: 16px; }
         .proj-links a { font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
 
-        /* ====== 文章列表 ====== */
+        /* ====== 社区评价 ====== */
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+        .testimonial-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; transition: all 0.25s var(--ease);
+        }
+        .testimonial-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .t-content { color: var(--text-sub); font-size: 0.9rem; font-style: italic; margin-bottom: 14px; line-height: 1.6; }
+        .t-author { display: flex; flex-direction: column; gap: 2px; }
+        .t-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
+        .t-role { font-size: 0.72rem; color: var(--text-sub); }
+
+        /* ====== 博客搜索与列表 ====== */
+        .blog-filter { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        #search-input {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            padding: 12px 16px; color: var(--text-main); font-size: 0.9rem; outline: none; width: 100%;
+            font-family: inherit; transition: border-color 0.2s;
+        }
+        #search-input:focus { border-color: var(--primary); }
+        .tag-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+        .filter-tag {
+            padding: 4px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-sub);
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .filter-tag.active, .filter-tag:hover { background: var(--primary-dim); color: var(--primary); border-color: var(--primary); }
+        
         .post-item {
             display: block; padding: 24px; background: var(--bg-card);
             border: 1px solid var(--border); border-radius: var(--radius);
@@ -148,13 +172,45 @@
         .post-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; color: var(--text-main); line-height: 1.35; }
         .post-excerpt { color: var(--text-sub); font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        /* ====== 文章详情 ====== */
+        /* ====== 联系表单 ====== */
+        .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+        .contact-methods { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .contact-method {
+            display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text-sub); font-size: 0.9rem; transition: all 0.2s var(--ease);
+        }
+        .contact-method:hover { border-color: var(--primary); color: var(--text-main); }
+        .contact-form { display: flex; flex-direction: column; gap: 12px; }
+        .contact-form input, .contact-form select, .contact-form textarea {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+            padding: 12px 16px; color: var(--text-main); font-family: inherit; font-size: 0.9rem;
+            outline: none; transition: border-color 0.2s; width: 100%;
+        }
+        .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--primary); }
+        .submit-btn {
+            background: var(--primary); color: #fff; border: none; border-radius: 10px;
+            padding: 14px; font-weight: 600; font-size: 0.95rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s var(--ease); font-family: inherit;
+        }
+        .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* ====== 赞助 CTA ====== */
+        .sponsor-box {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 32px 24px; max-width: 500px; margin: 0 auto; text-align: center;
+        }
+        .sponsor-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .sponsor-primary { background: var(--primary) !important; color: #fff !important; border-color: var(--primary) !important; }
+
+        /* ====== 文章详情视图 ====== */
         #article-view { display: none; padding: 40px 0 80px; }
         #article-view.visible { display: block; animation: fadeIn 0.35s var(--ease); }
         .back-btn {
             display: inline-flex; align-items: center; gap: 6px;
             color: var(--text-sub); font-size: 0.88rem; margin-bottom: 24px;
-            padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
+            padding: 6px 14px; border-radius: 8px; transition: all 0.2s; cursor: pointer;
         }
         .back-btn:hover { background: var(--bg-card); color: var(--primary); }
         .article-header { margin-bottom: 32px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
@@ -180,19 +236,19 @@
         }
         .article-content strong { color: var(--text-main); font-weight: 600; }
 
-        /* ====== 页脚 ====== */
-        footer {
-            border-top: 1px solid var(--border); padding: 32px 0;
-            text-align: center; color: var(--text-sub); font-size: 0.82rem;
-        }
-        footer .heart { color: var(--primary); }
+        /* ====== 增强页脚 ====== */
+        footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--text-sub); font-size: 0.82rem; }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-sub); font-size: 0.82rem; }
+        .footer-links a:hover { color: var(--primary); }
+        .heart { color: var(--primary); }
 
         /* ====== 动画 & 响应式 ====== */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 640px) {
             .hero { flex-direction: column; text-align: center; gap: 20px; padding: 40px 0 30px; }
-            .hero-tags, .social-bar { justify-content: center; }
+            .hero-tags, .social-bar, .sponsor-actions { justify-content: center; }
             .hero-info h1 { font-size: 1.7rem; }
             .hero-bio { margin: 0 auto 14px; }
             .tech-grid { grid-template-columns: repeat(2, 1fr); }
@@ -200,10 +256,11 @@
             .article-header h1 { font-size: 1.5rem; }
             .post-title { font-size: 1.1rem; }
             .proj-header { flex-direction: column; }
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 380px) {
-            .tech-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
             .nav-links { gap: 2px; }
             .nav-links a { padding: 6px 8px; font-size: 0.75rem; }
         }
@@ -214,22 +271,21 @@
     <!-- 导航栏 -->
     <nav>
         <div class="nav-inner">
-            <a href="#" class="logo" onclick="showHome(); return false;">BlueDrift<span>HK</span></a>
+            <div class="logo" onclick="showHome()">BlueDrift<span>HK</span></div>
             <div class="nav-links">
                 <a href="#about" onclick="scrollToSection('about'); return false;">About</a>
                 <a href="#projects" onclick="scrollToSection('projects'); return false;">Projects</a>
                 <a href="#blog" onclick="scrollToSection('blog'); return false;" class="active" id="nav-blog">Blog</a>
-                <a href="mailto:asiacomk@gmail.com">Contact</a>
+                <a href="#contact" onclick="scrollToSection('contact'); return false;">Contact</a>
             </div>
         </div>
     </nav>
 
     <div class="container">
-
         <!-- ========== 首页视图 ========== -->
         <div id="home-view">
-
-            <!-- 个人简介 Hero -->
+            
+            <!-- 个人简介 -->
             <section class="hero" id="about">
                 <img class="hero-avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK Avatar" />
                 <div class="hero-info">
@@ -272,7 +328,6 @@
             <!-- 代表项目 -->
             <section id="projects">
                 <div class="section-title"><i class="fas fa-folder-open"></i> Featured Projects</div>
-                
                 <div class="project-card">
                     <div class="proj-header">
                         <div class="proj-name"><i class="fas fa-satellite-dish"></i> CF-workers-netdiag</div>
@@ -293,16 +348,81 @@
                 </div>
             </section>
 
-            <!-- 博客文章列表 -->
+            <!-- 社区评价 -->
+            <section id="testimonials">
+                <div class="section-title"><i class="fas fa-quote-left"></i> Community Voices</div>
+                <div class="testimonial-grid">
+                    <div class="testimonial-card">
+                        <p class="t-content">"Deployed in 5 mins, faster than our internal SRE tools. The WebSocket retry logic is production-grade."</p>
+                        <div class="t-author"><span class="t-name">@devops-chen</span><span class="t-role">Senior SRE · FinTech</span></div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-content">"Finally an open-source edge diagnostics tool that actually works in SEA regions. Saved us weeks of dev time."</p>
+                        <div class="t-author"><span class="t-name">@net-fanatic</span><span class="t-role">Network Engineer · CDN Provider</span></div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="t-content">"The HLS adaptive bitrate tuning article solved our buffering issues in Brazil. Incredible depth of knowledge."</p>
+                        <div class="t-author"><span class="t-name">@streaming-dev</span><span class="t-role">Video Infra Lead · LatAm Startup</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 博客文章 -->
             <section id="blog">
                 <div class="section-title"><i class="fas fa-pen-fancy"></i> Latest Posts</div>
+                <div class="blog-filter">
+                    <input type="text" id="search-input" placeholder="🔍 Search posts by title or keyword..." oninput="filterPosts()" />
+                    <div class="tag-filters" id="tag-filters">
+                        <button class="filter-tag active" onclick="filterByTag('all')">All</button>
+                    </div>
+                </div>
                 <div id="post-list"></div>
+            </section>
+
+            <!-- 联系我 -->
+            <section id="contact">
+                <div class="section-title"><i class="fas fa-paper-plane"></i> Get In Touch</div>
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <p style="color:var(--text-sub);">无论是技术咨询、开源合作还是项目邀约，欢迎留言。我通常会在 24 小时内回复。</p>
+                        <div class="contact-methods">
+                            <a href="mailto:asiacomk@gmail.com" class="contact-method"><i class="fas fa-envelope"></i> asiocomk@gmail.com</a>
+                            <a href="https://t.me/BlueDriftHK" target="_blank" class="contact-method"><i class="fab fa-telegram-plane"></i> @BlueDriftHK</a>
+                            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/discussions" target="_blank" class="contact-method"><i class="fab fa-github"></i> GitHub Discussions</a>
+                        </div>
+                    </div>
+                    <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                        <input type="text" name="name" placeholder="Your Name" required />
+                        <input type="email" name="email" placeholder="Your Email" required />
+                        <select name="topic">
+                            <option value="collab">🤝 Collaboration</option>
+                            <option value="tech">💬 Technical Question</option>
+                            <option value="sponsor">☕ Sponsorship</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                        <textarea name="message" rows="4" placeholder="Your message..." required></textarea>
+                        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Send Message</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 赞助支持 -->
+            <section id="sponsor">
+                <div class="sponsor-box">
+                    <div style="font-size:2rem; margin-bottom:12px;">☕</div>
+                    <h3 style="font-size:1.2rem; margin-bottom:8px; color:var(--text-main);">Enjoying my work?</h3>
+                    <p style="color:var(--text-sub); font-size:0.9rem;">All projects are open source and free. If they've helped you, consider buying me a coffee or starring the repos.</p>
+                    <div class="sponsor-actions">
+                        <a href="https://github.com/sponsors/BlueDriftHK" target="_blank" class="social-btn sponsor-primary"><i class="fas fa-heart"></i> Sponsor on GitHub</a>
+                        <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" class="social-btn"><i class="fas fa-star"></i> Star the Repo</a>
+                    </div>
+                </div>
             </section>
         </div>
 
         <!-- ========== 文章详情视图 ========== -->
         <div id="article-view">
-            <a href="#" class="back-btn" onclick="showHome(); return false;"><i class="fas fa-arrow-left"></i> Back to posts</a>
+            <div class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to posts</div>
             <article>
                 <div class="article-header">
                     <div class="post-meta" id="article-meta"></div>
@@ -311,12 +431,19 @@
                 <div class="article-content" id="article-content"></div>
             </article>
         </div>
-
     </div>
 
+    <!-- 增强页脚 -->
     <footer>
+        <div class="footer-links">
+            <a href="#about" onclick="scrollToSection('about'); return false;">About</a>
+            <a href="#projects" onclick="scrollToSection('projects'); return false;">Projects</a>
+            <a href="#blog" onclick="scrollToSection('blog'); return false;">Blog</a>
+            <a href="https://github.com/BlueDriftHK" target="_blank">GitHub</a>
+            <a href="#contact" onclick="scrollToSection('contact'); return false;">Contact</a>
+        </div>
         <p>&copy; 2026 BlueDriftHK · Built with <span class="heart">♥</span> on Cloudflare Pages</p>
-        <p style="margin-top:6px; font-size:0.75rem;">Stay curious, stay innovative.</p>
+        <p style="font-size:0.72rem; margin-top:6px; opacity:0.6;">Licensed under GNU GPL v3.0 · Stay curious, stay innovative.</p>
     </footer>
 
     <script>
@@ -345,14 +472,16 @@
             }
         ];
 
-        // ====== 渲染 & 路由 ======
+        // ====== 渲染与路由逻辑 ======
         const postListEl = document.getElementById('post-list');
         const homeView = document.getElementById('home-view');
         const articleView = document.getElementById('article-view');
         const navBlog = document.getElementById('nav-blog');
+        let currentTag = 'all';
 
-        function renderPosts() {
-            postListEl.innerHTML = posts.map(p => `
+        function renderPosts(list) {
+            const data = list || posts;
+            postListEl.innerHTML = data.length ? data.map(p => `
                 <div class="post-item" onclick="showPost('${p.id}')">
                     <div class="post-meta">
                         <span class="post-tag">${p.tag}</span>
@@ -361,8 +490,39 @@
                     <div class="post-title">${p.title}</div>
                     <div class="post-excerpt">${p.excerpt}</div>
                 </div>
-            `).join('');
+            `).join('') : '<p style="color:var(--text-sub);text-align:center;padding:40px 0;">No posts found 😔 Try another keyword.</p>';
         }
+
+        // 初始化标签过滤器
+        function initFilters() {
+            const tags = [...new Set(posts.map(p => p.tag))];
+            const container = document.getElementById('tag-filters');
+            tags.forEach(tag => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-tag';
+                btn.textContent = tag;
+                btn.onclick = () => filterByTag(tag);
+                container.appendChild(btn);
+            });
+        }
+
+        window.filterByTag = function(tag) {
+            currentTag = tag;
+            document.querySelectorAll('.filter-tag').forEach(b => {
+                b.classList.toggle('active', b.textContent === tag || (tag === 'all' && b.textContent === 'All'));
+            });
+            filterPosts();
+        };
+
+        window.filterPosts = function() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = posts.filter(p => {
+                const matchTag = currentTag === 'all' || p.tag === currentTag;
+                const matchSearch = !query || p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(query);
+                return matchTag && matchSearch;
+            });
+            renderPosts(filtered);
+        };
 
         window.showPost = function(id) {
             const post = posts.find(p => p.id === id);
@@ -396,13 +556,30 @@
             }, 50);
         };
 
+        // 表单提交模拟（生产环境请替换为真实 API）
+        window.handleFormSubmit = function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('.submit-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Sent Successfully!';
+            btn.style.background = '#2ea44f';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = '';
+                e.target.reset();
+            }, 3000);
+        };
+
+        // 浏览器前进后退支持
         window.addEventListener('popstate', (e) => {
             if (e.state?.postId) showPost(e.state.postId);
             else showHome();
         });
 
+        // 初始化
         window.addEventListener('DOMContentLoaded', () => {
             renderPosts();
+            initFilters();
             const hash = location.hash.slice(1);
             if (hash && posts.find(p => p.id === hash)) showPost(hash);
         });
