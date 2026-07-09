@@ -6,14 +6,28 @@
     <title>BlueDriftHK · 边缘计算架构师</title>
     <meta name="description" content="边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source" />
 
+    <!-- ====== 预连接 ====== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <!-- ====== marked.js (Markdown 渲染) ====== -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- ====== highlight.js (代码高亮) ====== -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
     <style>
-        /* ====== 全局重置 & 变量 ====== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ============================================================
+               全局重置 & 变量（含亮色模式支持）
+               ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
             --primary: #F38020;
@@ -29,9 +43,36 @@
             --radius: 12px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --max-width: 1000px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
-        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+        /* 亮色模式（根据系统偏好自动切换 + 手动按钮控制） */
+        [data-theme="light"] {
+            --bg-dark: #f6f8fa;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f0f2f5;
+            --text-primary: #24292f;
+            --text-secondary: #57606a;
+            --border-color: #d0d7de;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root:not([data-theme="dark"]) {
+                --bg-dark: #f6f8fa;
+                --bg-card: #ffffff;
+                --bg-card-hover: #f0f2f5;
+                --text-primary: #24292f;
+                --text-secondary: #57606a;
+                --border-color: #d0d7de;
+                --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -42,266 +83,905 @@
             display: flex;
             flex-direction: column;
             padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
+            transition: background 0.3s, color 0.3s;
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 8px; }
-
-        a { color: var(--primary); text-decoration: none; transition: var(--transition); }
-        a:hover { color: var(--primary-light); }
-        ::selection { background: var(--primary); color: #fff; }
-
-        .clickable, .social-bar a, .btn {
-            min-height: 44px; min-width: 44px;
-            display: inline-flex; align-items: center; justify-content: center;
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 8px;
         }
 
-        .container { max-width: var(--max-width); margin: 0 auto; padding: 24px 16px 40px; width: 100%; flex: 1; }
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        a:hover {
+            color: var(--primary-light);
+        }
+        ::selection {
+            background: var(--primary);
+            color: #fff;
+        }
 
-        /* ====== 头部 ====== */
-        .header { text-align: center; padding: 32px 0 28px; border-bottom: 1px solid var(--border-color); margin-bottom: 32px; }
+        .clickable,
+        .social-bar a,
+        .btn {
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 24px 16px 40px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* ============================================================
+               头部
+               ============================================================ */
+        .header {
+            text-align: center;
+            padding: 32px 0 28px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 32px;
+        }
         .avatar {
-            width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--primary);
-            object-fit: cover; margin-bottom: 14px; box-shadow: 0 0 30px rgba(243, 128, 32, 0.12); transition: var(--transition);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            object-fit: cover;
+            margin-bottom: 14px;
+            box-shadow: 0 0 30px rgba(243, 128, 32, 0.12);
+            transition: var(--transition);
         }
-        .header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; word-break: break-word; }
-        .header h1 span { color: var(--primary); }
-        .header .subtitle { font-size: 1rem; color: var(--text-secondary); margin-top: 4px; padding: 0 10px; }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            word-break: break-word;
+        }
+        .header h1 span {
+            color: var(--primary);
+        }
+        .header .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            padding: 0 10px;
+        }
 
-        .header .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 14px 0 16px; }
+        .header .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 14px 0 16px;
+        }
         .header .tags .tag {
-            display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 500;
-            background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); white-space: nowrap;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            white-space: nowrap;
         }
-        .header .tags .tag i { margin-right: 4px; color: var(--primary); }
+        .header .tags .tag i {
+            margin-right: 4px;
+            color: var(--primary);
+        }
 
-        .social-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 12px; }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .header-actions .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 6px 16px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+        }
+        .header-actions .theme-toggle:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .social-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 6px;
+        }
         .social-bar a {
-            display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 24px;
-            background: var(--bg-card); border: 1px solid var(--border-color); font-size: 0.85rem;
-            color: var(--text-secondary); transition: var(--transition); min-height: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            min-height: 40px;
         }
 
-        /* ====== 通用卡片 ====== */
+        /* ============================================================
+               通用卡片
+               ============================================================ */
         .card {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius);
-            padding: 24px 20px; margin-bottom: 24px; transition: var(--transition);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            margin-bottom: 24px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
-        .card h2 { font-size: 1.35rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .card h2 i { color: var(--primary); }
-        .card p, .card li { color: var(--text-secondary); font-size: 0.95rem; }
-        .card ul { list-style: none; padding: 0; }
-        .card ul li { padding: 5px 0 5px 26px; position: relative; }
-        .card ul li::before { content: '▸'; position: absolute; left: 4px; color: var(--primary); font-weight: 700; }
+        .card h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .card h2 i {
+            color: var(--primary);
+        }
+        .card p,
+        .card li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .card ul li {
+            padding: 5px 0 5px 26px;
+            position: relative;
+        }
+        .card ul li::before {
+            content: '▸';
+            position: absolute;
+            left: 4px;
+            color: var(--primary);
+            font-weight: 700;
+        }
 
-        /* ====== 技能网格 ====== */
-        .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+        /* ============================================================
+               技能网格
+               ============================================================ */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 6px;
+        }
         .skill-grid .skill {
-            background: var(--bg-dark); border-radius: 10px; padding: 14px 12px;
-            border: 1px solid var(--border-color); text-align: center; transition: var(--transition);
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 14px 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: var(--transition);
         }
-        .skill-grid .skill .sicon { font-size: 1.5rem; display: block; margin-bottom: 2px; }
-        .skill-grid .skill .sname { font-weight: 600; color: var(--text-primary); font-size: 0.9rem; }
-        .skill-grid .skill .slevel { font-size: 0.75rem; color: var(--text-secondary); }
+        .skill-grid .skill .sicon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .skill-grid .skill .sname {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        .skill-grid .skill .slevel {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
 
-        /* ====== 项目卡片 ====== */
+        /* ============================================================
+               项目卡片
+               ============================================================ */
         .project-card {
-            background: var(--bg-dark); border-radius: 10px; padding: 16px 18px;
-            border: 1px solid var(--border-color); margin-bottom: 14px; transition: var(--transition);
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 16px 18px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 14px;
+            transition: var(--transition);
         }
-        .project-card .pname { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
-        .project-card .pname i { color: var(--primary); margin-right: 6px; }
-        .project-card .pdesc { color: var(--text-secondary); font-size: 0.9rem; margin: 4px 0 8px; }
-        .project-card .ptags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .project-card .pname {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .project-card .pname i {
+            color: var(--primary);
+            margin-right: 6px;
+        }
+        .project-card .pdesc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 4px 0 8px;
+        }
+        .project-card .ptags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
         .project-card .ptags .ptag {
-            font-size: 0.7rem; padding: 2px 12px; border-radius: 12px;
-            background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary);
+            font-size: 0.7rem;
+            padding: 2px 12px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
         }
-        .project-card .p-links { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 12px; }
-        .project-card .p-links a { font-weight: 600; font-size: 0.9rem; }
+        .project-card .p-links {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .project-card .p-links a {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
 
-        /* ====== 时间线 ====== */
-        .timeline-item { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
-        .timeline-item:last-child { border-bottom: none; }
-        .timeline-item .tdate { min-width: 70px; font-weight: 700; color: var(--primary); font-size: 0.85rem; flex-shrink: 0; }
-        .timeline-item .tcontent .ttitle { font-weight: 600; color: var(--text-primary); font-size: 0.95rem; }
-        .timeline-item .tcontent .tdesc { color: var(--text-secondary); font-size: 0.88rem; }
+        /* ============================================================
+               时间线
+               ============================================================ */
+        .timeline-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        .timeline-item .tdate {
+            min-width: 70px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .timeline-item .tcontent .ttitle {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+        .timeline-item .tcontent .tdesc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+        }
 
-        /* ====== 博客系统增强 ====== */
-        .blog-filter { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        /* ============================================================
+               博客列表
+               ============================================================ */
+        .blog-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
         #search-input {
-            background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 10px;
-            padding: 10px 16px; color: var(--text-primary); font-size: 0.9rem; outline: none; width: 100%;
-            font-family: inherit; transition: var(--transition); min-height: 44px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            outline: none;
+            width: 100%;
+            font-family: inherit;
+            transition: var(--transition);
+            min-height: 44px;
         }
-        #search-input:focus { border-color: var(--primary); }
-        .tag-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+        #search-input:focus {
+            border-color: var(--primary);
+        }
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
         .filter-tag {
-            padding: 4px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-            background: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-secondary);
-            cursor: pointer; transition: var(--transition); font-family: inherit; min-height: 32px;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            min-height: 32px;
         }
-        .filter-tag.active, .filter-tag:hover { background: var(--primary-dim); color: var(--primary); border-color: var(--primary); }
+        .filter-tag.active,
+        .filter-tag:hover {
+            background: var(--primary-dim);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
 
         .blog-item {
-            display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 14px 0;
-            border-bottom: 1px solid var(--border-color); align-items: baseline; cursor: pointer; transition: var(--transition);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+            align-items: baseline;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .blog-item:last-child { border-bottom: none; }
-        .blog-item:hover .btitle { color: var(--primary); }
-        .blog-item .bdate { color: var(--text-secondary); font-size: 0.78rem; min-width: 70px; flex-shrink: 0; }
-        .blog-item .btitle { font-weight: 500; color: var(--text-primary); flex: 1; font-size: 0.95rem; transition: var(--transition); }
+        .blog-item:last-child {
+            border-bottom: none;
+        }
+        .blog-item:hover .btitle {
+            color: var(--primary);
+        }
+        .blog-item .bdate {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+        .blog-item .btitle {
+            font-weight: 500;
+            color: var(--text-primary);
+            flex: 1;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
         .blog-item .btag {
-            font-size: 0.65rem; padding: 2px 12px; border-radius: 12px;
-            background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-secondary); white-space: nowrap;
+            font-size: 0.65rem;
+            padding: 2px 12px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            white-space: nowrap;
         }
-        .blog-empty { color: var(--text-secondary); text-align: center; padding: 30px 0; font-size: 0.9rem; }
+        .blog-empty {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 30px 0;
+            font-size: 0.9rem;
+        }
 
-        /* ====== 文章详情视图 ====== */
-        #article-view { display: none; animation: fadeIn 0.35s var(--transition); }
-        #article-view.visible { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        /* ============================================================
+               文章详情视图
+               ============================================================ */
+        #article-view {
+            display: none;
+            animation: fadeIn 0.35s var(--transition);
+        }
+        #article-view.visible {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .back-btn {
-            display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary);
-            font-size: 0.9rem; margin-bottom: 20px; padding: 8px 16px; border-radius: 8px;
-            transition: var(--transition); cursor: pointer; min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            min-height: 44px;
+            background: transparent;
+            border: none;
+            font-family: inherit;
         }
-        .back-btn:hover { background: var(--bg-card); color: var(--primary); }
+        .back-btn:hover {
+            background: var(--bg-card);
+            color: var(--primary);
+        }
 
-        .article-header { margin-bottom: 28px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-        .article-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; line-height: 1.3; }
-        .article-meta { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-secondary); flex-wrap: wrap; }
-        .article-meta .btag { font-size: 0.68rem; padding: 2px 12px; border-radius: 12px; background: var(--primary-dim); color: var(--primary); border: 1px solid transparent; }
+        .article-header {
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .article-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+        .article-meta .btag {
+            font-size: 0.68rem;
+            padding: 2px 12px;
+            border-radius: 12px;
+            background: var(--primary-dim);
+            color: var(--primary);
+            border: 1px solid transparent;
+        }
 
-        .article-content { font-size: 1rem; color: #c9d1d9; line-height: 1.8; }
-        .article-content h2 { font-size: 1.4rem; margin: 32px 0 14px; color: var(--text-primary); font-weight: 700; }
-        .article-content h3 { font-size: 1.15rem; margin: 24px 0 10px; color: var(--text-primary); font-weight: 600; }
-        .article-content p { margin-bottom: 16px; }
-        .article-content ul, .article-content ol { margin: 0 0 16px 22px; }
-        .article-content li { margin-bottom: 5px; color: #c9d1d9; }
+        /* ---- 文章正文样式 ---- */
+        .article-content {
+            font-size: 1rem;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+        .article-content h2 {
+            font-size: 1.4rem;
+            margin: 32px 0 14px;
+            color: var(--text-primary);
+            font-weight: 700;
+            scroll-margin-top: 20px;
+        }
+        .article-content h3 {
+            font-size: 1.15rem;
+            margin: 24px 0 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            scroll-margin-top: 20px;
+        }
+        .article-content p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        .article-content ul,
+        .article-content ol {
+            margin: 0 0 16px 22px;
+        }
+        .article-content li {
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
         .article-content code {
-            font-family: 'JetBrains Mono', monospace; background: var(--primary-dim);
-            color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 0.88em;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--primary-dim);
+            color: var(--primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
         }
         .article-content pre {
-            background: var(--bg-dark); border: 1px solid var(--border-color);
-            border-radius: var(--radius); padding: 18px; overflow-x: auto; margin-bottom: 22px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 18px;
+            overflow-x: auto;
+            margin-bottom: 22px;
         }
-        .article-content pre code { background: none; padding: 0; color: #c9d1d9; }
+        .article-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
         .article-content blockquote {
-            border-left: 3px solid var(--primary); padding: 12px 18px; margin: 0 0 22px;
-            background: var(--primary-dim); border-radius: 0 var(--radius) var(--radius) 0; color: var(--text-primary);
+            border-left: 3px solid var(--primary);
+            padding: 12px 18px;
+            margin: 0 0 22px;
+            background: var(--primary-dim);
+            border-radius: 0 var(--radius) var(--radius) 0;
+            color: var(--text-primary);
         }
-        .article-content strong { color: var(--text-primary); font-weight: 600; }
+        .article-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .article-content img {
+            max-width: 100%;
+            border-radius: var(--radius);
+            margin: 16px 0;
+        }
 
-        /* ====== 联系信息 ====== */
-        .contact-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
-        .contact-item:last-child { border-bottom: none; }
-        .contact-item .cicon { width: 32px; font-size: 1.1rem; color: var(--primary); text-align: center; flex-shrink: 0; }
-        .contact-item .clabel { font-weight: 500; color: var(--text-secondary); min-width: 70px; font-size: 0.9rem; }
-        .contact-item .cvalue { color: var(--text-primary); word-break: break-word; font-size: 0.9rem; }
-        .contact-item .cvalue a { color: var(--text-primary); }
+        /* ---- 文章目录 (TOC) ---- */
+        .toc-wrap {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+        .toc-wrap .toc-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toc-wrap .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .toc-wrap .toc-list li {
+            padding: 3px 0 3px 16px;
+            position: relative;
+            font-size: 0.88rem;
+            border: none;
+        }
+        .toc-wrap .toc-list li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            opacity: 0.6;
+        }
+        .toc-wrap .toc-list li.toc-h3 {
+            padding-left: 32px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+        .toc-wrap .toc-list a {
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+        .toc-wrap .toc-list a:hover {
+            color: var(--primary);
+        }
 
-        /* ====== 页脚 ====== */
-        .footer { text-align: center; padding: 32px 0 16px; border-top: 1px solid var(--border-color); margin-top: 16px; color: var(--text-secondary); font-size: 0.85rem; }
+        /* ---- 阅读进度条 ---- */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            z-index: 999;
+            transition: width 0.1s;
+        }
+
+        /* ---- 评论 ---- */
+        #comments-section {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ============================================================
+               联系信息
+               ============================================================ */
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+        .contact-item .cicon {
+            width: 32px;
+            font-size: 1.1rem;
+            color: var(--primary);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .contact-item .clabel {
+            font-weight: 500;
+            color: var(--text-secondary);
+            min-width: 70px;
+            font-size: 0.9rem;
+        }
+        .contact-item .cvalue {
+            color: var(--text-primary);
+            word-break: break-word;
+            font-size: 0.9rem;
+        }
+        .contact-item .cvalue a {
+            color: var(--text-primary);
+        }
+
+        /* ============================================================
+               页脚
+               ============================================================ */
+        .footer {
+            text-align: center;
+            padding: 32px 0 16px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
         .footer .wave {
-            display: block; width: 100%; height: 40px;
+            display: block;
+            width: 100%;
+            height: 40px;
             background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0,20 C300,0 600,40 900,20 C1050,10 1150,20 1200,20 L1200,40 L0,40Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
             -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0,20 C300,0 600,40 900,20 C1050,10 1150,20 1200,20 L1200,40 L0,40Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
-            margin-bottom: 16px; opacity: 0.4;
+            margin-bottom: 16px;
+            opacity: 0.4;
         }
 
-        /* ====== 响应式断点 ====== */
+        /* ============================================================
+               响应式
+               ============================================================ */
         @media (min-width: 600px) {
-            .container { padding: 32px 24px 50px; }
-            .card { padding: 28px; }
-            .header h1 { font-size: 2.4rem; }
-            .avatar { width: 120px; height: 120px; }
+            .container {
+                padding: 32px 24px 50px;
+            }
+            .card {
+                padding: 28px;
+            }
+            .header h1 {
+                font-size: 2.4rem;
+            }
+            .avatar {
+                width: 120px;
+                height: 120px;
+            }
         }
 
         @media (min-width: 900px) {
-            .container { padding: 40px 32px 60px; }
-            .card { padding: 32px 36px; margin-bottom: 28px; }
-            .card h2 { font-size: 1.6rem; }
-            .header { padding: 50px 0 40px; margin-bottom: 40px; }
-            .header h1 { font-size: 2.8rem; }
-            .avatar { width: 130px; height: 130px; }
-            .skill-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
-            .skill-grid .skill { padding: 18px 16px; }
-            .skill-grid .skill .sicon { font-size: 1.8rem; }
-            .timeline-item .tdate { min-width: 100px; font-size: 0.95rem; }
-            .contact-item .clabel { min-width: 90px; }
-            .social-bar a { padding: 8px 24px; font-size: 0.95rem; }
-            .project-card { padding: 20px 24px; }
-            .project-card .pname { font-size: 1.2rem; }
-            .blog-item .bdate { min-width: 90px; font-size: 0.85rem; }
-            .footer .wave { height: 60px; }
-            .article-header h1 { font-size: 2.2rem; }
+            .container {
+                padding: 40px 32px 60px;
+            }
+            .card {
+                padding: 32px 36px;
+                margin-bottom: 28px;
+            }
+            .card h2 {
+                font-size: 1.6rem;
+            }
+            .header {
+                padding: 50px 0 40px;
+                margin-bottom: 40px;
+            }
+            .header h1 {
+                font-size: 2.8rem;
+            }
+            .avatar {
+                width: 130px;
+                height: 130px;
+            }
+            .skill-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 16px;
+            }
+            .skill-grid .skill {
+                padding: 18px 16px;
+            }
+            .skill-grid .skill .sicon {
+                font-size: 1.8rem;
+            }
+            .timeline-item .tdate {
+                min-width: 100px;
+                font-size: 0.95rem;
+            }
+            .contact-item .clabel {
+                min-width: 90px;
+            }
+            .social-bar a {
+                padding: 8px 24px;
+                font-size: 0.95rem;
+            }
+            .project-card {
+                padding: 20px 24px;
+            }
+            .project-card .pname {
+                font-size: 1.2rem;
+            }
+            .blog-item .bdate {
+                min-width: 90px;
+                font-size: 0.85rem;
+            }
+            .footer .wave {
+                height: 60px;
+            }
+            .article-header h1 {
+                font-size: 2.2rem;
+            }
         }
 
         @media (min-width: 1200px) {
-            .container { max-width: 1100px; }
+            .container {
+                max-width: 1100px;
+            }
         }
 
         @media (max-width: 399px) {
-            .container { padding: 16px 10px 30px; }
-            .card { padding: 16px 14px; }
-            .header h1 { font-size: 1.5rem; }
-            .header .tags .tag { font-size: 0.7rem; padding: 3px 10px; }
-            .skill-grid { grid-template-columns: 1fr; gap: 10px; }
-            .social-bar a { padding: 4px 12px; font-size: 0.75rem; min-height: 36px; }
-            .avatar { width: 80px; height: 80px; }
-            .contact-item { gap: 8px; }
-            .contact-item .clabel { min-width: 60px; font-size: 0.8rem; }
-            .timeline-item { flex-direction: column; gap: 2px; }
-            .timeline-item .tdate { min-width: auto; }
-            .blog-item { flex-direction: column; gap: 2px; }
-            .blog-item .bdate { min-width: auto; }
+            .container {
+                padding: 16px 10px 30px;
+            }
+            .card {
+                padding: 16px 14px;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .header .tags .tag {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
+            .skill-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .social-bar a {
+                padding: 4px 12px;
+                font-size: 0.75rem;
+                min-height: 36px;
+            }
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+            .contact-item {
+                gap: 8px;
+            }
+            .contact-item .clabel {
+                min-width: 60px;
+                font-size: 0.8rem;
+            }
+            .timeline-item {
+                flex-direction: column;
+                gap: 2px;
+            }
+            .timeline-item .tdate {
+                min-width: auto;
+            }
+            .blog-item {
+                flex-direction: column;
+                gap: 2px;
+            }
+            .blog-item .bdate {
+                min-width: auto;
+            }
+            .article-header h1 {
+                font-size: 1.4rem;
+            }
         }
 
         @supports (padding: max(0px)) {
-            body { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+            body {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+            }
         }
 
         @media (hover: hover) {
-            .card:hover { border-color: rgba(243, 128, 32, 0.25); }
-            .skill-grid .skill:hover { transform: translateY(-3px); border-color: var(--primary); }
-            .social-bar a:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--text-primary); }
-            .project-card:hover { border-color: var(--primary); }
+            .card:hover {
+                border-color: rgba(243, 128, 32, 0.25);
+            }
+            .skill-grid .skill:hover {
+                transform: translateY(-3px);
+                border-color: var(--primary);
+            }
+            .social-bar a:hover {
+                transform: translateY(-2px);
+                border-color: var(--primary);
+                color: var(--text-primary);
+            }
+            .project-card:hover {
+                border-color: var(--primary);
+            }
         }
 
         @media (hover: none) {
-            .card:hover, .skill-grid .skill:hover, .social-bar a:hover, .project-card:hover {
-                transform: none; border-color: var(--border-color);
+            .card:hover,
+            .skill-grid .skill:hover,
+            .social-bar a:hover,
+            .project-card:hover {
+                transform: none;
+                border-color: var(--border-color);
             }
-            .social-bar a:hover { color: var(--text-secondary); }
+            .social-bar a:hover {
+                color: var(--text-secondary);
+            }
         }
 
         @media print {
-            body { background: #fff; color: #000; padding: 0.5in; }
-            .card { background: #f9f9f9; border-color: #ddd; box-shadow: none; }
-            .avatar { border-color: #333; }
-            .header h1 span { color: #333; }
-            .social-bar a { border-color: #ccc; color: #333; }
-            .footer .wave, .blog-filter, .back-btn { display: none; }
-            #article-view { display: block !important; }
-            #home-view { display: none !important; }
+            body {
+                background: #fff;
+                color: #000;
+                padding: 0.5in;
+            }
+            .card {
+                background: #f9f9f9;
+                border-color: #ddd;
+                box-shadow: none;
+            }
+            .avatar {
+                border-color: #333;
+            }
+            .header h1 span {
+                color: #333;
+            }
+            .social-bar a {
+                border-color: #ccc;
+                color: #333;
+            }
+            .footer .wave,
+            .blog-filter,
+            .back-btn,
+            .reading-progress,
+            .header-actions {
+                display: none;
+            }
+            #article-view {
+                display: block !important;
+            }
+            #home-view {
+                display: none !important;
+            }
         }
     </style>
 </head>
 <body>
 
+    <!-- ====== 阅读进度条 ====== -->
+    <div class="reading-progress" id="readingProgress"></div>
+
     <div class="container">
 
-        <!-- ========== 首页视图 ========== -->
+        <!-- ============================================================
+        首页视图
+        ============================================================ -->
         <div id="home-view">
 
             <!-- 头部 -->
             <header class="header">
-                <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像" />
+                <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23161b22%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2256%22 text-anchor=%22middle%22 font-size=%2240%22 font-family=%22sans-serif%22 fill=%22%23f38020%22%3E🚀%3C/text%3E%3C/svg%3E'" />
                 <h1>👋 我是 <span>BlueDriftHK</span></h1>
                 <p class="subtitle">边缘计算架构师 · Cloudflare Workers 开发者 · 开源工具构建者</p>
                 <div class="tags">
@@ -310,6 +990,11 @@
                     <span class="tag"><i class="fas fa-chart-line"></i> 网络诊断</span>
                     <span class="tag"><i class="fas fa-code"></i> 全栈工具</span>
                     <span class="tag"><i class="fas fa-lock"></i> 协议安全</span>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
+                        <i class="fas fa-moon"></i> <span id="themeLabel">深色</span>
+                    </button>
                 </div>
                 <div class="social-bar">
                     <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i> GitHub</a>
@@ -398,18 +1083,20 @@
                 </div>
             </section>
 
-            <!-- 博客文章（动态系统） -->
+            <!-- 博客文章 -->
             <section class="card" id="blog-section">
                 <h2><i class="fas fa-pen-fancy"></i> 技术文章</h2>
                 <p style="color:var(--text-secondary); margin-bottom:12px;">记录技术思考与实践经验，支持搜索与标签过滤。</p>
-                
+
                 <div class="blog-filter">
-                    <input type="text" id="search-input" placeholder="🔍 搜索文章标题或关键词..." oninput="filterPosts()" />
+                    <input type="text" id="search-input" placeholder="🔍 搜索文章标题或关键词..." oninput="debouncedFilter()" />
                     <div class="tag-filters" id="tag-filters">
                         <button class="filter-tag active" onclick="filterByTag('all')">全部</button>
                     </div>
                 </div>
-                <div id="post-list"></div>
+                <div id="post-list">
+                    <div class="blog-empty">⏳ 加载文章中...</div>
+                </div>
             </section>
 
             <!-- 联系我 -->
@@ -455,15 +1142,25 @@
             </section>
         </div>
 
-        <!-- ========== 文章详情视图 ========== -->
+        <!-- ============================================================
+        文章详情视图
+        ============================================================ -->
         <div id="article-view">
-            <div class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> 返回文章列表</div>
+            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> 返回文章列表</button>
             <article class="card" style="margin-bottom:0;">
                 <div class="article-header">
                     <div class="article-meta" id="article-meta"></div>
                     <h1 id="article-title"></h1>
                 </div>
+                <!-- 目录将动态插入到这里 -->
+                <div id="toc-container"></div>
                 <div class="article-content" id="article-content"></div>
+
+                <!-- 评论 -->
+                <div id="comments-section">
+                    <h2 style="font-size:1.2rem; margin-bottom:12px;"><i class="fas fa-comments"></i> 讨论区</h2>
+                    <div id="giscus-container"></div>
+                </div>
             </article>
         </div>
 
@@ -471,84 +1168,129 @@
         <footer class="footer">
             <div class="wave"></div>
             <p>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊<br /><span style="font-style:italic;">🔮 保持好奇，保持创新。</span></p>
-            <p style="font-size:0.75rem; margin-top:10px; color:var(--text-secondary);">&copy; 2026 BlueDriftHK · 基于 Cloudflare Workers 构建</p>
+            <p style="font-size:0.75rem; margin-top:10px; color:var(--text-secondary);">&copy; 2026 BlueDriftHK · 基于 GitHub Pages 构建</p>
+            <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:4px;">
+                <span id="visitor-counter">👀 访问量：<span id="visit-count">--</span></span>
+            </p>
         </footer>
     </div>
 
     <script>
-        // ====== 博客数据（7篇深度技术文章） ======
-        const posts = [
-            {
-                id: "websocket-retry",
-                title: "WebSocket 在边缘环境下的重连策略实战",
-                date: "2026.07", tag: "实时通信",
-                excerpt: "深入解析如何在 Cloudflare Workers 的不稳定边缘环境中，设计一套优雅的 WebSocket 断线重连与心跳保活机制。",
-                content: `<p>在边缘计算场景中，WebSocket 连接面临着比传统数据中心更复杂的网络环境。本文将分享我在 <strong>NetSight Pro</strong> 项目中总结的重连策略。</p><h2>核心挑战</h2><ul><li>用户网络频繁切换（WiFi ↔ 4G/5G）</li><li>NAT 超时时间不可预测</li><li>Worker 实例可能被随时回收</li></ul><h2>指数退避 + 抖动算法</h2><blockquote>关键原则：永远不要让所有客户端在同一时刻发起重连请求。</blockquote><pre><code>function getRetryDelay(attempt) {\n  const base = Math.min(1000 * Math.pow(2, attempt), 30000);\n  const jitter = Math.random() * 1000;\n  return base + jitter;\n}</code></pre><h2>心跳保活设计</h2><p>建议心跳间隔设置为 <strong>25秒</strong>，这能兼容大多数运营商的 NAT 超时策略，同时避免不必要的电量消耗。</p>`
-            },
-            {
-                id: "d1-hyperdrive",
-                title: "D1 + Hyperdrive：将边缘数据库查询加速 10 倍",
-                date: "2026.06", tag: "数据库",
-                excerpt: "揭秘 Cloudflare Hyperdrive 如何通过连接池复用与智能缓存，彻底解决 D1 跨地域查询的高延迟痛点。",
-                content: `<p>Cloudflare D1 作为边缘 SQLite 数据库，虽然部署便捷，但在跨区域访问时延迟较高。<strong>Hyperdrive</strong> 的出现改变了这一现状。</p><h2>工作原理</h2><p>Hyperdrive 本质上是一个全局分布式的连接代理层。它维护了一个持久的 TCP 连接池，避免了每次请求都重新进行 TLS 握手和认证。</p><h2>性能对比</h2><ul><li>直连 D1 (US-East → Asia): ~320ms</li><li>通过 Hyperdrive: ~28ms</li></ul><blockquote>注意：Hyperdrive 目前对写入操作有严格的一致性保证，读操作则优先利用本地缓存。</blockquote><h2>接入示例</h2><pre><code>// wrangler.toml\n[[hyperdrive]]\nbinding = "HYPERDRIVE"\nid = "your-hyperdrive-id"</code></pre><p>只需修改绑定配置，现有 Drizzle/Prisma ORM 代码无需任何改动即可享受加速。</p>`
-            },
-            {
-                id: "r2-presigned-url",
-                title: "R2 预签名 URL 安全实践与防盗链策略",
-                date: "2026.06", tag: "对象存储",
-                excerpt: "如何在不暴露 Access Key 的前提下，让前端直传文件至 R2？详解预签名 URL 的生成逻辑与安全加固方案。",
-                content: `<p>在处理用户上传头像或视频素材时，让流量经过 Worker 中转会浪费大量 CPU 时间。使用 <strong>R2 Presigned URLs</strong> 实现客户端直传是最佳实践。</p><h2>生成签名</h2><pre><code>import { getSignedUrl } from "@aws-sdk/s3-request-presigner";\n\nconst url = await getSignedUrl(s3Client, new PutObjectCommand({\n  Bucket: "user-uploads",\n  Key: \`avatars/\${userId}/\${Date.now()}.webp\`\n}), { expiresIn: 300 });</code></pre><h2>安全加固三要素</h2><ol><li><strong>短有效期</strong>：URL 仅在上传窗口期内有效</li><li><strong>路径约束</strong>：限制 Key 前缀，防止覆盖他人文件</li><li><strong>Content-Type 校验</strong>：在 R2 生命周期规则中拒绝非预期 MIME 类型</li></ol>`
-            },
-            {
-                id: "waf-custom-rules",
-                title: "用 WAF Custom Rules 替代传统 Nginx 限流",
-                date: "2026.05", tag: "安全防护",
-                excerpt: "告别复杂的 limit_req 配置。利用 Cloudflare WAF 表达式引擎，实现基于 JA4 指纹、ASN 和行为特征的精准防护。",
-                content: `<p>传统 Nginx 限流只能基于 IP，容易被代理池绕过。Cloudflare WAF 提供了更丰富的匹配维度。</p><h2>高级表达式示例</h2><pre><code>(cf.client.asn in {13335 15169}) \nand not cf.bot_management.verified_bot \nand http.request.uri.path contains "/api/v1/"</code></pre><h2>JA4 指纹识别</h2><p>JA4 是新一代 TLS 指纹技术，能有效区分浏览器、爬虫和自动化工具。即使攻击者更换 IP，其 TLS 握手特征依然可被识别并拦截。</p><blockquote>实战经验：开启 JA4 指纹挑战后，某 API 接口的恶意请求量下降了 98%，而正常用户零感知。</blockquote>`
-            },
-            {
-                id: "cold-start",
-                title: "Cloudflare Workers 冷启动优化：从 80ms 到 12ms",
-                date: "2026.05", tag: "性能优化",
-                excerpt: "通过代码分割、延迟初始化和 V8 快照技术，将 Worker 冷启动时间降低 85% 的完整实践指南。",
-                content: `<p>冷启动是 Serverless 架构中最常被诟病的问题之一。但在 Cloudflare Workers 上，通过合理的代码组织，我们可以将其控制在极低水平。</p><h2>瓶颈分析</h2><p>使用 <code>wrangler dev --inspect</code> 进行性能剖析后，主要耗时集中在顶层 import 的大型库初始化（占 60%）和 KV/D1 绑定的首次握手（占 25%）。</p><h2>动态 Import</h2><pre><code>// ❌ Before\nimport { heavyParser } from './parser';\n\n// ✅ After\nconst { heavyParser } = await import('./parser');</code></pre><h2>成果</h2><p>P99 冷启动时间从 <strong>80ms 降至 12ms</strong>，用户体验几乎无感知。</p>`
-            },
-            {
-                id: "quic-http3-edge",
-                title: "QUIC/HTTP3 在边缘网络的实测收益与坑点",
-                date: "2026.04", tag: "网络协议",
-                excerpt: "HTTP/3 真的比 HTTP/2 快吗？我们在全球 20 个边缘节点的实测数据揭示了 QUIC 的真实表现与回退策略。",
-                content: `<p>QUIC 协议基于 UDP，解决了 TCP 队头阻塞问题。但在实际边缘部署中，情况并非总是理想。</p><h2>实测数据</h2><ul><li><strong>弱网环境 (丢包率 > 2%)</strong>：HTTP/3 首字节时间比 HTTP/2 快 40-60%</li><li><strong>优质网络 (丢包率 < 0.1%)</strong>：两者差距在 5% 以内</li><li><strong>UDP 受限区域</strong>：部分企业防火墙会静默丢弃 UDP 443 端口流量</li></ul><h2>优雅降级策略</h2><p>务必在 DNS 记录中启用 <code>HTTPS</code> RR 记录，并在服务端配置 Alt-Svc 头。当 QUIC 握手超时时，客户端应能在 200ms 内自动回退到 TCP。</p>`
-            },
-            {
-                id: "hls-adaptive",
-                title: "HLS.js 在低带宽场景下的自适应码率调优",
-                date: "2026.03", tag: "流媒体",
-                excerpt: "针对东南亚及南美等弱网环境，调整 HLS.js 的 ABR 控制器参数，实现更平滑的视频播放体验。",
-                content: `<p>在网络诊断工具中集成视频流测试时，默认的 HLS.js 配置在弱网下频繁卡顿。</p><h2>自定义 ABR 配置</h2><pre><code>const hls = new Hls({\n  abrEwmaFastLive: 3.0,\n  abrEwmaSlowLive: 9.0,\n  abrBandWidthUpFactor: 0.7,\n  maxStarvationDelay: 4\n});</code></pre><blockquote>核心思路：降低快速估算权重，让算法对带宽波动更加"迟钝"，避免频繁切档。</blockquote><p>调整后弱网画质切换次数减少 <strong>70%</strong>，播放中断率下降 <strong>45%</strong>。</p>`
-            }
-        ];
+        // ================================================================
+        // 全局状态
+        // ================================================================
+        let posts = [];
+        let currentTag = 'all';
+        let currentPostId = null;
 
-        // ====== 渲染与路由逻辑 ======
         const postListEl = document.getElementById('post-list');
         const homeView = document.getElementById('home-view');
         const articleView = document.getElementById('article-view');
-        let currentTag = 'all';
+        const searchInput = document.getElementById('search-input');
+        const progressBar = document.getElementById('readingProgress');
 
+        // ================================================================
+        // 工具函数：防抖
+        // ================================================================
+        function debounce(fn, delay = 300) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn(...args), delay);
+            };
+        }
+        const debouncedFilter = debounce(() => filterPosts(), 250);
+
+        // ================================================================
+        // 主题切换
+        // ================================================================
+        function initTheme() {
+            const stored = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = stored || (prefersDark ? 'dark' : 'light');
+            applyTheme(theme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
+            localStorage.setItem('theme', theme);
+            const icon = document.querySelector('#themeToggle i');
+            const label = document.getElementById('themeLabel');
+            if (theme === 'dark') {
+                icon.className = 'fas fa-moon';
+                label.textContent = '深色';
+            } else {
+                icon.className = 'fas fa-sun';
+                label.textContent = '亮色';
+            }
+        }
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // ================================================================
+        // 阅读进度条
+        // ================================================================
+        function updateProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = progress + '%';
+        }
+        window.addEventListener('scroll', updateProgress);
+
+        // ================================================================
+        // 加载文章数据
+        // ================================================================
+        async function loadMeta() {
+            try {
+                const res = await fetch('/posts/meta.json');
+                if (!res.ok) throw new Error('meta.json 加载失败');
+                posts = await res.json();
+                posts.sort((a, b) => b.date.localeCompare(a.date));
+                renderPosts(posts);
+                initFilters();
+                // 路由：检查 URL path 或 hash
+                const path = window.location.pathname;
+                const hash = window.location.hash.slice(1);
+                let slug = null;
+                if (path.startsWith('/post/')) {
+                    slug = path.replace('/post/', '').replace(/\/$/, '');
+                } else if (hash) {
+                    slug = hash;
+                }
+                if (slug && posts.find(p => p.id === slug)) {
+                    showPost(slug, false);
+                } else {
+                    showHome();
+                }
+            } catch (err) {
+                console.error('加载文章列表失败:', err);
+                postListEl.innerHTML = '<div class="blog-empty">⚠️ 文章数据加载失败，请刷新重试</div>';
+            }
+        }
+
+        // ================================================================
+        // 渲染文章列表
+        // ================================================================
         function renderPosts(list) {
             const data = list || posts;
             postListEl.innerHTML = data.length ? data.map(p => `
-                <div class="blog-item" onclick="showPost('${p.id}')">
-                    <span class="bdate">${p.date}</span>
-                    <span class="btitle">${p.title}</span>
-                    <span class="btag">${p.tag}</span>
-                </div>
-            `).join('') : '<div class="blog-empty">😔 没有找到相关文章，试试其他关键词吧</div>';
+                    <div class="blog-item" onclick="navigateToPost('${p.id}')">
+                        <span class="bdate">${p.date}</span>
+                        <span class="btitle">${p.title}</span>
+                        <span class="btag">${p.tag}</span>
+                    </div>
+                `).join('') : '<div class="blog-empty">😔 没有找到相关文章，试试其他关键词吧</div>';
         }
 
         function initFilters() {
             const tags = [...new Set(posts.map(p => p.tag))];
             const container = document.getElementById('tag-filters');
+            // 保留 "全部" 按钮，追加其他标签
+            const allBtn = container.querySelector('.filter-tag');
             tags.forEach(tag => {
                 const btn = document.createElement('button');
                 btn.className = 'filter-tag';
@@ -567,49 +1309,238 @@
         };
 
         window.filterPosts = function() {
-            const query = document.getElementById('search-input').value.toLowerCase();
+            const query = searchInput.value.toLowerCase();
             const filtered = posts.filter(p => {
                 const matchTag = currentTag === 'all' || p.tag === currentTag;
-                const matchSearch = !query || p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(query);
+                const matchSearch = !query || p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(
+                query);
                 return matchTag && matchSearch;
             });
             renderPosts(filtered);
         };
 
-        window.showPost = function(id) {
-            const post = posts.find(p => p.id === id);
-            if (!post) return;
-            document.getElementById('article-title').textContent = post.title;
-            document.getElementById('article-meta').innerHTML = `
-                <span class="btag">${post.tag}</span>
-                <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
-                <span><i class="far fa-clock"></i> ${Math.ceil(post.content.length / 500)} min read</span>
-            `;
-            document.getElementById('article-content').innerHTML = post.content;
-            homeView.style.display = 'none';
-            articleView.classList.add('visible');
-            window.scrollTo({ top: 0 });
-            history.pushState({ postId: id }, '', `#${id}`);
+        // ================================================================
+        // 导航函数（更新 URL）
+        // ================================================================
+        window.navigateToPost = function(id) {
+            showPost(id, true);
         };
 
+        window.showPost = async function(id, pushHistory = true) {
+            const post = posts.find(p => p.id === id);
+            if (!post) return;
+
+            currentPostId = id;
+
+            // 显示加载状态
+            document.getElementById('article-title').textContent = '加载中...';
+            document.getElementById('article-content').innerHTML = '<p style="color:var(--text-secondary);">⏳ 文章内容加载中...</p>';
+            document.getElementById('toc-container').innerHTML = '';
+
+            try {
+                const mdRes = await fetch(`/posts/${id}.md`);
+                if (!mdRes.ok) throw new Error('文章内容不存在');
+                const mdContent = await mdRes.text();
+
+                // 用 marked 渲染
+                const htmlContent = marked.parse(mdContent);
+
+                // 更新 meta
+                document.getElementById('article-title').textContent = post.title;
+                document.getElementById('article-meta').innerHTML = `
+                        <span class="btag">${post.tag}</span>
+                        <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
+                        <span><i class="far fa-clock"></i> ${Math.ceil(mdContent.length / 300)} min read</span>
+                    `;
+
+                // 插入内容
+                document.getElementById('article-content').innerHTML = htmlContent;
+
+                // --- 生成目录 (TOC) ---
+                const toc = generateTOC(htmlContent);
+                document.getElementById('toc-container').innerHTML = toc;
+
+                // --- 代码高亮 ---
+                document.querySelectorAll('#article-content pre code').forEach(block => {
+                    hljs.highlightElement(block);
+                });
+
+                // --- 加载 Giscus 评论 ---
+                loadGiscus(post.id);
+
+                // 切换视图
+                homeView.style.display = 'none';
+                articleView.classList.add('visible');
+                window.scrollTo({ top: 0 });
+
+                // 更新 URL
+                if (pushHistory) {
+                    const newUrl = `/post/${id}`;
+                    history.pushState({ postId: id }, '', newUrl);
+                }
+
+                // 更新页面标题（SEO）
+                document.title = `${post.title} · BlueDriftHK`;
+
+                // 更新 meta description（前端方式，对爬虫有限，但保留）
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
+
+                // 更新阅读进度
+                updateProgress();
+
+            } catch (err) {
+                console.error('加载文章失败:', err);
+                document.getElementById('article-content').innerHTML =
+                    '<p style="color:#e74c3c;">❌ 文章加载失败，请稍后重试</p>';
+            }
+        };
+
+        // ================================================================
+        // 生成目录 (TOC)
+        // ================================================================
+        function generateTOC(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const headings = doc.querySelectorAll('h2, h3');
+            if (headings.length === 0) return '';
+
+            let items = '';
+            headings.forEach(h => {
+                const level = h.tagName.toLowerCase() === 'h2' ? 'toc-h2' : 'toc-h3';
+                const text = h.textContent;
+                const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
+                h.id = id; // 注入 id 让锚点生效
+                items += `<li class="${level}"><a href="#${id}">${text}</a></li>`;
+            });
+
+            // 将修改后的标题同步回 article-content
+            const contentEl = document.getElementById('article-content');
+            const updatedHtml = doc.body.innerHTML;
+            // 只替换 body 内容，保留外层结构
+            contentEl.innerHTML = updatedHtml;
+
+            return `
+                    <div class="toc-wrap">
+                        <div class="toc-title"><i class="fas fa-list-ul"></i> 目录</div>
+                        <ul class="toc-list">${items}</ul>
+                    </div>
+                `;
+        }
+
+        // ================================================================
+        // Giscus 评论系统
+        // ================================================================
+        let giscusLoaded = false;
+
+        function loadGiscus(postId) {
+            const container = document.getElementById('giscus-container');
+            container.innerHTML = ''; // 清空
+
+            // 如果 Giscus 已加载，只需更新 data-term
+            const existingScript = document.querySelector('script[src*="giscus"]');
+            if (existingScript) {
+                // 重新加载 Giscus 需要移除并重新插入
+                existingScript.remove();
+                giscusLoaded = false;
+            }
+
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', 'BlueDriftHK/BlueDriftHK.github.io');
+            script.setAttribute('data-repo-id', '你的仓库ID'); // ⚠️ 替换为你的仓库 ID
+            script.setAttribute('data-category', 'Announcements');
+            script.setAttribute('data-category-id', '你的分类ID'); // ⚠️ 替换为你的分类 ID
+            script.setAttribute('data-mapping', 'pathname');
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'top');
+            script.setAttribute('data-theme', 'dark_dimmed');
+            script.setAttribute('data-lang', 'zh-CN');
+            script.setAttribute('crossorigin', 'anonymous');
+            script.async = true;
+
+            // 根据当前主题设置 data-theme
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            script.setAttribute('data-theme', currentTheme === 'dark' ? 'dark_dimmed' : 'light');
+
+            container.appendChild(script);
+            giscusLoaded = true;
+        }
+
+        // ================================================================
+        // 返回首页
+        // ================================================================
         window.showHome = function() {
             articleView.classList.remove('visible');
             homeView.style.display = 'block';
             window.scrollTo({ top: 0 });
-            history.pushState(null, '', window.location.pathname);
+            history.pushState(null, '', '/');
+            document.title = 'BlueDriftHK · 边缘计算架构师';
+            // 恢复 meta description
+            const metaDesc = document.querySelector('meta[name="description"]');
+            if (metaDesc) {
+                metaDesc.setAttribute('content', '边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source');
+            }
+            progressBar.style.width = '0%';
         };
 
+        // ================================================================
+        // 浏览器历史 (popstate)
+        // ================================================================
         window.addEventListener('popstate', (e) => {
-            if (e.state?.postId) showPost(e.state.postId);
-            else showHome();
+            if (e.state?.postId) {
+                showPost(e.state.postId, false);
+            } else {
+                showHome();
+            }
         });
 
+        // ================================================================
+        // 访问量统计（基于 Cloudflare Web Analytics 或简单计数）
+        // ================================================================
+        async function fetchVisitCount() {
+            try {
+                // 使用一个简单的 KV 模拟，实际可用 Cloudflare Analytics 或计数服务
+                // 这里仅展示占位，你可以替换为 Umami / Plausible 等
+                const countEl = document.getElementById('visit-count');
+                // 从 localStorage 模拟（仅供演示，实际应使用后端 API）
+                let count = parseInt(localStorage.getItem('visitCount') || '0');
+                if (!sessionStorage.getItem('visited')) {
+                    count++;
+                    localStorage.setItem('visitCount', String(count));
+                    sessionStorage.setItem('visited', 'true');
+                }
+                countEl.textContent = count || '--';
+            } catch (_) { /* 静默失败 */ }
+        }
+
+        // ================================================================
+        // 初始化
+        // ================================================================
         window.addEventListener('DOMContentLoaded', () => {
-            renderPosts();
-            initFilters();
-            const hash = location.hash.slice(1);
-            if (hash && posts.find(p => p.id === hash)) showPost(hash);
+            initTheme();
+            loadMeta();
+            fetchVisitCount();
+            // 监听主题变化以更新 Giscus 主题
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                if (giscusLoaded && document.querySelector('.giscus-frame')) {
+                    // 简单刷新 Giscus 主题（通过 postMessage）
+                    const iframe = document.querySelector('.giscus-frame');
+                    if (iframe && iframe.contentWindow) {
+                        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' :
+                            'light';
+                        iframe.contentWindow.postMessage({
+                            giscus: { setConfig: { theme } }
+                        }, 'https://giscus.app');
+                    }
+                }
+            });
         });
+
+        // 当文章内容变化时，重新高亮代码（用于动态加载后）
+        // 在 showPost 中已调用 hljs.highlightElement，无需额外操作
     </script>
 </body>
 </html>
