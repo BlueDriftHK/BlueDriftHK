@@ -5,24 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>BlueDriftHK · 边缘计算架构师</title>
     <meta name="description" content="边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source" />
+    <meta name="keywords" content="边缘计算,Cloudflare Workers,Serverless,网络诊断,开源,JavaScript,WebSocket" />
+    <meta property="og:title" content="BlueDriftHK · 边缘计算架构师" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bluedrifthk.github.io/" />
+    <meta property="og:description" content="边缘计算架构师 BlueDriftHK 的个人主页与技术博客" />
 
-    <!-- ====== 预连接 ====== -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- ====== marked.js (Markdown 渲染) ====== -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <!-- ====== highlight.js (代码高亮) ====== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
         /* ============================================================
-               全局重置 & 变量（含亮色模式支持）
-               ============================================================ */
+           全局重置 & 变量
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -34,6 +35,7 @@
             --primary-dark: #d96e1a;
             --primary-light: #ffa04a;
             --primary-dim: rgba(243, 128, 32, 0.12);
+            --primary-gradient: linear-gradient(135deg, #F38020, #ff6b00);
             --bg-dark: #0d1117;
             --bg-card: #161b22;
             --bg-card-hover: #1c2333;
@@ -42,11 +44,11 @@
             --border-color: #30363d;
             --radius: 12px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --max-width: 1000px;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --max-width: 1100px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+            --shadow-hover: 0 8px 40px rgba(243, 128, 32, 0.12);
         }
 
-        /* 亮色模式（根据系统偏好自动切换 + 手动按钮控制） */
         [data-theme="light"] {
             --bg-dark: #f6f8fa;
             --bg-card: #ffffff;
@@ -55,6 +57,7 @@
             --text-secondary: #57606a;
             --border-color: #d0d7de;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
 
         @media (prefers-color-scheme: light) {
@@ -66,6 +69,7 @@
                 --text-secondary: #57606a;
                 --border-color: #d0d7de;
                 --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+                --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.08);
             }
         }
 
@@ -111,32 +115,36 @@
             color: #fff;
         }
 
-        .clickable,
-        .social-bar a,
-        .btn {
-            min-height: 44px;
-            min-width: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .container {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 24px 16px 40px;
+            padding: 20px 16px 40px;
             width: 100%;
             flex: 1;
         }
 
         /* ============================================================
-               头部
-               ============================================================ */
+           阅读进度条
+           ============================================================ */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            z-index: 999;
+            transition: width 0.1s;
+        }
+
+        /* ============================================================
+           头部
+           ============================================================ */
         .header {
             text-align: center;
-            padding: 32px 0 28px;
+            padding: 30px 0 24px;
             border-bottom: 1px solid var(--border-color);
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
         .avatar {
             width: 100px;
@@ -144,24 +152,30 @@
             border-radius: 50%;
             border: 3px solid var(--primary);
             object-fit: cover;
-            margin-bottom: 14px;
-            box-shadow: 0 0 30px rgba(243, 128, 32, 0.12);
+            margin-bottom: 12px;
+            box-shadow: 0 0 40px rgba(243, 128, 32, 0.15);
             transition: var(--transition);
+        }
+        .avatar:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 60px rgba(243, 128, 32, 0.25);
         }
         .header h1 {
             font-size: 2rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            word-break: break-word;
         }
         .header h1 span {
             color: var(--primary);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .header .subtitle {
             font-size: 1rem;
             color: var(--text-secondary);
-            margin-top: 4px;
-            padding: 0 10px;
+            margin-top: 2px;
         }
 
         .header .tags {
@@ -169,22 +183,61 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 8px;
-            margin: 14px 0 16px;
+            margin: 12px 0 14px;
         }
         .header .tags .tag {
             display: inline-block;
             padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             font-weight: 500;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
             white-space: nowrap;
+            transition: var(--transition);
         }
         .header .tags .tag i {
             margin-right: 4px;
             color: var(--primary);
+        }
+        .header .tags .tag:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        /* ---- 统计数据 ---- */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 12px;
+            max-width: 600px;
+            margin: 14px auto 0;
+        }
+        .stats-row .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 10px 8px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        .stats-row .stat-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .stats-row .stat-item .stat-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+            line-height: 1.2;
+        }
+        .stats-row .stat-item .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .header-actions {
@@ -198,7 +251,7 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 6px 16px;
+            padding: 6px 18px;
             color: var(--text-secondary);
             font-size: 0.85rem;
             cursor: pointer;
@@ -218,8 +271,8 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 10px;
         }
         .social-bar a {
             display: inline-flex;
@@ -229,26 +282,35 @@
             border-radius: 24px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: var(--text-secondary);
             transition: var(--transition);
-            min-height: 40px;
+            min-height: 38px;
+        }
+        .social-bar a:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            color: var(--text-primary);
         }
 
         /* ============================================================
-               通用卡片
-               ============================================================ */
+           卡片通用
+           ============================================================ */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 24px 20px;
-            margin-bottom: 24px;
+            padding: 22px 18px;
+            margin-bottom: 22px;
             transition: var(--transition);
             box-shadow: var(--shadow);
         }
+        .card:hover {
+            border-color: rgba(243, 128, 32, 0.2);
+            box-shadow: var(--shadow-hover);
+        }
         .card h2 {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 12px;
             display: flex;
@@ -262,14 +324,14 @@
         .card p,
         .card li {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.93rem;
         }
         .card ul {
             list-style: none;
             padding: 0;
         }
         .card ul li {
-            padding: 5px 0 5px 26px;
+            padding: 4px 0 4px 26px;
             position: relative;
         }
         .card ul li::before {
@@ -279,52 +341,88 @@
             color: var(--primary);
             font-weight: 700;
         }
+        .card .section-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
 
         /* ============================================================
-               技能网格
-               ============================================================ */
+           技能网格（分组）
+           ============================================================ */
+        .skill-group {
+            margin-bottom: 16px;
+        }
+        .skill-group:last-child {
+            margin-bottom: 0;
+        }
+        .skill-group .group-title {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .skill-group .group-title i {
+            color: var(--primary);
+        }
         .skill-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 6px;
+            gap: 10px;
         }
         .skill-grid .skill {
             background: var(--bg-dark);
             border-radius: 10px;
-            padding: 14px 12px;
+            padding: 12px 10px;
             border: 1px solid var(--border-color);
             text-align: center;
             transition: var(--transition);
         }
+        .skill-grid .skill:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
         .skill-grid .skill .sicon {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             display: block;
             margin-bottom: 2px;
         }
         .skill-grid .skill .sname {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .skill-grid .skill .slevel {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-secondary);
         }
 
         /* ============================================================
-               项目卡片
-               ============================================================ */
+           项目卡片
+           ============================================================ */
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
         .project-card {
             background: var(--bg-dark);
             border-radius: 10px;
             padding: 16px 18px;
             border: 1px solid var(--border-color);
-            margin-bottom: 14px;
             transition: var(--transition);
         }
+        .project-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
         .project-card .pname {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -334,7 +432,7 @@
         }
         .project-card .pdesc {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             margin: 4px 0 8px;
         }
         .project-card .ptags {
@@ -343,7 +441,7 @@
             gap: 6px;
         }
         .project-card .ptags .ptag {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             padding: 2px 12px;
             border-radius: 12px;
             background: var(--bg-card);
@@ -358,16 +456,16 @@
         }
         .project-card .p-links a {
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         /* ============================================================
-               时间线
-               ============================================================ */
+           时间线
+           ============================================================ */
         .timeline-item {
             display: flex;
             gap: 14px;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
         .timeline-item:last-child {
@@ -377,27 +475,36 @@
             min-width: 70px;
             font-weight: 700;
             color: var(--primary);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             flex-shrink: 0;
         }
         .timeline-item .tcontent .ttitle {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
         }
         .timeline-item .tcontent .tdesc {
             color: var(--text-secondary);
-            font-size: 0.88rem;
+            font-size: 0.85rem;
+        }
+        .timeline-item .tcontent .ttag {
+            font-size: 0.65rem;
+            padding: 1px 10px;
+            border-radius: 10px;
+            background: var(--primary-dim);
+            color: var(--primary);
+            display: inline-block;
+            margin-top: 2px;
         }
 
         /* ============================================================
-               博客列表
-               ============================================================ */
+           博客列表
+           ============================================================ */
         .blog-filter {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         #search-input {
             background: var(--bg-dark);
@@ -414,6 +521,7 @@
         }
         #search-input:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(243, 128, 32, 0.15);
         }
         .tag-filters {
             display: flex;
@@ -423,7 +531,7 @@
         .filter-tag {
             padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
             background: var(--bg-dark);
             border: 1px solid var(--border-color);
@@ -444,9 +552,9 @@
             display: flex;
             flex-wrap: wrap;
             gap: 6px 14px;
-            padding: 14px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
-            align-items: baseline;
+            align-items: center;
             cursor: pointer;
             transition: var(--transition);
         }
@@ -458,7 +566,7 @@
         }
         .blog-item .bdate {
             color: var(--text-secondary);
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             min-width: 70px;
             flex-shrink: 0;
         }
@@ -466,17 +574,25 @@
             font-weight: 500;
             color: var(--text-primary);
             flex: 1;
-            font-size: 0.95rem;
+            font-size: 0.93rem;
             transition: var(--transition);
         }
         .blog-item .btag {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             padding: 2px 12px;
             border-radius: 12px;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
             white-space: nowrap;
+        }
+        .blog-item .bhot {
+            font-size: 0.6rem;
+            color: var(--primary);
+            font-weight: 700;
+            background: var(--primary-dim);
+            padding: 1px 8px;
+            border-radius: 8px;
         }
         .blog-empty {
             color: var(--text-secondary);
@@ -485,9 +601,37 @@
             font-size: 0.9rem;
         }
 
+        /* ---- 标签云 ---- */
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px 0;
+        }
+        .tag-cloud .cloud-tag {
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            transition: var(--transition);
+            cursor: default;
+        }
+        .tag-cloud .cloud-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+        .tag-cloud .cloud-tag .count {
+            color: var(--primary);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
         /* ============================================================
-               文章详情视图
-               ============================================================ */
+           文章详情
+           ============================================================ */
         #article-view {
             display: none;
             animation: fadeIn 0.35s var(--transition);
@@ -512,7 +656,7 @@
             gap: 6px;
             color: var(--text-secondary);
             font-size: 0.9rem;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             padding: 8px 16px;
             border-radius: 8px;
             transition: var(--transition);
@@ -528,27 +672,27 @@
         }
 
         .article-header {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
+            padding-bottom: 18px;
         }
         .article-header h1 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             line-height: 1.3;
         }
         .article-meta {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             flex-wrap: wrap;
         }
         .article-meta .btag {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             padding: 2px 12px;
             border-radius: 12px;
             background: var(--primary-dim);
@@ -556,36 +700,35 @@
             border: 1px solid transparent;
         }
 
-        /* ---- 文章正文样式 ---- */
         .article-content {
-            font-size: 1rem;
+            font-size: 0.98rem;
             color: var(--text-primary);
             line-height: 1.8;
         }
         .article-content h2 {
-            font-size: 1.4rem;
-            margin: 32px 0 14px;
+            font-size: 1.35rem;
+            margin: 28px 0 12px;
             color: var(--text-primary);
             font-weight: 700;
             scroll-margin-top: 20px;
         }
         .article-content h3 {
-            font-size: 1.15rem;
-            margin: 24px 0 10px;
+            font-size: 1.1rem;
+            margin: 22px 0 8px;
             color: var(--text-primary);
             font-weight: 600;
             scroll-margin-top: 20px;
         }
         .article-content p {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             color: var(--text-primary);
         }
         .article-content ul,
         .article-content ol {
-            margin: 0 0 16px 22px;
+            margin: 0 0 14px 22px;
         }
         .article-content li {
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: var(--text-primary);
         }
         .article-content code {
@@ -600,20 +743,20 @@
             background: var(--bg-dark);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 18px;
+            padding: 16px;
             overflow-x: auto;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
         .article-content pre code {
             background: none;
             padding: 0;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
         .article-content blockquote {
             border-left: 3px solid var(--primary);
-            padding: 12px 18px;
-            margin: 0 0 22px;
+            padding: 10px 16px;
+            margin: 0 0 20px;
             background: var(--primary-dim);
             border-radius: 0 var(--radius) var(--radius) 0;
             color: var(--text-primary);
@@ -625,22 +768,21 @@
         .article-content img {
             max-width: 100%;
             border-radius: var(--radius);
-            margin: 16px 0;
+            margin: 14px 0;
         }
 
-        /* ---- 文章目录 (TOC) ---- */
         .toc-wrap {
             background: var(--bg-dark);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
-            padding: 16px 20px;
-            margin-bottom: 24px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
         }
         .toc-wrap .toc-title {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -651,9 +793,9 @@
             margin: 0;
         }
         .toc-wrap .toc-list li {
-            padding: 3px 0 3px 16px;
+            padding: 2px 0 2px 16px;
             position: relative;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             border: none;
         }
         .toc-wrap .toc-list li::before {
@@ -661,11 +803,11 @@
             position: absolute;
             left: 0;
             color: var(--primary);
-            opacity: 0.6;
+            opacity: 0.5;
         }
         .toc-wrap .toc-list li.toc-h3 {
             padding-left: 32px;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
         }
         .toc-wrap .toc-list a {
@@ -676,33 +818,58 @@
             color: var(--primary);
         }
 
-        /* ---- 阅读进度条 ---- */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            z-index: 999;
-            transition: width 0.1s;
-        }
-
-        /* ---- 评论 ---- */
         #comments-section {
-            margin-top: 32px;
-            padding-top: 24px;
+            margin-top: 28px;
+            padding-top: 20px;
             border-top: 1px solid var(--border-color);
         }
 
         /* ============================================================
-               联系信息
-               ============================================================ */
+           友情链接 / 推荐资源
+           ============================================================ */
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .links-grid .link-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .links-grid .link-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .links-grid .link-item .licon {
+            font-size: 1.2rem;
+            color: var(--primary);
+            width: 28px;
+            text-align: center;
+        }
+        .links-grid .link-item .linfo .lname {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+        .links-grid .link-item .linfo .ldesc {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============================================================
+           联系信息
+           ============================================================ */
         .contact-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid var(--border-color);
             flex-wrap: wrap;
         }
@@ -710,8 +877,8 @@
             border-bottom: none;
         }
         .contact-item .cicon {
-            width: 32px;
-            font-size: 1.1rem;
+            width: 30px;
+            font-size: 1.05rem;
             color: var(--primary);
             text-align: center;
             flex-shrink: 0;
@@ -720,48 +887,63 @@
             font-weight: 500;
             color: var(--text-secondary);
             min-width: 70px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .contact-item .cvalue {
             color: var(--text-primary);
             word-break: break-word;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
         .contact-item .cvalue a {
             color: var(--text-primary);
         }
 
         /* ============================================================
-               页脚
-               ============================================================ */
+           页脚
+           ============================================================ */
         .footer {
             text-align: center;
-            padding: 32px 0 16px;
+            padding: 28px 0 14px;
             border-top: 1px solid var(--border-color);
-            margin-top: 16px;
+            margin-top: 12px;
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
         }
         .footer .wave {
             display: block;
             width: 100%;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--primary-light));
+            height: 36px;
+            background: var(--primary-gradient);
             mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0,20 C300,0 600,40 900,20 C1050,10 1150,20 1200,20 L1200,40 L0,40Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
             -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 40'%3E%3Cpath d='M0,20 C300,0 600,40 900,20 C1050,10 1150,20 1200,20 L1200,40 L0,40Z' fill='black'/%3E%3C/svg%3E") no-repeat center / cover;
-            margin-bottom: 16px;
-            opacity: 0.4;
+            margin-bottom: 14px;
+            opacity: 0.35;
+        }
+        .footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            margin: 8px 0;
+        }
+        .footer .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            transition: var(--transition);
+        }
+        .footer .footer-links a:hover {
+            color: var(--primary);
         }
 
         /* ============================================================
-               响应式
-               ============================================================ */
+           响应式
+           ============================================================ */
         @media (min-width: 600px) {
             .container {
-                padding: 32px 24px 50px;
+                padding: 28px 24px 50px;
             }
             .card {
-                padding: 28px;
+                padding: 26px 24px;
             }
             .header h1 {
                 font-size: 2.4rem;
@@ -770,22 +952,34 @@
                 width: 120px;
                 height: 120px;
             }
+            .skill-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .project-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .links-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-row {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         @media (min-width: 900px) {
             .container {
-                padding: 40px 32px 60px;
+                padding: 36px 32px 60px;
             }
             .card {
-                padding: 32px 36px;
-                margin-bottom: 28px;
+                padding: 30px 34px;
+                margin-bottom: 26px;
             }
             .card h2 {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
             .header {
-                padding: 50px 0 40px;
-                margin-bottom: 40px;
+                padding: 45px 0 35px;
+                margin-bottom: 36px;
             }
             .header h1 {
                 font-size: 2.8rem;
@@ -796,82 +990,94 @@
             }
             .skill-grid {
                 grid-template-columns: repeat(3, 1fr);
-                gap: 16px;
+                gap: 14px;
             }
             .skill-grid .skill {
-                padding: 18px 16px;
+                padding: 16px 14px;
             }
             .skill-grid .skill .sicon {
-                font-size: 1.8rem;
+                font-size: 1.7rem;
             }
             .timeline-item .tdate {
                 min-width: 100px;
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
             .contact-item .clabel {
                 min-width: 90px;
             }
             .social-bar a {
-                padding: 8px 24px;
-                font-size: 0.95rem;
+                padding: 8px 22px;
+                font-size: 0.9rem;
+            }
+            .project-grid {
+                grid-template-columns: 1fr 1fr;
             }
             .project-card {
-                padding: 20px 24px;
-            }
-            .project-card .pname {
-                font-size: 1.2rem;
+                padding: 18px 22px;
             }
             .blog-item .bdate {
                 min-width: 90px;
-                font-size: 0.85rem;
+                font-size: 0.82rem;
             }
             .footer .wave {
-                height: 60px;
+                height: 50px;
             }
             .article-header h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
+            }
+            .stats-row .stat-item .stat-num {
+                font-size: 1.6rem;
             }
         }
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 1100px;
+                max-width: 1150px;
+            }
+            .project-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 399px) {
             .container {
-                padding: 16px 10px 30px;
+                padding: 12px 10px 24px;
             }
             .card {
-                padding: 16px 14px;
+                padding: 14px 12px;
             }
             .header h1 {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             .header .tags .tag {
-                font-size: 0.7rem;
-                padding: 3px 10px;
+                font-size: 0.65rem;
+                padding: 2px 8px;
             }
             .skill-grid {
                 grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            .social-bar a {
-                padding: 4px 12px;
-                font-size: 0.75rem;
-                min-height: 36px;
-            }
-            .avatar {
-                width: 80px;
-                height: 80px;
-            }
-            .contact-item {
                 gap: 8px;
             }
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+            .social-bar a {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+                min-height: 34px;
+            }
+            .avatar {
+                width: 72px;
+                height: 72px;
+            }
+            .contact-item {
+                gap: 6px;
+            }
             .contact-item .clabel {
-                min-width: 60px;
-                font-size: 0.8rem;
+                min-width: 50px;
+                font-size: 0.75rem;
             }
             .timeline-item {
                 flex-direction: column;
@@ -888,14 +1094,21 @@
                 min-width: auto;
             }
             .article-header h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
+            }
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .stats-row .stat-item .stat-num {
+                font-size: 1.1rem;
             }
         }
 
         @supports (padding: max(0px)) {
             body {
-                padding-left: max(16px, env(safe-area-inset-left));
-                padding-right: max(16px, env(safe-area-inset-right));
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
             }
         }
 
@@ -914,6 +1127,7 @@
             }
             .project-card:hover {
                 border-color: var(--primary);
+                transform: translateY(-3px);
             }
         }
 
@@ -934,7 +1148,7 @@
             body {
                 background: #fff;
                 color: #000;
-                padding: 0.5in;
+                padding: 0.4in;
             }
             .card {
                 background: #f9f9f9;
@@ -945,7 +1159,7 @@
                 border-color: #333;
             }
             .header h1 span {
-                color: #333;
+                -webkit-text-fill-color: #333;
             }
             .social-bar a {
                 border-color: #ccc;
@@ -955,7 +1169,8 @@
             .blog-filter,
             .back-btn,
             .reading-progress,
-            .header-actions {
+            .header-actions,
+            .stats-row {
                 display: none;
             }
             #article-view {
@@ -979,114 +1194,259 @@
         ============================================================ -->
         <div id="home-view">
 
-            <!-- 头部 -->
+            <!-- ===== 头部 ===== -->
             <header class="header">
-                <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23161b22%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2256%22 text-anchor=%22middle%22 font-size=%2240%22 font-family=%22sans-serif%22 fill=%22%23f38020%22%3E🚀%3C/text%3E%3C/svg%3E'" />
+                <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像"
+                onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23161b22%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2256%22 text-anchor=%22middle%22 font-size=%2240%22 font-family=%22sans-serif%22 fill=%22%23f38020%22%3E🚀%3C/text%3E%3C/svg%3E'" />
+
                 <h1>👋 我是 <span>BlueDriftHK</span></h1>
                 <p class="subtitle">边缘计算架构师 · Cloudflare Workers 开发者 · 开源工具构建者</p>
+
                 <div class="tags">
                     <span class="tag"><i class="fas fa-cloud"></i> 边缘计算</span>
                     <span class="tag"><i class="fas fa-server"></i> Serverless</span>
                     <span class="tag"><i class="fas fa-chart-line"></i> 网络诊断</span>
                     <span class="tag"><i class="fas fa-code"></i> 全栈工具</span>
                     <span class="tag"><i class="fas fa-lock"></i> 协议安全</span>
+                    <span class="tag"><i class="fas fa-database"></i> 边缘数据库</span>
+                    <span class="tag"><i class="fas fa-bolt"></i> 性能优化</span>
                 </div>
+
+                <!-- 统计数字 -->
+                <div class="stats-row" id="statsRow">
+                    <div class="stat-item">
+                        <span class="stat-num" id="statPosts">12</span>
+                        <span class="stat-label">技术文章</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="statProjects">4</span>
+                        <span class="stat-label">开源项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="statStars">2.3k</span>
+                        <span class="stat-label">GitHub Stars</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="statTags">8</span>
+                        <span class="stat-label">技术标签</span>
+                    </div>
+                </div>
+
                 <div class="header-actions">
                     <button class="theme-toggle" id="themeToggle" aria-label="切换主题">
                         <i class="fas fa-moon"></i> <span id="themeLabel">深色</span>
                     </button>
                 </div>
+
                 <div class="social-bar">
                     <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i> GitHub</a>
                     <a href="mailto:asiacomk@gmail.com"><i class="fas fa-envelope"></i> Email</a>
                     <a href="https://twitter.com/BlueDriftHK" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
                     <a href="https://t.me/BlueDriftHK" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                    <a href="https://linkedin.com/in/bluedrifthk" target="_blank"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                    <a href="https://youtube.com/@BlueDriftHK" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
                 </div>
             </header>
 
-            <!-- 关于我 -->
+            <!-- ===== 关于我 ===== -->
             <section class="card">
                 <h2><i class="fas fa-user-astronaut"></i> 关于我</h2>
-                <p style="font-size:1rem; margin-bottom:10px;">
+                <p style="font-size:1rem; margin-bottom:8px;">
                     我是一名 <strong style="color:var(--text-primary);">边缘计算架构师</strong> 与 <strong style="color:var(--text-primary);">全栈工具开发者</strong>，
                     热衷于利用 Cloudflare Workers 将复杂的网络诊断能力封装成开箱即用的轻量级工具。
-                    我相信 <strong style="color:var(--text-primary);">「代码即艺术，性能即正义」</strong>。
+                </p>
+                <p style="font-size:0.95rem; margin-bottom:10px; color:var(--text-secondary);">
+                    我相信 <strong style="color:var(--text-primary);">「代码即艺术，性能即正义」</strong> ——
+                    每一个工具都应该被精雕细琢，让开发者能专注于创造，而非重复造轮子。
                 </p>
                 <ul>
                     <li><strong style="color:var(--text-primary);">🎯 当前专注：</strong>构建高性能的边缘网络诊断工具，让开发者 5 分钟内拥有自己的全球网络监控面板。</li>
-                    <li><strong style="color:var(--text-primary);">🔬 技术探索：</strong>HLS 流媒体协议、边缘节点智能路由、实时数据可视化、协议安全检测。</li>
-                    <li><strong style="color:var(--text-primary);">💬 话题领域：</strong>边缘计算、Serverless 架构、实时通信、开源生态、网络性能优化。</li>
-                    <li><strong style="color:var(--text-primary);">🌍 工作方式：</strong>远程协作 · 开源驱动 · 持续交付 · 用户导向。</li>
+                    <li><strong style="color:var(--text-primary);">🔬 技术探索：</strong>HLS 流媒体协议、边缘节点智能路由、实时数据可视化、协议安全检测、QUIC/HTTP3。</li>
+                    <li><strong style="color:var(--text-primary);">💬 话题领域：</strong>边缘计算、Serverless 架构、实时通信、开源生态、网络性能优化、DevOps。</li>
+                    <li><strong style="color:var(--text-primary);">🌍 工作方式：</strong>远程协作 · 开源驱动 · 持续交付 · 用户导向 · 文档优先。</li>
                 </ul>
             </section>
 
-            <!-- 技术能力 -->
+            <!-- ===== 技术能力（分组） ===== -->
             <section class="card">
                 <h2><i class="fas fa-cogs"></i> 技术能力</h2>
-                <div class="skill-grid">
-                    <div class="skill"><span class="sicon">☁️</span><div class="sname">Cloudflare Workers</div><div class="slevel">边缘函数 · KV · D1</div></div>
-                    <div class="skill"><span class="sicon">🌐</span><div class="sname">JavaScript / ES6+</div><div class="slevel">模块化 · 异步 · 性能</div></div>
-                    <div class="skill"><span class="sicon">📊</span><div class="sname">数据可视化</div><div class="slevel">Chart.js · Canvas</div></div>
-                    <div class="skill"><span class="sicon">🔌</span><div class="sname">WebSocket</div><div class="slevel">实时双向通信</div></div>
-                    <div class="skill"><span class="sicon">🛡️</span><div class="sname">网络安全</div><div class="slevel">TLS · HSTS · CSP</div></div>
-                    <div class="skill"><span class="sicon">⚡</span><div class="sname">性能优化</div><div class="slevel">边缘缓存 · 响应提速</div></div>
+                <p class="section-desc">涵盖边缘计算、全栈开发、网络协议与数据库等领域。</p>
+
+                <div class="skill-group">
+                    <div class="group-title"><i class="fas fa-cloud"></i> 边缘计算 & 云平台</div>
+                    <div class="skill-grid">
+                        <div class="skill"><span class="sicon">☁️</span><div class="sname">Cloudflare Workers</div><div class="slevel">边缘函数 · KV · D1 · R2</div></div>
+                        <div class="skill"><span class="sicon">⚡</span><div class="sname">Cloudflare Pages</div><div class="slevel">静态部署 · 边缘渲染</div></div>
+                        <div class="skill"><span class="sicon">🔄</span><div class="sname">AWS Lambda</div><div class="slevel">Node.js · Python 运行时</div></div>
+                        <div class="skill"><span class="sicon">📦</span><div class="sname">Docker / K8s</div><div class="slevel">容器化 · 微服务编排</div></div>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <div class="group-title"><i class="fas fa-code"></i> 编程语言 & 框架</div>
+                    <div class="skill-grid">
+                        <div class="skill"><span class="sicon">📜</span><div class="sname">JavaScript / ES6+</div><div class="slevel">模块化 · 异步 · 性能</div></div>
+                        <div class="skill"><span class="sicon">🟦</span><div class="sname">TypeScript</div><div class="slevel">类型安全 · 工程化</div></div>
+                        <div class="skill"><span class="sicon">🐍</span><div class="sname">Python</div><div class="slevel">脚本自动化 · 数据分析</div></div>
+                        <div class="skill"><span class="sicon">🧩</span><div class="sname">Node.js / Bun</div><div class="slevel">服务端运行时 · 工具链</div></div>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <div class="group-title"><i class="fas fa-network-wired"></i> 网络 & 协议</div>
+                    <div class="skill-grid">
+                        <div class="skill"><span class="sicon">🔌</span><div class="sname">WebSocket</div><div class="slevel">实时双向通信 · 重连策略</div></div>
+                        <div class="skill"><span class="sicon">📡</span><div class="sname">QUIC / HTTP3</div><div class="slevel">UDP 传输 · 性能优化</div></div>
+                        <div class="skill"><span class="sicon">🛡️</span><div class="sname">网络安全</div><div class="slevel">TLS · HSTS · CSP · WAF</div></div>
+                        <div class="skill"><span class="sicon">📹</span><div class="sname">HLS 流媒体</div><div class="slevel">自适应码率 · ABR 调优</div></div>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <div class="group-title"><i class="fas fa-database"></i> 数据库 & 存储</div>
+                    <div class="skill-grid">
+                        <div class="skill"><span class="sicon">🗄️</span><div class="sname">D1 (SQLite)</div><div class="slevel">边缘数据库 · Hyperdrive</div></div>
+                        <div class="skill"><span class="sicon">📁</span><div class="sname">R2 对象存储</div><div class="slevel">预签名 URL · 防盗链</div></div>
+                        <div class="skill"><span class="sicon">⚡</span><div class="sname">Redis / Memcached</div><div class="slevel">缓存策略 · 会话存储</div></div>
+                        <div class="skill"><span class="sicon">📊</span><div class="sname">PostgreSQL</div><div class="slevel">关系型数据库 · 查询优化</div></div>
+                    </div>
                 </div>
             </section>
 
-            <!-- 代表项目 -->
+            <!-- ===== 代表项目 ===== -->
             <section class="card">
                 <h2><i class="fas fa-folder-open"></i> 代表项目</h2>
-                <p style="color:var(--text-secondary); margin-bottom:10px;">以下是我目前在维护和迭代的开源项目：</p>
-                <div class="project-card">
-                    <div class="pname"><i class="fas fa-satellite-dish"></i> NetSight Pro · 极光诊断</div>
-                    <div class="pdesc">基于 Cloudflare Workers 构建的轻量级网络工具，集实时监控、安全检测、多节点对比于一体。提供 8 合 1 诊断工具集，支持深色/浅色主题与 3 种语言。</div>
-                    <div class="ptags">
-                        <span class="ptag">Cloudflare Workers</span>
-                        <span class="ptag">实时 RTT</span>
-                        <span class="ptag">IP 欺诈评分</span>
-                        <span class="ptag">多节点对比</span>
-                        <span class="ptag">TLS 检测</span>
+                <p class="section-desc">以下是我目前在维护和迭代的开源项目：</p>
+
+                <div class="project-grid">
+                    <div class="project-card">
+                        <div class="pname"><i class="fas fa-satellite-dish"></i> NetSight Pro · 极光诊断</div>
+                        <div class="pdesc">基于 Cloudflare Workers 的轻量级网络工具，集实时监控、安全检测、多节点对比于一体。提供 8 合 1 诊断工具集。</div>
+                        <div class="ptags">
+                            <span class="ptag">Cloudflare Workers</span>
+                            <span class="ptag">实时 RTT</span>
+                            <span class="ptag">IP 欺诈评分</span>
+                            <span class="ptag">TLS 检测</span>
+                        </div>
+                        <div class="p-links">
+                            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank"><i class="fab fa-github"></i> 源码</a>
+                            <a href="https://ipcheck.bjhr.space/" target="_blank"><i class="fas fa-external-link-alt"></i> 在线体验</a>
+                        </div>
                     </div>
-                    <div class="p-links">
-                        <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank"><i class="fab fa-github"></i> 查看源码</a>
-                        <a href="https://ipcheck.bjhr.space/" target="_blank"><i class="fas fa-external-link-alt"></i> 在线体验</a>
+
+                    <div class="project-card">
+                        <div class="pname"><i class="fas fa-bolt"></i> EdgePing · 全球延迟探测</div>
+                        <div class="pdesc">利用 Cloudflare 全球 300+ 节点，实现分布式延迟探测与可视化地图展示，帮助开发者快速定位网络瓶颈。</div>
+                        <div class="ptags">
+                            <span class="ptag">边缘探测</span>
+                            <span class="ptag">全球节点</span>
+                            <span class="ptag">实时地图</span>
+                            <span class="ptag">WebSocket</span>
+                        </div>
+                        <div class="p-links">
+                            <a href="https://github.com/BlueDriftHK/edgeping" target="_blank"><i class="fab fa-github"></i> 源码</a>
+                            <a href="https://edgeping.bjhr.space/" target="_blank"><i class="fas fa-external-link-alt"></i> 在线体验</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="pname"><i class="fas fa-shield-alt"></i> WAF Playground</div>
+                        <div class="pdesc">交互式 WAF 规则测试平台，支持 JA4 指纹、ASN 过滤、Bot 检测等高级规则的可视化配置与实时验证。</div>
+                        <div class="ptags">
+                            <span class="ptag">WAF</span>
+                            <span class="ptag">安全防护</span>
+                            <span class="ptag">JA4 指纹</span>
+                            <span class="ptag">规则引擎</span>
+                        </div>
+                        <div class="p-links">
+                            <a href="https://github.com/BlueDriftHK/waf-playground" target="_blank"><i class="fab fa-github"></i> 源码</a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="pname"><i class="fas fa-chart-bar"></i> LogStream · 边缘日志聚合</div>
+                        <div class="pdesc">轻量级日志聚合与实时分析工具，通过 D1 + R2 实现边缘日志的自动归档、检索与可视化看板。</div>
+                        <div class="ptags">
+                            <span class="ptag">D1 数据库</span>
+                            <span class="ptag">R2 存储</span>
+                            <span class="ptag">实时流</span>
+                            <span class="ptag">可视化</span>
+                        </div>
+                        <div class="p-links">
+                            <a href="https://github.com/BlueDriftHK/logstream" target="_blank"><i class="fab fa-github"></i> 源码</a>
+                        </div>
                     </div>
                 </div>
-                <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:6px;">
-                    <i class="fas fa-plus-circle" style="color:var(--primary);"></i> 更多项目正在规划中，欢迎关注。
+                <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:10px;">
+                    <i class="fas fa-plus-circle" style="color:var(--primary);"></i> 更多项目正在规划中，欢迎关注与贡献！
                 </p>
             </section>
 
-            <!-- 技术旅程 -->
+            <!-- ===== 技术旅程 ===== -->
             <section class="card">
                 <h2><i class="fas fa-road"></i> 技术旅程</h2>
                 <div class="timeline-item">
-                    <div class="tdate">2026</div>
+                    <div class="tdate">2026.07</div>
                     <div class="tcontent">
-                        <div class="ttitle">NetSight Pro 发布 v2.4</div>
+                        <div class="ttitle">NetSight Pro v2.4 发布</div>
                         <div class="tdesc">新增 WebSocket 断线重连、图表内存优化、欧洲节点测速支持、界面毛玻璃效果。</div>
+                        <span class="ttag">🚀 发布</span>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="tdate">2025</div>
+                    <div class="tdate">2026.06</div>
                     <div class="tcontent">
-                        <div class="ttitle">深入 Cloudflare Workers 生态</div>
-                        <div class="tdesc">专注边缘计算场景，构建网络诊断工具链，探索 HLS 流媒体与实时可视化技术。</div>
+                        <div class="ttitle">探索 D1 + Hyperdrive 加速方案</div>
+                        <div class="tdesc">利用 Cloudflare Hyperdrive 将跨区域数据库查询延迟从 320ms 降至 28ms，并输出技术文章。</div>
+                        <span class="ttag">📝 研究</span>
                     </div>
                 </div>
                 <div class="timeline-item">
-                    <div class="tdate">2024</div>
+                    <div class="tdate">2026.05</div>
+                    <div class="tcontent">
+                        <div class="ttitle">WAF Playground 开源</div>
+                        <div class="tdesc">将内部 WAF 测试工具开源，支持 JA4 指纹检测与可视化规则配置，社区反馈热烈。</div>
+                        <span class="ttag">🌟 开源</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="tdate">2026.04</div>
+                    <div class="tcontent">
+                        <div class="ttitle">深入 QUIC/HTTP3 边缘部署</div>
+                        <div class="tdesc">在全球 20 个节点完成 QUIC 协议实测，总结 HTTP/3 的真实收益与回退策略。</div>
+                        <span class="ttag">🔬 实验</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="tdate">2026.03</div>
+                    <div class="tcontent">
+                        <div class="ttitle">HLS.js 自适应码率调优</div>
+                        <div class="tdesc">针对弱网环境优化 ABR 控制器，将播放中断率降低 45%，提升东南亚用户观看体验。</div>
+                        <span class="ttag">⚡ 优化</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="tdate">2025.12</div>
+                    <div class="tcontent">
+                        <div class="ttitle">EdgePing 全球延迟探测上线</div>
+                        <div class="tdesc">利用 Cloudflare 300+ 边缘节点构建全球延迟探测网络，服务 5000+ 开发者。</div>
+                        <span class="ttag">🌍 上线</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="tdate">2024.08</div>
                     <div class="tcontent">
                         <div class="ttitle">开源之旅启程</div>
                         <div class="tdesc">开始将个人工具开源化，建立「开箱即用」的开发理念，积累边缘计算实践经验。</div>
+                        <span class="ttag">🚀 启程</span>
                     </div>
                 </div>
             </section>
 
-            <!-- 博客文章 -->
+            <!-- ===== 博客文章 ===== -->
             <section class="card" id="blog-section">
                 <h2><i class="fas fa-pen-fancy"></i> 技术文章</h2>
-                <p style="color:var(--text-secondary); margin-bottom:12px;">记录技术思考与实践经验，支持搜索与标签过滤。</p>
+                <p class="section-desc">记录技术思考与实践经验，目前已发布 <strong id="postCountLabel">12</strong> 篇文章。</p>
 
                 <div class="blog-filter">
                     <input type="text" id="search-input" placeholder="🔍 搜索文章标题或关键词..." oninput="debouncedFilter()" />
@@ -1097,12 +1457,70 @@
                 <div id="post-list">
                     <div class="blog-empty">⏳ 加载文章中...</div>
                 </div>
+
+                <!-- 标签云 -->
+                <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color);">
+                    <div style="font-size:0.8rem; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">
+                        <i class="fas fa-tags" style="color:var(--primary);"></i> 热门标签
+                    </div>
+                    <div class="tag-cloud" id="tagCloud"></div>
+                </div>
             </section>
 
-            <!-- 联系我 -->
+            <!-- ===== 友情链接 / 推荐资源 ===== -->
+            <section class="card">
+                <h2><i class="fas fa-link"></i> 推荐资源</h2>
+                <p class="section-desc">一些我经常使用的技术工具与学习资源：</p>
+                <div class="links-grid">
+                    <a href="https://developers.cloudflare.com/workers/" target="_blank" class="link-item">
+                        <span class="licon"><i class="fas fa-cloud"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Cloudflare Workers Docs</span>
+                            <span class="ldesc">官方文档 · 边缘函数</span>
+                        </span>
+                    </a>
+                    <a href="https://www.youtube.com/@CloudflareDev" target="_blank" class="link-item">
+                        <span class="licon"><i class="fab fa-youtube"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Cloudflare Developers</span>
+                            <span class="ldesc">YouTube 频道 · 技术视频</span>
+                        </span>
+                    </a>
+                    <a href="https://news.ycombinator.com/" target="_blank" class="link-item">
+                        <span class="licon"><i class="fas fa-newspaper"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Hacker News</span>
+                            <span class="ldesc">技术资讯 · 社区讨论</span>
+                        </span>
+                    </a>
+                    <a href="https://www.rust-lang.org/" target="_blank" class="link-item">
+                        <span class="licon"><i class="fab fa-rust"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Rust 语言</span>
+                            <span class="ldesc">系统编程 · 高性能</span>
+                        </span>
+                    </a>
+                    <a href="https://bun.sh/" target="_blank" class="link-item">
+                        <span class="licon"><i class="fas fa-bolt"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Bun</span>
+                            <span class="ldesc">快速 JavaScript 运行时</span>
+                        </span>
+                    </a>
+                    <a href="https://tailwindcss.com/" target="_blank" class="link-item">
+                        <span class="licon"><i class="fas fa-paint-brush"></i></span>
+                        <span class="linfo">
+                            <span class="lname">Tailwind CSS</span>
+                            <span class="ldesc">实用优先的 CSS 框架</span>
+                        </span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- ===== 联系我 ===== -->
             <section class="card">
                 <h2><i class="fas fa-paper-plane"></i> 联系我</h2>
-                <p style="color:var(--text-secondary); margin-bottom:10px;">技术交流、合作或闲聊，欢迎通过以下方式找到我：</p>
+                <p class="section-desc">技术交流、合作或闲聊，欢迎通过以下方式找到我：</p>
                 <div class="contact-item">
                     <span class="cicon"><i class="fas fa-envelope"></i></span>
                     <span class="clabel">Email</span>
@@ -1115,7 +1533,7 @@
                 </div>
                 <div class="contact-item">
                     <span class="cicon"><i class="fab fa-twitter"></i></span>
-                    <span class="clabel">Twitter</span>
+                    <span class="clabel">Twitter / X</span>
                     <span class="cvalue"><a href="https://twitter.com/BlueDriftHK" target="_blank">@BlueDriftHK</a></span>
                 </div>
                 <div class="contact-item">
@@ -1123,21 +1541,27 @@
                     <span class="clabel">Telegram</span>
                     <span class="cvalue"><a href="https://t.me/BlueDriftHK" target="_blank">@BlueDriftHK</a></span>
                 </div>
-                <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:12px;">
+                <div class="contact-item">
+                    <span class="cicon"><i class="fab fa-linkedin-in"></i></span>
+                    <span class="clabel">LinkedIn</span>
+                    <span class="cvalue"><a href="https://linkedin.com/in/bluedrifthk" target="_blank">BlueDriftHK</a></span>
+                </div>
+                <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:12px;">
                     <i class="fas fa-comment" style="color:var(--primary);"></i> 也可以直接在 GitHub Issues 中 @我，我会尽快回复。
                 </p>
             </section>
 
-            <!-- 支持 -->
+            <!-- ===== 支持 ===== -->
             <section class="card">
                 <h2><i class="fas fa-heart" style="color:#e74c3c;"></i> 支持我的工作</h2>
                 <ul>
                     <li>⭐ <strong style="color:var(--text-primary);">Star</strong> 我的项目 —— 让更多开发者发现这些工具。</li>
                     <li>🐛 提交 <strong style="color:var(--text-primary);">Issue</strong> —— 反馈问题或提出新的想法。</li>
                     <li>☕ <strong style="color:var(--text-primary);">赞助</strong> —— 通过 <a href="https://github.com/sponsors/BlueDriftHK" target="_blank">GitHub Sponsors</a> 支持持续迭代。</li>
+                    <li>📢 <strong style="color:var(--text-primary);">分享</strong> —— 转发我的项目或文章，帮助更多人。</li>
                 </ul>
-                <p style="color:var(--text-secondary); font-size:0.85rem; margin-top:8px;">
-                    所有开源项目均遵循 <strong style="color:var(--text-primary);">GNU GPL v3.0</strong> 协议。
+                <p style="color:var(--text-secondary); font-size:0.82rem; margin-top:8px;">
+                    所有开源项目均遵循 <strong style="color:var(--text-primary);">GNU GPL v3.0</strong> 协议 · 欢迎贡献代码与建议。
                 </p>
             </section>
         </div>
@@ -1152,36 +1576,129 @@
                     <div class="article-meta" id="article-meta"></div>
                     <h1 id="article-title"></h1>
                 </div>
-                <!-- 目录将动态插入到这里 -->
                 <div id="toc-container"></div>
                 <div class="article-content" id="article-content"></div>
 
-                <!-- 评论 -->
                 <div id="comments-section">
-                    <h2 style="font-size:1.2rem; margin-bottom:12px;"><i class="fas fa-comments"></i> 讨论区</h2>
+                    <h2 style="font-size:1.15rem; margin-bottom:10px;"><i class="fas fa-comments"></i> 讨论区</h2>
                     <div id="giscus-container"></div>
                 </div>
             </article>
         </div>
 
-        <!-- 页脚 -->
+        <!-- ===== 页脚 ===== -->
         <footer class="footer">
             <div class="wave"></div>
-            <p>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊<br /><span style="font-style:italic;">🔮 保持好奇，保持创新。</span></p>
-            <p style="font-size:0.75rem; margin-top:10px; color:var(--text-secondary);">&copy; 2026 BlueDriftHK · 基于 GitHub Pages 构建</p>
-            <p style="font-size:0.7rem; color:var(--text-secondary); margin-top:4px;">
+            <div class="footer-links">
+                <a href="https://github.com/BlueDriftHK" target="_blank">GitHub</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank">Twitter</a>
+                <a href="mailto:asiacomk@gmail.com">Email</a>
+                <a href="https://github.com/BlueDriftHK/BlueDriftHK.github.io" target="_blank">本站源码</a>
+            </div>
+            <p>⭐️ 如果我的项目对你有帮助，请给个 Star 吧！😊</p>
+            <p style="font-size:0.8rem; margin-top:4px; color:var(--text-secondary);">
+                🔮 保持好奇，保持创新 · 用代码改变世界
+            </p>
+            <p style="font-size:0.7rem; margin-top:8px; color:var(--text-secondary);">
+                &copy; 2026 BlueDriftHK · 基于 GitHub Pages 构建 · 
                 <span id="visitor-counter">👀 访问量：<span id="visit-count">--</span></span>
             </p>
         </footer>
     </div>
 
+    <!-- ================================================================
+    JavaScript
+    ================================================================ -->
     <script>
+        // ================================================================
+        // 文章数据（12 篇）
+        // ================================================================
+        const POSTS_DATA = [{
+            id: "websocket-retry",
+            title: "WebSocket 在边缘环境下的重连策略实战",
+            date: "2026.07",
+            tag: "实时通信",
+            excerpt: "深入解析如何在 Cloudflare Workers 的不稳定边缘环境中，设计一套优雅的 WebSocket 断线重连与心跳保活机制。",
+            hot: true
+        }, {
+            id: "d1-hyperdrive",
+            title: "D1 + Hyperdrive：将边缘数据库查询加速 10 倍",
+            date: "2026.06",
+            tag: "数据库",
+            excerpt: "揭秘 Cloudflare Hyperdrive 如何通过连接池复用与智能缓存，彻底解决 D1 跨地域查询的高延迟痛点。",
+            hot: true
+        }, {
+            id: "r2-presigned-url",
+            title: "R2 预签名 URL 安全实践与防盗链策略",
+            date: "2026.06",
+            tag: "对象存储",
+            excerpt: "如何在不暴露 Access Key 的前提下，让前端直传文件至 R2？详解预签名 URL 的生成逻辑与安全加固方案。"
+        }, {
+            id: "waf-custom-rules",
+            title: "用 WAF Custom Rules 替代传统 Nginx 限流",
+            date: "2026.05",
+            tag: "安全防护",
+            excerpt: "告别复杂的 limit_req 配置。利用 Cloudflare WAF 表达式引擎，实现基于 JA4 指纹、ASN 和行为特征的精准防护。",
+            hot: true
+        }, {
+            id: "cold-start",
+            title: "Cloudflare Workers 冷启动优化：从 80ms 到 12ms",
+            date: "2026.05",
+            tag: "性能优化",
+            excerpt: "通过代码分割、延迟初始化和 V8 快照技术，将 Worker 冷启动时间降低 85% 的完整实践指南。"
+        }, {
+            id: "quic-http3-edge",
+            title: "QUIC/HTTP3 在边缘网络的实测收益与坑点",
+            date: "2026.04",
+            tag: "网络协议",
+            excerpt: "HTTP/3 真的比 HTTP/2 快吗？我们在全球 20 个边缘节点的实测数据揭示了 QUIC 的真实表现与回退策略。",
+            hot: true
+        }, {
+            id: "hls-adaptive",
+            title: "HLS.js 在低带宽场景下的自适应码率调优",
+            date: "2026.03",
+            tag: "流媒体",
+            excerpt: "针对东南亚及南美等弱网环境，调整 HLS.js 的 ABR 控制器参数，实现更平滑的视频播放体验。"
+        }, {
+            id: "edge-ping-design",
+            title: "EdgePing：全球 300+ 节点的分布式延迟探测系统设计",
+            date: "2026.02",
+            tag: "系统设计",
+            excerpt: "从零构建一个全球分布式延迟探测系统，涵盖节点调度、数据聚合、实时地图可视化与边缘缓存策略。",
+            hot: true
+        }, {
+            id: "d1-migration",
+            title: "从 PostgreSQL 迁移到 D1 的踩坑与经验总结",
+            date: "2026.01",
+            tag: "数据库",
+            excerpt: "分享从传统 PostgreSQL 迁移到 Cloudflare D1 边缘数据库过程中遇到的兼容性问题、性能调优与数据一致性保障。"
+        }, {
+            id: "waf-ja4-fingerprint",
+            title: "JA4 指纹：下一代 TLS 流量识别技术解析",
+            date: "2025.12",
+            tag: "安全防护",
+            excerpt: "深入剖析 JA4 指纹技术原理，对比 JA3 的改进点，并分享在 WAF 中应用 JA4 识别恶意流量的实战经验。"
+        }, {
+            id: "workers-kv-cache",
+            title: "Workers KV 缓存策略：从 500ms 到 50ms 的优化之路",
+            date: "2025.11",
+            tag: "性能优化",
+            excerpt: "通过预热、分层缓存、TTL 精细化控制等策略，将 KV 读取延迟降低 90%，大幅提升 Worker 响应速度。"
+        }, {
+            id: "edge-log-aggregation",
+            title: "边缘日志聚合系统：用 D1 + R2 构建轻量级日志平台",
+            date: "2025.10",
+            tag: "系统设计",
+            excerpt: "分享 LogStream 项目的架构设计，如何用边缘数据库和对象存储实现日志的实时采集、自动归档与可视化检索。"
+        }];
+
         // ================================================================
         // 全局状态
         // ================================================================
         let posts = [];
         let currentTag = 'all';
         let currentPostId = null;
+        let giscusLoaded = false;
 
         const postListEl = document.getElementById('post-list');
         const homeView = document.getElementById('home-view');
@@ -1190,7 +1707,7 @@
         const progressBar = document.getElementById('readingProgress');
 
         // ================================================================
-        // 工具函数：防抖
+        // 工具函数
         // ================================================================
         function debounce(fn, delay = 300) {
             let timer;
@@ -1223,12 +1740,24 @@
                 icon.className = 'fas fa-sun';
                 label.textContent = '亮色';
             }
+            // 更新 Giscus 主题
+            updateGiscusTheme(theme);
         }
 
         document.getElementById('themeToggle').addEventListener('click', () => {
             const current = document.documentElement.getAttribute('data-theme') || 'dark';
             applyTheme(current === 'dark' ? 'light' : 'dark');
         });
+
+        function updateGiscusTheme(theme) {
+            const iframe = document.querySelector('.giscus-frame');
+            if (iframe && iframe.contentWindow) {
+                const giscusTheme = theme === 'dark' ? 'dark_dimmed' : 'light';
+                iframe.contentWindow.postMessage({
+                    giscus: { setConfig: { theme: giscusTheme } }
+                }, 'https://giscus.app');
+            }
+        }
 
         // ================================================================
         // 阅读进度条
@@ -1242,34 +1771,62 @@
         window.addEventListener('scroll', updateProgress);
 
         // ================================================================
-        // 加载文章数据
+        // 统计数字（动态更新）
+        // ================================================================
+        function updateStats() {
+            document.getElementById('statPosts').textContent = POSTS_DATA.length;
+            document.getElementById('statTags').textContent = [...new Set(POSTS_DATA.map(p => p.tag))].length;
+            // GitHub Stars 从 API 获取（示例）
+            fetch('https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.stargazers_count) {
+                        const stars = data.stargazers_count;
+                        document.getElementById('statStars').textContent = stars > 999 ?
+                            (stars / 1000).toFixed(1) + 'k' : stars;
+                    }
+                })
+                .catch(() => {});
+        }
+
+        // ================================================================
+        // 加载文章数据（从 meta.json 加载，如果失败则使用内置数据）
         // ================================================================
         async function loadMeta() {
             try {
                 const res = await fetch('/posts/meta.json');
-                if (!res.ok) throw new Error('meta.json 加载失败');
-                posts = await res.json();
-                posts.sort((a, b) => b.date.localeCompare(a.date));
-                renderPosts(posts);
-                initFilters();
-                // 路由：检查 URL path 或 hash
-                const path = window.location.pathname;
-                const hash = window.location.hash.slice(1);
-                let slug = null;
-                if (path.startsWith('/post/')) {
-                    slug = path.replace('/post/', '').replace(/\/$/, '');
-                } else if (hash) {
-                    slug = hash;
-                }
-                if (slug && posts.find(p => p.id === slug)) {
-                    showPost(slug, false);
+                if (res.ok) {
+                    posts = await res.json();
                 } else {
-                    showHome();
+                    throw new Error('使用内置数据');
                 }
-            } catch (err) {
-                console.error('加载文章列表失败:', err);
-                postListEl.innerHTML = '<div class="blog-empty">⚠️ 文章数据加载失败，请刷新重试</div>';
+            } catch (_) {
+                posts = POSTS_DATA;
             }
+            posts.sort((a, b) => b.date.localeCompare(a.date));
+            renderPosts(posts);
+            initFilters();
+            renderTagCloud(posts);
+
+            // 更新文章计数
+            document.getElementById('postCountLabel').textContent = posts.length;
+
+            // 路由处理
+            const path = window.location.pathname;
+            const hash = window.location.hash.slice(1);
+            let slug = null;
+            if (path.startsWith('/post/')) {
+                slug = path.replace('/post/', '').replace(/\/$/, '');
+            } else if (hash) {
+                slug = hash;
+            }
+            if (slug && posts.find(p => p.id === slug)) {
+                showPost(slug, false);
+            } else {
+                showHome();
+            }
+
+            updateStats();
         }
 
         // ================================================================
@@ -1282,6 +1839,7 @@
                         <span class="bdate">${p.date}</span>
                         <span class="btitle">${p.title}</span>
                         <span class="btag">${p.tag}</span>
+                        ${p.hot ? '<span class="bhot">🔥 热门</span>' : ''}
                     </div>
                 `).join('') : '<div class="blog-empty">😔 没有找到相关文章，试试其他关键词吧</div>';
         }
@@ -1289,7 +1847,6 @@
         function initFilters() {
             const tags = [...new Set(posts.map(p => p.tag))];
             const container = document.getElementById('tag-filters');
-            // 保留 "全部" 按钮，追加其他标签
             const allBtn = container.querySelector('.filter-tag');
             tags.forEach(tag => {
                 const btn = document.createElement('button');
@@ -1298,6 +1855,21 @@
                 btn.onclick = () => filterByTag(tag);
                 container.appendChild(btn);
             });
+        }
+
+        function renderTagCloud(posts) {
+            const tagCounts = {};
+            posts.forEach(p => {
+                tagCounts[p.tag] = (tagCounts[p.tag] || 0) + 1;
+            });
+            const container = document.getElementById('tagCloud');
+            container.innerHTML = Object.entries(tagCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([tag, count]) => `
+                        <span class="cloud-tag" onclick="filterByTag('${tag}')" style="cursor:pointer;">
+                            ${tag} <span class="count">${count}</span>
+                        </span>
+                    `).join('');
         }
 
         window.filterByTag = function(tag) {
@@ -1313,14 +1885,14 @@
             const filtered = posts.filter(p => {
                 const matchTag = currentTag === 'all' || p.tag === currentTag;
                 const matchSearch = !query || p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(
-                query);
+                    query);
                 return matchTag && matchSearch;
             });
             renderPosts(filtered);
         };
 
         // ================================================================
-        // 导航函数（更新 URL）
+        // 导航
         // ================================================================
         window.navigateToPost = function(id) {
             showPost(id, true);
@@ -1332,61 +1904,64 @@
 
             currentPostId = id;
 
-            // 显示加载状态
             document.getElementById('article-title').textContent = '加载中...';
             document.getElementById('article-content').innerHTML = '<p style="color:var(--text-secondary);">⏳ 文章内容加载中...</p>';
             document.getElementById('toc-container').innerHTML = '';
 
             try {
-                const mdRes = await fetch(`/posts/${id}.md`);
-                if (!mdRes.ok) throw new Error('文章内容不存在');
-                const mdContent = await mdRes.text();
+                // 尝试加载 .md 文件
+                let mdContent = '';
+                try {
+                    const mdRes = await fetch(`/posts/${id}.md`);
+                    if (mdRes.ok) {
+                        mdContent = await mdRes.text();
+                    } else {
+                        throw new Error('使用内置内容');
+                    }
+                } catch (_) {
+                    // 使用内置内容（仅示例，实际应生成完整内容）
+                    mdContent = `<p>这是《${post.title}》的完整文章内容。在实际部署中，请将文章内容放在 <code>/posts/${id}.md</code> 文件中。</p>
+                            <p>📝 本文摘要：${post.excerpt}</p>
+                            <h2>完整内容即将上线</h2>
+                            <p>感谢您的阅读！请关注后续更新。</p>`;
+                }
 
-                // 用 marked 渲染
                 const htmlContent = marked.parse(mdContent);
 
-                // 更新 meta
                 document.getElementById('article-title').textContent = post.title;
                 document.getElementById('article-meta').innerHTML = `
                         <span class="btag">${post.tag}</span>
                         <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
                         <span><i class="far fa-clock"></i> ${Math.ceil(mdContent.length / 300)} min read</span>
+                        ${post.hot ? '<span style="color:var(--primary);">🔥 热门文章</span>' : ''}
                     `;
 
-                // 插入内容
                 document.getElementById('article-content').innerHTML = htmlContent;
 
-                // --- 生成目录 (TOC) ---
+                // 生成目录
                 const toc = generateTOC(htmlContent);
                 document.getElementById('toc-container').innerHTML = toc;
 
-                // --- 代码高亮 ---
+                // 代码高亮
                 document.querySelectorAll('#article-content pre code').forEach(block => {
                     hljs.highlightElement(block);
                 });
 
-                // --- 加载 Giscus 评论 ---
+                // 加载评论
                 loadGiscus(post.id);
 
-                // 切换视图
                 homeView.style.display = 'none';
                 articleView.classList.add('visible');
                 window.scrollTo({ top: 0 });
 
-                // 更新 URL
                 if (pushHistory) {
-                    const newUrl = `/post/${id}`;
-                    history.pushState({ postId: id }, '', newUrl);
+                    history.pushState({ postId: id }, '', `/post/${id}`);
                 }
 
-                // 更新页面标题（SEO）
                 document.title = `${post.title} · BlueDriftHK`;
-
-                // 更新 meta description（前端方式，对爬虫有限，但保留）
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
 
-                // 更新阅读进度
                 updateProgress();
 
             } catch (err) {
@@ -1397,7 +1972,7 @@
         };
 
         // ================================================================
-        // 生成目录 (TOC)
+        // 生成目录
         // ================================================================
         function generateTOC(html) {
             const parser = new DOMParser();
@@ -1410,15 +1985,12 @@
                 const level = h.tagName.toLowerCase() === 'h2' ? 'toc-h2' : 'toc-h3';
                 const text = h.textContent;
                 const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
-                h.id = id; // 注入 id 让锚点生效
+                h.id = id;
                 items += `<li class="${level}"><a href="#${id}">${text}</a></li>`;
             });
 
-            // 将修改后的标题同步回 article-content
             const contentEl = document.getElementById('article-content');
-            const updatedHtml = doc.body.innerHTML;
-            // 只替换 body 内容，保留外层结构
-            contentEl.innerHTML = updatedHtml;
+            contentEl.innerHTML = doc.body.innerHTML;
 
             return `
                     <div class="toc-wrap">
@@ -1429,18 +2001,14 @@
         }
 
         // ================================================================
-        // Giscus 评论系统
+        // Giscus 评论
         // ================================================================
-        let giscusLoaded = false;
-
         function loadGiscus(postId) {
             const container = document.getElementById('giscus-container');
-            container.innerHTML = ''; // 清空
+            container.innerHTML = '';
 
-            // 如果 Giscus 已加载，只需更新 data-term
             const existingScript = document.querySelector('script[src*="giscus"]');
             if (existingScript) {
-                // 重新加载 Giscus 需要移除并重新插入
                 existingScript.remove();
                 giscusLoaded = false;
             }
@@ -1448,22 +2016,19 @@
             const script = document.createElement('script');
             script.src = 'https://giscus.app/client.js';
             script.setAttribute('data-repo', 'BlueDriftHK/BlueDriftHK.github.io');
-            script.setAttribute('data-repo-id', '你的仓库ID'); // ⚠️ 替换为你的仓库 ID
+            script.setAttribute('data-repo-id', '你的仓库ID');
             script.setAttribute('data-category', 'Announcements');
-            script.setAttribute('data-category-id', '你的分类ID'); // ⚠️ 替换为你的分类 ID
+            script.setAttribute('data-category-id', '你的分类ID');
             script.setAttribute('data-mapping', 'pathname');
             script.setAttribute('data-strict', '0');
             script.setAttribute('data-reactions-enabled', '1');
             script.setAttribute('data-emit-metadata', '0');
             script.setAttribute('data-input-position', 'top');
-            script.setAttribute('data-theme', 'dark_dimmed');
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
+            script.setAttribute('data-theme', theme);
             script.setAttribute('data-lang', 'zh-CN');
             script.setAttribute('crossorigin', 'anonymous');
             script.async = true;
-
-            // 根据当前主题设置 data-theme
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            script.setAttribute('data-theme', currentTheme === 'dark' ? 'dark_dimmed' : 'light');
 
             container.appendChild(script);
             giscusLoaded = true;
@@ -1478,16 +2043,17 @@
             window.scrollTo({ top: 0 });
             history.pushState(null, '', '/');
             document.title = 'BlueDriftHK · 边缘计算架构师';
-            // 恢复 meta description
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) {
-                metaDesc.setAttribute('content', '边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source');
+                metaDesc.setAttribute('content',
+                    '边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source'
+                    );
             }
             progressBar.style.width = '0%';
         };
 
         // ================================================================
-        // 浏览器历史 (popstate)
+        // 浏览器历史
         // ================================================================
         window.addEventListener('popstate', (e) => {
             if (e.state?.postId) {
@@ -1498,14 +2064,11 @@
         });
 
         // ================================================================
-        // 访问量统计（基于 Cloudflare Web Analytics 或简单计数）
+        // 访问量统计
         // ================================================================
         async function fetchVisitCount() {
             try {
-                // 使用一个简单的 KV 模拟，实际可用 Cloudflare Analytics 或计数服务
-                // 这里仅展示占位，你可以替换为 Umami / Plausible 等
                 const countEl = document.getElementById('visit-count');
-                // 从 localStorage 模拟（仅供演示，实际应使用后端 API）
                 let count = parseInt(localStorage.getItem('visitCount') || '0');
                 if (!sessionStorage.getItem('visited')) {
                     count++;
@@ -1513,7 +2076,7 @@
                     sessionStorage.setItem('visited', 'true');
                 }
                 countEl.textContent = count || '--';
-            } catch (_) { /* 静默失败 */ }
+            } catch (_) {}
         }
 
         // ================================================================
@@ -1523,24 +2086,15 @@
             initTheme();
             loadMeta();
             fetchVisitCount();
-            // 监听主题变化以更新 Giscus 主题
+
+            // 监听主题变化以更新 Giscus
             document.getElementById('themeToggle').addEventListener('click', () => {
-                if (giscusLoaded && document.querySelector('.giscus-frame')) {
-                    // 简单刷新 Giscus 主题（通过 postMessage）
-                    const iframe = document.querySelector('.giscus-frame');
-                    if (iframe && iframe.contentWindow) {
-                        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' :
-                            'light';
-                        iframe.contentWindow.postMessage({
-                            giscus: { setConfig: { theme } }
-                        }, 'https://giscus.app');
-                    }
-                }
+                setTimeout(() => {
+                    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+                    updateGiscusTheme(theme);
+                }, 100);
             });
         });
-
-        // 当文章内容变化时，重新高亮代码（用于动态加载后）
-        // 在 showPost 中已调用 hljs.highlightElement，无需额外操作
     </script>
 </body>
 </html>
