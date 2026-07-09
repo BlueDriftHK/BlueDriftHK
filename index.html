@@ -4,21 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <title>BlueDriftHK · 边缘计算架构师</title>
-    <meta name="description" content="边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source" />
-    <meta name="keywords" content="边缘计算,Cloudflare Workers,Serverless,网络诊断,开源,JavaScript,WebSocket" />
-    <meta property="og:title" content="BlueDriftHK · 边缘计算架构师" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://bluedrifthk.github.io/" />
-    <meta property="og:description" content="边缘计算架构师 BlueDriftHK 的个人主页与技术博客" />
+    <meta name="description" content="边缘计算架构师 BlueDriftHK 的个人主页 - Cloudflare Workers, 网络诊断, 开源工具" />
+    <meta name="keywords" content="边缘计算,Cloudflare Workers,Serverless,网络诊断,开源,JavaScript" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
     <style>
         /* ============================================================
@@ -44,7 +36,7 @@
             --border-color: #30363d;
             --radius: 12px;
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --max-width: 1100px;
+            --max-width: 1000px;
             --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
             --shadow-hover: 0 8px 40px rgba(243, 128, 32, 0.12);
         }
@@ -124,20 +116,6 @@
         }
 
         /* ============================================================
-           阅读进度条
-           ============================================================ */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: var(--primary-gradient);
-            z-index: 999;
-            transition: width 0.1s;
-        }
-
-        /* ============================================================
            头部
            ============================================================ */
         .header {
@@ -206,12 +184,11 @@
             color: var(--text-primary);
         }
 
-        /* ---- 统计数据 ---- */
         .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
             gap: 12px;
-            max-width: 600px;
+            max-width: 480px;
             margin: 14px auto 0;
         }
         .stats-row .stat-item {
@@ -348,7 +325,7 @@
         }
 
         /* ============================================================
-           技能网格（分组）
+           技能网格
            ============================================================ */
         .skill-group {
             margin-bottom: 16px;
@@ -403,7 +380,7 @@
         }
 
         /* ============================================================
-           项目卡片（单项目丰富版）
+           项目卡片
            ============================================================ */
         .project-card {
             background: var(--bg-dark);
@@ -553,333 +530,6 @@
         }
 
         /* ============================================================
-           博客列表
-           ============================================================ */
-        .blog-filter {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-        #search-input {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px 16px;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            outline: none;
-            width: 100%;
-            font-family: inherit;
-            transition: var(--transition);
-            min-height: 44px;
-        }
-        #search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(243, 128, 32, 0.15);
-        }
-        .tag-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .filter-tag {
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: inherit;
-            min-height: 32px;
-        }
-        .filter-tag.active,
-        .filter-tag:hover {
-            background: var(--primary-dim);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .blog-item {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px 14px;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            align-items: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .blog-item:last-child {
-            border-bottom: none;
-        }
-        .blog-item:hover .btitle {
-            color: var(--primary);
-        }
-        .blog-item .bdate {
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            min-width: 70px;
-            flex-shrink: 0;
-        }
-        .blog-item .btitle {
-            font-weight: 500;
-            color: var(--text-primary);
-            flex: 1;
-            font-size: 0.93rem;
-            transition: var(--transition);
-        }
-        .blog-item .btag {
-            font-size: 0.62rem;
-            padding: 2px 12px;
-            border-radius: 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-        .blog-item .bhot {
-            font-size: 0.6rem;
-            color: var(--primary);
-            font-weight: 700;
-            background: var(--primary-dim);
-            padding: 1px 8px;
-            border-radius: 8px;
-        }
-        .blog-empty {
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 30px 0;
-            font-size: 0.9rem;
-        }
-
-        /* ---- 标签云 ---- */
-        .tag-cloud {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 4px 0;
-        }
-        .tag-cloud .cloud-tag {
-            padding: 4px 14px;
-            border-radius: 16px;
-            font-size: 0.75rem;
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            transition: var(--transition);
-            cursor: default;
-        }
-        .tag-cloud .cloud-tag:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: scale(1.05);
-        }
-        .tag-cloud .cloud-tag .count {
-            color: var(--primary);
-            font-weight: 700;
-            margin-left: 4px;
-        }
-
-        /* ============================================================
-           文章详情
-           ============================================================ */
-        #article-view {
-            display: none;
-            animation: fadeIn 0.35s var(--transition);
-        }
-        #article-view.visible {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 18px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: var(--transition);
-            cursor: pointer;
-            min-height: 44px;
-            background: transparent;
-            border: none;
-            font-family: inherit;
-        }
-        .back-btn:hover {
-            background: var(--bg-card);
-            color: var(--primary);
-        }
-
-        .article-header {
-            margin-bottom: 24px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 18px;
-        }
-        .article-header h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        .article-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            flex-wrap: wrap;
-        }
-        .article-meta .btag {
-            font-size: 0.65rem;
-            padding: 2px 12px;
-            border-radius: 12px;
-            background: var(--primary-dim);
-            color: var(--primary);
-            border: 1px solid transparent;
-        }
-
-        .article-content {
-            font-size: 0.98rem;
-            color: var(--text-primary);
-            line-height: 1.8;
-        }
-        .article-content h2 {
-            font-size: 1.35rem;
-            margin: 28px 0 12px;
-            color: var(--text-primary);
-            font-weight: 700;
-            scroll-margin-top: 20px;
-        }
-        .article-content h3 {
-            font-size: 1.1rem;
-            margin: 22px 0 8px;
-            color: var(--text-primary);
-            font-weight: 600;
-            scroll-margin-top: 20px;
-        }
-        .article-content p {
-            margin-bottom: 14px;
-            color: var(--text-primary);
-        }
-        .article-content ul,
-        .article-content ol {
-            margin: 0 0 14px 22px;
-        }
-        .article-content li {
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        .article-content code {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--primary-dim);
-            color: var(--primary);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.88em;
-        }
-        .article-content pre {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 16px;
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-        .article-content pre code {
-            background: none;
-            padding: 0;
-            color: var(--text-primary);
-            font-size: 0.88rem;
-        }
-        .article-content blockquote {
-            border-left: 3px solid var(--primary);
-            padding: 10px 16px;
-            margin: 0 0 20px;
-            background: var(--primary-dim);
-            border-radius: 0 var(--radius) var(--radius) 0;
-            color: var(--text-primary);
-        }
-        .article-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-        .article-content img {
-            max-width: 100%;
-            border-radius: var(--radius);
-            margin: 14px 0;
-        }
-
-        .toc-wrap {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 22px;
-        }
-        .toc-wrap .toc-title {
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .toc-wrap .toc-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .toc-wrap .toc-list li {
-            padding: 2px 0 2px 16px;
-            position: relative;
-            font-size: 0.85rem;
-            border: none;
-        }
-        .toc-wrap .toc-list li::before {
-            content: '—';
-            position: absolute;
-            left: 0;
-            color: var(--primary);
-            opacity: 0.5;
-        }
-        .toc-wrap .toc-list li.toc-h3 {
-            padding-left: 32px;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        .toc-wrap .toc-list a {
-            color: var(--text-secondary);
-            transition: var(--transition);
-        }
-        .toc-wrap .toc-list a:hover {
-            color: var(--primary);
-        }
-
-        #comments-section {
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        /* ============================================================
            友情链接
            ============================================================ */
         .links-grid {
@@ -1014,7 +664,7 @@
                 grid-template-columns: 1fr 1fr;
             }
             .stats-row {
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(3, 1fr);
             }
             .project-card .pfeatures {
                 grid-template-columns: 1fr 1fr;
@@ -1074,15 +724,8 @@
             .project-card .pheader .pinfo .pname {
                 font-size: 1.35rem;
             }
-            .blog-item .bdate {
-                min-width: 90px;
-                font-size: 0.82rem;
-            }
             .footer .wave {
                 height: 50px;
-            }
-            .article-header h1 {
-                font-size: 2rem;
             }
             .stats-row .stat-item .stat-num {
                 font-size: 1.6rem;
@@ -1091,7 +734,7 @@
 
         @media (min-width: 1200px) {
             .container {
-                max-width: 1150px;
+                max-width: 1100px;
             }
         }
 
@@ -1138,16 +781,6 @@
             }
             .timeline-item .tdate {
                 min-width: auto;
-            }
-            .blog-item {
-                flex-direction: column;
-                gap: 2px;
-            }
-            .blog-item .bdate {
-                min-width: auto;
-            }
-            .article-header h1 {
-                font-size: 1.3rem;
             }
             .stats-row {
                 grid-template-columns: repeat(2, 1fr);
@@ -1227,25 +860,14 @@
                 color: #333;
             }
             .footer .wave,
-            .blog-filter,
-            .back-btn,
-            .reading-progress,
             .header-actions,
             .stats-row {
                 display: none;
-            }
-            #article-view {
-                display: block !important;
-            }
-            #home-view {
-                display: none !important;
             }
         }
     </style>
 </head>
 <body>
-
-    <div class="reading-progress" id="readingProgress"></div>
 
     <div class="container">
 
@@ -1275,10 +897,6 @@
                 <!-- 统计数字 -->
                 <div class="stats-row" id="statsRow">
                     <div class="stat-item">
-                        <span class="stat-num" id="statPosts">12</span>
-                        <span class="stat-label">技术文章</span>
-                    </div>
-                    <div class="stat-item">
                         <span class="stat-num" id="statProjects">1</span>
                         <span class="stat-label">开源项目</span>
                     </div>
@@ -1288,7 +906,7 @@
                     </div>
                     <div class="stat-item">
                         <span class="stat-num" id="statTags">8</span>
-                        <span class="stat-label">技术标签</span>
+                        <span class="stat-label">技术领域</span>
                     </div>
                 </div>
 
@@ -1372,7 +990,7 @@
                 </div>
             </section>
 
-            <!-- ===== 核心项目（单项目丰富版） ===== -->
+            <!-- ===== 核心项目 ===== -->
             <section class="card">
                 <h2><i class="fas fa-folder-open"></i> 核心项目</h2>
                 <p class="section-desc">目前正在持续维护与迭代的开源项目：</p>
@@ -1449,7 +1067,7 @@
                     <div class="tdate">2026.06</div>
                     <div class="tcontent">
                         <div class="ttitle">探索 D1 + Hyperdrive 加速方案</div>
-                        <div class="tdesc">利用 Cloudflare Hyperdrive 将跨区域数据库查询延迟从 320ms 降至 28ms，并输出技术文章。</div>
+                        <div class="tdesc">利用 Cloudflare Hyperdrive 将跨区域数据库查询延迟从 320ms 降至 28ms。</div>
                         <span class="ttag">📝 研究</span>
                     </div>
                 </div>
@@ -1457,7 +1075,7 @@
                     <div class="tdate">2026.05</div>
                     <div class="tcontent">
                         <div class="ttitle">NetSight Pro 开源社区建立</div>
-                        <div class="tdesc">项目获得 2k+ Star，收到来自全球开发者的 47 个 PR 与 120+  Issue 反馈。</div>
+                        <div class="tdesc">项目获得 2k+ Star，收到来自全球开发者的 47 个 PR 与 120+ Issue 反馈。</div>
                         <span class="ttag">🌟 社区</span>
                     </div>
                 </div>
@@ -1473,7 +1091,7 @@
                     <div class="tdate">2026.03</div>
                     <div class="tcontent">
                         <div class="ttitle">HLS.js 自适应码率调优</div>
-                        <div class="tdesc">针对弱网环境优化 ABR 控制器，将播放中断率降低 45%，提升东南亚用户观看体验。</div>
+                        <div class="tdesc">针对弱网环境优化 ABR 控制器，将播放中断率降低 45%。</div>
                         <span class="ttag">⚡ 优化</span>
                     </div>
                 </div>
@@ -1492,29 +1110,6 @@
                         <div class="tdesc">开始将个人工具开源化，建立「开箱即用」的开发理念，积累边缘计算实践经验。</div>
                         <span class="ttag">🚀 启程</span>
                     </div>
-                </div>
-            </section>
-
-            <!-- ===== 博客文章 ===== -->
-            <section class="card" id="blog-section">
-                <h2><i class="fas fa-pen-fancy"></i> 技术文章</h2>
-                <p class="section-desc">记录技术思考与实践经验，目前已发布 <strong id="postCountLabel">12</strong> 篇文章。</p>
-
-                <div class="blog-filter">
-                    <input type="text" id="search-input" placeholder="🔍 搜索文章标题或关键词..." oninput="debouncedFilter()" />
-                    <div class="tag-filters" id="tag-filters">
-                        <button class="filter-tag active" onclick="filterByTag('all')">全部</button>
-                    </div>
-                </div>
-                <div id="post-list">
-                    <div class="blog-empty">⏳ 加载文章中...</div>
-                </div>
-
-                <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-color);">
-                    <div style="font-size:0.8rem; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">
-                        <i class="fas fa-tags" style="color:var(--primary);"></i> 热门标签
-                    </div>
-                    <div class="tag-cloud" id="tagCloud"></div>
                 </div>
             </section>
 
@@ -1617,26 +1212,6 @@
             </section>
         </div>
 
-        <!-- ============================================================
-        文章详情视图
-        ============================================================ -->
-        <div id="article-view">
-            <button class="back-btn" onclick="showHome()"><i class="fas fa-arrow-left"></i> 返回文章列表</button>
-            <article class="card" style="margin-bottom:0;">
-                <div class="article-header">
-                    <div class="article-meta" id="article-meta"></div>
-                    <h1 id="article-title"></h1>
-                </div>
-                <div id="toc-container"></div>
-                <div class="article-content" id="article-content"></div>
-
-                <div id="comments-section">
-                    <h2 style="font-size:1.15rem; margin-bottom:10px;"><i class="fas fa-comments"></i> 讨论区</h2>
-                    <div id="giscus-container"></div>
-                </div>
-            </article>
-        </div>
-
         <!-- ===== 页脚 ===== -->
         <footer class="footer">
             <div class="wave"></div>
@@ -1662,114 +1237,6 @@
     ================================================================ -->
     <script>
         // ================================================================
-        // 文章数据（12 篇）
-        // ================================================================
-        const POSTS_DATA = [{
-            id: "websocket-retry",
-            title: "WebSocket 在边缘环境下的重连策略实战",
-            date: "2026.07",
-            tag: "实时通信",
-            excerpt: "深入解析如何在 Cloudflare Workers 的不稳定边缘环境中，设计一套优雅的 WebSocket 断线重连与心跳保活机制。",
-            hot: true
-        }, {
-            id: "d1-hyperdrive",
-            title: "D1 + Hyperdrive：将边缘数据库查询加速 10 倍",
-            date: "2026.06",
-            tag: "数据库",
-            excerpt: "揭秘 Cloudflare Hyperdrive 如何通过连接池复用与智能缓存，彻底解决 D1 跨地域查询的高延迟痛点。",
-            hot: true
-        }, {
-            id: "r2-presigned-url",
-            title: "R2 预签名 URL 安全实践与防盗链策略",
-            date: "2026.06",
-            tag: "对象存储",
-            excerpt: "如何在不暴露 Access Key 的前提下，让前端直传文件至 R2？详解预签名 URL 的生成逻辑与安全加固方案。"
-        }, {
-            id: "waf-custom-rules",
-            title: "用 WAF Custom Rules 替代传统 Nginx 限流",
-            date: "2026.05",
-            tag: "安全防护",
-            excerpt: "告别复杂的 limit_req 配置。利用 Cloudflare WAF 表达式引擎，实现基于 JA4 指纹、ASN 和行为特征的精准防护。",
-            hot: true
-        }, {
-            id: "cold-start",
-            title: "Cloudflare Workers 冷启动优化：从 80ms 到 12ms",
-            date: "2026.05",
-            tag: "性能优化",
-            excerpt: "通过代码分割、延迟初始化和 V8 快照技术，将 Worker 冷启动时间降低 85% 的完整实践指南。"
-        }, {
-            id: "quic-http3-edge",
-            title: "QUIC/HTTP3 在边缘网络的实测收益与坑点",
-            date: "2026.04",
-            tag: "网络协议",
-            excerpt: "HTTP/3 真的比 HTTP/2 快吗？我们在全球 20 个边缘节点的实测数据揭示了 QUIC 的真实表现与回退策略。",
-            hot: true
-        }, {
-            id: "hls-adaptive",
-            title: "HLS.js 在低带宽场景下的自适应码率调优",
-            date: "2026.03",
-            tag: "流媒体",
-            excerpt: "针对东南亚及南美等弱网环境，调整 HLS.js 的 ABR 控制器参数，实现更平滑的视频播放体验。"
-        }, {
-            id: "edge-ping-design",
-            title: "EdgePing：全球 300+ 节点的分布式延迟探测系统设计",
-            date: "2026.02",
-            tag: "系统设计",
-            excerpt: "从零构建一个全球分布式延迟探测系统，涵盖节点调度、数据聚合、实时地图可视化与边缘缓存策略。",
-            hot: true
-        }, {
-            id: "d1-migration",
-            title: "从 PostgreSQL 迁移到 D1 的踩坑与经验总结",
-            date: "2026.01",
-            tag: "数据库",
-            excerpt: "分享从传统 PostgreSQL 迁移到 Cloudflare D1 边缘数据库过程中遇到的兼容性问题、性能调优与数据一致性保障。"
-        }, {
-            id: "waf-ja4-fingerprint",
-            title: "JA4 指纹：下一代 TLS 流量识别技术解析",
-            date: "2025.12",
-            tag: "安全防护",
-            excerpt: "深入剖析 JA4 指纹技术原理，对比 JA3 的改进点，并分享在 WAF 中应用 JA4 识别恶意流量的实战经验。"
-        }, {
-            id: "workers-kv-cache",
-            title: "Workers KV 缓存策略：从 500ms 到 50ms 的优化之路",
-            date: "2025.11",
-            tag: "性能优化",
-            excerpt: "通过预热、分层缓存、TTL 精细化控制等策略，将 KV 读取延迟降低 90%，大幅提升 Worker 响应速度。"
-        }, {
-            id: "edge-log-aggregation",
-            title: "边缘日志聚合系统：用 D1 + R2 构建轻量级日志平台",
-            date: "2025.10",
-            tag: "系统设计",
-            excerpt: "分享 LogStream 项目的架构设计，如何用边缘数据库和对象存储实现日志的实时采集、自动归档与可视化检索。"
-        }];
-
-        // ================================================================
-        // 全局状态
-        // ================================================================
-        let posts = [];
-        let currentTag = 'all';
-        let currentPostId = null;
-        let giscusLoaded = false;
-
-        const postListEl = document.getElementById('post-list');
-        const homeView = document.getElementById('home-view');
-        const articleView = document.getElementById('article-view');
-        const searchInput = document.getElementById('search-input');
-        const progressBar = document.getElementById('readingProgress');
-
-        // ================================================================
-        // 工具函数
-        // ================================================================
-        function debounce(fn, delay = 300) {
-            let timer;
-            return (...args) => {
-                clearTimeout(timer);
-                timer = setTimeout(() => fn(...args), delay);
-            };
-        }
-        const debouncedFilter = debounce(() => filterPosts(), 250);
-
-        // ================================================================
         // 主题切换
         // ================================================================
         function initTheme() {
@@ -1791,7 +1258,6 @@
                 icon.className = 'fas fa-sun';
                 label.textContent = '亮色';
             }
-            updateGiscusTheme(theme);
         }
 
         document.getElementById('themeToggle').addEventListener('click', () => {
@@ -1799,34 +1265,10 @@
             applyTheme(current === 'dark' ? 'light' : 'dark');
         });
 
-        function updateGiscusTheme(theme) {
-            const iframe = document.querySelector('.giscus-frame');
-            if (iframe && iframe.contentWindow) {
-                const giscusTheme = theme === 'dark' ? 'dark_dimmed' : 'light';
-                iframe.contentWindow.postMessage({
-                    giscus: { setConfig: { theme: giscusTheme } }
-                }, 'https://giscus.app');
-            }
-        }
-
         // ================================================================
-        // 阅读进度条
-        // ================================================================
-        function updateProgress() {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            progressBar.style.width = progress + '%';
-        }
-        window.addEventListener('scroll', updateProgress);
-
-        // ================================================================
-        // 统计数字
+        // 统计数字 - GitHub Stars
         // ================================================================
         function updateStats() {
-            document.getElementById('statPosts').textContent = POSTS_DATA.length;
-            document.getElementById('statProjects').textContent = '1';
-            document.getElementById('statTags').textContent = [...new Set(POSTS_DATA.map(p => p.tag))].length;
             fetch('https://api.github.com/repos/BlueDriftHK/CF-workers-netdiag')
                 .then(r => r.json())
                 .then(data => {
@@ -1840,275 +1282,9 @@
         }
 
         // ================================================================
-        // 加载文章数据
+        // 访问量统计（本地模拟）
         // ================================================================
-        async function loadMeta() {
-            try {
-                const res = await fetch('/posts/meta.json');
-                if (res.ok) {
-                    posts = await res.json();
-                } else {
-                    throw new Error('使用内置数据');
-                }
-            } catch (_) {
-                posts = POSTS_DATA;
-            }
-            posts.sort((a, b) => b.date.localeCompare(a.date));
-            renderPosts(posts);
-            initFilters();
-            renderTagCloud(posts);
-
-            document.getElementById('postCountLabel').textContent = posts.length;
-
-            const path = window.location.pathname;
-            const hash = window.location.hash.slice(1);
-            let slug = null;
-            if (path.startsWith('/post/')) {
-                slug = path.replace('/post/', '').replace(/\/$/, '');
-            } else if (hash) {
-                slug = hash;
-            }
-            if (slug && posts.find(p => p.id === slug)) {
-                showPost(slug, false);
-            } else {
-                showHome();
-            }
-
-            updateStats();
-        }
-
-        // ================================================================
-        // 渲染文章列表
-        // ================================================================
-        function renderPosts(list) {
-            const data = list || posts;
-            postListEl.innerHTML = data.length ? data.map(p => `
-                    <div class="blog-item" onclick="navigateToPost('${p.id}')">
-                        <span class="bdate">${p.date}</span>
-                        <span class="btitle">${p.title}</span>
-                        <span class="btag">${p.tag}</span>
-                        ${p.hot ? '<span class="bhot">🔥 热门</span>' : ''}
-                    </div>
-                `).join('') : '<div class="blog-empty">😔 没有找到相关文章，试试其他关键词吧</div>';
-        }
-
-        function initFilters() {
-            const tags = [...new Set(posts.map(p => p.tag))];
-            const container = document.getElementById('tag-filters');
-            tags.forEach(tag => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-tag';
-                btn.textContent = tag;
-                btn.onclick = () => filterByTag(tag);
-                container.appendChild(btn);
-            });
-        }
-
-        function renderTagCloud(posts) {
-            const tagCounts = {};
-            posts.forEach(p => {
-                tagCounts[p.tag] = (tagCounts[p.tag] || 0) + 1;
-            });
-            const container = document.getElementById('tagCloud');
-            container.innerHTML = Object.entries(tagCounts)
-                .sort((a, b) => b[1] - a[1])
-                .map(([tag, count]) => `
-                        <span class="cloud-tag" onclick="filterByTag('${tag}')" style="cursor:pointer;">
-                            ${tag} <span class="count">${count}</span>
-                        </span>
-                    `).join('');
-        }
-
-        window.filterByTag = function(tag) {
-            currentTag = tag;
-            document.querySelectorAll('.filter-tag').forEach(b => {
-                b.classList.toggle('active', b.textContent === tag || (tag === 'all' && b.textContent === '全部'));
-            });
-            filterPosts();
-        };
-
-        window.filterPosts = function() {
-            const query = searchInput.value.toLowerCase();
-            const filtered = posts.filter(p => {
-                const matchTag = currentTag === 'all' || p.tag === currentTag;
-                const matchSearch = !query || p.title.toLowerCase().includes(query) || p.excerpt.toLowerCase().includes(
-                    query);
-                return matchTag && matchSearch;
-            });
-            renderPosts(filtered);
-        };
-
-        // ================================================================
-        // 导航
-        // ================================================================
-        window.navigateToPost = function(id) {
-            showPost(id, true);
-        };
-
-        window.showPost = async function(id, pushHistory = true) {
-            const post = posts.find(p => p.id === id);
-            if (!post) return;
-
-            currentPostId = id;
-
-            document.getElementById('article-title').textContent = '加载中...';
-            document.getElementById('article-content').innerHTML = '<p style="color:var(--text-secondary);">⏳ 文章内容加载中...</p>';
-            document.getElementById('toc-container').innerHTML = '';
-
-            try {
-                let mdContent = '';
-                try {
-                    const mdRes = await fetch(`/posts/${id}.md`);
-                    if (mdRes.ok) {
-                        mdContent = await mdRes.text();
-                    } else {
-                        throw new Error('使用内置内容');
-                    }
-                } catch (_) {
-                    mdContent = `<p>这是《${post.title}》的完整文章内容。在实际部署中，请将文章内容放在 <code>/posts/${id}.md</code> 文件中。</p>
-                            <p>📝 本文摘要：${post.excerpt}</p>
-                            <h2>完整内容即将上线</h2>
-                            <p>感谢您的阅读！请关注后续更新。</p>`;
-                }
-
-                const htmlContent = marked.parse(mdContent);
-
-                document.getElementById('article-title').textContent = post.title;
-                document.getElementById('article-meta').innerHTML = `
-                        <span class="btag">${post.tag}</span>
-                        <span><i class="far fa-calendar-alt"></i> ${post.date}</span>
-                        <span><i class="far fa-clock"></i> ${Math.ceil(mdContent.length / 300)} min read</span>
-                        ${post.hot ? '<span style="color:var(--primary);">🔥 热门文章</span>' : ''}
-                    `;
-
-                document.getElementById('article-content').innerHTML = htmlContent;
-
-                const toc = generateTOC(htmlContent);
-                document.getElementById('toc-container').innerHTML = toc;
-
-                document.querySelectorAll('#article-content pre code').forEach(block => {
-                    hljs.highlightElement(block);
-                });
-
-                loadGiscus(post.id);
-
-                homeView.style.display = 'none';
-                articleView.classList.add('visible');
-                window.scrollTo({ top: 0 });
-
-                if (pushHistory) {
-                    history.pushState({ postId: id }, '', `/post/${id}`);
-                }
-
-                document.title = `${post.title} · BlueDriftHK`;
-                const metaDesc = document.querySelector('meta[name="description"]');
-                if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
-
-                updateProgress();
-
-            } catch (err) {
-                console.error('加载文章失败:', err);
-                document.getElementById('article-content').innerHTML =
-                    '<p style="color:#e74c3c;">❌ 文章加载失败，请稍后重试</p>';
-            }
-        };
-
-        // ================================================================
-        // 生成目录
-        // ================================================================
-        function generateTOC(html) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const headings = doc.querySelectorAll('h2, h3');
-            if (headings.length === 0) return '';
-
-            let items = '';
-            headings.forEach(h => {
-                const level = h.tagName.toLowerCase() === 'h2' ? 'toc-h2' : 'toc-h3';
-                const text = h.textContent;
-                const id = text.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
-                h.id = id;
-                items += `<li class="${level}"><a href="#${id}">${text}</a></li>`;
-            });
-
-            const contentEl = document.getElementById('article-content');
-            contentEl.innerHTML = doc.body.innerHTML;
-
-            return `
-                    <div class="toc-wrap">
-                        <div class="toc-title"><i class="fas fa-list-ul"></i> 目录</div>
-                        <ul class="toc-list">${items}</ul>
-                    </div>
-                `;
-        }
-
-        // ================================================================
-        // Giscus 评论
-        // ================================================================
-        function loadGiscus(postId) {
-            const container = document.getElementById('giscus-container');
-            container.innerHTML = '';
-
-            const existingScript = document.querySelector('script[src*="giscus"]');
-            if (existingScript) {
-                existingScript.remove();
-                giscusLoaded = false;
-            }
-
-            const script = document.createElement('script');
-            script.src = 'https://giscus.app/client.js';
-            script.setAttribute('data-repo', 'BlueDriftHK/BlueDriftHK.github.io');
-            script.setAttribute('data-repo-id', '你的仓库ID');
-            script.setAttribute('data-category', 'Announcements');
-            script.setAttribute('data-category-id', '你的分类ID');
-            script.setAttribute('data-mapping', 'pathname');
-            script.setAttribute('data-strict', '0');
-            script.setAttribute('data-reactions-enabled', '1');
-            script.setAttribute('data-emit-metadata', '0');
-            script.setAttribute('data-input-position', 'top');
-            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark_dimmed' : 'light';
-            script.setAttribute('data-theme', theme);
-            script.setAttribute('data-lang', 'zh-CN');
-            script.setAttribute('crossorigin', 'anonymous');
-            script.async = true;
-
-            container.appendChild(script);
-            giscusLoaded = true;
-        }
-
-        // ================================================================
-        // 返回首页
-        // ================================================================
-        window.showHome = function() {
-            articleView.classList.remove('visible');
-            homeView.style.display = 'block';
-            window.scrollTo({ top: 0 });
-            history.pushState(null, '', '/');
-            document.title = 'BlueDriftHK · 边缘计算架构师';
-            const metaDesc = document.querySelector('meta[name="description"]');
-            if (metaDesc) {
-                metaDesc.setAttribute('content',
-                    '边缘计算架构师 BlueDriftHK 的个人主页与技术博客 - Cloudflare Workers, D1, R2, Network Diagnostics, Open Source'
-                    );
-            }
-            progressBar.style.width = '0%';
-        };
-
-        // ================================================================
-        // 浏览器历史
-        // ================================================================
-        window.addEventListener('popstate', (e) => {
-            if (e.state?.postId) {
-                showPost(e.state.postId, false);
-            } else {
-                showHome();
-            }
-        });
-
-        // ================================================================
-        // 访问量统计
-        // ================================================================
-        async function fetchVisitCount() {
+        function fetchVisitCount() {
             try {
                 const countEl = document.getElementById('visit-count');
                 let count = parseInt(localStorage.getItem('visitCount') || '0');
@@ -2126,15 +1302,8 @@
         // ================================================================
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
-            loadMeta();
+            updateStats();
             fetchVisitCount();
-
-            document.getElementById('themeToggle').addEventListener('click', () => {
-                setTimeout(() => {
-                    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-                    updateGiscusTheme(theme);
-                }, 100);
-            });
         });
     </script>
 </body>
