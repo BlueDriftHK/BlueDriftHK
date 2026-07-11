@@ -1227,7 +1227,7 @@
             </p>
             <p style="font-size:0.7rem; margin-top:8px; color:var(--text-secondary);">
                 &copy; 2026 BlueDriftHK · 基于 GitHub Pages 构建 ·
-                <span id="visitor-counter">👀 访问量：<span id="visit-count">--</span></span>
+                <span id="visitor-counter">👀 访问量：<span id="visit-count" class="loading">--</span></span>
             </p>
         </footer>
     </div>
@@ -1282,19 +1282,40 @@
         }
 
         // ================================================================
-        // 访问量统计（本地模拟）
+        // 全局访问量（从 Cloudflare Worker 获取）
+        // 使用 https://api.bjhr.space/count
         // ================================================================
-        function fetchVisitCount() {
+        async function fetchVisitCount() {
+            const countEl = document.getElementById('visit-count');
+            if (!countEl) return;
+
+            const workerUrl = 'https://api.bjhr.space/count';  // 你的 Worker API 地址
+
             try {
-                const countEl = document.getElementById('visit-count');
-                let count = parseInt(localStorage.getItem('visitCount') || '0');
-                if (!sessionStorage.getItem('visited')) {
-                    count++;
-                    localStorage.setItem('visitCount', String(count));
-                    sessionStorage.setItem('visited', 'true');
+                const response = await fetch(workerUrl);
+                if (!response.ok) throw new Error('网络响应错误');
+                const data = await response.json();
+
+                // 预期返回格式：{ "count": 123 }
+                if (typeof data.count === 'number') {
+                    countEl.textContent = data.count;
+                    countEl.classList.remove('loading');
+                } else {
+                    throw new Error('数据格式错误');
                 }
-                countEl.textContent = count || '--';
-            } catch (_) {}
+            } catch (error) {
+                console.warn('访问量获取失败，使用降级方案', error);
+                // 降级：使用 localStorage 作为本地备用（仅供演示）
+                try {
+                    let localCount = parseInt(localStorage.getItem('fallbackVisit') || '0', 10);
+                    localCount += 1;
+                    localStorage.setItem('fallbackVisit', String(localCount));
+                    countEl.textContent = localCount;
+                } catch (_) {
+                    countEl.textContent = '--';
+                }
+                countEl.classList.remove('loading');
+            }
         }
 
         // ================================================================
@@ -1303,7 +1324,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
             updateStats();
-            fetchVisitCount();
+            fetchVisitCount();  // 替换了原来的本地计数函数
         });
     </script>
 </body>
