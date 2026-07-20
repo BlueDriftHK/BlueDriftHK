@@ -2619,102 +2619,6 @@
             .share-bar { display: none; }
         }
 
-        /* 访客地理分布小地图 */
-        .geo-wrap {
-            display: grid;
-            grid-template-columns: 1.6fr 1fr;
-            gap: 22px;
-            align-items: stretch;
-        }
-        .geo-map {
-            position: relative;
-            background:
-                radial-gradient(circle at 70% 20%, rgba(6, 182, 212, 0.10), transparent 60%),
-                var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md, 12px);
-            overflow: hidden;
-            aspect-ratio: 2 / 1;
-        }
-        [data-theme="light"] .geo-map { background: radial-gradient(circle at 70% 20%, rgba(6, 182, 212, 0.10), transparent 60%), #eef2ff; }
-        .geo-map svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-        .geo-graticule { stroke: var(--border-color); stroke-width: 0.5; opacity: 0.5; }
-        .geo-land {
-            fill: color-mix(in srgb, var(--primary) 13%, transparent);
-            stroke: color-mix(in srgb, var(--primary) 38%, transparent);
-            stroke-width: 0.6;
-            stroke-linejoin: round;
-        }
-        [data-theme="light"] .geo-land {
-            fill: color-mix(in srgb, var(--primary) 16%, transparent);
-            stroke: color-mix(in srgb, var(--primary) 45%, transparent);
-        }
-        .geo-dot {
-            fill: var(--primary);
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: geoPulse 2.4s ease-in-out infinite;
-        }
-        .geo-dot.alt { fill: var(--accent); }
-        .geo-dot-ring {
-            fill: none;
-            stroke: var(--primary);
-            stroke-width: 1;
-            opacity: 0;
-            transform-box: fill-box;
-            transform-origin: center;
-            animation: geoRing 2.4s ease-out infinite;
-        }
-        @keyframes geoPulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
-        @keyframes geoRing {
-            0% { transform: scale(1); opacity: 0.6; }
-            100% { transform: scale(4); opacity: 0; }
-        }
-        .geo-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            justify-content: center;
-        }
-        .geo-row {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.82rem;
-        }
-        .geo-flag { font-size: 1.05rem; line-height: 1; }
-        .geo-name { color: var(--text-primary); }
-        .geo-bar-track {
-            grid-column: 1 / -1;
-            height: 5px;
-            border-radius: 3px;
-            background: var(--border-color);
-            overflow: hidden;
-        }
-        .geo-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            width: 0;
-            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .geo-count { color: var(--text-secondary); font-variant-numeric: tabular-nums; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
-        .geo-total {
-            margin-top: 4px;
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            text-align: right;
-        }
-        .geo-total b { color: var(--primary); font-family: 'JetBrains Mono', monospace; }
-        @media (max-width: 720px) {
-            .geo-wrap { grid-template-columns: 1fr; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .geo-dot, .geo-dot-ring { animation: none; }
-            .geo-dot-ring { display: none; }
-        }
-
         /* 节日彩蛋 */
         .holiday-layer {
             position: fixed;
@@ -3152,6 +3056,42 @@
         .resume-body li { margin-bottom: 4px; }
         .resume-body .r-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
         .resume-body .r-tag { font-size: 0.72rem; background: var(--primary-dim); color: var(--primary); padding: 3px 12px; border-radius: 10px; }
+
+        /* ---------- 文章阅读器 ---------- */
+        .reader-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.62); backdrop-filter: blur(6px); z-index: 10004; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: var(--transition); }
+        .reader-overlay.open { opacity: 1; visibility: visible; }
+        .reader-modal { width: min(760px, 96vw); max-height: 90vh; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg, 16px); box-shadow: 0 28px 80px rgba(0,0,0,0.55); display: flex; flex-direction: column; overflow: hidden; transform: translateY(16px) scale(0.98); transition: var(--transition); }
+        .reader-overlay.open .reader-modal { transform: translateY(0) scale(1); }
+        .reader-progress { height: 3px; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: width 0.1s linear; flex-shrink: 0; }
+        .reader-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 20px 24px 0; flex-shrink: 0; }
+        .reader-close { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .reader-close:hover { color: var(--text-primary); border-color: var(--primary); transform: rotate(90deg); }
+        .reader-scroll { overflow-y: auto; padding: 0 26px 30px; scroll-behavior: smooth; }
+        .reader-cover { font-size: 3.2rem; line-height: 1; margin: 6px 0 14px; }
+        .reader-tags { display: flex; gap: 8px; margin-bottom: 12px; }
+        .reader-tag { font-size: 0.72rem; padding: 3px 12px; border-radius: 10px; background: var(--primary-dim); color: var(--primary); }
+        .reader-tag.alt { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+        .reader-title { font-size: 1.65rem; font-weight: 800; line-height: 1.35; color: var(--text-primary); margin: 0 0 12px; letter-spacing: -0.01em; }
+        .reader-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); padding-bottom: 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+        .reader-meta i { margin-right: 5px; color: var(--primary); }
+        .reader-body { color: var(--text-secondary); line-height: 1.85; font-size: 0.94rem; }
+        .reader-body p { margin: 0 0 16px; }
+        .reader-body h4 { color: var(--text-primary); font-size: 1.12rem; font-weight: 700; margin: 26px 0 12px; padding-left: 12px; border-left: 3px solid var(--primary); }
+        .reader-body ul, .reader-body ol { margin: 0 0 16px 22px; padding: 0; }
+        .reader-body li { margin-bottom: 6px; }
+        .reader-body strong { color: var(--text-primary); }
+        .reader-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.84em; background: color-mix(in srgb, var(--primary) 12%, transparent); color: var(--primary); padding: 2px 6px; border-radius: 5px; }
+        .reader-body pre { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: var(--radius-md, 12px); padding: 16px 18px; overflow-x: auto; margin: 0 0 18px; }
+        [data-theme="light"] .reader-body pre { background: #0d1117; }
+        .reader-body pre code { background: transparent; color: #c9d1d9; padding: 0; font-size: 0.82rem; line-height: 1.6; }
+        .reader-body blockquote { border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); padding: 12px 16px; border-radius: 0 var(--radius-md,12px) var(--radius-md,12px) 0; margin: 0 0 18px; color: var(--text-secondary); }
+        .reader-body blockquote p { margin: 0; }
+        .reader-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-color); flex-wrap: wrap; }
+        .reader-author { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-secondary); }
+        .reader-author b { color: var(--text-primary); }
+        .reader-author .ra-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.85rem; }
+        .reader-origin { font-size: 0.82rem; color: var(--primary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 7px 16px; border-radius: 10px; transition: var(--transition); }
+        .reader-origin:hover { background: var(--primary-dim); }
 
         /* ============================================================
            响应式
@@ -3658,7 +3598,7 @@
             <p class="section-desc">关于边缘计算、网络协议与工程实践的技术笔记。</p>
 
             <div class="blog-grid">
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：用 Cloudflare Workers 打造全球网络诊断面板">
+                <a class="blog-card" data-article="a1" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：用 Cloudflare Workers 打造全球网络诊断面板">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">📡</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">Cloudflare</span><span class="blog-tag alt">边缘计算</span></div>
@@ -3671,7 +3611,7 @@
                     </div>
                 </a>
 
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：QUIC 与 HTTP/3 实战性能调优">
+                <a class="blog-card" data-article="a2" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：QUIC 与 HTTP/3 实战性能调优">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">⚡</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">QUIC</span><span class="blog-tag alt">HTTP/3</span></div>
@@ -3684,7 +3624,7 @@
                     </div>
                 </a>
 
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：HLS 自适应码率（ABR）原理与调优">
+                <a class="blog-card" data-article="a3" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：HLS 自适应码率（ABR）原理与调优">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">📹</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">HLS</span><span class="blog-tag alt">流媒体</span></div>
@@ -3697,7 +3637,7 @@
                     </div>
                 </a>
 
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：D1 + R2 构建 Serverless 数据层">
+                <a class="blog-card" data-article="a4" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：D1 + R2 构建 Serverless 数据层">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">🗄️</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">D1</span><span class="blog-tag alt">Serverless</span></div>
@@ -3710,7 +3650,7 @@
                     </div>
                 </a>
 
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：Web 安全加固清单：TLS、HSTS 与 CSP">
+                <a class="blog-card" data-article="a5" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：Web 安全加固清单：TLS、HSTS 与 CSP">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">🛡️</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">安全</span><span class="blog-tag alt">TLS</span></div>
@@ -3723,7 +3663,7 @@
                     </div>
                 </a>
 
-                <a class="blog-card" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：WebSocket 实时通信的重连与心跳设计">
+                <a class="blog-card" data-article="a6" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer" aria-label="阅读文章：WebSocket 实时通信的重连与心跳设计">
                     <div class="blog-cover" aria-hidden="true"><span class="cover-emoji">🔌</span></div>
                     <div class="blog-body">
                         <div class="blog-tags"><span class="blog-tag">WebSocket</span><span class="blog-tag alt">实时通信</span></div>
@@ -3806,22 +3746,6 @@
                 <!-- 右：置顶仓库卡片 -->
                 <div class="pinned-grid" id="pinnedGrid">
                     <div class="gh-loading"><i class="fas fa-spinner fa-spin"></i> 正在加载仓库数据…</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== 访客地理分布 ===== -->
-        <section class="card reveal" aria-labelledby="geo-title">
-            <h2 id="geo-title"><i class="fas fa-earth-asia" aria-hidden="true"></i> 访客地理分布</h2>
-            <p class="section-desc">来自世界各地的访问足迹（基于边缘节点实时统计）。</p>
-
-            <div class="geo-wrap">
-                <div class="geo-map" role="img" aria-label="访客地理分布世界地图">
-                    <svg id="geoMapSvg" viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
-                </div>
-                <div>
-                    <div id="geoList" class="geo-list" aria-label="访客来源排行"></div>
-                    <div class="geo-total" id="geoTotal"></div>
                 </div>
             </div>
         </section>
@@ -4200,6 +4124,31 @@
                 <div class="r-tags">
                     <span class="r-tag">Cloudflare Workers</span><span class="r-tag">边缘计算</span><span class="r-tag">Serverless</span>
                     <span class="r-tag">网络诊断</span><span class="r-tag">开源</span><span class="r-tag">全栈</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文章阅读器 -->
+    <div class="reader-overlay" id="readerOverlay" role="dialog" aria-modal="true" aria-label="文章阅读">
+        <div class="reader-modal">
+            <div class="reader-progress" id="readerProgress"></div>
+            <div class="reader-head">
+                <div></div>
+                <button class="reader-close" id="readerClose" aria-label="关闭文章" type="button"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <div class="reader-scroll" id="readerScroll">
+                <div class="reader-cover" id="readerCover" aria-hidden="true"></div>
+                <div class="reader-tags" id="readerTags"></div>
+                <h3 class="reader-title" id="readerTitle"></h3>
+                <div class="reader-meta" id="readerMeta"></div>
+                <div class="reader-body" id="readerBody"></div>
+                <div class="reader-foot">
+                    <div class="reader-author">
+                        <span class="ra-avatar">B</span>
+                        <span><b>BlueDriftHK</b><br>边缘计算架构师 · 开源爱好者</span>
+                    </div>
+                    <a class="reader-origin" href="https://blog.bjhr.space/" target="_blank" rel="noopener noreferrer"><i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i> 在博客原文阅读</a>
                 </div>
             </div>
         </div>
@@ -5425,7 +5374,7 @@
             // blog cards
             document.querySelectorAll('.blog-card').forEach(function (card) {
                 var t = card.querySelector('.blog-title');
-                if (t) add(t.textContent.trim(), '博客', 'fa-pen-nib', { url: card.getAttribute('href') });
+                if (t) add(t.textContent.trim(), '博客', 'fa-pen-nib', { click: card });
             });
             // project cards
             document.querySelectorAll('.project-card').forEach(function (card) {
@@ -5462,6 +5411,7 @@
 
             function go(item) {
                 close();
+                if (item.target.click) { item.target.click.click(); return; }
                 if (item.target.url) { window.open(item.target.url, '_blank', 'noopener'); return; }
                 if (item.target.el && item.target.el.scrollIntoView) {
                     item.target.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -5636,6 +5586,220 @@
             // 简历弹窗关闭
             if (resumeClose) resumeClose.addEventListener('click', closeResume);
             if (resumeOverlay) resumeOverlay.addEventListener('click', function (e) { if (e.target === resumeOverlay) closeResume(); });
+        })();
+
+        /* ============================================================
+           文章阅读器 (initArticleReader)
+           ============================================================ */
+        (function initArticleReader() {
+            var overlay = document.getElementById('readerOverlay');
+            var scrollEl = document.getElementById('readerScroll');
+            var progressEl = document.getElementById('readerProgress');
+            var coverEl = document.getElementById('readerCover');
+            var tagsEl = document.getElementById('readerTags');
+            var titleEl = document.getElementById('readerTitle');
+            var metaEl = document.getElementById('readerMeta');
+            var bodyEl = document.getElementById('readerBody');
+            var closeBtn = document.getElementById('readerClose');
+            if (!overlay || !bodyEl) return;
+
+            var ARTICLES = {
+                a1: {
+                    cover: '📡', tags: ['Cloudflare', '边缘计算'], title: '用 Cloudflare Workers 打造全球网络诊断面板',
+                    date: '2026-06-18', time: '8 分钟',
+                    body: `<p>NetSight Pro 的起点是一个很朴素的需求：<strong>我想知道从世界不同角落访问我的服务，到底快不快、通不通</strong>。传统做法是买一堆 VPS 部署探针，而 Cloudflare Workers 让我把"探针"直接搬进了遍布全球的边缘节点。</p>
+<h4>为什么是边缘</h4>
+<p>Workers 运行在 Cloudflare 的 Anycast 网络上，同一段代码部署一次，就能在数百个 PoP 节点就近执行。用户的请求被自动路由到地理上最近的节点，这意味着<strong>探测源天然就是分布式的</strong>——你不需要自己维护任何一台服务器。</p>
+<h4>核心架构</h4>
+<p>整个面板分为三层：边缘探测层（Workers 执行 ping / DNS / TLS 探测）、边缘存储层（Durable Objects 与 KV 聚合结果）、前端展示层（纯静态页面 + 实时 WebSocket 推送）。探测逻辑的核心代码如下：</p>
+<pre><code>export default {
+  async fetch(request, env) {
+    const { host } = new URL(request.url);
+    const start = performance.now();
+    const resp = await fetch('https://' + host, { method: 'HEAD' });
+    const rtt = (performance.now() - start).toFixed(1);
+    return Response.json({
+      host, rtt: Number(rtt),
+      status: resp.status,
+      colo: request.cf.colo,        // 当前边缘节点
+      country: request.cf.country
+    });
+  }
+};</code></pre>
+<h4>三类探针的设计取舍</h4>
+<ul>
+<li><strong>RTT 延迟探测</strong>：用 <code>fetch</code> + <code>performance.now()</code> 测 HTTP 往返，虽不如 ICMP ping 底层，但在 Workers 沙箱里最可行，且更贴近真实用户体验。</li>
+<li><strong>DNS 探测</strong>：通过 DNS-over-HTTPS 查询解析耗时，顺带校验解析结果是否被劫持。</li>
+<li><strong>TLS 检测</strong>：握手时检查协议版本、证书链与有效期，给出安全评分。</li>
+</ul>
+<blockquote><p>把复杂能力封装成开箱即用的工具，是这个项目 2.3k Star 的根本原因——用户要的不是 API，而是答案。</p></blockquote>
+<p>完整源码与部署文档已开源（GPL v3.0），5 分钟即可拥有属于自己的全球网络监控面板。</p>`
+                },
+                a2: {
+                    cover: '⚡', tags: ['QUIC', 'HTTP/3'], title: 'QUIC 与 HTTP/3 实战性能调优',
+                    date: '2026-05-02', time: '12 分钟',
+                    body: `<p>HTTP/3 把传输层从 TCP 换成了基于 UDP 的 QUIC。在高延迟、弱网环境下，这一换带来的收益是数量级的。本文记录我在 NetSight Pro 前端资源分发上启用 HTTP/3 的完整调优过程。</p>
+<h4>0-RTT 与连接迁移</h4>
+<p>QUIC 最大的两个杀手锏：<strong>0-RTT 会话恢复</strong>（重连时首个数据包即可携带应用数据）和<strong>连接迁移</strong>（用 Connection ID 而非四元组标识连接，Wi-Fi 切 4G 不断流）。对移动端用户，后者几乎是刚需。</p>
+<h4>开启 HTTP/3</h4>
+<p>在 Cloudflare 上只需一个开关，但要在源站正确宣告 <code>Alt-Svc</code> 头，浏览器才会尝试升级：</p>
+<pre><code>Alt-Svc: h3=":443"; ma=86400</code></pre>
+<h4>弱网压测数据</h4>
+<p>用 3% 丢包 + 200ms RTT 的模拟环境对比同一页面的加载：</p>
+<ul>
+<li>TCP + HTTP/2：首屏 <strong>4.8s</strong>，队头阻塞导致关键资源排队</li>
+<li>QUIC + HTTP/3：首屏 <strong>2.1s</strong>，多路复用互不干扰</li>
+<li>弱网重连场景：QUIC 凭借 0-RTT 快约 <strong>60%</strong></li>
+</ul>
+<h4>调优要点</h4>
+<ol>
+<li>拥塞算法选 <code>BBR</code> 而非 CUBIC，高带宽延迟积链路下吞吐更稳。</li>
+<li>初始拥塞窗口调大，减少慢启动对短连接的惩罚。</li>
+<li>0-RTT 有重放风险，只用于幂等请求（GET 静态资源）。</li>
+</ol>
+<blockquote><p>协议升级不是银弹，但在移动弱网场景，QUIC 是目前性价比最高的一次"免费"提速。</p></blockquote>`
+                },
+                a3: {
+                    cover: '📹', tags: ['HLS', '流媒体'], title: 'HLS 自适应码率（ABR）原理与调优',
+                    date: '2026-03-27', time: '10 分钟',
+                    body: `<p>看视频时清晰度能随网速自动升降，背后就是 ABR（Adaptive Bitrate）。本文拆解 HLS 的分片调度逻辑，以及如何调参避免"反复降档"和卡顿。</p>
+<h4>m3u8 的结构</h4>
+<p>HLS 用播放列表描述流。主播放列表（Master Playlist）列出多档码率的子播放列表，播放器根据带宽在它们之间切换：</p>
+<pre><code>#EXTM3U
+#EXT-X-STREAM-INF:BANDWIDTH=800000,RESOLUTION=640x360
+360p.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=2500000,RESOLUTION=1280x720
+720p.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=6000000,RESOLUTION=1920x1080
+1080p.m3u8</code></pre>
+<h4>ABR 的调度逻辑</h4>
+<p>播放器每下载完一个分片（通常 2~6 秒），就估算一次可用带宽，再决定下一片选哪档。主流算法分两派：<strong>基于带宽</strong>（选低于估算带宽的最高档）和<strong>基于缓冲</strong>（缓冲区越满越敢升档）。实践中多用混合策略。</p>
+<h4>避免卡顿与反复降档</h4>
+<ul>
+<li><strong>升档保守、降档激进</strong>：升档需要带宽富余 1.5 倍以上，降档在缓冲告急时立即执行。</li>
+<li><strong>分片时长对齐</strong>：各码率分片必须严格等长且关键帧对齐（IDR aligned），否则切换会黑屏。</li>
+<li><strong>设置切换冷却</strong>：两次升档之间留足间隔，防止带宽抖动导致来回横跳。</li>
+</ul>
+<blockquote><p>ABR 调优的本质是在"清晰度"和"流畅度"之间做权衡，而用户永远更在意后者。</p></blockquote>`
+                },
+                a4: {
+                    cover: '🗄️', tags: ['D1', 'Serverless'], title: 'D1 + R2 构建 Serverless 数据层',
+                    date: '2026-02-11', time: '9 分钟',
+                    body: `<p>D1 是跑在边缘的 SQLite，R2 是免出口费的对象存储。两者加上 Workers，就是一套零运维的完整后端。本文分享我在生产环境的使用模式与成本账。</p>
+<h4>分工：结构化 vs 大对象</h4>
+<p>原则很简单：<strong>元数据进 D1，文件本体进 R2</strong>。D1 存索引、配置、关系数据；R2 存截图、日志归档、媒体文件。D1 里只保留 R2 对象的 key。</p>
+<h4>典型查询与预签名 URL</h4>
+<pre><code>// D1：参数化查询防注入
+const row = await env.DB
+  .prepare('SELECT r2_key, title FROM reports WHERE id = ?')
+  .bind(id).first();
+
+// R2：生成限时下载链接
+const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
+<h4>缓存策略</h4>
+<ul>
+<li>读多写少的热点数据用 <code>Workers KV</code> 挡在 D1 前面，命中率可达 95%+。</li>
+<li>R2 对象配 <code>Cache-Control: public, max-age=31536000, immutable</code>，配合文件名哈希做永久缓存。</li>
+<li>D1 的读副本（alpha）适合报表类重查询，避免拖慢主库。</li>
+</ul>
+<h4>成本实测</h4>
+<p>一个日均 10 万请求的小型应用：D1 每月几百万行读操作在免费额度内，R2 因无出口费，同样流量比 S3 省约 <strong>70%</strong>。对独立开发者，这套组合几乎是零成本起步。</p>
+<blockquote><p>Serverless 数据层的核心心法：把状态推到边缘，把冷数据沉到对象存储，中间用缓存抹平延迟。</p></blockquote>`
+                },
+                a5: {
+                    cover: '🛡️', tags: ['安全', 'TLS'], title: 'Web 安全加固清单：TLS、HSTS 与 CSP',
+                    date: '2026-01-08', time: '7 分钟',
+                    body: `<p>安全配置大多"一次配置、长期受益"。这是一份我在所有项目上强制落地的清单，覆盖传输加密、头部策略与常见攻击面。</p>
+<h4>TLS：只留 1.2 和 1.3</h4>
+<p>禁用 TLS 1.0/1.1 与弱密码套件，优先 <code>TLS_AES_128_GCM_SHA256</code> 与 <code>TLS_CHACHA20_POLY1305_SHA256</code>。证书用 ECDSA P-256，比 RSA 2048 更快更小。开启 OCSP Stapling 减少客户端验证往返。</p>
+<h4>HSTS：强制走 HTTPS</h4>
+<pre><code>Strict-Transport-Security: max-age=63072000; includeSubDomains; preload</code></pre>
+<p><code>preload</code> 提交进浏览器内置名单后，首次访问也不存在 SSL 剥离窗口。注意：一旦 preload，回退 HTTP 的成本极高，确认全站无 HTTP 依赖再加。</p>
+<h4>CSP：白名单思维</h4>
+<pre><code>Content-Security-Policy: default-src 'self'; script-src 'self'; img-src 'self' data: https:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'</code></pre>
+<ul>
+<li><code>object-src 'none'</code> 关掉 Flash/插件类攻击面。</li>
+<li><code>frame-ancestors 'none'</code> 防点击劫持，比 X-Frame-Options 更现代。</li>
+<li>先上 <code>Content-Security-Policy-Report-Only</code> 观察一周报告，再转强制，避免误伤。</li>
+</ul>
+<h4>其他必备头部</h4>
+<ul>
+<li><code>X-Content-Type-Options: nosniff</code> 防 MIME 嗅探</li>
+<li><code>Referrer-Policy: strict-origin-when-cross-origin</code></li>
+<li><code>Permissions-Policy</code> 关掉用不到的摄像头、地理位置等能力</li>
+</ul>
+<blockquote><p>安全头部就像安全带——平时感觉不到存在，出事时才知道值不值。</p></blockquote>`
+                },
+                a6: {
+                    cover: '🔌', tags: ['WebSocket', '实时通信'], title: 'WebSocket 实时通信的重连与心跳设计',
+                    date: '2025-12-15', time: '6 分钟',
+                    body: `<p>WebSocket 建立连接只是开始，真正的工程难点在于：<strong>连接断了怎么办，以及怎么尽早发现它断了</strong>。本文总结我在实时面板项目中沉淀的一套重连与心跳方案。</p>
+<h4>心跳保活</h4>
+<p>NAT 和负载均衡器会静默清理空闲连接，客户端往往浑然不觉。解决办法是定时心跳：客户端每 30 秒发 <code>ping</code>，服务端回 <code>pong</code>，连续 N 次无响应即判定断线，主动触发重连。</p>
+<h4>指数退避重连</h4>
+<p>断线后不能立刻疯狂重试（会把刚恢复的服务打垮），正确姿势是指数退避 + 抖动：</p>
+<pre><code>function scheduleReconnect() {
+  const base = 1000, cap = 30000;
+  const delay = Math.min(cap, base * Math.pow(2, attempts));
+  const jitter = delay * (0.5 + Math.random() * 0.5);
+  attempts++;
+  setTimeout(connect, jitter);
+}
+// 连接成功后：attempts = 0</code></pre>
+<h4>三个容易踩的坑</h4>
+<ul>
+<li><strong>页面隐藏时暂停心跳</strong>：移动端浏览器切后台会冻结定时器，恢复后要立即做一次健康检查而不是干等下一次心跳。</li>
+<li><strong>重连后补数据</strong>：断线期间的消息会丢，重连成功应携带最后消息序号，让服务端补发增量。</li>
+<li><strong>区分"主动关闭"与"异常断开"</strong>：只有异常断开才进重连流程，用户主动退出时别自作多情地重连。</li>
+</ul>
+<blockquote><p>衡量长连接质量的标准不是"能不能连上"，而是"断了之后用户有没有感知"。</p></blockquote>`
+                }
+            };
+
+            function open(id) {
+                var a = ARTICLES[id];
+                if (!a) return;
+                coverEl.textContent = a.cover;
+                tagsEl.innerHTML = a.tags.map(function (t, i) {
+                    return '<span class="reader-tag' + (i % 2 ? ' alt' : '') + '">' + t + '</span>';
+                }).join('');
+                titleEl.textContent = a.title;
+                metaEl.innerHTML =
+                    '<span><i class="far fa-calendar"></i>' + a.date + '</span>' +
+                    '<span><i class="far fa-clock"></i>' + a.time + '</span>' +
+                    '<span><i class="fas fa-feather-pointed"></i>BlueDriftHK</span>';
+                bodyEl.innerHTML = a.body;
+                scrollEl.scrollTop = 0;
+                progressEl.style.width = '0%';
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function close() {
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            // 阅读进度
+            scrollEl.addEventListener('scroll', function () {
+                var max = scrollEl.scrollHeight - scrollEl.clientHeight;
+                var pct = max > 0 ? (scrollEl.scrollTop / max) * 100 : 0;
+                progressEl.style.width = pct + '%';
+            }, { passive: true });
+
+            // 卡片点击 → 打开阅读器
+            document.querySelectorAll('.blog-card[data-article]').forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    open(card.getAttribute('data-article'));
+                });
+            });
+
+            closeBtn.addEventListener('click', close);
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+            });
         })();
 
         /* ============================================================
@@ -7040,150 +7204,6 @@
         })();
 
         /* ============================================================
-           访客地理分布小地图
-           ============================================================ */
-        (function initGeoMap() {
-            var svg = document.getElementById('geoMapSvg');
-            var listEl = document.getElementById('geoList');
-            var totalEl = document.getElementById('geoTotal');
-            if (!svg || !listEl) return;
-            var NS = 'http://www.w3.org/2000/svg';
-
-            // 备用数据（API 不可用时展示），lat/lon 为代表性城市坐标
-            var FALLBACK = [
-                { name: '中国', flag: '🇨🇳', lat: 31.23, lon: 121.47, count: 4820 },
-                { name: '美国', flag: '🇺🇸', lat: 37.77, lon: -122.42, count: 2130 },
-                { name: '日本', flag: '🇯🇵', lat: 35.68, lon: 139.69, count: 1260 },
-                { name: '德国', flag: '🇩🇪', lat: 52.52, lon: 13.40, count: 940 },
-                { name: '新加坡', flag: '🇸🇬', lat: 1.35, lon: 103.82, count: 810 },
-                { name: '英国', flag: '🇬🇧', lat: 51.51, lon: -0.13, count: 620 },
-                { name: '印度', flag: '🇮🇳', lat: 19.07, lon: 72.88, count: 540 },
-                { name: '巴西', flag: '🇧🇷', lat: -23.55, lon: -46.63, count: 380 },
-            ];
-
-            function el(tag, attrs) {
-                var n = document.createElementNS(NS, tag);
-                for (var k in attrs) n.setAttribute(k, attrs[k]);
-                return n;
-            }
-
-            function drawGraticule() {
-                var g = el('g', {});
-                for (var lon = -180; lon <= 180; lon += 30) {
-                    g.appendChild(el('line', { x1: lon + 180, y1: 0, x2: lon + 180, y2: 180, class: 'geo-graticule' }));
-                }
-                for (var lat = -90; lat <= 90; lat += 30) {
-                    g.appendChild(el('line', { x1: 0, y1: 90 - lat, x2: 360, y2: 90 - lat, class: 'geo-graticule' }));
-                }
-                svg.appendChild(g);
-            }
-
-            // 简化低多边形大陆轮廓（等距圆柱投影：x=lon+180, y=90-lat）
-            function drawLand() {
-                var LAND = [
-                    // 北美洲（含中美洲）
-                    'M12,26 L38,18 L70,15 L98,19 L118,28 L124,40 L110,47 L102,58 L99,66 L90,61 L84,69 L90,76 L96,83 L89,79 L78,70 L62,53 L50,41 L32,31 Z',
-                    // 格陵兰
-                    'M130,12 L145,10 L152,16 L148,24 L138,26 L130,20 Z',
-                    // 南美洲
-                    'M104,84 L116,82 L128,88 L142,96 L140,110 L128,124 L114,140 L108,128 L102,108 L99,94 Z',
-                    // 非洲
-                    'M172,56 L188,53 L203,56 L214,60 L212,73 L221,84 L211,99 L201,123 L186,117 L170,104 L161,90 L158,80 L162,71 Z',
-                    // 欧亚大陆
-                    'M168,50 L171,44 L183,43 L193,47 L201,51 L208,47 L216,51 L214,58 L220,66 L226,76 L233,70 L234,61 L240,57 L246,64 L250,74 L256,86 L261,76 L266,68 L272,76 L278,84 L282,90 L285,80 L289,70 L294,74 L300,62 L305,52 L310,46 L318,48 L326,42 L336,36 L348,30 L356,24 L350,16 L320,13 L280,12 L240,13 L210,15 L195,20 L186,26 L184,32 L188,36 L184,40 L177,43 Z',
-                    // 不列颠群岛
-                    'M178,34 L181,33 L182,37 L180,40 L177,38 Z',
-                    // 日本列岛
-                    'M318,50 L321,47 L323,51 L320,56 L317,54 Z',
-                    // 澳大利亚
-                    'M293,116 L302,110 L314,112 L322,118 L319,128 L307,132 L295,128 Z',
-                    // 东南亚群岛
-                    'M284,92 L290,91 L296,93 L292,95 L286,94 Z',
-                    // 马达加斯加
-                    'M222,108 L224,104 L226,110 L223,114 Z'
-                ];
-                var g = el('g', {});
-                LAND.forEach(function (d) {
-                    g.appendChild(el('path', { d: d, class: 'geo-land' }));
-                });
-                svg.appendChild(g);
-            }
-
-            function drawDots(data) {
-                var max = Math.max.apply(null, data.map(function (d) { return d.count; })) || 1;
-                data.forEach(function (d, i) {
-                    var x = d.lon + 180;
-                    var y = 90 - d.lat;
-                    var r = 1.6 + (d.count / max) * 3.2;
-                    var ring = el('circle', { cx: x, cy: y, r: r, class: 'geo-dot-ring' });
-                    ring.style.animationDelay = (i * 0.3) + 's';
-                    var dot = el('circle', { cx: x, cy: y, r: r, class: 'geo-dot' + (i % 2 ? ' alt' : '') });
-                    var title = el('title', {});
-                    title.textContent = d.name + '：' + d.count.toLocaleString() + ' 次访问';
-                    dot.appendChild(title);
-                    svg.appendChild(ring);
-                    svg.appendChild(dot);
-                });
-            }
-
-            function buildList(data) {
-                var total = data.reduce(function (s, d) { return s + d.count; }, 0);
-                var max = data[0] ? data[0].count : 1;
-                listEl.innerHTML = '';
-                data.forEach(function (d) {
-                    var pct = total ? Math.round((d.count / total) * 100) : 0;
-                    var row = document.createElement('div');
-                    row.className = 'geo-row';
-                    row.innerHTML =
-                        '<span class="geo-flag" aria-hidden="true">' + d.flag + '</span>' +
-                        '<span class="geo-name">' + d.name + ' <span style="color:var(--text-secondary);font-size:0.72rem">' + pct + '%</span></span>' +
-                        '<span class="geo-count">' + d.count.toLocaleString() + '</span>' +
-                        '<span class="geo-bar-track"><span class="geo-bar-fill" data-w="' + Math.round((d.count / max) * 100) + '"></span></span>';
-                    listEl.appendChild(row);
-                });
-                if (totalEl) totalEl.innerHTML = '累计访问 <b>' + total.toLocaleString() + '</b> 次 · 覆盖 <b>' + data.length + '</b> 个国家/地区';
-            }
-
-            function animateBars() {
-                var fills = listEl.querySelectorAll('.geo-bar-fill');
-                fills.forEach(function (f) { f.style.width = f.getAttribute('data-w') + '%'; });
-            }
-
-            function render(data) {
-                data = data.slice().sort(function (a, b) { return b.count - a.count; });
-                drawGraticule();
-                drawLand();
-                drawDots(data);
-                buildList(data);
-                // 进入视口时动画填充进度条
-                if ('IntersectionObserver' in window) {
-                    var io = new IntersectionObserver(function (entries) {
-                        entries.forEach(function (e) {
-                            if (e.isIntersecting) { animateBars(); io.disconnect(); }
-                        });
-                    }, { threshold: 0.3 });
-                    io.observe(listEl);
-                } else {
-                    animateBars();
-                }
-            }
-
-            fetch('https://api.bjhr.space/geo')
-                .then(function (res) {
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    return res.json();
-                })
-                .then(function (json) {
-                    var data = (json && json.regions) ? json.regions : null;
-                    if (!data || !data.length) throw new Error('empty');
-                    render(data);
-                })
-                .catch(function () {
-                    render(FALLBACK);
-                });
-        })();
-
-        /* ============================================================
            浮动分享条 - 复制链接
            ============================================================ */
         (function initCopyLink() {
@@ -7477,7 +7497,6 @@
                     'status-title': '站点状态',
                     'perf-title': '性能评分',
                     'gh-repos-title': '开源仓库',
-                    'geo-title': '访客分布',
                     'badge-title': '证书与成就',
                     'timeline-title': '技术旅程',
                     'links-title': '推荐资源',
@@ -7496,7 +7515,6 @@
                     'status-title': 'Site Status',
                     'perf-title': 'Performance',
                     'gh-repos-title': 'Repositories',
-                    'geo-title': 'Visitors',
                     'badge-title': 'Certifications',
                     'timeline-title': 'Journey',
                     'links-title': 'Resources',
@@ -7515,7 +7533,6 @@
                     'status-title': 'サイト状態',
                     'perf-title': 'パフォーマンス',
                     'gh-repos-title': 'リポジトリ',
-                    'geo-title': '訪問者分布',
                     'badge-title': '資格・実績',
                     'timeline-title': '技術の旅',
                     'links-title': 'おすすめリソース',
