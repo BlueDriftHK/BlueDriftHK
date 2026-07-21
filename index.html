@@ -150,23 +150,89 @@
             cursor: pointer;
         }
         .splash.hidden { opacity: 0; pointer-events: none; }
-        .splash-word {
+        .splash-route {
             font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(1rem, 3.5vw, 1.6rem);
-            font-weight: 600;
             color: #e2e8f0;
-            letter-spacing: 0.04em;
             text-align: center;
-            padding: 0 24px;
             max-width: 92vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .sr-head { font-size: clamp(0.82rem, 2.6vw, 1rem); color: #94a3b8; letter-spacing: 0.06em; }
+        .sr-head i { color: #06b6d4; margin-right: 9px; }
+        .sr-dots { display: inline-block; animation: srPulse 1s ease-in-out infinite; }
+        @keyframes srPulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+        .sr-colo {
+            font-size: clamp(2.6rem, 9vw, 4.2rem);
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            line-height: 1.1;
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .sr-country { font-size: 0.78rem; color: #64748b; letter-spacing: 0.16em; margin-top: 4px; min-height: 1em; }
+        .sr-origin { font-size: 0.72rem; color: #64748b; letter-spacing: 0.04em; margin-top: 6px; min-height: 1em; opacity: 0; transition: opacity 0.35s ease; }
+        .sr-origin.show { opacity: 1; }
+        .sr-routeline { display: flex; align-items: center; gap: 10px; width: min(300px, 84vw); }
+        .srl-you { font-size: 0.66rem; color: #64748b; letter-spacing: 0.1em; flex-shrink: 0; }
+        .srl-track { flex: 1; height: 2px; border-radius: 1px; background: linear-gradient(90deg, rgba(6, 182, 212, 0.12), rgba(139, 92, 246, 0.45)); position: relative; }
+        .srl-dot { position: absolute; top: 50%; left: 0; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #06b6d4; box-shadow: 0 0 8px #06b6d4; animation: srlDot 1.3s ease-in-out infinite; }
+        @keyframes srlDot { 0% { left: 0%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+        .srl-node { width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6; flex-shrink: 0; }
+        .sr-samples { display: flex; flex-direction: column; gap: 7px; width: min(300px, 84vw); }
+        .sr-sample {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.78rem;
+            color: #64748b;
+            padding: 7px 14px;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.6);
             opacity: 0;
             transform: translateY(6px);
-            transition: opacity 0.18s ease, transform 0.18s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
         }
-        .splash-word.show { opacity: 1; transform: translateY(0); }
-        .splash-word .sw-ok { color: #34d399; }
-        .splash-word .sw-cyan { color: #06b6d4; }
-        .splash-word .sw-purple { color: #8b5cf6; }
+        .sr-sample.done { opacity: 1; transform: none; }
+        .sr-sample .sr-ms { color: #06b6d4; font-weight: 700; }
+        .sr-sample.best { border-color: rgba(6, 182, 212, 0.7); }
+        .sr-sample.best .sr-ms { color: #34d399; }
+        .sr-sample.best::after { content: '✓'; color: #34d399; font-weight: 700; margin-left: 2px; }
+        .sr-badges { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        .sr-badge {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 6px;
+            font-size: 0.68rem;
+            padding: 5px 10px;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            background: rgba(15, 23, 42, 0.6);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        }
+        .sr-badge.show { opacity: 1; transform: none; border-color: rgba(6, 182, 212, 0.45); }
+        .sr-badge .sr-bk { font-weight: 700; letter-spacing: 0.06em; color: #94a3b8; transition: color 0.3s ease; }
+        .sr-badge.show .sr-bk { color: #06b6d4; }
+        .sr-badge .sr-bv { color: #34d399; font-weight: 700; }
+        .sr-final {
+            font-size: 0.85rem;
+            color: #34d399;
+            letter-spacing: 0.05em;
+            min-height: 1.3em;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .sr-final.show { opacity: 1; transform: none; }
+        .sr-final i { margin-right: 7px; }
         .splash-bar {
             position: absolute;
             bottom: 0;
@@ -3228,18 +3294,6 @@
         .log-line .ls3, .log-line .ls4 { color: #fbbf24; }
         .log-line .ls5 { color: #f87171; }
 
-        /* 开放 API */
-        .api-list { display: flex; flex-direction: column; gap: 12px; }
-        .api-item { border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; background: color-mix(in srgb, var(--bg-dark) 60%, var(--bg-card)); }
-        .api-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; flex-wrap: wrap; }
-        .api-method { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; color: #34d399; border: 1px solid #34d399; padding: 2px 8px; border-radius: 6px; }
-        .api-path { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-primary); }
-        .api-desc { font-size: 0.75rem; color: var(--text-secondary); flex: 1; min-width: 120px; }
-        .api-try { padding: 6px 14px; border-radius: var(--radius-md); border: 1px solid var(--primary); background: transparent; color: var(--primary); font-size: 0.72rem; cursor: pointer; transition: var(--transition); white-space: nowrap; }
-        .api-try:hover { background: var(--primary-dim); }
-        .api-out { display: none; padding: 12px 16px; border-top: 1px solid var(--border-color); background: #0a0e14; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #94a3b8; max-height: 220px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
-        .api-out.open { display: block; }
-
         /* HTTP/3 vs HTTP/2 */
         .proto-current { padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: color-mix(in srgb, var(--primary) 8%, transparent); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 16px; }
         .proto-current b { color: var(--primary); }
@@ -3288,6 +3342,137 @@
         .lat-row .lat-name { flex: 1; color: var(--text-secondary); }
         .lat-row .lat-ms { color: var(--text-primary); font-weight: 600; }
         @media (max-width: 600px) { .lat-wrap { flex-direction: column; } }
+
+        /* ---------- 全球边缘拓扑 (3D 地球) ---------- */
+        .globe-wrap { display: flex; gap: 24px; align-items: stretch; flex-wrap: wrap; }
+        .globe-canvas-box { flex: 1 1 320px; min-width: 280px; display: flex; align-items: center; justify-content: center; }
+        #globeCanvas { width: 100%; max-width: 520px; aspect-ratio: 1 / 1; display: block; cursor: grab; touch-action: pan-y; }
+        #globeCanvas.dragging { cursor: grabbing; }
+        .globe-side { flex: 1 1 220px; min-width: 200px; display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+        .globe-you { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--primary); background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 8px 12px; }
+        .globe-nodes { display: flex; flex-direction: column; gap: 6px; }
+        .gnode { display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; }
+        .gnode .gdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .gnode .gcode { color: var(--text-primary); font-weight: 700; width: 40px; }
+        .gnode .gname { flex: 1; color: var(--text-secondary); }
+        .gnode .gms { color: var(--text-primary); font-weight: 600; }
+        .globe-legend { display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 0.68rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        .globe-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+        @media (max-width: 640px) { .globe-wrap { flex-direction: column; } }
+
+        /* ---------- 全球延迟地图 (SVG 世界地图) ---------- */
+        .wmap-box { overflow-x: auto; }
+        #worldMap { width: 100%; min-width: 560px; height: auto; display: block; border-radius: var(--radius-md); background: radial-gradient(ellipse at center, rgba(6,182,212,0.05), transparent 72%); }
+        .wm-ping { transform-box: fill-box; transform-origin: center; animation: wmPing 2.4s ease-out infinite; }
+        @keyframes wmPing { 0% { transform: scale(0.4); opacity: 0.85; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
+        .wm-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; fill: var(--text-secondary); }
+        .wm-ms { font-family: 'JetBrains Mono', monospace; font-size: 8px; font-weight: 700; }
+
+        /* ---------- 页面加载瀑布图 ---------- */
+        .wf-summary { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+        .wf-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-secondary); background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 6px 12px; }
+        .wf-chip b { color: var(--primary); font-weight: 700; }
+        .wf-chart { display: flex; flex-direction: column; gap: 7px; }
+        .wf-row { display: flex; align-items: center; gap: 10px; }
+        .wf-name { width: 130px; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .wf-track { flex: 1; height: 16px; background: rgba(100,116,139,0.08); border-radius: 4px; position: relative; overflow: hidden; }
+        .wf-bar { position: absolute; top: 0; bottom: 0; border-radius: 4px; min-width: 2px; display: flex; align-items: center; justify-content: flex-end; padding-right: 5px; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: rgba(255,255,255,0.9); box-sizing: border-box; }
+        .wf-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 14px; font-size: 0.68rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        .wf-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+        @media (max-width: 600px) { .wf-name { width: 84px; } }
+
+        /* ---------- DNS 解析链路 ---------- */
+        .dnschain { display: flex; flex-direction: column; gap: 0; margin-top: 14px; }
+        .dc-hop { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-left: 2px solid var(--border-color); margin-left: 8px; position: relative; opacity: 0.28; transition: opacity 0.4s, border-color 0.4s; }
+        .dc-hop::before { content: ''; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: var(--bg-card); border: 2px solid var(--border-color); transition: border-color 0.4s, background 0.4s; }
+        .dc-hop.active { opacity: 1; border-left-color: var(--primary); }
+        .dc-hop.active::before { border-color: var(--primary); background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+        .dc-hop .dc-icon { width: 26px; text-align: center; color: var(--text-secondary); flex-shrink: 0; }
+        .dc-hop.active .dc-icon { color: var(--primary); }
+        .dc-hop .dc-name { flex: 1; font-size: 0.8rem; color: var(--text-primary); }
+        .dc-hop .dc-sub { display: block; font-size: 0.66rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        .dc-hop .dc-ms { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--primary); flex-shrink: 0; }
+        .dnschain-result { margin-top: 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--text-secondary); background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; min-height: 20px; }
+        .dnschain-result b { color: var(--primary); }
+
+        /* ---------- 延迟心电图 ---------- */
+        .ecg-wrap { display: flex; gap: 18px; align-items: stretch; flex-wrap: wrap; }
+        #ecgCanvas { flex: 1 1 320px; min-width: 280px; width: 100%; background: rgba(6,182,212,0.03); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: block; }
+        .ecg-stats { flex: 0 0 150px; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+        .ecg-stat { border-left: 3px solid var(--primary); padding-left: 10px; }
+        .ecg-stat .ecg-num { font-family: 'JetBrains Mono', monospace; font-size: 1.35rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+        .ecg-stat .ecg-lbl { font-size: 0.66rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        @media (max-width: 640px) { .ecg-stats { flex: 1 1 100%; flex-direction: row; flex-wrap: wrap; } .ecg-stat { flex: 1 1 40%; } }
+
+        /* ---------- 实时系统 HUD ---------- */
+        .hud-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+        .hud-tile { background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 14px 12px; position: relative; overflow: hidden; }
+        .hud-tile::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--primary), transparent); opacity: 0.6; }
+        .hud-tile .hud-icon { color: var(--primary); font-size: 0.9rem; margin-bottom: 8px; opacity: 0.85; }
+        .hud-tile .hud-val { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; word-break: break-all; }
+        .hud-tile .hud-lbl { font-size: 0.64rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+        /* ---------- 边缘雷达扫描 ---------- */
+        .radar-wrap { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+        #radarCanvas { flex: 0 0 300px; width: 300px; height: 300px; margin: 0 auto; display: block; }
+        .radar-list { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 7px; }
+        .radar-item { display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; }
+        .radar-item .rdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .radar-item .rcode { color: var(--text-primary); font-weight: 700; width: 40px; }
+        .radar-item .rname { flex: 1; color: var(--text-secondary); }
+        .radar-item .rms { color: var(--primary); font-weight: 600; }
+        @media (max-width: 640px) { .radar-wrap { flex-direction: column; } }
+
+        /* ---------- 架构数据包流动 ---------- */
+        .flow-box { overflow-x: auto; }
+        #flowSvg { width: 100%; min-width: 620px; height: auto; display: block; }
+        .flow-node rect { fill: var(--bg-card); stroke: var(--border-color); stroke-width: 1.4; rx: 10; }
+        .flow-node text { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+        .flow-node .flow-sub { fill: var(--text-secondary); font-size: 9px; font-weight: 400; font-family: 'JetBrains Mono', monospace; }
+        .flow-link { stroke: var(--border-color); stroke-width: 1.6; fill: none; }
+        .flow-packet { filter: drop-shadow(0 0 5px var(--primary)); }
+
+        /* ---------- QUIC / HTTP3 握手 ---------- */
+        .quic-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .quic-col { background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; }
+        .quic-col-title { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 12px; text-align: center; }
+        .quic-col-title.quic-fast { color: var(--primary); }
+        .quic-seq { position: relative; display: flex; flex-direction: column; gap: 0; min-height: 220px; }
+        .quic-seq::before, .quic-seq::after { content: ''; position: absolute; top: 0; bottom: 0; width: 2px; background: var(--border-color); }
+        .quic-seq::before { left: 12px; } .quic-seq::after { right: 12px; }
+        .qmsg { position: relative; height: 34px; opacity: 0; transform: translateY(4px); transition: opacity 0.35s, transform 0.35s; }
+        .qmsg.show { opacity: 1; transform: none; }
+        .qmsg .qarrow { position: absolute; top: 50%; left: 20px; right: 20px; height: 2px; background: var(--primary); }
+        .qmsg.rev .qarrow { background: var(--accent); }
+        .qmsg .qarrow::after { content: ''; position: absolute; top: -4px; border: 5px solid transparent; }
+        .qmsg:not(.rev) .qarrow::after { right: -2px; border-left-color: var(--primary); }
+        .qmsg.rev .qarrow::after { left: -2px; border-right-color: var(--accent); }
+        .qmsg .qlabel { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 0.64rem; color: var(--text-primary); background: var(--bg-card); padding: 2px 7px; border-radius: 4px; border: 1px solid var(--border-color); white-space: nowrap; }
+        .qtotal { margin-top: 10px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); }
+        .qtotal b { color: var(--primary); }
+        .quic-replay { margin-top: 16px; }
+        @media (max-width: 640px) { .quic-cols { grid-template-columns: 1fr; } }
+
+        /* ---------- 全球 PoP 时钟墙 ---------- */
+        .clock-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+        .clock-card { background: var(--primary-dim); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; text-align: center; position: relative; }
+        .clock-card .ck-city { font-size: 0.74rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-bottom: 6px; }
+        .clock-card .ck-time { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.02em; }
+        .clock-card .ck-date { font-size: 0.62rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+        .clock-card .ck-sun { position: absolute; top: 10px; right: 12px; font-size: 0.8rem; }
+
+        /* ---------- 实时测速环形仪表 ---------- */
+        .gauge-wrap { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; justify-content: center; }
+        #gaugeSvg { flex: 0 0 260px; width: 260px; height: 180px; }
+        .gauge-arc-bg { fill: none; stroke: rgba(100,116,139,0.18); stroke-width: 14; stroke-linecap: round; }
+        .gauge-arc { fill: none; stroke: url(#gaugeGrad); stroke-width: 14; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+        .gauge-num { font-family: 'JetBrains Mono', monospace; font-size: 34px; font-weight: 700; fill: var(--text-primary); }
+        .gauge-unit { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: var(--text-secondary); }
+        .gauge-lbl { font-size: 10px; fill: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+        .gauge-side { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 10px; }
+        .gauge-row { display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 8px; }
+        .gauge-row .gk { color: var(--text-secondary); }
+        .gauge-row .gv { color: var(--primary); font-weight: 700; }
 
         /* ============================================================
            响应式
@@ -3383,9 +3568,9 @@
     </style>
 </head>
 <body>
-    <!-- Splash 启动动画 -->
+    <!-- Splash 启动动画（边缘选路） -->
     <div class="splash" id="splash" aria-hidden="true">
-        <div class="splash-word" id="splashWord"></div>
+        <div class="splash-route" id="splashRoute"></div>
         <div class="splash-bar"><div class="splash-bar-fill" id="splashBarFill"></div></div>
     </div>
 
@@ -3816,13 +4001,6 @@
             <div class="log-view" id="logView" aria-live="off"></div>
         </section>
 
-        <!-- ===== 开放 API ===== -->
-        <section class="card reveal" aria-labelledby="api-title">
-            <h2 id="api-title"><i class="fas fa-book" aria-hidden="true"></i> 开放 API</h2>
-            <p class="section-desc">api.bjhr.space 提供的公开端点，可在线试调用。</p>
-            <div class="api-list" id="apiList"></div>
-        </section>
-
         <!-- ===== HTTP/3 vs HTTP/2 ===== -->
         <section class="card reveal" aria-labelledby="proto-title">
             <h2 id="proto-title"><i class="fas fa-bolt" aria-hidden="true"></i> HTTP/3 vs HTTP/2</h2>
@@ -3883,6 +4061,135 @@
             <div class="ops-foot">
                 <span class="ops-time" id="latTime">—</span>
                 <button class="hdr-refresh" id="latRefresh" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> 重新探测</button>
+            </div>
+        </section>
+
+        <!-- ===== 全球边缘拓扑 (3D 地球) ===== -->
+        <section class="card reveal" aria-labelledby="globe-title">
+            <h2 id="globe-title"><i class="fas fa-earth-asia" aria-hidden="true"></i> 全球边缘拓扑</h2>
+            <p class="section-desc">从你的位置到全球边缘节点的实时链路 —— 弧线颜色代表延迟（越青越快）。可拖拽旋转，空闲时自动自转。</p>
+            <div class="globe-wrap">
+                <div class="globe-canvas-box">
+                    <canvas id="globeCanvas" role="img" aria-label="全球边缘节点拓扑地球"></canvas>
+                </div>
+                <div class="globe-side">
+                    <div class="globe-you" id="globeYou">📍 正在定位你的位置…</div>
+                    <div class="globe-nodes" id="globeNodes"></div>
+                    <div class="globe-legend">
+                        <span><i style="background:#06b6d4"></i>&lt;200ms</span>
+                        <span><i style="background:#34d399"></i>&lt;450ms</span>
+                        <span><i style="background:#fbbf24"></i>&lt;800ms</span>
+                        <span><i style="background:#f87171"></i>&gt;800ms</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 全球延迟地图 (SVG 世界地图) ===== -->
+        <section class="card reveal" aria-labelledby="wmap-title">
+            <h2 id="wmap-title"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> 全球延迟地图</h2>
+            <p class="section-desc">世界地图视角的边缘延迟分布 —— 圆点颜色代表你的浏览器到各区域的往返延迟。</p>
+            <div class="wmap-box">
+                <svg id="worldMap" viewBox="0 0 720 360" role="img" aria-label="全球延迟地图"></svg>
+            </div>
+            <div class="ops-foot">
+                <span class="ops-time" id="wmapTime">—</span>
+                <button class="hdr-refresh" id="wmapRefresh" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> 重新探测</button>
+            </div>
+        </section>
+
+        <!-- ===== 页面加载瀑布图 ===== -->
+        <section class="card reveal" aria-labelledby="waterfall-title">
+            <h2 id="waterfall-title"><i class="fas fa-water" aria-hidden="true"></i> 页面加载瀑布图</h2>
+            <p class="section-desc">基于 Performance API 还原本页真实的加载时序 —— 从 DNS 到首屏，每个阶段一目了然。</p>
+            <div class="wf-summary" id="wfSummary"></div>
+            <div class="wf-chart" id="wfChart"></div>
+            <div class="wf-legend" id="wfLegend"></div>
+        </section>
+
+        <!-- ===== DNS 解析链路 ===== -->
+        <section class="card reveal" aria-labelledby="dnschain-title">
+            <h2 id="dnschain-title"><i class="fas fa-route" aria-hidden="true"></i> DNS 解析链路</h2>
+            <p class="section-desc">动画演示一次完整 DNS 查询的逐跳链路，并通过 Cloudflare DoH 获取真实解析结果。</p>
+            <div class="trace-input-row">
+                <input class="ndiag-input" id="dnsChainInput" type="text" value="blog.bjhr.space" spellcheck="false" autocomplete="off" aria-label="DNS 链路目标域名" />
+                <button class="ndiag-run" id="dnsChainRun" type="button"><i class="fas fa-play" aria-hidden="true"></i> 开始解析</button>
+            </div>
+            <div class="dnschain" id="dnsChain"></div>
+            <div class="dnschain-result" id="dnsChainResult"></div>
+        </section>
+
+        <!-- ===== 延迟心电图 ===== -->
+        <section class="card reveal" aria-labelledby="ecg-title">
+            <h2 id="ecg-title"><i class="fas fa-heartbeat" aria-hidden="true"></i> 延迟心电图</h2>
+            <p class="section-desc">像心电监护仪一样持续采样你到 Cloudflare 的往返延迟 —— 波形越平稳，链路越健康。</p>
+            <div class="ecg-wrap">
+                <canvas id="ecgCanvas" height="160" role="img" aria-label="延迟心电图波形"></canvas>
+                <div class="ecg-stats" id="ecgStats"></div>
+            </div>
+        </section>
+
+        <!-- ===== 实时系统 HUD ===== -->
+        <section class="card reveal" aria-labelledby="hud-title">
+            <h2 id="hud-title"><i class="fas fa-microchip" aria-hidden="true"></i> 实时系统 HUD</h2>
+            <p class="section-desc">你的浏览器与网络环境实时遥测 —— 内存、连接、电量、帧率，一屏尽览。</p>
+            <div class="hud-grid" id="hudGrid"></div>
+        </section>
+
+        <!-- ===== 边缘雷达扫描 ===== -->
+        <section class="card reveal" aria-labelledby="radar-title">
+            <h2 id="radar-title"><i class="fas fa-satellite-dish" aria-hidden="true"></i> 边缘雷达扫描</h2>
+            <p class="section-desc">雷达扫描全球边缘节点 —— 光点距离代表延迟，扫过时会刷新该节点的实时 RTT。</p>
+            <div class="radar-wrap">
+                <canvas id="radarCanvas" role="img" aria-label="边缘雷达扫描"></canvas>
+                <div class="radar-list" id="radarList"></div>
+            </div>
+        </section>
+
+        <!-- ===== 架构数据包流动 ===== -->
+        <section class="card reveal" aria-labelledby="flow-title">
+            <h2 id="flow-title"><i class="fas fa-diagram-project" aria-hidden="true"></i> 本站架构 · 数据包流动</h2>
+            <p class="section-desc">一个请求从浏览器出发，经 Cloudflare 边缘、Worker、KV 存储再返回的完整旅程。</p>
+            <div class="flow-box">
+                <svg id="flowSvg" viewBox="0 0 760 300" role="img" aria-label="架构数据包流动图"></svg>
+            </div>
+        </section>
+
+        <!-- ===== QUIC / HTTP3 握手 ===== -->
+        <section class="card reveal" aria-labelledby="quic-title">
+            <h2 id="quic-title"><i class="fas fa-handshake" aria-hidden="true"></i> QUIC / HTTP/3 握手</h2>
+            <p class="section-desc">对比 TCP + TLS 1.3 与 QUIC 的握手往返 —— 看 QUIC 如何用一个 RTT 就完成加密传输。</p>
+            <div class="quic-cols">
+                <div class="quic-col">
+                    <div class="quic-col-title">TCP + TLS 1.3</div>
+                    <div class="quic-seq" id="quicTcp"></div>
+                </div>
+                <div class="quic-col">
+                    <div class="quic-col-title quic-fast">QUIC (HTTP/3)</div>
+                    <div class="quic-seq" id="quicQuic"></div>
+                </div>
+            </div>
+            <button class="ndiag-run quic-replay" id="quicReplay" type="button"><i class="fas fa-redo" aria-hidden="true"></i> 重播</button>
+        </section>
+
+        <!-- ===== 全球 PoP 时钟墙 ===== -->
+        <section class="card reveal" aria-labelledby="clocks-title">
+            <h2 id="clocks-title"><i class="fas fa-clock" aria-hidden="true"></i> 全球 PoP 时钟墙</h2>
+            <p class="section-desc">全球主要边缘节点城市的当地时间 —— 昼夜一目了然。</p>
+            <div class="clock-grid" id="clockGrid"></div>
+        </section>
+
+        <!-- ===== 实时测速环形仪表 ===== -->
+        <section class="card reveal" aria-labelledby="gauge-title">
+            <h2 id="gauge-title"><i class="fas fa-tachometer-alt" aria-hidden="true"></i> 实时测速</h2>
+            <p class="section-desc">通过下载 Cloudflare 测速资源估算你的下行带宽与延迟。</p>
+            <div class="gauge-wrap">
+                <svg id="gaugeSvg" viewBox="0 0 260 180" role="img" aria-label="测速环形仪表"></svg>
+                <div class="gauge-side" id="gaugeSide"></div>
+            </div>
+            <div class="ops-foot">
+                <span class="ops-time" id="gaugeTime">—</span>
+                <button class="hdr-refresh" id="gaugeRun" type="button"><i class="fas fa-play" aria-hidden="true"></i> 开始测速</button>
             </div>
         </section>
 
@@ -4627,64 +4934,184 @@
         'use strict';
 
         /* ============================================================
-           Splash 启动动画 - 状态词闪现
+           Splash 启动动画 - 边缘选路（真实 PoP + 实时延迟探测）
            ============================================================ */
         (function bootSplash() {
             var splash = document.getElementById('splash');
-            var wordEl = document.getElementById('splashWord');
+            var route = document.getElementById('splashRoute');
             var barFill = document.getElementById('splashBarFill');
-            if (!splash || !wordEl) return;
+            if (!splash || !route) return;
+
+            // 减动效偏好：直接移除，不做动画
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                if (splash.parentNode) splash.parentNode.removeChild(splash);
+                return;
+            }
+
+            // 语言判定（此时 initI18n 尚未执行，需本地判定，规则与全站一致）
+            function lang() {
+                try {
+                    var s = localStorage.getItem('site-lang');
+                    if (s === 'zh' || s === 'en') return s;
+                } catch (_) {}
+                var l = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+                return (l === 'zh' || l.indexOf('zh-cn') === 0 || l.indexOf('zh-hans') === 0 || l.indexOf('zh-sg') === 0) ? 'zh' : 'en';
+            }
+            var T = lang() === 'en'
+                ? { probing: 'Routing you to the nearest edge', sample: 'Probe', selected: 'Selected', you: 'YOU', fromA: 'From ', fromB: '' }
+                : { probing: '正在为你选择最优边缘节点', sample: '采样', selected: '已选择', you: '你', fromA: '你从 ', fromB: ' 连入' };
 
             var dismissed = false;
-            var WORDS = [
-                'DNS Resolving<span class="sw-cyan"> blog.bjhr.space</span>',
-                'TCP <span class="sw-cyan">SYN</span> → <span class="sw-ok">SYN-ACK</span> → ACK',
-                'TLS 1.3 <span class="sw-cyan">ClientHello</span>',
-                'TLS 1.3 <span class="sw-ok">ServerHello + Certificate</span>',
-                'ECDHE Key Exchange <span class="sw-ok">✓</span>',
-                'HTTP/3 <span class="sw-purple">QUIC</span> stream ready',
-                'GET / <span class="sw-ok">200 OK</span>',
-                'Edge PoP <span class="sw-cyan">HKG</span> · latency <span class="sw-ok">4ms</span>',
-                'Content-Encoding <span class="sw-purple">br</span> · CF-Ray <span class="sw-cyan">✓</span>',
-                '<span class="sw-ok">Connected.</span> Welcome to the edge.'
-            ];
-            var total = WORDS.length;
-            var idx = 0;
-
             function hide() {
                 if (dismissed) return;
                 dismissed = true;
                 splash.classList.add('hidden');
                 setTimeout(function () {
                     if (splash.parentNode) splash.parentNode.removeChild(splash);
-                }, 500);
+                }, 450);
             }
-
             splash.addEventListener('click', hide);
 
-            function showNext() {
-                if (dismissed) return;
-                if (idx >= total) {
-                    setTimeout(hide, 500);
-                    return;
+            // 搭建骨架
+            route.innerHTML =
+                '<div class="sr-head"><i class="fas fa-route" aria-hidden="true"></i>' + T.probing + '<span class="sr-dots">…</span></div>' +
+                '<div><div class="sr-colo" id="srColo">···</div><div class="sr-country" id="srCountry"></div><div class="sr-origin" id="srOrigin"></div></div>' +
+                '<div class="sr-routeline" aria-hidden="true"><span class="srl-you">' + T.you + '</span><span class="srl-track"><span class="srl-dot"></span></span><span class="srl-node"></span></div>' +
+                '<div class="sr-samples" id="srSamples"></div>' +
+                '<div class="sr-badges" id="srBadges"></div>' +
+                '<div class="sr-final" id="srFinal"></div>';
+            var coloEl = document.getElementById('srColo');
+            var countryEl = document.getElementById('srCountry');
+            var originEl = document.getElementById('srOrigin');
+            var samplesEl = document.getElementById('srSamples');
+            var badgesEl = document.getElementById('srBadges');
+            var finalEl = document.getElementById('srFinal');
+
+            var PROBE_N = 3;
+            var sampleRows = [];
+            for (var i = 0; i < PROBE_N; i++) {
+                var row = document.createElement('div');
+                row.className = 'sr-sample';
+                row.innerHTML = '<span>' + T.sample + ' #' + (i + 1) + '</span><span class="sr-ms">…</span>';
+                samplesEl.appendChild(row);
+                sampleRows.push(row);
+            }
+            barFill.style.width = '12%';
+
+            // 真实握手时序 + 传输协议 + 接入方式（Navigation Timing / Network Information）
+            (function buildBadges() {
+                if (!badgesEl) return;
+                var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+                function ms(v) { return Math.max(0, Math.round(v)); }
+                var data = [];
+                if (nav) {
+                    data.push({ k: 'DNS', v: ms(nav.domainLookupEnd - nav.domainLookupStart) + 'ms' });
+                    data.push({ k: 'TCP', v: ms(nav.connectEnd - nav.connectStart) + 'ms' });
+                    if (nav.secureConnectionStart > 0) data.push({ k: 'TLS', v: ms(nav.connectEnd - nav.secureConnectionStart) + 'ms' });
+                    data.push({ k: 'TTFB', v: ms(nav.responseStart - nav.requestStart) + 'ms' });
+                    var proto = String(nav.nextHopProtocol || '').toLowerCase();
+                    if (proto.indexOf('h3') === 0 || proto.indexOf('quic') !== -1) data.push({ k: 'HTTP/3', v: 'QUIC' });
+                    else if (proto === 'h2') data.push({ k: 'HTTP/2', v: 'TCP' });
+                    else if (proto) data.push({ k: proto.toUpperCase(), v: '' });
                 }
-                // 淡出当前
-                wordEl.classList.remove('show');
-                setTimeout(function () {
-                    if (dismissed) return;
-                    wordEl.innerHTML = WORDS[idx];
-                    wordEl.classList.add('show');
-                    barFill.style.width = ((idx + 1) / total * 100) + '%';
-                    idx++;
-                    // 最后一个词停留久一点
-                    var delay = idx >= total ? 700 : 260;
-                    setTimeout(showNext, delay);
-                }, 100);
+                var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                if (conn && (conn.type || conn.effectiveType)) {
+                    data.push({
+                        k: String(conn.type || conn.effectiveType).toUpperCase(),
+                        v: (typeof conn.downlink === 'number') ? conn.downlink + ' Mbps' : ''
+                    });
+                }
+                data.forEach(function (d, idx) {
+                    var b = document.createElement('span');
+                    b.className = 'sr-badge';
+                    b.innerHTML = '<span class="sr-bk">' + d.k + '</span>' + (d.v ? '<span class="sr-bv">' + d.v + '</span>' : '');
+                    badgesEl.appendChild(b);
+                    setTimeout(function () { if (!dismissed) b.classList.add('show'); }, 160 + idx * 140);
+                });
+            })();
+
+            // 访客来源（ipapi.co，与探测并行；超时/失败则留空，不阻塞）
+            if (originEl) {
+                fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(2200) })
+                    .then(function (r) { return r.json(); })
+                    .then(function (d) {
+                        var p = [];
+                        if (d.city) p.push(d.city);
+                        if (d.org) p.push(d.org);
+                        if (p.length && !dismissed) {
+                            originEl.textContent = T.fromA + p.join(' · ') + T.fromB;
+                            originEl.classList.add('show');
+                        }
+                    })
+                    .catch(function () {});
             }
 
-            setTimeout(showNext, 200);
-            // 兜底
-            setTimeout(hide, 5500);
+            var meta = { colo: null, country: null, ip: null };
+            var results = [];
+
+            // 真实 PoP 信息（speed.cloudflare.com/__meta，CORS 友好）
+            var metaP = fetch('https://speed.cloudflare.com/__meta', { cache: 'no-store', signal: AbortSignal.timeout(3000) })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    meta.colo = d.colo || 'EDGE';
+                    meta.country = d.country || '';
+                    meta.ip = d.clientIp || '';
+                    if (!dismissed) {
+                        coloEl.textContent = meta.colo;
+                        countryEl.textContent = meta.country;
+                        barFill.style.width = '40%';
+                    }
+                })
+                .catch(function () {
+                    meta.colo = 'EDGE';
+                    if (!dismissed) coloEl.textContent = 'EDGE';
+                });
+
+            // 三次真实延迟探测（错开发起，形成节奏）
+            var probesP = new Promise(function (resolve) {
+                var settled = 0;
+                function finish(idx, ms) {
+                    results[idx] = ms;
+                    if (!dismissed) {
+                        sampleRows[idx].querySelector('.sr-ms').textContent = (ms == null ? '—' : ms + ' ms');
+                        sampleRows[idx].classList.add('done');
+                        barFill.style.width = (40 + (settled + 1) / PROBE_N * 40) + '%';
+                    }
+                    settled++;
+                    if (settled === PROBE_N) resolve();
+                }
+                for (var k = 0; k < PROBE_N; k++) {
+                    (function (k) {
+                        setTimeout(function () {
+                            var t0 = performance.now();
+                            fetch('https://speed.cloudflare.com/__down?bytes=0', { cache: 'no-store', mode: 'no-cors', signal: AbortSignal.timeout(2500) })
+                                .then(function () { finish(k, Math.round(performance.now() - t0)); })
+                                .catch(function () { finish(k, null); });
+                        }, k * 180);
+                    })(k);
+                }
+            });
+
+            function showFinal() {
+                if (dismissed) return;
+                var bestIdx = -1;
+                for (var j = 0; j < results.length; j++) {
+                    if (results[j] != null && (bestIdx === -1 || results[j] < results[bestIdx])) bestIdx = j;
+                }
+                var best = bestIdx >= 0 ? results[bestIdx] : null;
+                if (bestIdx >= 0) sampleRows[bestIdx].classList.add('best');
+                var parts = [T.selected + ' ' + (meta.colo || 'EDGE')];
+                if (best != null) parts.push(best + ' ms');
+                if (meta.ip) parts.push(meta.ip);
+                finalEl.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i>' + parts.join(' · ');
+                finalEl.classList.add('show');
+                barFill.style.width = '100%';
+                setTimeout(hide, 950);
+            }
+
+            Promise.all([metaP, probesP]).then(showFinal);
+            // 兜底：无论如何不超过 ~4.4s
+            setTimeout(hide, 4400);
         })();
 
         /* ============================================================
@@ -6727,48 +7154,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
         })();
 
         /* ============================================================
-           开放 API 文档
-           ============================================================ */
-        (function initApiDocs() {
-            var list = document.getElementById('apiList');
-            if (!list) return;
-            var BASE = 'https://api.bjhr.space';
-            var APIS = [
-                { m: 'GET', p: '/api/ip', zh: '返回访客 IP、归属地、ISP、协议版本', en: 'Returns visitor IP, location, ISP, and protocol version' },
-                { m: 'GET', p: '/api/headers', zh: '回显你的全部 HTTP 请求头', en: 'Echoes back all your HTTP request headers' },
-                { m: 'GET', p: '/api/dns?name=example.com&type=A', zh: 'DNS over HTTPS 查询代理', en: 'DNS over HTTPS query proxy' },
-                { m: 'GET', p: '/api/ping?host=example.com', zh: 'HTTP 延迟探测（模拟 ping）', en: 'HTTP latency probe (simulated ping)' },
-                { m: 'GET', p: '/api/health', zh: '各服务健康状态', en: 'Health status of each service' },
-                { m: 'GET', p: '/og?title=Hello', zh: '动态生成 OG 社交分享图（SVG）', en: 'Dynamically generated OG share image (SVG)' }
-            ];
-            function isEn() { return window.__siteLang === 'en'; }
-            function bindTry() {
-                list.querySelectorAll('.api-try').forEach(function (btn) {
-                    btn.addEventListener('click', function () {
-                        var i = btn.dataset.idx || btn.dataset.i;
-                        var out = document.getElementById('apiOut' + i);
-                        var en = isEn();
-                        out.classList.add('open');
-                        out.textContent = en ? 'Requesting…' : '请求中…';
-                        fetch(BASE + APIS[i].p, { signal: AbortSignal.timeout(8000) })
-                            .then(function (r) { return r.text().then(function (t) { return { status: r.status, body: t }; }); })
-                            .then(function (res) { out.textContent = 'HTTP ' + res.status + '\n\n' + res.body.slice(0, 1500); })
-                            .catch(function (e) { out.textContent = (en ? 'Request failed: ' : '请求失败：') + e.message + (en ? '\n(The endpoint may not be deployed, or CORS is not open for your origin)' : '\n（该端点可能尚未部署，或未对你的来源开放 CORS）'); });
-                    });
-                });
-            }
-            function render() {
-                var en = isEn();
-                list.innerHTML = APIS.map(function (a, i) {
-                    return '<div class="api-item"><div class="api-head"><span class="api-method">' + a.m + '</span><span class="api-path">' + a.p + '</span><span class="api-desc">' + (en ? a.en : a.zh) + '</span><button class="api-try" data-i="' + i + '" type="button">' + (en ? 'Try it' : '试调用') + '</button></div><div class="api-out" id="apiOut' + i + '"></div></div>';
-                }).join('');
-                bindTry();
-            }
-            render();
-            document.addEventListener('site-lang-change', render);
-        })();
-
-        /* ============================================================
            HTTP/3 vs HTTP/2 协议检测
            ============================================================ */
         (function initProtoCompare() {
@@ -6918,6 +7303,873 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
             }
             btn.addEventListener('click', probe);
             probe();
+        })();
+
+        /* ============================================================
+           全球边缘拓扑 (initGlobe) — 纯 Canvas 正交投影 3D 地球
+           ============================================================ */
+        (function initGlobe() {
+            var canvas = document.getElementById('globeCanvas');
+            var youEl = document.getElementById('globeYou');
+            var nodesEl = document.getElementById('globeNodes');
+            if (!canvas || !canvas.getContext || !nodesEl) return;
+            var ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // 全球边缘节点（IATA 代码 + 经纬度 + 可探测端点）
+            var NODES = [
+                { code: 'HKG', name: 'Hong Kong', lat: 22.3, lon: 114.2, url: 'https://blog.bjhr.space' },
+                { code: 'NRT', name: 'Tokyo', lat: 35.7, lon: 139.8, url: 'https://www.yahoo.co.jp' },
+                { code: 'SIN', name: 'Singapore', lat: 1.35, lon: 103.8, url: 'https://www.google.com.sg' },
+                { code: 'SJC', name: 'San Jose', lat: 37.3, lon: -121.9, url: 'https://www.cloudflare.com' },
+                { code: 'FRA', name: 'Frankfurt', lat: 50.1, lon: 8.7, url: 'https://www.wikipedia.org' },
+                { code: 'SYD', name: 'Sydney', lat: -33.9, lon: 151.2, url: 'https://www.microsoft.com' },
+                { code: 'LHR', name: 'London', lat: 51.5, lon: -0.1, url: 'https://www.bbc.co.uk' },
+                { code: 'GRU', name: 'São Paulo', lat: -23.5, lon: -46.6, url: 'https://www.globo.com' },
+                { code: 'BOM', name: 'Mumbai', lat: 19.1, lon: 72.9, url: 'https://www.flipkart.com' },
+                { code: 'JNB', name: 'Johannesburg', lat: -26.2, lon: 28.0, url: 'https://www.news24.com' }
+            ];
+            var visitor = { lat: 39.9, lon: 116.4, label: '默认位置' };
+            var latencies = {}; // code -> ms | null
+
+            function latColor(ms) {
+                if (ms == null) return { r: 100, g: 116, b: 139 };
+                if (ms < 200) return { r: 6, g: 182, b: 212 };
+                if (ms < 450) return { r: 52, g: 211, b: 153 };
+                if (ms < 800) return { r: 251, g: 191, b: 36 };
+                return { r: 248, g: 113, b: 113 };
+            }
+            function rgba(c, a) { return 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + a.toFixed(3) + ')'; }
+
+            // ---- 正交投影 ----
+            var rotY = -1.8, tilt = -0.42;
+            var W = 0, H = 0, CX = 0, CY = 0, R = 0;
+            function toVec(lat, lon) {
+                var p = lat * Math.PI / 180, l = lon * Math.PI / 180;
+                return { x: Math.cos(p) * Math.sin(l), y: Math.sin(p), z: Math.cos(p) * Math.cos(l) };
+            }
+            function rot(v) {
+                var cy = Math.cos(rotY), sy = Math.sin(rotY);
+                var x1 = v.x * cy + v.z * sy, z1 = -v.x * sy + v.z * cy, y1 = v.y;
+                var ct = Math.cos(tilt), st = Math.sin(tilt);
+                return { x: x1, y: y1 * ct - z1 * st, z: y1 * st + z1 * ct };
+            }
+            function proj(v) { return { x: CX + v.x * R, y: CY - v.y * R, z: v.z }; }
+            function visA(z) { return Math.max(0.05, Math.min(1, (z + 0.2) / 1.2)); }
+
+            function resize() {
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                var w = canvas.clientWidth || 480, h = canvas.clientHeight || 480;
+                canvas.width = Math.round(w * dpr);
+                canvas.height = Math.round(h * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                W = w; H = h; CX = w / 2; CY = h / 2; R = Math.min(w, h) / 2 * 0.8;
+            }
+
+            // ---- 绘制 ----
+            function drawSphere() {
+                var g = ctx.createRadialGradient(CX - R * 0.35, CY - R * 0.35, R * 0.1, CX, CY, R);
+                g.addColorStop(0, 'rgba(6,182,212,0.10)');
+                g.addColorStop(0.7, 'rgba(17,24,39,0.55)');
+                g.addColorStop(1, 'rgba(10,14,26,0.85)');
+                ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI * 2);
+                ctx.fillStyle = g; ctx.fill();
+                ctx.lineWidth = 1.2; ctx.strokeStyle = 'rgba(6,182,212,0.35)'; ctx.stroke();
+                // 大气辉光
+                ctx.beginPath(); ctx.arc(CX, CY, R + 5, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(6,182,212,0.10)'; ctx.lineWidth = 7; ctx.stroke();
+            }
+            function drawGraticule() {
+                ctx.lineWidth = 0.7;
+                var GRAY = { r: 100, g: 116, b: 139 }, CYAN = { r: 6, g: 182, b: 212 };
+                var i, t, seg;
+                // 经线
+                for (i = 0; i < 360; i += 30) {
+                    seg = [];
+                    for (t = -90; t <= 90; t += 4) seg.push(proj(rot(toVec(t, i))));
+                    strokePath(seg, GRAY, 0.26);
+                }
+                // 纬线
+                for (i = -60; i <= 60; i += 30) {
+                    seg = [];
+                    for (t = 0; t <= 360; t += 4) seg.push(proj(rot(toVec(i, t))));
+                    strokePath(seg, i === 0 ? CYAN : GRAY, i === 0 ? 0.32 : 0.26);
+                }
+            }
+            function strokePath(pts, rgb, baseA) {
+                for (var i = 1; i < pts.length; i++) {
+                    var a = pts[i - 1], b = pts[i];
+                    var al = visA((a.z + b.z) / 2) * baseA;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+                    ctx.strokeStyle = rgba(rgb, al);
+                    ctx.stroke();
+                }
+            }
+
+            // 大圆弧（球面插值 + 抬升）
+            function arcPoints(va, vb, n) {
+                var dot = Math.max(-1, Math.min(1, va.x * vb.x + va.y * vb.y + va.z * vb.z));
+                var om = Math.acos(dot), so = Math.sin(om) || 1e-6;
+                var pts = [];
+                for (var i = 0; i <= n; i++) {
+                    var t = i / n;
+                    var wa = Math.sin((1 - t) * om) / so, wb = Math.sin(t * om) / so;
+                    var lift = 1 + 0.28 * Math.sin(Math.PI * t);
+                    pts.push({ x: (va.x * wa + vb.x * wb) * lift, y: (va.y * wa + vb.y * wb) * lift, z: (va.z * wa + vb.z * wb) * lift });
+                }
+                return pts;
+            }
+            function drawArcs(time) {
+                var vv = toVec(visitor.lat, visitor.lon);
+                NODES.forEach(function (node, idx) {
+                    var nv = toVec(node.lat, node.lon);
+                    var pts = arcPoints(vv, nv, 44);
+                    var col = latColor(latencies[node.code]);
+                    // 弧线
+                    for (var i = 1; i < pts.length; i++) {
+                        var a = rot(pts[i - 1]), b = rot(pts[i]);
+                        var pa = proj(a), pb = proj(b);
+                        var al = visA((a.z + b.z) / 2) * 0.75;
+                        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+                        ctx.strokeStyle = rgba(col, al); ctx.lineWidth = 1.4; ctx.stroke();
+                    }
+                    // 沿线运动的数据包
+                    if (!reduced) {
+                        var tt = ((time * 0.00022) + idx * 0.13) % 1;
+                        var k = Math.floor(tt * (pts.length - 1));
+                        var pk = rot(pts[k]);
+                        if (pk.z > 0) {
+                            var pp = proj(pk);
+                            ctx.beginPath(); ctx.arc(pp.x, pp.y, 2.6, 0, Math.PI * 2);
+                            ctx.fillStyle = rgba(col, 0.95);
+                            ctx.shadowColor = rgba(col, 0.9); ctx.shadowBlur = 8;
+                            ctx.fill(); ctx.shadowBlur = 0;
+                        }
+                    }
+                });
+            }
+            function drawNodes() {
+                NODES.forEach(function (node) {
+                    var v = rot(toVec(node.lat, node.lon));
+                    if (v.z <= 0.02) return;
+                    var p = proj(v), col = latColor(latencies[node.code]);
+                    var al = visA(v.z);
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 3.4, 0, Math.PI * 2);
+                    ctx.fillStyle = rgba(col, al);
+                    ctx.shadowColor = rgba(col, al); ctx.shadowBlur = 10;
+                    ctx.fill(); ctx.shadowBlur = 0;
+                    if (v.z > 0.35) {
+                        ctx.font = '600 9px "JetBrains Mono", monospace';
+                        ctx.fillStyle = 'rgba(226,232,240,' + (al * 0.85).toFixed(3) + ')';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(node.code, p.x, p.y - 8);
+                    }
+                });
+            }
+            function drawVisitor(time) {
+                var v = rot(toVec(visitor.lat, visitor.lon));
+                if (v.z <= 0.02) return;
+                var p = proj(v);
+                var pulse = reduced ? 1 : (1 + 0.35 * Math.sin(time * 0.004));
+                ctx.beginPath(); ctx.arc(p.x, p.y, 5 * pulse, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.6; ctx.stroke();
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2.6, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff'; ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 12; ctx.fill(); ctx.shadowBlur = 0;
+            }
+
+            var running = false, rafId = null;
+            function draw(time) {
+                ctx.clearRect(0, 0, W, H);
+                drawSphere();
+                drawGraticule();
+                drawArcs(time || 0);
+                drawNodes();
+                drawVisitor(time || 0);
+            }
+            function frame(time) {
+                if (!running) return;
+                if (!dragging && !reduced) rotY += 0.0016;
+                draw(time);
+                rafId = requestAnimationFrame(frame);
+            }
+            function start() { if (!running) { running = true; rafId = requestAnimationFrame(frame); } }
+            function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); }
+
+            // ---- 拖拽旋转 ----
+            var dragging = false, lastX = 0, lastY = 0;
+            canvas.addEventListener('pointerdown', function (e) {
+                dragging = true; lastX = e.clientX; lastY = e.clientY;
+                canvas.classList.add('dragging');
+                try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+            });
+            canvas.addEventListener('pointermove', function (e) {
+                if (!dragging) return;
+                rotY += (e.clientX - lastX) * 0.005;
+                tilt = Math.max(-1.2, Math.min(1.2, tilt + (e.clientY - lastY) * 0.004));
+                lastX = e.clientX; lastY = e.clientY;
+                if (reduced) draw(0);
+            });
+            function endDrag() { dragging = false; canvas.classList.remove('dragging'); }
+            canvas.addEventListener('pointerup', endDrag);
+            canvas.addEventListener('pointercancel', endDrag);
+
+            // ---- 侧栏节点列表 ----
+            function renderList() {
+                nodesEl.innerHTML = NODES.map(function (n) {
+                    var ms = latencies[n.code];
+                    var col = latColor(ms);
+                    var txt = ms === undefined ? '…' : (ms == null ? '超时' : ms + ' ms');
+                    return '<div class="gnode"><span class="gdot" style="background:' + rgba(col, 1) + '"></span>' +
+                        '<span class="gcode">' + n.code + '</span><span class="gname">' + n.name + '</span>' +
+                        '<span class="gms">' + txt + '</span></div>';
+                }).join('');
+            }
+
+            // ---- 延迟探测 ----
+            function probe() {
+                NODES.forEach(function (n) { latencies[n.code] = undefined; });
+                renderList();
+                NODES.forEach(function (n) {
+                    var t0 = performance.now();
+                    fetch(n.url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                        .then(function () { latencies[n.code] = Math.round(performance.now() - t0); })
+                        .catch(function () { latencies[n.code] = null; })
+                        .finally(function () { renderList(); });
+                });
+            }
+
+            // ---- 访客定位 ----
+            fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(8000) })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (typeof d.latitude === 'number' && typeof d.longitude === 'number') {
+                        visitor.lat = d.latitude; visitor.lon = d.longitude;
+                        visitor.label = d.city || d.country_name || '你的位置';
+                        youEl.textContent = '📍 ' + visitor.label + ' (' + visitor.lat.toFixed(1) + ', ' + visitor.lon.toFixed(1) + ')';
+                    } else {
+                        youEl.textContent = '📍 ' + visitor.label;
+                    }
+                })
+                .catch(function () { youEl.textContent = '📍 ' + visitor.label + '（定位失败）'; });
+
+            // ---- 初始化 ----
+            resize();
+            if ('ResizeObserver' in window) { new ResizeObserver(resize).observe(canvas); }
+            else { window.addEventListener('resize', resize); }
+            renderList();
+            probe();
+            // 进入视口才运行动画
+            if ('IntersectionObserver' in window && !reduced) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+                }, { threshold: 0.05 }).observe(canvas);
+            } else if (reduced) { draw(0); } else { start(); }
+        })();
+
+        /* ============================================================
+           全球延迟地图 (initWorldMap) — SVG 等距圆柱投影
+           ============================================================ */
+        (function initWorldMap() {
+            var svg = document.getElementById('worldMap');
+            if (!svg) return;
+            var NS = 'http://www.w3.org/2000/svg';
+            var W = 720, H = 360;
+            var CITIES = [
+                { code: 'HKG', lat: 22.3, lon: 114.2, url: 'https://blog.bjhr.space' },
+                { code: 'NRT', lat: 35.7, lon: 139.8, url: 'https://www.yahoo.co.jp' },
+                { code: 'SIN', lat: 1.35, lon: 103.8, url: 'https://www.google.com.sg' },
+                { code: 'SJC', lat: 37.3, lon: -121.9, url: 'https://www.cloudflare.com' },
+                { code: 'FRA', lat: 50.1, lon: 8.7, url: 'https://www.wikipedia.org' },
+                { code: 'SYD', lat: -33.9, lon: 151.2, url: 'https://www.microsoft.com' },
+                { code: 'GRU', lat: -23.5, lon: -46.6, url: 'https://www.globo.com' },
+                { code: 'JNB', lat: -26.2, lon: 28.0, url: 'https://www.news24.com' }
+            ];
+            function px(lon) { return (lon + 180) / 360 * W; }
+            function py(lat) { return (90 - lat) / 180 * H; }
+            function el(t, a) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); return e; }
+            function color(ms) { if (ms == null) return '#64748b'; if (ms < 200) return '#06b6d4'; if (ms < 450) return '#34d399'; if (ms < 800) return '#fbbf24'; return '#f87171'; }
+            var i;
+            // 经纬网
+            var grid = el('g', {});
+            for (i = -180; i <= 180; i += 30) grid.appendChild(el('line', { x1: px(i), y1: 0, x2: px(i), y2: H, stroke: 'rgba(100,116,139,0.13)', 'stroke-width': 1 }));
+            for (i = -60; i <= 90; i += 30) grid.appendChild(el('line', { x1: 0, y1: py(i), x2: W, y2: py(i), stroke: i === 0 ? 'rgba(6,182,212,0.25)' : 'rgba(100,116,139,0.13)', 'stroke-width': 1 }));
+            svg.appendChild(grid);
+            // 简化大陆轮廓
+            var LAND = [
+                [[-168, 66], [-140, 70], [-100, 73], [-80, 73], [-60, 60], [-65, 45], [-75, 35], [-80, 25], [-97, 15], [-105, 20], [-120, 35], [-125, 48], [-155, 58]],
+                [[-80, 10], [-60, 10], [-50, 0], [-35, -8], [-40, -22], [-55, -35], [-70, -52], [-72, -40], [-70, -20], [-80, -5]],
+                [[-17, 15], [-10, 30], [10, 37], [30, 32], [43, 12], [51, 10], [40, -15], [35, -30], [20, -35], [12, -18], [8, 5], [-8, 5]],
+                [[-10, 36], [-10, 58], [0, 60], [10, 55], [20, 55], [30, 60], [40, 65], [60, 70], [90, 75], [130, 72], [160, 70], [178, 66], [178, 55], [140, 50], [135, 35], [120, 25], [105, 10], [95, 15], [88, 22], [78, 8], [72, 20], [60, 25], [48, 30], [35, 32], [25, 38], [10, 38], [0, 38]],
+                [[113, -22], [130, -12], [142, -11], [150, -25], [147, -38], [135, -35], [125, -32], [115, -30]],
+                [[-45, 60], [-20, 70], [-25, 82], [-55, 80], [-58, 70]]
+            ];
+            LAND.forEach(function (poly) {
+                svg.appendChild(el('polygon', { points: poly.map(function (p) { return px(p[0]).toFixed(1) + ',' + py(p[1]).toFixed(1); }).join(' '), fill: 'rgba(6,182,212,0.07)', stroke: 'rgba(6,182,212,0.18)', 'stroke-width': 1 }));
+            });
+            // 城市标记
+            var markers = {};
+            CITIES.forEach(function (c, idx) {
+                var x = px(c.lon), y = py(c.lat);
+                var ping = el('circle', { cx: x, cy: y, r: 5, fill: 'none', stroke: '#06b6d4', 'stroke-width': 1.5, 'class': 'wm-ping' });
+                ping.style.animationDelay = (idx * 0.3) + 's';
+                var dot = el('circle', { cx: x, cy: y, r: 3.2, fill: '#64748b' });
+                var label = el('text', { x: x + 7, y: y + 3, 'class': 'wm-label' }); label.textContent = c.code;
+                var ms = el('text', { x: x + 7, y: y + 13, 'class': 'wm-ms', fill: '#64748b' }); ms.textContent = '…';
+                svg.appendChild(ping); svg.appendChild(dot); svg.appendChild(label); svg.appendChild(ms);
+                markers[c.code] = { dot: dot, ping: ping, ms: ms };
+            });
+            function setMs(c, ms) {
+                var m = markers[c.code], col = color(ms);
+                m.dot.setAttribute('fill', col);
+                m.ping.setAttribute('stroke', col);
+                m.ms.setAttribute('fill', col);
+                m.ms.textContent = ms == null ? 'timeout' : ms + 'ms';
+            }
+            function probe() {
+                document.getElementById('wmapTime').textContent = new Date().toLocaleTimeString();
+                CITIES.forEach(function (c) {
+                    var t0 = performance.now();
+                    fetch(c.url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                        .then(function () { setMs(c, Math.round(performance.now() - t0)); })
+                        .catch(function () { setMs(c, null); });
+                });
+            }
+            document.getElementById('wmapRefresh').addEventListener('click', probe);
+            probe();
+        })();
+
+        /* ============================================================
+           页面加载瀑布图 (initPerfWaterfall) — Performance API
+           ============================================================ */
+        (function initPerfWaterfall() {
+            var chart = document.getElementById('wfChart');
+            var summary = document.getElementById('wfSummary');
+            var legend = document.getElementById('wfLegend');
+            if (!chart) return;
+            var COLORS = { Redirect: '#64748b', DNS: '#06b6d4', TCP: '#8b5cf6', TLS: '#a78bfa', TTFB: '#34d399', Download: '#fbbf24', DOMContentLoaded: '#f472b6', Load: '#f87171', Resource: '#38bdf8' };
+            function build() {
+                var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+                var rows = [];
+                if (nav) {
+                    if (nav.redirectEnd > nav.redirectStart) rows.push({ name: 'Redirect', start: nav.redirectStart, dur: nav.redirectEnd - nav.redirectStart, c: 'Redirect' });
+                    rows.push({ name: 'DNS Lookup', start: nav.domainLookupStart, dur: nav.domainLookupEnd - nav.domainLookupStart, c: 'DNS' });
+                    rows.push({ name: 'TCP Connect', start: nav.connectStart, dur: nav.connectEnd - nav.connectStart, c: 'TCP' });
+                    if (nav.secureConnectionStart > 0) rows.push({ name: 'TLS Handshake', start: nav.secureConnectionStart, dur: nav.connectEnd - nav.secureConnectionStart, c: 'TLS' });
+                    rows.push({ name: 'TTFB', start: nav.requestStart, dur: nav.responseStart - nav.requestStart, c: 'TTFB' });
+                    rows.push({ name: 'Download', start: nav.responseStart, dur: nav.responseEnd - nav.responseStart, c: 'Download' });
+                    rows.push({ name: 'DOMContentLoaded', start: 0, dur: nav.domContentLoadedEventEnd, c: 'DOMContentLoaded' });
+                    rows.push({ name: 'Load', start: 0, dur: nav.loadEventEnd, c: 'Load' });
+                }
+                var res = (performance.getEntriesByType && performance.getEntriesByType('resource') || [])
+                    .filter(function (r) { return r.duration > 5; })
+                    .sort(function (a, b) { return b.duration - a.duration; })
+                    .slice(0, 6);
+                res.forEach(function (r) {
+                    var nm = (r.name.split('/').pop() || r.name).split('?')[0];
+                    rows.push({ name: nm.length > 22 ? nm.substring(0, 22) + '…' : nm, start: r.startTime, dur: r.duration, c: 'Resource' });
+                });
+                var maxEnd = 1;
+                rows.forEach(function (r) { maxEnd = Math.max(maxEnd, r.start + r.dur); });
+                chart.innerHTML = rows.map(function (r) {
+                    var left = (r.start / maxEnd * 100).toFixed(2);
+                    var w = Math.max(0.6, r.dur / maxEnd * 100).toFixed(2);
+                    return '<div class="wf-row"><span class="wf-name" title="' + r.name + '">' + r.name + '</span>' +
+                        '<div class="wf-track"><div class="wf-bar" style="left:' + left + '%;width:' + w + '%;background:' + COLORS[r.c] + '">' + Math.round(r.dur) + '</div></div></div>';
+                }).join('');
+                if (nav) {
+                    summary.innerHTML = [
+                        ['TTFB', Math.round(nav.responseStart) + ' ms'],
+                        ['DOMContentLoaded', Math.round(nav.domContentLoadedEventEnd) + ' ms'],
+                        ['Load', Math.round(nav.loadEventEnd) + ' ms'],
+                        ['Transfer', nav.transferSize ? (nav.transferSize / 1024).toFixed(1) + ' KB' : '—']
+                    ].map(function (c) { return '<span class="wf-chip">' + c[0] + ' <b>' + c[1] + '</b></span>'; }).join('');
+                }
+                legend.innerHTML = Object.keys(COLORS).map(function (k) { return '<span><i style="background:' + COLORS[k] + '"></i>' + k + '</span>'; }).join('');
+            }
+            function onReady() { setTimeout(build, 150); }
+            if (document.readyState === 'complete') onReady();
+            else window.addEventListener('load', onReady);
+        })();
+
+        /* ============================================================
+           DNS 解析链路 (initDnsChain) — 逐跳动画 + Cloudflare DoH
+           ============================================================ */
+        (function initDnsChain() {
+            var runBtn = document.getElementById('dnsChainRun');
+            var input = document.getElementById('dnsChainInput');
+            var chainEl = document.getElementById('dnsChain');
+            var resultEl = document.getElementById('dnsChainResult');
+            if (!runBtn || !chainEl) return;
+            var HOPS = [
+                { icon: 'fa-memory', name: '浏览器 DNS 缓存', sub: 'Browser Cache' },
+                { icon: 'fa-laptop', name: '操作系统解析器', sub: 'OS Resolver' },
+                { icon: 'fa-wifi', name: '本地网关 / 路由器', sub: 'Gateway' },
+                { icon: 'fa-server', name: 'ISP 递归解析器', sub: 'Recursive Resolver' },
+                { icon: 'fa-globe', name: '根域名服务器', sub: 'Root Server ( . )' },
+                { icon: 'fa-sitemap', name: 'TLD 服务器', sub: '.space TLD' },
+                { icon: 'fa-database', name: '权威域名服务器', sub: 'Authoritative NS' }
+            ];
+            var timer = null;
+            function render() {
+                chainEl.innerHTML = HOPS.map(function (h) {
+                    return '<div class="dc-hop"><span class="dc-icon"><i class="fas ' + h.icon + '" aria-hidden="true"></i></span>' +
+                        '<span class="dc-name">' + h.name + '<span class="dc-sub">' + h.sub + '</span></span><span class="dc-ms"></span></div>';
+                }).join('');
+            }
+            function run() {
+                var domain = (input.value || 'blog.bjhr.space').trim();
+                if (timer) { clearInterval(timer); timer = null; }
+                render();
+                resultEl.innerHTML = '正在解析 <b>' + domain + '</b> …';
+                var hops = chainEl.querySelectorAll('.dc-hop');
+                var idx = 0, t0 = performance.now();
+                var doh = fetch('https://cloudflare-dns.com/dns-query?name=' + encodeURIComponent(domain) + '&type=A', { headers: { accept: 'application/dns-json' }, signal: AbortSignal.timeout(8000) })
+                    .then(function (r) { return r.json(); });
+                timer = setInterval(function () {
+                    if (idx < hops.length) {
+                        hops[idx].classList.add('active');
+                        hops[idx].querySelector('.dc-ms').textContent = (idx === 0 ? 0 : Math.round(Math.random() * 18 + 2)) + ' ms';
+                        idx++;
+                    } else {
+                        clearInterval(timer); timer = null;
+                        doh.then(function (d) {
+                            var ans = (d.Answer || []).filter(function (a) { return a.type === 1 || a.type === 5; }).map(function (a) { return a.data; });
+                            var ttl = d.Answer && d.Answer[0] ? d.Answer[0].TTL : '—';
+                            resultEl.innerHTML = '<b>' + domain + '</b> → ' + (ans.length ? ans.join(' , ') : '无 A 记录') +
+                                ' <span style="opacity:.6">· DoH ' + Math.round(performance.now() - t0) + ' ms · TTL ' + ttl + 's</span>';
+                        }).catch(function () { resultEl.innerHTML = 'DoH 查询失败（网络受限），仅演示链路动画。'; });
+                    }
+                }, 300);
+            }
+            runBtn.addEventListener('click', run);
+            render();
+        })();
+
+        /* ============================================================
+           延迟心电图 (initEcg) — 持续采样 RTT 的时间轴波形
+           ============================================================ */
+        (function initEcg() {
+            var canvas = document.getElementById('ecgCanvas');
+            var statsEl = document.getElementById('ecgStats');
+            if (!canvas || !canvas.getContext || !statsEl) return;
+            var ctx = canvas.getContext('2d');
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var H = 160, W = 0, WIN = 30000, MAXMS = 400;
+            var samples = [];
+            function resize() {
+                var d = Math.min(window.devicePixelRatio || 1, 2);
+                W = canvas.clientWidth || 600;
+                canvas.width = Math.round(W * d); canvas.height = Math.round(H * d);
+                ctx.setTransform(d, 0, 0, d, 0, 0);
+            }
+            resize(); window.addEventListener('resize', resize);
+            function yPos(ms) { return H - 16 - Math.min(ms, MAXMS) / MAXMS * (H - 34); }
+            var cur = null, mn = Infinity, mx = 0, sum = 0, cnt = 0;
+            function push(ms) {
+                cur = ms;
+                if (ms != null) { mn = Math.min(mn, ms); mx = Math.max(mx, ms); sum += ms; cnt++; }
+                samples.push({ t: Date.now(), ms: ms });
+                var cutoff = Date.now() - WIN - 2000;
+                while (samples.length && samples[0].t < cutoff) samples.shift();
+                stats();
+                if (reduced) draw();
+            }
+            function probe() {
+                var t0 = performance.now();
+                fetch('https://www.cloudflare.com/cdn-cgi/trace', { cache: 'no-store', signal: AbortSignal.timeout(3000) })
+                    .then(function () { push(Math.max(1, Math.round(performance.now() - t0))); })
+                    .catch(function () { push(null); });
+            }
+            function stats() {
+                var avg = cnt ? Math.round(sum / cnt) : null;
+                statsEl.innerHTML =
+                    '<div class="ecg-stat"><div class="ecg-num">' + (cur == null ? '—' : cur) + '</div><div class="ecg-lbl">当前 RTT (ms)</div></div>' +
+                    '<div class="ecg-stat"><div class="ecg-num">' + (avg == null ? '—' : avg) + '</div><div class="ecg-lbl">平均 (ms)</div></div>' +
+                    '<div class="ecg-stat"><div class="ecg-num">' + (mn === Infinity ? '—' : mn) + '</div><div class="ecg-lbl">最低 (ms)</div></div>' +
+                    '<div class="ecg-stat"><div class="ecg-num">' + (mx || '—') + '</div><div class="ecg-lbl">最高 (ms)</div></div>';
+            }
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(6,182,212,0.07)';
+                var gx, gy;
+                for (gx = 0; gx < W; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+                for (gy = 0; gy < H; gy += 32) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+                ctx.fillStyle = 'rgba(100,116,139,0.55)'; ctx.font = '9px "JetBrains Mono",monospace';
+                ctx.fillText('0 ms', 5, H - 5); ctx.fillText(MAXMS + ' ms', 5, yPos(MAXMS) + 4);
+                var now = Date.now();
+                if (!samples.length) return;
+                ctx.beginPath();
+                var started = false, hx = 0, hy = 0;
+                for (var i = 0; i < samples.length; i++) {
+                    var s = samples[i];
+                    if (s.ms == null) { started = false; continue; }
+                    var x = W - (now - s.t) / WIN * W, y = yPos(s.ms);
+                    if (!started) { ctx.moveTo(x, y); started = true; } else ctx.lineTo(x, y);
+                    hx = x; hy = y;
+                }
+                if (!started) return;
+                ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 1.8;
+                ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 6; ctx.stroke(); ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff'; ctx.shadowColor = '#06b6d4'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+            }
+            var visible = false, raf = null;
+            function loop() { draw(); raf = (visible && !reduced) ? requestAnimationFrame(loop) : null; }
+            if ('IntersectionObserver' in window && !reduced) {
+                new IntersectionObserver(function (es) {
+                    es.forEach(function (e) { visible = e.isIntersecting; if (visible && raf == null) loop(); });
+                }, { threshold: 0.05 }).observe(canvas);
+            } else { visible = true; if (!reduced) loop(); else draw(); }
+            probe(); setInterval(probe, 900);
+            stats();
+        })();
+
+        /* ============================================================
+           实时系统 HUD (initHud) — 浏览器 / 网络 / 硬件遥测
+           ============================================================ */
+        (function initHud() {
+            var grid = document.getElementById('hudGrid');
+            if (!grid) return;
+            var fps = 0, frames = 0, lastT = performance.now();
+            (function countFps() {
+                frames++;
+                var n = performance.now();
+                if (n - lastT >= 1000) { fps = frames; frames = 0; lastT = n; }
+                requestAnimationFrame(countFps);
+            })();
+            var battery = null;
+            if (navigator.getBattery) { navigator.getBattery().then(function (b) { battery = b; render(); }).catch(function () {}); }
+            function tile(icon, val, lbl) {
+                return '<div class="hud-tile"><div class="hud-icon"><i class="fas ' + icon + '" aria-hidden="true"></i></div>' +
+                    '<div class="hud-val">' + val + '</div><div class="hud-lbl">' + lbl + '</div></div>';
+            }
+            function mb(b) { return (b / 1048576).toFixed(1) + ' MB'; }
+            function render() {
+                var mem = performance.memory ? mb(performance.memory.usedJSHeapSize) + ' / ' + mb(performance.memory.totalJSHeapSize) : 'N/A';
+                var conn = navigator.connection;
+                var net = conn ? (conn.effectiveType || '—').toUpperCase() + (conn.downlink ? ' · ' + conn.downlink + 'Mb' : '') : 'N/A';
+                var rtt = conn && conn.rtt != null ? conn.rtt + ' ms' : '—';
+                var bat = battery ? Math.round(battery.level * 100) + '%' + (battery.charging ? ' ⚡' : '') : '—';
+                var up = Math.floor(performance.now() / 1000);
+                var upStr = up < 60 ? up + 's' : Math.floor(up / 60) + 'm ' + (up % 60) + 's';
+                grid.innerHTML =
+                    tile('fa-microchip', mem, 'JS Heap') +
+                    tile('fa-network-wired', net, 'Effective Type') +
+                    tile('fa-stopwatch', rtt, 'Net RTT') +
+                    tile('fa-battery-three-quarters', bat, 'Battery') +
+                    tile('fa-film', fps + ' fps', 'Frame Rate') +
+                    tile('fa-hourglass-half', upStr, 'Page Uptime') +
+                    tile('fa-desktop', screen.width + '×' + screen.height + ' @' + (window.devicePixelRatio || 1) + 'x', 'Screen') +
+                    tile('fa-brain', (navigator.hardwareConcurrency || '—') + ' threads', 'CPU') +
+                    tile('fa-language', navigator.language || '—', 'Locale') +
+                    tile('fa-globe', (Intl.DateTimeFormat().resolvedOptions().timeZone || '—'), 'Timezone');
+            }
+            render();
+            setInterval(render, 1000);
+        })();
+
+        /* ============================================================
+           边缘雷达扫描 (initRadar) — Canvas 扫描波束 + 延迟光点
+           ============================================================ */
+        (function initEdgeRadar() {
+            var canvas = document.getElementById('radarCanvas');
+            var listEl = document.getElementById('radarList');
+            if (!canvas || !canvas.getContext || !listEl) return;
+            var ctx = canvas.getContext('2d');
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var SIZE = 300, C = SIZE / 2, R = C - 18;
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            var NODES = [
+                { code: 'HKG', url: 'https://blog.bjhr.space' },
+                { code: 'NRT', url: 'https://www.yahoo.co.jp' },
+                { code: 'SIN', url: 'https://www.google.com.sg' },
+                { code: 'SJC', url: 'https://www.cloudflare.com' },
+                { code: 'FRA', url: 'https://www.wikipedia.org' },
+                { code: 'SYD', url: 'https://www.microsoft.com' },
+                { code: 'LHR', url: 'https://www.bbc.co.uk' },
+                { code: 'GRU', url: 'https://www.globo.com' }
+            ];
+            NODES.forEach(function (n, i) { n.angle = i / NODES.length * Math.PI * 2 + (i * 0.4) % 0.6; n.ms = null; n.flash = 0; n.busy = false; });
+            var sweep = -Math.PI / 2;
+            function radius(ms) { return ms == null ? R * 0.92 : Math.min(R * 0.92, 34 + ms / 800 * (R - 46)); }
+            function rgb(ms) { if (ms == null) return '100,116,139'; if (ms < 200) return '6,182,212'; if (ms < 450) return '52,211,153'; if (ms < 800) return '251,191,36'; return '248,113,113'; }
+            function probe(n) {
+                var t0 = performance.now();
+                fetch(n.url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(5000) })
+                    .then(function () { n.ms = Math.round(performance.now() - t0); })
+                    .catch(function () { n.ms = null; })
+                    .finally(function () { renderList(); });
+            }
+            function renderList() {
+                listEl.innerHTML = NODES.map(function (n) {
+                    return '<div class="radar-item"><span class="rdot" style="background:rgb(' + rgb(n.ms) + ')"></span>' +
+                        '<span class="rcode">' + n.code + '</span><span class="rname"></span>' +
+                        '<span class="rms">' + (n.ms == null ? '—' : n.ms + ' ms') + '</span></div>';
+                }).join('');
+            }
+            function draw() {
+                ctx.clearRect(0, 0, SIZE, SIZE);
+                ctx.lineWidth = 1;
+                [0.33, 0.66, 1].forEach(function (f) {
+                    ctx.beginPath(); ctx.arc(C, C, R * f, 0, Math.PI * 2);
+                    ctx.strokeStyle = 'rgba(6,182,212,0.15)'; ctx.stroke();
+                });
+                ctx.beginPath(); ctx.moveTo(C - R, C); ctx.lineTo(C + R, C); ctx.moveTo(C, C - R); ctx.lineTo(C, C + R);
+                ctx.strokeStyle = 'rgba(6,182,212,0.1)'; ctx.stroke();
+                for (var a = 0; a < 42; a++) {
+                    var ang = sweep - a * 0.02;
+                    ctx.beginPath(); ctx.moveTo(C, C); ctx.arc(C, C, R, ang - 0.021, ang); ctx.closePath();
+                    ctx.fillStyle = 'rgba(6,182,212,' + (0.15 * (1 - a / 42)).toFixed(3) + ')'; ctx.fill();
+                }
+                ctx.beginPath(); ctx.moveTo(C, C);
+                ctx.lineTo(C + Math.cos(sweep) * R, C + Math.sin(sweep) * R);
+                ctx.strokeStyle = 'rgba(6,182,212,0.85)'; ctx.lineWidth = 1.6; ctx.stroke();
+                NODES.forEach(function (n) {
+                    var r = radius(n.ms), col = rgb(n.ms);
+                    var bx = C + Math.cos(n.angle) * r, by = C + Math.sin(n.angle) * r;
+                    ctx.beginPath(); ctx.arc(bx, by, 3.5 + n.flash * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(' + col + ',' + (0.55 + n.flash * 0.45).toFixed(2) + ')';
+                    ctx.shadowColor = 'rgb(' + col + ')'; ctx.shadowBlur = 8 + n.flash * 10;
+                    ctx.fill(); ctx.shadowBlur = 0;
+                    if (n.flash > 0.45) {
+                        ctx.fillStyle = 'rgba(226,232,240,0.9)'; ctx.font = '8px "JetBrains Mono",monospace';
+                        ctx.textAlign = 'center'; ctx.fillText(n.code, bx, by - 9);
+                    }
+                    n.flash = Math.max(0, n.flash - 0.018);
+                    var diff = ((sweep - n.angle) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+                    if (diff < 0.05 && !n.busy) {
+                        n.flash = 1; n.busy = true; probe(n);
+                        setTimeout(function () { n.busy = false; }, 4000);
+                    }
+                });
+            }
+            var visible = false, raf = null;
+            function loop() { sweep = (sweep + 0.024) % (Math.PI * 2); draw(); raf = (visible && !reduced) ? requestAnimationFrame(loop) : null; }
+            if ('IntersectionObserver' in window && !reduced) {
+                new IntersectionObserver(function (es) {
+                    es.forEach(function (e) { visible = e.isIntersecting; if (visible && raf == null) loop(); });
+                }, { threshold: 0.05 }).observe(canvas);
+            } else { draw(); }
+            renderList();
+            NODES.forEach(probe);
+        })();
+
+        /* ============================================================
+           架构数据包流动 (initFlow) — SVG 请求/响应往返动画
+           ============================================================ */
+        (function initFlow() {
+            var svg = document.getElementById('flowSvg');
+            if (!svg) return;
+            var NS = 'http://www.w3.org/2000/svg';
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            function el(t, a) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); return e; }
+            var NODES = [
+                { x: 80, label: '浏览器', sub: 'Browser' },
+                { x: 270, label: 'CF 边缘', sub: 'Anycast PoP' },
+                { x: 460, label: 'Worker', sub: 'api.bjhr.space' },
+                { x: 650, label: 'KV 存储', sub: 'Edge KV' }
+            ];
+            var Y = 150, BW = 128, BH = 58;
+            var i;
+            for (i = 0; i < NODES.length - 1; i++) {
+                svg.appendChild(el('line', { x1: NODES[i].x + BW / 2, y1: Y, x2: NODES[i + 1].x - BW / 2, y2: Y, 'class': 'flow-link' }));
+            }
+            NODES.forEach(function (n) {
+                var g = el('g', { 'class': 'flow-node' });
+                g.appendChild(el('rect', { x: n.x - BW / 2, y: Y - BH / 2, width: BW, height: BH, rx: 10 }));
+                var t1 = el('text', { x: n.x, y: Y - 2, 'text-anchor': 'middle' }); t1.textContent = n.label;
+                var t2 = el('text', { x: n.x, y: Y + 15, 'text-anchor': 'middle', 'class': 'flow-sub' }); t2.textContent = n.sub;
+                g.appendChild(t1); g.appendChild(t2); svg.appendChild(g);
+            });
+            var pkt = el('circle', { r: 5, fill: '#06b6d4', 'class': 'flow-packet', cx: NODES[0].x, cy: Y });
+            svg.appendChild(pkt);
+            var xs = NODES.map(function (n) { return n.x; });
+            var waypoints = xs.concat(xs.slice(0, -1).reverse());
+            var segs = waypoints.length - 1;
+            var t = 0;
+            function place(tt) {
+                var s = tt * segs, i0 = Math.min(Math.floor(s), segs - 1), f = s - i0;
+                pkt.setAttribute('cx', waypoints[i0] + (waypoints[i0 + 1] - waypoints[i0]) * f);
+                pkt.setAttribute('cy', Y);
+                pkt.setAttribute('fill', s < 3 ? '#06b6d4' : '#34d399');
+            }
+            var visible = false, raf = null;
+            function loop() {
+                t = (t + 0.0038) % 1; place(t);
+                raf = (visible && !reduced) ? requestAnimationFrame(loop) : null;
+            }
+            if ('IntersectionObserver' in window && !reduced) {
+                new IntersectionObserver(function (es) {
+                    es.forEach(function (e) { visible = e.isIntersecting; if (visible && raf == null) loop(); });
+                }, { threshold: 0.1 }).observe(svg);
+            } else { place(0.12); }
+        })();
+
+        /* ============================================================
+           QUIC / HTTP3 握手 (initQuic) — 与 TCP+TLS 的时序对比
+           ============================================================ */
+        (function initQuic() {
+            var tcpEl = document.getElementById('quicTcp');
+            var quicEl = document.getElementById('quicQuic');
+            var replay = document.getElementById('quicReplay');
+            if (!tcpEl || !quicEl) return;
+            var TCP = [
+                { l: 'SYN', rev: false }, { l: 'SYN-ACK', rev: true }, { l: 'ACK', rev: false },
+                { l: 'ClientHello', rev: false }, { l: 'ServerHello + Cert', rev: true },
+                { l: 'Finished', rev: false }, { l: 'Encrypted Data', rev: true }
+            ];
+            var QUIC = [
+                { l: 'Initial · ClientHello', rev: false },
+                { l: 'Initial · ServerHello', rev: true },
+                { l: 'Handshake · Finished', rev: false },
+                { l: '1-RTT Data (加密)', rev: true }
+            ];
+            function build(el, msgs, rtt) {
+                el.innerHTML = msgs.map(function (m) {
+                    return '<div class="qmsg' + (m.rev ? ' rev' : '') + '"><div class="qarrow"></div><span class="qlabel">' + m.l + '</span></div>';
+                }).join('') + '<div class="qtotal">≈ <b>' + rtt + '</b> RTT to first data</div>';
+            }
+            var timers = [];
+            function play() {
+                timers.forEach(clearTimeout); timers = [];
+                build(tcpEl, TCP, '2–3'); build(quicEl, QUIC, '1');
+                [tcpEl, quicEl].forEach(function (col) {
+                    var msgs = col.querySelectorAll('.qmsg');
+                    Array.prototype.forEach.call(msgs, function (m, i) {
+                        timers.push(setTimeout(function () { m.classList.add('show'); }, 260 + i * 400));
+                    });
+                });
+            }
+            if (replay) replay.addEventListener('click', play);
+            var played = false;
+            if ('IntersectionObserver' in window) {
+                new IntersectionObserver(function (es) {
+                    es.forEach(function (e) { if (e.isIntersecting && !played) { played = true; play(); } });
+                }, { threshold: 0.2 }).observe(quicEl);
+            } else { play(); }
+        })();
+
+        /* ============================================================
+           全球 PoP 时钟墙 (initClocks) — Intl 时区 + 昼夜指示
+           ============================================================ */
+        (function initClocks() {
+            var grid = document.getElementById('clockGrid');
+            if (!grid) return;
+            var CITIES = [
+                { city: 'Hong Kong', code: 'HKG', tz: 'Asia/Hong_Kong' },
+                { city: 'Tokyo', code: 'NRT', tz: 'Asia/Tokyo' },
+                { city: 'Singapore', code: 'SIN', tz: 'Asia/Singapore' },
+                { city: 'San Jose', code: 'SJC', tz: 'America/Los_Angeles' },
+                { city: 'Frankfurt', code: 'FRA', tz: 'Europe/Berlin' },
+                { city: 'London', code: 'LHR', tz: 'Europe/London' },
+                { city: 'Sydney', code: 'SYD', tz: 'Australia/Sydney' },
+                { city: 'São Paulo', code: 'GRU', tz: 'America/Sao_Paulo' },
+                { city: 'Dubai', code: 'DXB', tz: 'Asia/Dubai' },
+                { city: 'Johannesburg', code: 'JNB', tz: 'Africa/Johannesburg' }
+            ];
+            var fmtT = {}, fmtD = {};
+            function locale() { return window.__siteLang === 'en' ? 'en-US' : 'zh-CN'; }
+            function buildFmt() {
+                CITIES.forEach(function (c) {
+                    try {
+                        fmtT[c.tz] = new Intl.DateTimeFormat(locale(), { timeZone: c.tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                        fmtD[c.tz] = new Intl.DateTimeFormat(locale(), { timeZone: c.tz, month: '2-digit', day: '2-digit', weekday: 'short' });
+                    } catch (e) { /* 时区不受支持时跳过 */ }
+                });
+            }
+            function hourOf(tz) {
+                try { return parseInt(new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: 'numeric', hour12: false }).format(new Date()), 10); }
+                catch (e) { return 12; }
+            }
+            function render() {
+                var now = new Date();
+                grid.innerHTML = CITIES.map(function (c) {
+                    var h = hourOf(c.tz);
+                    var sun = (h >= 6 && h < 18) ? '☀️' : '🌙';
+                    return '<div class="clock-card"><span class="ck-sun">' + sun + '</span>' +
+                        '<div class="ck-city">' + c.code + ' · ' + c.city + '</div>' +
+                        '<div class="ck-time">' + (fmtT[c.tz] ? fmtT[c.tz].format(now) : '—') + '</div>' +
+                        '<div class="ck-date">' + (fmtD[c.tz] ? fmtD[c.tz].format(now) : '') + '</div></div>';
+                }).join('');
+            }
+            buildFmt(); render();
+            document.addEventListener('site-lang-change', function () { buildFmt(); render(); });
+            setInterval(render, 1000);
+        })();
+
+        /* ============================================================
+           实时测速环形仪表 (initGauge) — speed.cloudflare.com 下行测速
+           ============================================================ */
+        (function initGauge() {
+            var svg = document.getElementById('gaugeSvg');
+            var side = document.getElementById('gaugeSide');
+            var runBtn = document.getElementById('gaugeRun');
+            var timeEl = document.getElementById('gaugeTime');
+            if (!svg || !side || !runBtn) return;
+            var NS = 'http://www.w3.org/2000/svg';
+            function el(t, a) { var e = document.createElementNS(NS, t); for (var k in a) e.setAttribute(k, a[k]); return e; }
+            var defs = el('defs', {});
+            var grad = el('linearGradient', { id: 'gaugeGrad', x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
+            grad.appendChild(el('stop', { offset: '0%', 'stop-color': '#06b6d4' }));
+            grad.appendChild(el('stop', { offset: '100%', 'stop-color': '#8b5cf6' }));
+            defs.appendChild(grad); svg.appendChild(defs);
+            var CX = 130, CY = 140, R = 100, arcLen = Math.PI * R;
+            var d = 'M ' + (CX - R) + ' ' + CY + ' A ' + R + ' ' + R + ' 0 0 1 ' + (CX + R) + ' ' + CY;
+            svg.appendChild(el('path', { d: d, 'class': 'gauge-arc-bg' }));
+            var arc = el('path', { d: d, 'class': 'gauge-arc', 'stroke-dasharray': arcLen, 'stroke-dashoffset': arcLen });
+            svg.appendChild(arc);
+            var num = el('text', { x: CX, y: CY - 22, 'text-anchor': 'middle', 'class': 'gauge-num' }); num.textContent = '0';
+            var unit = el('text', { x: CX, y: CY - 4, 'text-anchor': 'middle', 'class': 'gauge-unit' }); unit.textContent = 'Mbps';
+            var lbl = el('text', { x: CX, y: CY + 14, 'text-anchor': 'middle', 'class': 'gauge-lbl' }); lbl.textContent = 'DOWNLOAD';
+            svg.appendChild(num); svg.appendChild(unit); svg.appendChild(lbl);
+            var MAX = 100;
+            function setVal(mbps) {
+                arc.setAttribute('stroke-dashoffset', arcLen * (1 - Math.min(1, mbps / MAX)));
+                num.textContent = mbps >= 10 ? Math.round(mbps) : mbps.toFixed(1);
+            }
+            var latVal = '—', dlVal = '—';
+            function renderSide() {
+                side.innerHTML =
+                    '<div class="gauge-row"><span class="gk">延迟 Latency</span><span class="gv">' + latVal + '</span></div>' +
+                    '<div class="gauge-row"><span class="gk">下行 Download</span><span class="gv">' + dlVal + '</span></div>' +
+                    '<div class="gauge-row"><span class="gk">测速节点 PoP</span><span class="gv">speed.cloudflare.com</span></div>';
+            }
+            renderSide();
+            var running = false;
+            function animateTo(target) {
+                var steps = 40, i = 0;
+                var iv = setInterval(function () {
+                    i++; setVal(target * i / steps);
+                    if (i >= steps) clearInterval(iv);
+                }, 25);
+            }
+            function run() {
+                if (running) return;
+                running = true; runBtn.disabled = true;
+                num.textContent = '…'; setVal(0);
+                var lt0 = performance.now();
+                fetch('https://speed.cloudflare.com/__down?bytes=0', { cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                    .then(function () { latVal = Math.round(performance.now() - lt0) + ' ms'; })
+                    .catch(function () { latVal = '—'; })
+                    .finally(function () { renderSide(); });
+                var t0 = performance.now();
+                fetch('https://speed.cloudflare.com/__down?bytes=5000000', { cache: 'no-store', signal: AbortSignal.timeout(20000) })
+                    .then(function (r) { return r.arrayBuffer(); })
+                    .then(function (buf) {
+                        var secs = Math.max(0.001, (performance.now() - t0) / 1000);
+                        var mbps = buf.byteLength * 8 / secs / 1e6;
+                        animateTo(mbps);
+                        dlVal = mbps.toFixed(1) + ' Mbps';
+                        timeEl.textContent = new Date().toLocaleTimeString();
+                    })
+                    .catch(function () { dlVal = '测速失败'; num.textContent = '—'; })
+                    .finally(function () { running = false; runBtn.disabled = false; renderSide(); });
+            }
+            runBtn.addEventListener('click', run);
         })();
 
         /* ============================================================
@@ -7577,84 +8829,151 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 })();
             }
 
+            // 双语文案（跟随站点语言）
+            function curLang() { return window.__siteLang === 'en' ? 'en' : 'zh'; }
+            var STR = {
+                zh: {
+                    wel1: '<span class="term-accent">NetSight Shell</span> <span class="term-dim">v1.0 — 边缘节点已连接 📡</span>',
+                    wel2: '<span class="term-dim">输入 </span><span class="term-cyan">help</span><span class="term-dim"> 开始探索，或直接点击下方快捷命令。</span>',
+                    helpHead: '<span class="term-accent">可用命令</span> <span class="term-dim">(Available commands)</span>',
+                    helpTip: '<span class="term-dim">提示：按 ↑ / ↓ 浏览历史，Tab 自动补全</span>',
+                    d: { whoami: '— 关于我', skills: '— 技术栈', projects: '— 核心项目', contact: '— 联系方式', social: '— 社交链接', blog: '— 打开博客', theme: '— 切换深/浅色', date: '— 当前时间', echo: '— 回显文本', clear: '— 清屏' },
+                    whoami: [
+                        '<span class="term-accent">BlueDriftHK</span> <span class="term-dim">/ 边缘计算架构师</span>',
+                        '  角色    <span class="term-out">边缘计算架构师 · 全栈工具开发者</span>',
+                        '  专注    <span class="term-out">高性能边缘网络诊断工具</span>',
+                        '  主力    <span class="term-cyan">NetSight Pro</span> <span class="term-dim">(CF-workers-netdiag) ★ 2.3k+</span>',
+                        '  后端    <span class="term-out">Cloudflare Workers · api.bjhr.space</span>',
+                        '  信条    <span class="term-warn">「代码即艺术，性能即正义」</span>'
+                    ],
+                    skillsHead: '<span class="term-accent">技术栈</span> <span class="term-dim">(Tech Stack)</span>',
+                    skills: [
+                        '  <span class="term-cyan">边缘计算</span>  <span class="term-out">Cloudflare Workers / Pages · AWS Lambda · Docker / K8s</span>',
+                        '  <span class="term-cyan">语言框架</span>  <span class="term-out">JavaScript / TypeScript · Python · Node.js / Bun</span>',
+                        '  <span class="term-cyan">网络协议</span>  <span class="term-out">WebSocket · QUIC / HTTP3 · HLS · TLS / CSP</span>',
+                        '  <span class="term-cyan">数据存储</span>  <span class="term-out">D1 (SQLite) · R2 · Redis · PostgreSQL</span>'
+                    ],
+                    projHead: '<span class="term-accent">核心项目</span> <span class="term-dim">(Projects)</span>',
+                    proj: [
+                        '  <span class="term-ok">★ NetSight Pro</span>  <span class="term-dim">全球网络诊断面板 · CF Workers · 2.3k+ stars</span>',
+                        '  <span class="term-out">→ 详见页面「核心项目」区块，或访问 github.com/BlueDriftHK</span>'
+                    ],
+                    contactHead: '<span class="term-accent">联系方式</span> <span class="term-dim">(Contact)</span>',
+                    contact: [
+                        '  <span class="term-cyan">GitHub</span>   <span class="term-out">github.com/BlueDriftHK</span>',
+                        '  <span class="term-cyan">Blog</span>     <span class="term-out">https://blog.bjhr.space</span>',
+                        '  <span class="term-dim">→ 也可在页面「联系我」区块留言</span>'
+                    ],
+                    blogMsg: '<span class="term-ok">正在打开博客… https://blog.bjhr.space</span>',
+                    themeLight: '浅色', themeDark: '深色', themeDone: '已切换到{t}主题 ✓',
+                    konami: '<span class="term-warn">秘籍：在页面上按 ↑ ↑ ↓ ↓ ← → ← → B A 有惊喜 🎮</span>',
+                    sudo: '<span class="term-err">permission denied: 你不需要 root 权限也能了解我 :)</span>',
+                    nfHint: '<span class="term-dim">输入 help 查看可用命令</span>',
+                    inputAria: '终端命令输入框'
+                },
+                en: {
+                    wel1: '<span class="term-accent">NetSight Shell</span> <span class="term-dim">v1.0 — edge node connected 📡</span>',
+                    wel2: '<span class="term-dim">Type </span><span class="term-cyan">help</span><span class="term-dim"> to explore, or click a quick command below.</span>',
+                    helpHead: '<span class="term-accent">Available commands</span>',
+                    helpTip: '<span class="term-dim">Tip: ↑ / ↓ for history, Tab to autocomplete</span>',
+                    d: { whoami: '— about me', skills: '— tech stack', projects: '— projects', contact: '— contact', social: '— social links', blog: '— open blog', theme: '— toggle theme', date: '— current time', echo: '— echo text', clear: '— clear screen' },
+                    whoami: [
+                        '<span class="term-accent">BlueDriftHK</span> <span class="term-dim">/ Edge Computing Architect</span>',
+                        '  Role     <span class="term-out">Edge computing architect · Full-stack tooling dev</span>',
+                        '  Focus    <span class="term-out">High-performance edge network diagnostics</span>',
+                        '  Flagship <span class="term-cyan">NetSight Pro</span> <span class="term-dim">(CF-workers-netdiag) ★ 2.3k+</span>',
+                        '  Backend  <span class="term-out">Cloudflare Workers · api.bjhr.space</span>',
+                        '  Motto    <span class="term-warn">"Code is art, performance is justice"</span>'
+                    ],
+                    skillsHead: '<span class="term-accent">Tech Stack</span>',
+                    skills: [
+                        '  <span class="term-cyan">Edge</span>      <span class="term-out">Cloudflare Workers / Pages · AWS Lambda · Docker / K8s</span>',
+                        '  <span class="term-cyan">Languages</span> <span class="term-out">JavaScript / TypeScript · Python · Node.js / Bun</span>',
+                        '  <span class="term-cyan">Protocols</span> <span class="term-out">WebSocket · QUIC / HTTP3 · HLS · TLS / CSP</span>',
+                        '  <span class="term-cyan">Storage</span>   <span class="term-out">D1 (SQLite) · R2 · Redis · PostgreSQL</span>'
+                    ],
+                    projHead: '<span class="term-accent">Projects</span>',
+                    proj: [
+                        '  <span class="term-ok">★ NetSight Pro</span>  <span class="term-dim">Global network diagnostics panel · CF Workers · 2.3k+ stars</span>',
+                        '  <span class="term-out">→ See the Projects section, or visit github.com/BlueDriftHK</span>'
+                    ],
+                    contactHead: '<span class="term-accent">Contact</span>',
+                    contact: [
+                        '  <span class="term-cyan">GitHub</span>   <span class="term-out">github.com/BlueDriftHK</span>',
+                        '  <span class="term-cyan">Blog</span>     <span class="term-out">https://blog.bjhr.space</span>',
+                        '  <span class="term-dim">→ Or leave a message in the Contact section</span>'
+                    ],
+                    blogMsg: '<span class="term-ok">Opening blog… https://blog.bjhr.space</span>',
+                    themeLight: 'light', themeDark: 'dark', themeDone: 'Switched to {t} theme ✓',
+                    konami: '<span class="term-warn">Secret: press ↑ ↑ ↓ ↓ ← → ← → B A on the page 🎮</span>',
+                    sudo: '<span class="term-err">permission denied: you don\'t need root to get to know me :)</span>',
+                    nfHint: '<span class="term-dim">Type help for available commands</span>',
+                    inputAria: 'Terminal command input'
+                }
+            };
+            function T() { return STR[curLang()]; }
+
             // 命令定义
             var commands = {
                 help: function () {
+                    var t = T(), d = t.d;
                     return [
-                        { html: '<span class="term-accent">可用命令</span> <span class="term-dim">(Available commands)</span>', cls: '' },
-                        { html: '  <span class="term-cyan">whoami</span>      <span class="term-dim">— 关于我</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">skills</span>      <span class="term-dim">— 技术栈</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">projects</span>    <span class="term-dim">— 核心项目</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">contact</span>     <span class="term-dim">— 联系方式</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">social</span>      <span class="term-dim">— 社交链接</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">blog</span>        <span class="term-dim">— 打开博客</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">theme</span>       <span class="term-dim">— 切换深/浅色</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">date</span>        <span class="term-dim">— 当前时间</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">echo</span> &lt;txt&gt;  <span class="term-dim">— 回显文本</span>', cls: 'term-out' },
-                        { html: '  <span class="term-cyan">clear</span>       <span class="term-dim">— 清屏</span>', cls: 'term-out' },
-                        { html: '  <span class="term-dim">提示：按 ↑ / ↓ 浏览历史，Tab 自动补全</span>', cls: '' }
+                        { html: t.helpHead, cls: '' },
+                        { html: '  <span class="term-cyan">whoami</span>      <span class="term-dim">' + d.whoami + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">skills</span>      <span class="term-dim">' + d.skills + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">projects</span>    <span class="term-dim">' + d.projects + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">contact</span>     <span class="term-dim">' + d.contact + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">social</span>      <span class="term-dim">' + d.social + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">blog</span>        <span class="term-dim">' + d.blog + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">theme</span>       <span class="term-dim">' + d.theme + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">date</span>        <span class="term-dim">' + d.date + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">echo</span> &lt;txt&gt;  <span class="term-dim">' + d.echo + '</span>', cls: 'term-out' },
+                        { html: '  <span class="term-cyan">clear</span>       <span class="term-dim">' + d.clear + '</span>', cls: 'term-out' },
+                        { html: t.helpTip, cls: '' }
                     ];
                 },
                 whoami: function () {
-                    return [
-                        { html: '<span class="term-accent">BlueDriftHK</span> <span class="term-dim">/ 边缘计算架构师</span>', cls: '' },
-                        { html: '  角色    <span class="term-out">边缘计算架构师 · 全栈工具开发者</span>', cls: '' },
-                        { html: '  专注    <span class="term-out">高性能边缘网络诊断工具</span>', cls: '' },
-                        { html: '  主力    <span class="term-cyan">NetSight Pro</span> <span class="term-dim">(CF-workers-netdiag) ★ 2.3k+</span>', cls: '' },
-                        { html: '  后端    <span class="term-out">Cloudflare Workers · api.bjhr.space</span>', cls: '' },
-                        { html: '  信条    <span class="term-warn">「代码即艺术，性能即正义」</span>', cls: '' }
-                    ];
+                    return T().whoami.map(function (h) { return { html: h, cls: '' }; });
                 },
                 skills: function () {
-                    return [
-                        { html: '<span class="term-accent">技术栈</span> <span class="term-dim">(Tech Stack)</span>', cls: '' },
-                        { html: '  <span class="term-cyan">边缘计算</span>  <span class="term-out">Cloudflare Workers / Pages · AWS Lambda · Docker / K8s</span>', cls: '' },
-                        { html: '  <span class="term-cyan">语言框架</span>  <span class="term-out">JavaScript / TypeScript · Python · Node.js / Bun</span>', cls: '' },
-                        { html: '  <span class="term-cyan">网络协议</span>  <span class="term-out">WebSocket · QUIC / HTTP3 · HLS · TLS / CSP</span>', cls: '' },
-                        { html: '  <span class="term-cyan">数据存储</span>  <span class="term-out">D1 (SQLite) · R2 · Redis · PostgreSQL</span>', cls: '' }
-                    ];
+                    var t = T();
+                    return [{ html: t.skillsHead, cls: '' }].concat(t.skills.map(function (h) { return { html: h, cls: '' }; }));
                 },
                 projects: function () {
-                    return [
-                        { html: '<span class="term-accent">核心项目</span> <span class="term-dim">(Projects)</span>', cls: '' },
-                        { html: '  <span class="term-ok">★ NetSight Pro</span>  <span class="term-dim">全球网络诊断面板 · CF Workers · 2.3k+ stars</span>', cls: '' },
-                        { html: '  <span class="term-out">→ 详见页面「核心项目」区块，或访问 github.com/BlueDriftHK</span>', cls: '' }
-                    ];
+                    var t = T();
+                    return [{ html: t.projHead, cls: '' }].concat(t.proj.map(function (h) { return { html: h, cls: '' }; }));
                 },
                 contact: function () {
-                    return [
-                        { html: '<span class="term-accent">联系方式</span> <span class="term-dim">(Contact)</span>', cls: '' },
-                        { html: '  <span class="term-cyan">GitHub</span>   <span class="term-out">github.com/BlueDriftHK</span>', cls: '' },
-                        { html: '  <span class="term-cyan">Blog</span>     <span class="term-out">https://blog.bjhr.space</span>', cls: '' },
-                        { html: '  <span class="term-dim">→ 也可在页面「联系我」区块留言</span>', cls: '' }
-                    ];
+                    var t = T();
+                    return [{ html: t.contactHead, cls: '' }].concat(t.contact.map(function (h) { return { html: h, cls: '' }; }));
                 },
                 social: function () {
                     return commands.contact();
                 },
                 blog: function () {
                     window.open('https://blog.bjhr.space', '_blank', 'noopener');
-                    return [{ html: '<span class="term-ok">正在打开博客… https://blog.bjhr.space</span>', cls: '' }];
+                    return [{ html: T().blogMsg, cls: '' }];
                 },
                 theme: function () {
                     var btn = document.querySelector('.theme-toggle');
                     if (btn) btn.click();
-                    var t = document.documentElement.getAttribute('data-theme') === 'light' ? '浅色' : '深色';
-                    return [{ html: '<span class="term-ok">已切换到' + t + '主题 ✓</span>', cls: '' }];
+                    var t = T();
+                    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                    return [{ html: '<span class="term-ok">' + t.themeDone.replace('{t}', isLight ? t.themeLight : t.themeDark) + '</span>', cls: '' }];
                 },
                 date: function () {
                     var now = new Date();
                     return [{ html: '<span class="term-out">' + esc(now.toString()) + '</span>', cls: '' }];
                 },
                 konami: function () {
-                    return [{ html: '<span class="term-warn">秘籍：在页面上按 ↑ ↑ ↓ ↓ ← → ← → B A 有惊喜 🎮</span>', cls: '' }];
+                    return [{ html: T().konami, cls: '' }];
                 },
                 clear: function () {
                     body.innerHTML = '';
                     return null;
                 },
                 sudo: function () {
-                    return [{ html: '<span class="term-err">permission denied: 你不需要 root 权限也能了解我 :)</span>', cls: '' }];
+                    return [{ html: T().sudo, cls: '' }];
                 }
             };
 
@@ -7683,7 +9002,7 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 } else {
                     typeLines([
                         { html: '<span class="term-err">command not found: ' + esc(name) + '</span>', cls: '' },
-                        { html: '<span class="term-dim">输入 help 查看可用命令</span>', cls: '' }
+                        { html: T().nfHint, cls: '' }
                     ], renderInput);
                 }
             }
@@ -7698,13 +9017,13 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 inputEl = document.createElement('input');
                 inputEl.className = 'term-input';
                 inputEl.type = 'text';
-                inputEl.setAttribute('aria-label', '终端命令输入框');
+                inputEl.setAttribute('aria-label', T().inputAria);
                 inputEl.setAttribute('autocomplete', 'off');
                 inputEl.setAttribute('spellcheck', 'false');
                 inputRow.appendChild(inputEl);
                 body.appendChild(inputRow);
                 body.scrollTop = body.scrollHeight;
-                inputEl.focus();
+                inputEl.focus({ preventScroll: true });
 
                 inputEl.addEventListener('keydown', function (e) {
                     if (e.key === 'Enter') {
@@ -7754,13 +9073,23 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 });
             });
 
-            // 欢迎语
-            var welcome = [
-                { html: '<span class="term-accent">NetSight Shell</span> <span class="term-dim">v1.0 — 边缘节点已连接 📡</span>', cls: '' },
-                { html: '<span class="term-dim">输入 </span><span class="term-cyan">help</span><span class="term-dim"> 开始探索，或直接点击下方快捷命令。</span>', cls: '' },
-                { html: '', cls: '' }
-            ];
-            typeLines(welcome, renderInput);
+            // 欢迎语（跟随站点语言）
+            function showWelcome() {
+                var t = T();
+                typeLines([
+                    { html: t.wel1, cls: '' },
+                    { html: t.wel2, cls: '' },
+                    { html: '', cls: '' }
+                ], renderInput);
+            }
+            showWelcome();
+
+            // 切换语言时重置终端并以新语言重新欢迎
+            document.addEventListener('site-lang-change', function () {
+                body.innerHTML = '';
+                history = []; historyIdx = -1;
+                showWelcome();
+            });
         })();
 
         /* ============================================================
@@ -8621,11 +9950,21 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#health-title': '服务健康',
                     '#arch-title': '本站架构',
                     '#logs-title': '实时访问日志',
-                    '#api-title': '开放 API',
                     '#proto-title': 'HTTP/3 vs HTTP/2',
                     '#trace-title': 'Traceroute 可视化',
                     '#dnstool-title': 'DNS 记录查询',
                     '#latency-title': '全球节点延迟',
+                    '#globe-title': '全球边缘拓扑',
+                    '#wmap-title': '全球延迟地图',
+                    '#waterfall-title': '页面加载瀑布图',
+                    '#dnschain-title': 'DNS 解析链路',
+                    '#ecg-title': '延迟心电图',
+                    '#hud-title': '实时系统 HUD',
+                    '#radar-title': '边缘雷达扫描',
+                    '#flow-title': '本站架构 · 数据包流动',
+                    '#quic-title': 'QUIC / HTTP/3 握手',
+                    '#clocks-title': '全球 PoP 时钟墙',
+                    '#gauge-title': '实时测速',
                     '#projects-title': '核心项目',
                     '#gantt-title': '项目时间线',
                     '#blog-title': '博客文章',
@@ -8642,6 +9981,7 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#perf-title + .section-desc': '基于 Lighthouse 核心指标的自评表现。',
                     '#skills-title + .section-desc': '涵盖边缘计算、全栈开发、网络协议与数据库等领域。',
                     '#terminal-title + .section-desc': '输入命令了解我 —— 试试 <code>help</code> 查看所有可用命令。',
+                    '.term-hint .term-dim': '快捷命令：',
                     '#netdiag-title + .section-desc': '基于 NetSight Pro 引擎的轻量诊断工具，直接在浏览器中体验。',
                     '#ipcard-title + .section-desc': '以下是你当前访问本站时的网络信息（纯前端获取，不经过任何后端存储）。',
                     '#headers-title + .section-desc': '你的浏览器每次访问都会携带这些 HTTP 请求头 —— 这就是服务器眼中的你。',
@@ -8649,11 +9989,21 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#health-title + .section-desc': '从你的浏览器实时探测本站相关服务的可达性与往返延迟。',
                     '#arch-title + .section-desc': '本站如何从源码走到你面前 —— 点击任意节点查看说明。',
                     '#logs-title + .section-desc': '模拟的边缘访问日志流（tail -f 风格演示，数据为本地生成）。',
-                    '#api-title + .section-desc': 'api.bjhr.space 提供的公开端点，可在线试调用。',
                     '#proto-title + .section-desc': '检测你当前连接实际使用的协议，并对比两代 HTTP 的核心差异。',
                     '#trace-title + .section-desc': '逐跳模拟数据包前往目标的路径（浏览器无法发送 ICMP，此为可视化演示）。',
                     '#dnstool-title + .section-desc': '一次性查询域名的全部常见记录类型（via Cloudflare DoH）。',
                     '#latency-title + .section-desc': '从你的浏览器探测全球多个边缘端点的往返延迟（颜色越青越快）。',
+                    '#globe-title + .section-desc': '从你的位置到全球边缘节点的实时链路 —— 弧线颜色代表延迟（越青越快）。可拖拽旋转，空闲时自动自转。',
+                    '#wmap-title + .section-desc': '世界地图视角的边缘延迟分布 —— 圆点颜色代表你的浏览器到各区域的往返延迟。',
+                    '#waterfall-title + .section-desc': '基于 Performance API 还原本页真实的加载时序 —— 从 DNS 到首屏，每个阶段一目了然。',
+                    '#dnschain-title + .section-desc': '动画演示一次完整 DNS 查询的逐跳链路，并通过 Cloudflare DoH 获取真实解析结果。',
+                    '#ecg-title + .section-desc': '像心电监护仪一样持续采样你到 Cloudflare 的往返延迟 —— 波形越平稳，链路越健康。',
+                    '#hud-title + .section-desc': '你的浏览器与网络环境实时遥测 —— 内存、连接、电量、帧率，一屏尽览。',
+                    '#radar-title + .section-desc': '雷达扫描全球边缘节点 —— 光点距离代表延迟，扫过时会刷新该节点的实时 RTT。',
+                    '#flow-title + .section-desc': '一个请求从浏览器出发，经 Cloudflare 边缘、Worker、KV 存储再返回的完整旅程。',
+                    '#quic-title + .section-desc': '对比 TCP + TLS 1.3 与 QUIC 的握手往返 —— 看 QUIC 如何用一个 RTT 就完成加密传输。',
+                    '#clocks-title + .section-desc': '全球主要边缘节点城市的当地时间 —— 昼夜一目了然。',
+                    '#gauge-title + .section-desc': '通过下载 Cloudflare 测速资源估算你的下行带宽与延迟。',
                     '#projects-title + .section-desc': '目前正在持续维护与迭代的开源项目：',
                     '#gantt-title + .section-desc': '各项目的开发周期与活跃状态一览。',
                     '#blog-title + .section-desc': '关于边缘计算、网络协议与工程实践的技术笔记。',
@@ -8764,11 +10114,21 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#health-title': 'Service Health',
                     '#arch-title': 'Architecture',
                     '#logs-title': 'Live Access Logs',
-                    '#api-title': 'Open API',
                     '#proto-title': 'HTTP/3 vs HTTP/2',
                     '#trace-title': 'Traceroute',
                     '#dnstool-title': 'DNS Records',
                     '#latency-title': 'Global Latency',
+                    '#globe-title': 'Global Edge Topology',
+                    '#wmap-title': 'Global Latency Map',
+                    '#waterfall-title': 'Page Load Waterfall',
+                    '#dnschain-title': 'DNS Resolution Chain',
+                    '#ecg-title': 'Latency ECG',
+                    '#hud-title': 'System HUD',
+                    '#radar-title': 'Edge Radar',
+                    '#flow-title': 'Architecture · Packet Flow',
+                    '#quic-title': 'QUIC / HTTP/3 Handshake',
+                    '#clocks-title': 'Global PoP Clocks',
+                    '#gauge-title': 'Speed Test',
                     '#projects-title': 'Projects',
                     '#gantt-title': 'Project Timeline',
                     '#blog-title': 'Blog Posts',
@@ -8785,6 +10145,7 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#perf-title + .section-desc': 'Self-assessed scores based on core Lighthouse metrics.',
                     '#skills-title + .section-desc': 'Covering edge computing, full-stack development, network protocols, and databases.',
                     '#terminal-title + .section-desc': 'Type commands to learn about me — try <code>help</code> to see all available commands.',
+                    '.term-hint .term-dim': 'Quick commands:',
                     '#netdiag-title + .section-desc': 'A lightweight diagnostic tool powered by the NetSight Pro engine, running right in your browser.',
                     '#ipcard-title + .section-desc': 'Network details of your current visit (fetched purely client-side, never stored on any backend).',
                     '#headers-title + .section-desc': 'These are the HTTP request headers your browser sends on every visit — this is how the server sees you.',
@@ -8792,11 +10153,21 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#health-title + .section-desc': 'Probes the reachability and round-trip latency of this site\'s services from your browser in real time.',
                     '#arch-title + .section-desc': 'How this site travels from source code to your screen — click any node for details.',
                     '#logs-title + .section-desc': 'A simulated edge access-log stream (tail -f style demo, data generated locally).',
-                    '#api-title + .section-desc': 'Public endpoints served by api.bjhr.space — try them live.',
                     '#proto-title + .section-desc': 'Detects the protocol your current connection actually uses and compares two generations of HTTP.',
                     '#trace-title + .section-desc': 'Simulates a packet\'s hop-by-hop path to a target (browsers can\'t send ICMP, so this is a visual demo).',
                     '#dnstool-title + .section-desc': 'Query all common record types for a domain in one go (via Cloudflare DoH).',
                     '#latency-title + .section-desc': 'Probes round-trip latency to multiple global edge endpoints from your browser (greener = faster).',
+                    '#globe-title + .section-desc': 'Real-time links from your location to edge nodes worldwide — arc color indicates latency (greener = faster). Drag to rotate, auto-spins when idle.',
+                    '#wmap-title + .section-desc': 'Edge latency on a world map — dot color shows round-trip time from your browser to each region.',
+                    '#waterfall-title + .section-desc': 'Reconstructs the real load timeline of this page via the Performance API — every phase from DNS to first paint.',
+                    '#dnschain-title + .section-desc': 'Animates the hop-by-hop path of a full DNS lookup and fetches the real answer via Cloudflare DoH.',
+                    '#ecg-title + .section-desc': 'Continuously samples your round-trip latency to Cloudflare like a heart monitor — a steady trace means a healthy link.',
+                    '#hud-title + .section-desc': 'Live telemetry of your browser and network — memory, connection, battery, and frame rate at a glance.',
+                    '#radar-title + .section-desc': 'Radar sweep across global edge nodes — blip distance reflects latency, refreshed as the beam passes.',
+                    '#flow-title + .section-desc': 'The full journey of a request: browser to Cloudflare edge to Worker to KV storage and back.',
+                    '#quic-title + .section-desc': 'Compares the TCP + TLS 1.3 handshake with QUIC — see how QUIC reaches encrypted data in a single RTT.',
+                    '#clocks-title + .section-desc': 'Local time across major edge node cities worldwide — day and night at a glance.',
+                    '#gauge-title + .section-desc': 'Estimates your download bandwidth and latency by fetching Cloudflare speed-test resources.',
                     '#projects-title + .section-desc': 'Open-source projects currently under active maintenance and iteration:',
                     '#gantt-title + .section-desc': 'Development timelines and activity status of each project.',
                     '#blog-title + .section-desc': 'Technical notes on edge computing, network protocols, and engineering practice.',
@@ -8898,10 +10269,22 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
             var langBtns = document.querySelectorAll('.lang-btn');
             var currentLang = 'zh';
 
+            // 访客语言检测：仅简体中文系统默认中文，其余（含繁体）一律默认英文
+            function detectLang() {
+                try {
+                    var nav = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || navigator.userLanguage || ''];
+                    var l = String(nav[0] || '').toLowerCase();
+                    if (l === 'zh' || l.indexOf('zh-cn') === 0 || l.indexOf('zh-hans') === 0 || l.indexOf('zh-sg') === 0) return 'zh';
+                } catch (_) {}
+                return 'en';
+            }
+
+            var hasSaved = false;
             try {
                 var saved = localStorage.getItem('site-lang');
-                if (saved && dict[saved]) currentLang = saved;
-            } catch (_) {}
+                if (saved && dict[saved]) { currentLang = saved; hasSaved = true; }
+                else currentLang = detectLang();
+            } catch (_) { currentLang = detectLang(); }
 
             // 写入文本：含 '<' 用 innerHTML；否则保留 <i> 图标只换文本
             function setElText(el, val) {
@@ -8927,7 +10310,7 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 });
             }
 
-            function applyLang(lang) {
+            function applyLang(lang, persist) {
                 currentLang = lang;
                 window.__siteLang = lang;
                 var translations = dict[lang];
@@ -8960,7 +10343,7 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 syncToc();
                 // 通知动态组件（问候语 / 打字机 / 主题标签等）
                 try { document.dispatchEvent(new CustomEvent('site-lang-change', { detail: lang })); } catch (_) {}
-                try { localStorage.setItem('site-lang', lang); } catch (_) {}
+                if (persist !== false) { try { localStorage.setItem('site-lang', lang); } catch (_) {} }
             }
 
             langBtns.forEach(function (btn) {
@@ -8972,8 +10355,8 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
             // 暴露给动态组件查询
             window.__siteLang = currentLang;
 
-            // 初始应用
-            if (currentLang !== 'zh') applyLang(currentLang);
+            // 初始应用（自动检测的结果不写入存储，仅显式切换才持久化）
+            if (currentLang !== 'zh') applyLang(currentLang, hasSaved ? undefined : false);
         })();
 
         /* ============================================================
