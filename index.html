@@ -140,64 +140,46 @@
             position: fixed;
             inset: 0;
             z-index: 999999;
-            background: var(--bg-dark);
+            background: #060a12;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 24px;
-            transition: opacity 0.6s ease, visibility 0.6s;
+            gap: 32px;
+            transition: opacity 0.4s ease;
+            cursor: pointer;
         }
-        .splash.hidden {
+        .splash.hidden { opacity: 0; pointer-events: none; }
+        .splash-word {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1rem, 3.5vw, 1.6rem);
+            font-weight: 600;
+            color: #e2e8f0;
+            letter-spacing: 0.04em;
+            text-align: center;
+            padding: 0 24px;
+            max-width: 92vw;
             opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            transform: translateY(6px);
+            transition: opacity 0.18s ease, transform 0.18s ease;
         }
-        .splash-logo {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #06b6d4, #8b5cf6, #06b6d4);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: splash-gradient 2s ease infinite;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: splash-gradient 2s ease infinite, splash-fadein 0.6s ease forwards;
-        }
-        @keyframes splash-gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        @keyframes splash-fadein {
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .splash-word.show { opacity: 1; transform: translateY(0); }
+        .splash-word .sw-ok { color: #34d399; }
+        .splash-word .sw-cyan { color: #06b6d4; }
+        .splash-word .sw-purple { color: #8b5cf6; }
         .splash-bar {
-            width: 160px;
-            height: 3px;
-            border-radius: 2px;
-            background: var(--border-color);
-            overflow: hidden;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #1e293b;
         }
         .splash-bar-fill {
             height: 100%;
             width: 0%;
-            border-radius: 2px;
             background: linear-gradient(90deg, #06b6d4, #8b5cf6);
-            animation: splash-load 1.2s ease forwards;
-        }
-        @keyframes splash-load {
-            0% { width: 0%; }
-            60% { width: 70%; }
-            100% { width: 100%; }
-        }
-        .splash-sub {
-            font-size: 0.72rem;
-            color: var(--text-secondary);
-            opacity: 0;
-            animation: splash-fadein 0.6s ease 0.3s forwards;
+            transition: width 0.2s linear;
         }
         @media (prefers-reduced-motion: reduce) {
             .splash { display: none; }
@@ -3094,6 +3076,220 @@
         .reader-origin:hover { background: var(--primary-dim); }
 
         /* ============================================================
+           迷你网络诊断
+           ============================================================ */
+        .ndiag-box { border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; background: color-mix(in srgb, var(--bg-card) 60%, var(--bg-dark)); }
+        .ndiag-tabs { display: flex; border-bottom: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-dark) 80%, #000); }
+        .ndiag-tab { flex: 1; padding: 11px 0; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); background: none; border: none; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px; border-bottom: 2px solid transparent; }
+        .ndiag-tab:hover { color: var(--text-primary); background: color-mix(in srgb, var(--primary) 6%, transparent); }
+        .ndiag-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: color-mix(in srgb, var(--primary) 8%, transparent); }
+        .ndiag-input-row { display: flex; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .ndiag-input { flex: 1; min-width: 180px; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-dark); color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; outline: none; transition: var(--transition); }
+        .ndiag-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent); }
+        .ndiag-select { padding: 10px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-dark); color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; outline: none; cursor: pointer; }
+        .ndiag-run { padding: 10px 20px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .ndiag-run:hover { opacity: 0.88; transform: translateY(-1px); }
+        .ndiag-run:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .ndiag-output { padding: 16px; min-height: 140px; max-height: 320px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.7; color: var(--text-secondary); }
+        .ndiag-output::-webkit-scrollbar { width: 6px; }
+        .ndiag-output::-webkit-scrollbar-thumb { background: #3a4149; border-radius: 3px; }
+        .ndiag-placeholder { display: flex; align-items: center; justify-content: center; gap: 10px; height: 100px; color: var(--text-secondary); opacity: 0.5; font-size: 0.82rem; }
+        .ndiag-line { margin: 2px 0; word-break: break-all; }
+        .ndiag-line.ok { color: #34d399; }
+        .ndiag-line.err { color: #f87171; }
+        .ndiag-line.info { color: var(--primary); }
+        .ndiag-line.dim { opacity: 0.6; }
+        .ndiag-line b { color: var(--text-primary); font-weight: 600; }
+        .ndiag-stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
+        .ndiag-stat { text-align: center; }
+        .ndiag-stat .val { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .ndiag-stat .lbl { font-size: 0.7rem; color: var(--text-secondary); margin-top: 2px; }
+        .ndiag-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border-color); border-top-color: var(--primary); border-radius: 50%; animation: ndiagSpin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes ndiagSpin { to { transform: rotate(360deg); } }
+        @media (max-width: 600px) {
+            .ndiag-input-row { flex-direction: column; }
+            .ndiag-run { justify-content: center; }
+            .ndiag-stat-row { gap: 10px; }
+        }
+
+        /* ============================================================
+           你的连接 (IP 信息卡片)
+           ============================================================ */
+        .ipcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .ipcard-item { background: color-mix(in srgb, var(--bg-dark) 70%, var(--bg-card)); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition); }
+        .ipcard-item:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .ipcard-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); font-weight: 600; }
+        .ipcard-val { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: var(--text-primary); word-break: break-all; }
+        .ipcard-val.loading { opacity: 0.4; }
+        @media (max-width: 600px) {
+            .ipcard-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .ipcard-item { padding: 10px 12px; }
+        }
+
+        /* ============================================================
+           请求头透视
+           ============================================================ */
+        .hdr-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+        .hdr-count { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); }
+        .hdr-refresh { padding: 7px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: transparent; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 6px; }
+        .hdr-refresh:hover { color: var(--primary); border-color: var(--primary); }
+        .hdr-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+        .hdr-view { background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 18px; max-height: 380px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; line-height: 1.9; }
+        .hdr-view::-webkit-scrollbar { width: 6px; }
+        .hdr-view::-webkit-scrollbar-thumb { background: #3a4149; border-radius: 3px; }
+        .hdr-row { display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px dashed color-mix(in srgb, var(--border-color) 50%, transparent); word-break: break-all; }
+        .hdr-row:last-child { border-bottom: none; }
+        .hdr-name { color: var(--primary); flex-shrink: 0; min-width: 190px; font-weight: 600; }
+        .hdr-val { color: var(--text-secondary); }
+        .hdr-row.hl .hdr-name { color: var(--accent); }
+        .hdr-row.hl .hdr-val { color: var(--text-primary); }
+        @media (max-width: 600px) {
+            .hdr-row { flex-direction: column; gap: 2px; }
+            .hdr-name { min-width: 0; }
+            .hdr-view { font-size: 0.72rem; }
+        }
+
+        /* ============================================================
+           TLS 1.3 握手动画
+           ============================================================ */
+        .tls-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+        .tls-play { padding: 9px 20px; border-radius: var(--radius-md); border: none; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; gap: 7px; }
+        .tls-play:hover { opacity: 0.88; transform: translateY(-1px); }
+        .tls-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tls-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--primary); border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); padding: 4px 10px; border-radius: 99px; }
+        .tls-endpoints { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .tls-ep { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 8px; background: color-mix(in srgb, var(--primary) 10%, transparent); border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); padding: 8px 16px; border-radius: var(--radius-md); }
+        .tls-ep i { color: var(--primary); }
+        .tls-steps { display: flex; flex-direction: column; gap: 10px; }
+        .tls-step { position: relative; padding: 8px 0 4px; cursor: pointer; border-radius: var(--radius-md); transition: var(--transition); opacity: 0.35; }
+        .tls-step.active, .tls-step.done { opacity: 1; }
+        .tls-step.active { background: color-mix(in srgb, var(--primary) 5%, transparent); }
+        .tls-msg { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+        .dir-cs .tls-msg { justify-content: flex-start; padding-left: 4px; }
+        .dir-sc .tls-msg { justify-content: flex-end; padding-right: 4px; }
+        .tls-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
+        .tls-step.active .tls-name { color: var(--primary); }
+        .tls-enc { font-size: 0.68rem; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent); padding: 1px 7px; border-radius: 99px; }
+        .tls-arrow { position: relative; height: 2px; background: var(--border-color); margin: 0 4px; }
+        .dir-cs .tls-arrow::after { content: ''; position: absolute; right: -2px; top: -4px; border: 5px solid transparent; border-left-color: var(--primary); }
+        .dir-sc .tls-arrow::after { content: ''; position: absolute; left: -2px; top: -4px; border: 5px solid transparent; border-right-color: var(--accent); }
+        .tls-step.active .tls-arrow { background: color-mix(in srgb, var(--primary) 50%, var(--border-color)); }
+        .tls-packet { position: absolute; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 8px var(--primary); opacity: 0; }
+        .dir-sc .tls-packet { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+        .dir-cs.active .tls-packet { animation: tlsPacketCS 0.7s ease forwards; }
+        .dir-sc.active .tls-packet { animation: tlsPacketSC 0.7s ease forwards; }
+        @keyframes tlsPacketCS { 0% { left: 0; opacity: 1; } 100% { left: calc(100% - 10px); opacity: 1; } }
+        @keyframes tlsPacketSC { 0% { left: calc(100% - 10px); opacity: 1; } 100% { left: 0; opacity: 1; } }
+        .tls-detail { margin-top: 16px; padding: 14px 16px; background: color-mix(in srgb, var(--bg-dark) 70%, var(--bg-card)); border: 1px solid var(--border-color); border-left: 3px solid var(--primary); border-radius: var(--radius-md); font-size: 0.82rem; line-height: 1.7; color: var(--text-secondary); min-height: 48px; }
+        .tls-detail b { color: var(--primary); }
+        @media (max-width: 600px) {
+            .tls-ep { font-size: 0.7rem; padding: 6px 12px; }
+            .tls-name { font-size: 0.72rem; }
+        }
+
+        /* ============================================================
+           运维通用 (健康/日志/延迟)
+           ============================================================ */
+        .ops-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; }
+        .ops-time { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-secondary); }
+
+        /* 服务健康 */
+        .health-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+        .health-item { display: flex; align-items: center; gap: 12px; background: color-mix(in srgb, var(--bg-dark) 70%, var(--bg-card)); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; }
+        .health-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; background: #64748b; }
+        .health-dot.up { background: #34d399; box-shadow: 0 0 8px #34d399; }
+        .health-dot.slow { background: #fbbf24; box-shadow: 0 0 8px #fbbf24; }
+        .health-dot.down { background: #f87171; box-shadow: 0 0 8px #f87171; }
+        .health-info { flex: 1; min-width: 0; }
+        .health-name { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); }
+        .health-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px; }
+
+        /* 本站架构 */
+        .arch-wrap { display: flex; flex-direction: column; gap: 14px; }
+        .arch-svg { width: 100%; height: auto; }
+        .arch-link { stroke: var(--primary); stroke-width: 2; opacity: 0.5; }
+        .arch-node rect { fill: color-mix(in srgb, var(--bg-dark) 80%, var(--bg-card)); stroke: var(--border-color); stroke-width: 1.5; transition: var(--transition); }
+        .arch-node text { fill: var(--text-primary); font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; pointer-events: none; }
+        .arch-node .arch-sub { fill: var(--text-secondary); font-size: 11px; font-weight: 400; }
+        .arch-node { cursor: pointer; }
+        .arch-node:hover rect, .arch-node.sel rect { stroke: var(--primary); fill: color-mix(in srgb, var(--primary) 12%, var(--bg-dark)); }
+        .arch-info { padding: 14px 16px; background: color-mix(in srgb, var(--bg-dark) 70%, var(--bg-card)); border: 1px solid var(--border-color); border-left: 3px solid var(--primary); border-radius: var(--radius-md); font-size: 0.82rem; line-height: 1.7; color: var(--text-secondary); min-height: 48px; }
+        .arch-info b { color: var(--primary); }
+
+        /* 实时日志流 */
+        .log-view { background: #0a0e14; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; height: 260px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; line-height: 1.8; }
+        .log-view::-webkit-scrollbar { width: 6px; }
+        .log-view::-webkit-scrollbar-thumb { background: #3a4149; border-radius: 3px; }
+        .log-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #94a3b8; }
+        .log-line .lt { color: #475569; }
+        .log-line .lip { color: #8b5cf6; }
+        .log-line .lm { color: #06b6d4; font-weight: 600; }
+        .log-line .ls2 { color: #34d399; }
+        .log-line .ls3, .log-line .ls4 { color: #fbbf24; }
+        .log-line .ls5 { color: #f87171; }
+
+        /* 开放 API */
+        .api-list { display: flex; flex-direction: column; gap: 12px; }
+        .api-item { border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; background: color-mix(in srgb, var(--bg-dark) 60%, var(--bg-card)); }
+        .api-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; flex-wrap: wrap; }
+        .api-method { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; color: #34d399; border: 1px solid #34d399; padding: 2px 8px; border-radius: 6px; }
+        .api-path { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--text-primary); }
+        .api-desc { font-size: 0.75rem; color: var(--text-secondary); flex: 1; min-width: 120px; }
+        .api-try { padding: 6px 14px; border-radius: var(--radius-md); border: 1px solid var(--primary); background: transparent; color: var(--primary); font-size: 0.72rem; cursor: pointer; transition: var(--transition); white-space: nowrap; }
+        .api-try:hover { background: var(--primary-dim); }
+        .api-out { display: none; padding: 12px 16px; border-top: 1px solid var(--border-color); background: #0a0e14; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #94a3b8; max-height: 220px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+        .api-out.open { display: block; }
+
+        /* HTTP/3 vs HTTP/2 */
+        .proto-current { padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: color-mix(in srgb, var(--primary) 8%, transparent); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-primary); margin-bottom: 16px; }
+        .proto-current b { color: var(--primary); }
+        .proto-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .proto-col { border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; }
+        .proto-head { padding: 10px 16px; font-weight: 700; font-size: 0.9rem; text-align: center; }
+        .proto-head.h2 { background: color-mix(in srgb, var(--text-secondary) 15%, transparent); color: var(--text-secondary); }
+        .proto-head.h3 { background: color-mix(in srgb, var(--primary) 18%, transparent); color: var(--primary); }
+        .proto-col ul { list-style: none; margin: 0; padding: 14px 16px; display: flex; flex-direction: column; gap: 9px; }
+        .proto-col li { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; padding-left: 16px; position: relative; }
+        .proto-col li::before { content: '›'; position: absolute; left: 0; color: var(--primary); }
+        .proto-col li b { color: var(--text-primary); }
+        @media (max-width: 600px) { .proto-compare { grid-template-columns: 1fr; } }
+
+        /* Traceroute */
+        .trace-input-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .trace-hops { display: flex; flex-direction: column; gap: 0; }
+        .trace-hop { display: flex; align-items: center; gap: 12px; padding: 9px 4px; border-left: 2px solid var(--border-color); margin-left: 8px; padding-left: 18px; position: relative; opacity: 0; transform: translateX(-8px); transition: opacity 0.3s ease, transform 0.3s ease; }
+        .trace-hop.show { opacity: 1; transform: translateX(0); }
+        .trace-hop::before { content: ''; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 6px var(--primary); }
+        .trace-hop.target::before { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+        .trace-num { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-secondary); width: 24px; flex-shrink: 0; }
+        .trace-host { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-primary); flex: 1; word-break: break-all; }
+        .trace-rtt { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--primary); white-space: nowrap; }
+
+        /* DNS 记录查询 */
+        .dns-results { display: flex; flex-direction: column; gap: 10px; }
+        .dns-group { border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; }
+        .dns-group-head { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; background: color-mix(in srgb, var(--primary) 8%, transparent); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: var(--primary); }
+        .dns-group-head .dns-empty { color: var(--text-secondary); font-weight: 400; font-size: 0.7rem; }
+        .dns-rec { padding: 7px 14px; border-top: 1px solid color-mix(in srgb, var(--border-color) 50%, transparent); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-secondary); word-break: break-all; display: flex; justify-content: space-between; gap: 12px; }
+        .dns-rec:first-child { border-top: none; }
+        .dns-rec .dns-ttl { color: var(--text-secondary); opacity: 0.6; flex-shrink: 0; }
+
+        /* 全球节点延迟环 */
+        .lat-wrap { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .lat-ring { width: 240px; height: 240px; flex-shrink: 0; margin: 0 auto; }
+        .lat-ring .ring-bg { fill: none; stroke: var(--border-color); stroke-width: 1.5; }
+        .lat-node-dot { transition: var(--transition); }
+        .lat-node-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; fill: var(--text-secondary); }
+        .lat-center-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; fill: var(--primary); }
+        .lat-center-lbl { font-size: 10px; fill: var(--text-secondary); }
+        .lat-list { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 8px; }
+        .lat-row { display: flex; align-items: center; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; }
+        .lat-row .lat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+        .lat-row .lat-name { flex: 1; color: var(--text-secondary); }
+        .lat-row .lat-ms { color: var(--text-primary); font-weight: 600; }
+        @media (max-width: 600px) { .lat-wrap { flex-direction: column; } }
+
+        /* ============================================================
            响应式
            ============================================================ */
         @media (min-width: 600px) {
@@ -3187,11 +3383,10 @@
     </style>
 </head>
 <body>
-    <!-- Splash 加载动画 -->
+    <!-- Splash 启动动画 -->
     <div class="splash" id="splash" aria-hidden="true">
-        <div class="splash-logo">BlueDriftHK</div>
-        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
-        <div class="splash-sub">边缘计算架构师 · 正在加载…</div>
+        <div class="splash-word" id="splashWord"></div>
+        <div class="splash-bar"><div class="splash-bar-fill" id="splashBarFill"></div></div>
     </div>
 
     <!-- 滚动进度条 -->
@@ -3310,7 +3505,6 @@
                 <div class="lang-switch" role="group" aria-label="语言切换">
                     <button class="lang-btn active" data-lang="zh" type="button" aria-pressed="true">中</button>
                     <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
-                    <button class="lang-btn" data-lang="ja" type="button" aria-pressed="false">日</button>
                 </div>
                 <button class="resume-btn magnetic-btn" id="resumeBtn" type="button" aria-label="下载简历 PDF">
                     <i class="fas fa-download btn-icon" aria-hidden="true"></i>
@@ -3500,6 +3694,195 @@
                 <kbd data-cmd="projects">projects</kbd>
                 <kbd data-cmd="contact">contact</kbd>
                 <kbd data-cmd="clear">clear</kbd>
+            </div>
+        </section>
+
+        <!-- ===== 迷你网络诊断 ===== -->
+        <section class="card reveal" aria-labelledby="netdiag-title">
+            <h2 id="netdiag-title"><i class="fas fa-stethoscope" aria-hidden="true"></i> 网络诊断台</h2>
+            <p class="section-desc">基于 NetSight Pro 引擎的轻量诊断工具，直接在浏览器中体验。</p>
+
+            <div class="ndiag-box">
+                <div class="ndiag-tabs" role="tablist" aria-label="诊断类型">
+                    <button class="ndiag-tab active" data-mode="ping" role="tab" aria-selected="true" type="button"><i class="fas fa-signal" aria-hidden="true"></i> Ping</button>
+                    <button class="ndiag-tab" data-mode="dns" role="tab" aria-selected="false" type="button"><i class="fas fa-globe" aria-hidden="true"></i> DNS</button>
+                    <button class="ndiag-tab" data-mode="http" role="tab" aria-selected="false" type="button"><i class="fas fa-exchange-alt" aria-hidden="true"></i> HTTP</button>
+                </div>
+                <div class="ndiag-input-row">
+                    <input class="ndiag-input" id="ndiagInput" type="text" placeholder="输入域名或 URL，例如 cloudflare.com" spellcheck="false" autocomplete="off" aria-label="诊断目标" />
+                    <select class="ndiag-select" id="ndiagDnsType" aria-label="DNS 记录类型" style="display:none;">
+                        <option value="A">A</option>
+                        <option value="AAAA">AAAA</option>
+                        <option value="CNAME">CNAME</option>
+                        <option value="MX">MX</option>
+                        <option value="NS">NS</option>
+                        <option value="TXT">TXT</option>
+                    </select>
+                    <button class="ndiag-run" id="ndiagRun" type="button"><i class="fas fa-play" aria-hidden="true"></i> 执行</button>
+                </div>
+                <div class="ndiag-output" id="ndiagOutput" aria-live="polite" aria-label="诊断结果">
+                    <div class="ndiag-placeholder"><i class="fas fa-satellite-dish" aria-hidden="true"></i> 输入目标后点击「执行」开始诊断</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 你的连接 ===== -->
+        <section class="card reveal" aria-labelledby="ipcard-title">
+            <h2 id="ipcard-title"><i class="fas fa-user-shield" aria-hidden="true"></i> 你的连接</h2>
+            <p class="section-desc">以下是你当前访问本站时的网络信息（纯前端获取，不经过任何后端存储）。</p>
+            <div class="ipcard-grid" id="ipcardGrid">
+                <div class="ipcard-item"><span class="ipcard-label">IP 地址</span><span class="ipcard-val" id="ipAddr">获取中…</span></div>
+                <div class="ipcard-item"><span class="ipcard-label">位置</span><span class="ipcard-val" id="ipLoc">获取中…</span></div>
+                <div class="ipcard-item"><span class="ipcard-label">ISP / 组织</span><span class="ipcard-val" id="ipOrg">获取中…</span></div>
+                <div class="ipcard-item"><span class="ipcard-label">ASN</span><span class="ipcard-val" id="ipAsn">获取中…</span></div>
+                <div class="ipcard-item"><span class="ipcard-label">时区</span><span class="ipcard-val" id="ipTz">获取中…</span></div>
+                <div class="ipcard-item"><span class="ipcard-label">协议</span><span class="ipcard-val" id="ipProto">获取中…</span></div>
+            </div>
+        </section>
+
+        <!-- ===== 请求头透视 ===== -->
+        <section class="card reveal" aria-labelledby="headers-title">
+            <h2 id="headers-title"><i class="fas fa-file-code" aria-hidden="true"></i> 请求头透视</h2>
+            <p class="section-desc">你的浏览器每次访问都会携带这些 HTTP 请求头 —— 这就是服务器眼中的你。</p>
+            <div class="hdr-toolbar">
+                <span class="hdr-count" id="hdrCount">—</span>
+                <button class="hdr-refresh" id="hdrRefresh" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> 重新抓取</button>
+            </div>
+            <div class="hdr-view" id="hdrView">
+                <div class="ndiag-placeholder"><i class="fas fa-satellite-dish" aria-hidden="true"></i> 正在抓取你的请求头…</div>
+            </div>
+        </section>
+
+        <!-- ===== TLS 1.3 握手 ===== -->
+        <section class="card reveal" aria-labelledby="tls-title">
+            <h2 id="tls-title"><i class="fas fa-lock" aria-hidden="true"></i> TLS 1.3 握手过程</h2>
+            <p class="section-desc">相比 TLS 1.2 的 2-RTT，TLS 1.3 只需 1-RTT 即可建立加密连接。点击「演示握手」查看完整流程，点击任意步骤查看说明。</p>
+            <div class="tls-controls">
+                <button class="tls-play" id="tlsPlay" type="button"><i class="fas fa-play" aria-hidden="true"></i> 演示握手</button>
+                <span class="tls-badges"><span class="tls-badge">1-RTT</span><span class="tls-badge">前向安全</span><span class="tls-badge">加密证书</span></span>
+            </div>
+            <div class="tls-diagram">
+                <div class="tls-endpoints">
+                    <div class="tls-ep"><i class="fas fa-laptop" aria-hidden="true"></i> Client</div>
+                    <div class="tls-ep"><i class="fas fa-server" aria-hidden="true"></i> Server</div>
+                </div>
+                <div class="tls-steps" id="tlsSteps"></div>
+            </div>
+            <div class="tls-detail" id="tlsDetail">点击上方任意步骤查看该报文的详细说明。</div>
+        </section>
+
+        <!-- ===== 服务健康 ===== -->
+        <section class="card reveal" aria-labelledby="health-title">
+            <h2 id="health-title"><i class="fas fa-heartbeat" aria-hidden="true"></i> 服务健康</h2>
+            <p class="section-desc">从你的浏览器实时探测本站相关服务的可达性与往返延迟。</p>
+            <div class="health-grid" id="healthGrid"></div>
+            <div class="ops-foot">
+                <span class="ops-time" id="healthTime">—</span>
+                <button class="hdr-refresh" id="healthRefresh" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> 重新探测</button>
+            </div>
+        </section>
+
+        <!-- ===== 本站架构 ===== -->
+        <section class="card reveal" aria-labelledby="arch-title">
+            <h2 id="arch-title"><i class="fas fa-project-diagram" aria-hidden="true"></i> 本站架构</h2>
+            <p class="section-desc">本站如何从源码走到你面前 —— 点击任意节点查看说明。</p>
+            <div class="arch-wrap">
+                <svg class="arch-svg" viewBox="0 0 820 240" role="img" aria-label="本站架构拓扑图">
+                    <defs>
+                        <marker id="archArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--primary)"/></marker>
+                    </defs>
+                    <line class="arch-link" x1="150" y1="120" x2="240" y2="120" marker-end="url(#archArrow)"/>
+                    <line class="arch-link" x1="380" y1="120" x2="470" y2="120" marker-end="url(#archArrow)"/>
+                    <line class="arch-link" x1="610" y1="120" x2="700" y2="120" marker-end="url(#archArrow)"/>
+                    <line class="arch-link" x1="540" y1="160" x2="540" y2="200" marker-end="url(#archArrow)"/>
+                    <g class="arch-node" data-node="visitor" tabindex="0"><rect x="20" y="88" width="130" height="64" rx="12"/><text x="85" y="116" text-anchor="middle">🧑‍💻 访客</text><text x="85" y="136" text-anchor="middle" class="arch-sub">Browser</text></g>
+                    <g class="arch-node" data-node="pages" tabindex="0"><rect x="240" y="88" width="140" height="64" rx="12"/><text x="310" y="116" text-anchor="middle">GitHub Pages</text><text x="310" y="136" text-anchor="middle" class="arch-sub">静态托管</text></g>
+                    <g class="arch-node" data-node="cdn" tabindex="0"><rect x="470" y="88" width="140" height="64" rx="12"/><text x="540" y="116" text-anchor="middle">Cloudflare CDN</text><text x="540" y="136" text-anchor="middle" class="arch-sub">全球边缘缓存</text></g>
+                    <g class="arch-node" data-node="workers" tabindex="0"><rect x="700" y="88" width="100" height="64" rx="12"/><text x="750" y="116" text-anchor="middle">Workers</text><text x="750" y="136" text-anchor="middle" class="arch-sub">边缘函数</text></g>
+                    <g class="arch-node" data-node="storage" tabindex="0"><rect x="470" y="200" width="140" height="34" rx="10"/><text x="540" y="222" text-anchor="middle">D1 · R2 · KV</text></g>
+                </svg>
+                <div class="arch-info" id="archInfo">点击架构图中的任意节点查看它在整条链路中的作用。</div>
+            </div>
+        </section>
+
+        <!-- ===== 实时日志流 ===== -->
+        <section class="card reveal" aria-labelledby="logs-title">
+            <h2 id="logs-title"><i class="fas fa-stream" aria-hidden="true"></i> 实时访问日志</h2>
+            <p class="section-desc">模拟的边缘访问日志流（tail -f 风格演示，数据为本地生成）。</p>
+            <div class="ops-foot" style="margin-bottom:12px;">
+                <span class="ops-time" id="logCount">0 条</span>
+                <button class="hdr-refresh" id="logToggle" type="button"><i class="fas fa-pause" aria-hidden="true"></i> 暂停</button>
+            </div>
+            <div class="log-view" id="logView" aria-live="off"></div>
+        </section>
+
+        <!-- ===== 开放 API ===== -->
+        <section class="card reveal" aria-labelledby="api-title">
+            <h2 id="api-title"><i class="fas fa-book" aria-hidden="true"></i> 开放 API</h2>
+            <p class="section-desc">api.bjhr.space 提供的公开端点，可在线试调用。</p>
+            <div class="api-list" id="apiList"></div>
+        </section>
+
+        <!-- ===== HTTP/3 vs HTTP/2 ===== -->
+        <section class="card reveal" aria-labelledby="proto-title">
+            <h2 id="proto-title"><i class="fas fa-bolt" aria-hidden="true"></i> HTTP/3 vs HTTP/2</h2>
+            <p class="section-desc">检测你当前连接实际使用的协议，并对比两代 HTTP 的核心差异。</p>
+            <div class="proto-current" id="protoCurrent"></div>
+            <div class="proto-compare">
+                <div class="proto-col">
+                    <div class="proto-head h2">HTTP/2</div>
+                    <ul>
+                        <li>基于 <b>TCP</b>，队头阻塞仍存在</li>
+                        <li>多路复用单一 TCP 连接</li>
+                        <li>TLS 1.2/1.3 之上</li>
+                        <li>丢包会阻塞所有流</li>
+                    </ul>
+                </div>
+                <div class="proto-col">
+                    <div class="proto-head h3">HTTP/3</div>
+                    <ul>
+                        <li>基于 <b>QUIC (UDP)</b>，无队头阻塞</li>
+                        <li>流级别独立，丢包互不影响</li>
+                        <li>内建 TLS 1.3，0-RTT 重连</li>
+                        <li>连接迁移（切网不断线）</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Traceroute ===== -->
+        <section class="card reveal" aria-labelledby="trace-title">
+            <h2 id="trace-title"><i class="fas fa-route" aria-hidden="true"></i> Traceroute 可视化</h2>
+            <p class="section-desc">逐跳模拟数据包前往目标的路径（浏览器无法发送 ICMP，此为可视化演示）。</p>
+            <div class="trace-input-row">
+                <input class="ndiag-input" id="traceInput" type="text" placeholder="输入目标域名，例如 cloudflare.com" spellcheck="false" autocomplete="off" aria-label="追踪目标" />
+                <button class="ndiag-run" id="traceRun" type="button"><i class="fas fa-route" aria-hidden="true"></i> 追踪</button>
+            </div>
+            <div class="trace-hops" id="traceHops"></div>
+        </section>
+
+        <!-- ===== DNS 记录查询 ===== -->
+        <section class="card reveal" aria-labelledby="dnstool-title">
+            <h2 id="dnstool-title"><i class="fas fa-database" aria-hidden="true"></i> DNS 记录查询</h2>
+            <p class="section-desc">一次性查询域名的全部常见记录类型（via Cloudflare DoH）。</p>
+            <div class="trace-input-row">
+                <input class="ndiag-input" id="dnsToolInput" type="text" placeholder="输入域名，例如 cloudflare.com" spellcheck="false" autocomplete="off" aria-label="DNS 查询目标" />
+                <button class="ndiag-run" id="dnsToolRun" type="button"><i class="fas fa-search" aria-hidden="true"></i> 查询</button>
+            </div>
+            <div class="dns-results" id="dnsToolResults"></div>
+        </section>
+
+        <!-- ===== 全球节点延迟 ===== -->
+        <section class="card reveal" aria-labelledby="latency-title">
+            <h2 id="latency-title"><i class="fas fa-globe-asia" aria-hidden="true"></i> 全球节点延迟</h2>
+            <p class="section-desc">从你的浏览器探测全球多个边缘端点的往返延迟（颜色越青越快）。</p>
+            <div class="lat-wrap">
+                <svg class="lat-ring" viewBox="0 0 320 320" id="latRing" role="img" aria-label="全球节点延迟环"></svg>
+                <div class="lat-list" id="latList"></div>
+            </div>
+            <div class="ops-foot">
+                <span class="ops-time" id="latTime">—</span>
+                <button class="hdr-refresh" id="latRefresh" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i> 重新探测</button>
             </div>
         </section>
 
@@ -4049,12 +4432,12 @@
                 🔮 保持好奇，保持创新 · 用代码改变世界
             </p>
             <p style="font-size:0.7rem; margin-top:8px; color:var(--text-secondary);">
-                &copy; 2026 BlueDriftHK · 基于 GitHub Pages 构建 ·
-                <span id="visitor-counter">👀 访问量：<span id="visit-count">--</span></span>
+                &copy; 2026 BlueDriftHK · <span id="ftBuilt">基于 GitHub Pages 构建</span> ·
+                <span id="visitor-counter">👀 <span id="ftVisits">访问量</span>：<span id="visit-count">--</span></span>
             </p>
             <p style="font-size:0.72rem; margin-top:6px; color:var(--text-secondary); font-family:'JetBrains Mono',monospace;">
                 <i class="fas fa-heartbeat" style="color:var(--primary);" aria-hidden="true"></i>
-                本站已稳定运行 <span id="uptime-days" style="color:var(--primary); font-weight:700;">--</span> 天
+                <span id="ftUptimePre">本站已稳定运行</span> <span id="uptime-days" style="color:var(--primary); font-weight:700;">--</span> <span id="ftUptimeDay">天</span>
                 <span id="uptime-hms" style="opacity:0.8;"></span>
             </p>
         </footer>
@@ -4244,25 +4627,64 @@
         'use strict';
 
         /* ============================================================
-           Splash 加载动画 - 淡出
+           Splash 启动动画 - 状态词闪现
            ============================================================ */
-        (function dismissSplash() {
+        (function bootSplash() {
             var splash = document.getElementById('splash');
-            if (!splash) return;
+            var wordEl = document.getElementById('splashWord');
+            var barFill = document.getElementById('splashBarFill');
+            if (!splash || !wordEl) return;
+
             var dismissed = false;
+            var WORDS = [
+                'DNS Resolving<span class="sw-cyan"> blog.bjhr.space</span>',
+                'TCP <span class="sw-cyan">SYN</span> → <span class="sw-ok">SYN-ACK</span> → ACK',
+                'TLS 1.3 <span class="sw-cyan">ClientHello</span>',
+                'TLS 1.3 <span class="sw-ok">ServerHello + Certificate</span>',
+                'ECDHE Key Exchange <span class="sw-ok">✓</span>',
+                'HTTP/3 <span class="sw-purple">QUIC</span> stream ready',
+                'GET / <span class="sw-ok">200 OK</span>',
+                'Edge PoP <span class="sw-cyan">HKG</span> · latency <span class="sw-ok">4ms</span>',
+                'Content-Encoding <span class="sw-purple">br</span> · CF-Ray <span class="sw-cyan">✓</span>',
+                '<span class="sw-ok">Connected.</span> Welcome to the edge.'
+            ];
+            var total = WORDS.length;
+            var idx = 0;
+
             function hide() {
                 if (dismissed) return;
                 dismissed = true;
                 splash.classList.add('hidden');
                 setTimeout(function () {
                     if (splash.parentNode) splash.parentNode.removeChild(splash);
-                }, 700);
+                }, 500);
             }
-            window.addEventListener('load', function () {
-                setTimeout(hide, 400); // 最少展示一小段时间
-            });
-            // 兜底：最多 2.5 秒后强制隐藏
-            setTimeout(hide, 2500);
+
+            splash.addEventListener('click', hide);
+
+            function showNext() {
+                if (dismissed) return;
+                if (idx >= total) {
+                    setTimeout(hide, 500);
+                    return;
+                }
+                // 淡出当前
+                wordEl.classList.remove('show');
+                setTimeout(function () {
+                    if (dismissed) return;
+                    wordEl.innerHTML = WORDS[idx];
+                    wordEl.classList.add('show');
+                    barFill.style.width = ((idx + 1) / total * 100) + '%';
+                    idx++;
+                    // 最后一个词停留久一点
+                    var delay = idx >= total ? 700 : 260;
+                    setTimeout(showNext, delay);
+                }, 100);
+            }
+
+            setTimeout(showNext, 200);
+            // 兜底
+            setTimeout(hide, 5500);
         })();
 
         /* ============================================================
@@ -4388,15 +4810,25 @@
            打字机效果
            ============================================================ */
         const typingEl = document.getElementById('typing-text');
-        const phrases = [
-            '边缘计算架构师 · Cloudflare Workers 开发者',
-            '开源工具构建者 · 网络诊断专家',
-            '代码即艺术，性能即正义 ✨',
-            '让全球网络触手可及 🌍'
-        ];
+        const typingPhrases = {
+            zh: [
+                '边缘计算架构师 · Cloudflare Workers 开发者',
+                '开源工具构建者 · 网络诊断专家',
+                '代码即艺术，性能即正义 ✨',
+                '让全球网络触手可及 🌍'
+            ],
+            en: [
+                'Edge Computing Architect · Cloudflare Workers Developer',
+                'Open-source Tool Builder · Network Diagnostics Expert',
+                'Code is art, performance is justice ✨',
+                'Making the global network within reach 🌍'
+            ]
+        };
+        function getTypingPhrases() { return window.__siteLang === 'en' ? typingPhrases.en : typingPhrases.zh; }
         let phraseIndex = 0, charIndex = 0, isDeleting = false;
 
         function typeEffect() {
+            const phrases = getTypingPhrases();
             if (prefersReducedMotion) {
                 typingEl.textContent = phrases[0];
                 return;
@@ -4423,6 +4855,13 @@
             setTimeout(typeEffect, delay);
         }
         typeEffect();
+        document.addEventListener('site-lang-change', function () {
+            if (prefersReducedMotion) {
+                typingEl.textContent = getTypingPhrases()[0];
+            } else {
+                phraseIndex = 0; charIndex = 0; isDeleting = false;
+            }
+        });
 
         /* ============================================================
            主题切换
@@ -4433,21 +4872,26 @@
             return (h >= 6 && h < 18) ? 'light' : 'dark';
         }
 
+        var THEME_LABELS = { zh: { auto: '自动', dark: '深色', light: '亮色' }, en: { auto: 'Auto', dark: 'Dark', light: 'Light' } };
+        var currentThemeMode = 'dark';
         function updateToggleUI(mode) {
+            currentThemeMode = mode;
             const icon = document.querySelector('#themeToggle i');
             const label = document.getElementById('themeLabel');
             if (!icon) return;
+            var L = THEME_LABELS[window.__siteLang === 'en' ? 'en' : 'zh'];
             if (mode === 'auto') {
                 icon.className = 'fas fa-circle-half-stroke';
-                if (label) label.textContent = '自动';
+                if (label) label.textContent = L.auto;
             } else if (mode === 'dark') {
                 icon.className = 'fas fa-moon';
-                if (label) label.textContent = '深色';
+                if (label) label.textContent = L.dark;
             } else {
                 icon.className = 'fas fa-sun';
-                if (label) label.textContent = '亮色';
+                if (label) label.textContent = L.light;
             }
         }
+        document.addEventListener('site-lang-change', function () { updateToggleUI(currentThemeMode); });
 
         function initTheme() {
             let stored = null;
@@ -4846,9 +5290,9 @@
             }
 
             var STATES = {
-                off: { icon: 'fa-wand-magic-sparkles', text: '特效关', cls: '' },
-                matrix: { icon: 'fa-code', text: '矩阵雨', cls: 'geek-matrix' },
-                network: { icon: 'fa-share-nodes', text: '粒子网', cls: 'geek-network' }
+                off: { icon: 'fa-wand-magic-sparkles', zh: '特效关', en: 'FX Off', cls: '' },
+                matrix: { icon: 'fa-code', zh: '矩阵雨', en: 'Matrix', cls: 'geek-matrix' },
+                network: { icon: 'fa-share-nodes', zh: '粒子网', en: 'Particles', cls: 'geek-network' }
             };
 
             function applyMode(m) {
@@ -4858,7 +5302,7 @@
                 if (s.cls) document.body.classList.add(s.cls);
                 var icon = btn.querySelector('i');
                 if (icon) icon.className = 'fas ' + s.icon;
-                if (label) label.textContent = s.text;
+                if (label) label.textContent = window.__siteLang === 'en' ? s.en : s.zh;
                 btn.setAttribute('aria-pressed', m === 'off' ? 'false' : 'true');
                 try { localStorage.setItem('geek-bg', m); } catch (_) {}
                 if (m === 'off') {
@@ -4868,6 +5312,7 @@
                     ensureRunning();
                 }
             }
+            document.addEventListener('site-lang-change', function () { applyMode(mode); });
 
             btn.addEventListener('click', function () {
                 var next = mode === 'off' ? 'matrix' : (mode === 'matrix' ? 'network' : 'off');
@@ -4894,21 +5339,36 @@
         (function initGreeting() {
             var el = document.getElementById('timeGreetingText');
             if (!el) return;
-            var wk = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-            function render() {
-                var d = new Date();
+            var STR = {
+                zh: {
+                    wk: ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'],
+                    g: ['早上好，愿你元气满满 ☀️', '中午好，记得适当午休 🍜', '下午好，来杯咖啡提提神 ☕', '晚上好，辛苦了一天 🌆', '夜深了，注意休息 🌙'],
+                    sep: ' ｜ ',
+                    date: function (d, wk) { return (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日 · ' + wk[d.getDay()]; }
+                },
+                en: {
+                    wk: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    g: ['Good morning! ☀️', 'Time for a lunch break 🍜', 'Good afternoon — grab a coffee ☕', 'Good evening — well done today 🌆', 'Late night — get some rest 🌙'],
+                    sep: ' · ',
+                    date: function (d, wk) { var m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return m[d.getMonth()] + ' ' + d.getDate() + ' · ' + wk[d.getDay()]; }
+                }
+            };
+            function pick(d) {
                 var h = d.getHours();
-                var g;
-                if (h >= 5 && h < 11) g = '早上好，愿你元气满满 ☀️';
-                else if (h >= 11 && h < 13) g = '中午好，记得适当午休 🍜';
-                else if (h >= 13 && h < 18) g = '下午好，来杯咖啡提提神 ☕';
-                else if (h >= 18 && h < 23) g = '晚上好，辛苦了一天 🌆';
-                else g = '夜深了，注意休息 🌙';
-                var date = (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日 · ' + wk[d.getDay()];
-                el.textContent = g + ' ｜ ' + date;
+                if (h >= 5 && h < 11) return 0;
+                if (h >= 11 && h < 13) return 1;
+                if (h >= 13 && h < 18) return 2;
+                if (h >= 18 && h < 23) return 3;
+                return 4;
+            }
+            function render() {
+                var s = STR[window.__siteLang === 'en' ? 'en' : 'zh'];
+                var d = new Date();
+                el.textContent = s.g[pick(d)] + s.sep + s.date(d, s.wk);
             }
             render();
             setInterval(render, 30000);
+            document.addEventListener('site-lang-change', render);
         })();
 
         /* ============================================================
@@ -5492,7 +5952,6 @@
                 { group: '语言' },
                 { icon: 'fa-language', label: '切换到中文', action: function () { setLang('zh'); } },
                 { icon: 'fa-language', label: 'Switch to English', action: function () { setLang('en'); } },
-                { icon: 'fa-language', label: '日本語に切り替え', action: function () { setLang('ja'); } },
                 { group: '外部链接' },
                 { icon: 'fa-globe', label: '打开博客 blog.bjhr.space', action: function () { window.open('https://blog.bjhr.space/', '_blank', 'noopener'); } },
                 { icon: 'fa-code-branch', label: '打开 GitHub 主页', action: function () { window.open('https://github.com/BlueDriftHK', '_blank', 'noopener'); } }
@@ -5800,6 +6259,665 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && overlay.classList.contains('open')) close();
             });
+        })();
+
+        /* ============================================================
+           迷你网络诊断 (Ping / DNS / HTTP)
+           ============================================================ */
+        (function initNetDiag() {
+            var tabs = document.querySelectorAll('.ndiag-tab');
+            var input = document.getElementById('ndiagInput');
+            var dnsType = document.getElementById('ndiagDnsType');
+            var runBtn = document.getElementById('ndiagRun');
+            var output = document.getElementById('ndiagOutput');
+            var mode = 'ping';
+
+            if (!input || !output) return;
+
+            tabs.forEach(function (t) {
+                t.addEventListener('click', function () {
+                    tabs.forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+                    t.classList.add('active');
+                    t.setAttribute('aria-selected', 'true');
+                    mode = t.dataset.mode;
+                    dnsType.style.display = mode === 'dns' ? '' : 'none';
+                    input.placeholder = mode === 'dns' ? '输入域名，例如 cloudflare.com'
+                        : mode === 'http' ? '输入 URL，例如 https://blog.bjhr.space'
+                        : '输入域名或 URL，例如 cloudflare.com';
+                });
+            });
+
+            function line(text, cls) {
+                return '<div class="ndiag-line ' + (cls || '') + '">' + text + '</div>';
+            }
+            function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+            function setLoading(on) {
+                runBtn.disabled = on;
+                runBtn.innerHTML = on
+                    ? '<span class="ndiag-spinner"></span> 检测中…'
+                    : '<i class="fas fa-play" aria-hidden="true"></i> 执行';
+            }
+
+            /* --- Ping (HTTP HEAD 计时模拟) --- */
+            async function doPing(target) {
+                var url = target.startsWith('http') ? target : 'https://' + target;
+                var count = 5, results = [];
+                output.innerHTML = line('<span class="ndiag-spinner"></span>PING ' + esc(target) + ' — HTTP HEAD ×' + count, 'info');
+
+                for (var i = 0; i < count; i++) {
+                    var t0 = performance.now();
+                    try {
+                        await fetch(url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(5000) });
+                        var rtt = (performance.now() - t0).toFixed(1);
+                        results.push(rtt);
+                        output.innerHTML += line('seq ' + (i + 1) + '  rtt = <b>' + rtt + ' ms</b>', 'ok');
+                    } catch (e) {
+                        output.innerHTML += line('seq ' + (i + 1) + '  timeout / unreachable', 'err');
+                    }
+                    await new Promise(function (r) { setTimeout(r, 300); });
+                }
+
+                if (results.length) {
+                    var nums = results.map(Number);
+                    var min = Math.min.apply(null, nums).toFixed(1);
+                    var max = Math.max.apply(null, nums).toFixed(1);
+                    var avg = (nums.reduce(function (a, b) { return a + b; }, 0) / nums.length).toFixed(1);
+                    var loss = ((count - results.length) / count * 100).toFixed(0);
+                    output.innerHTML += line('') +
+                        '<div class="ndiag-stat-row">' +
+                        '<div class="ndiag-stat"><div class="val">' + min + '</div><div class="lbl">min ms</div></div>' +
+                        '<div class="ndiag-stat"><div class="val">' + avg + '</div><div class="lbl">avg ms</div></div>' +
+                        '<div class="ndiag-stat"><div class="val">' + max + '</div><div class="lbl">max ms</div></div>' +
+                        '<div class="ndiag-stat"><div class="val">' + loss + '%</div><div class="lbl">loss</div></div>' +
+                        '</div>';
+                } else {
+                    output.innerHTML += line('所有请求均超时，目标可能不可达。', 'err');
+                }
+            }
+
+            /* --- DNS (Cloudflare DoH) --- */
+            async function doDNS(name, type) {
+                output.innerHTML = line('<span class="ndiag-spinner"></span>DNS 查询 ' + esc(name) + ' [' + type + '] via Cloudflare DoH', 'info');
+                try {
+                    var resp = await fetch('https://cloudflare-dns.com/dns-query?name=' + encodeURIComponent(name) + '&type=' + type, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    var data = await resp.json();
+                    var statusMap = { 0: 'NOERROR', 1: 'FORMERR', 2: 'SERVFAIL', 3: 'NXDOMAIN', 5: 'REFUSED' };
+                    output.innerHTML += line('Status: <b>' + (statusMap[data.Status] || data.Status) + '</b>' + (data.AD ? '  ✓ DNSSEC validated' : ''), data.Status === 0 ? 'ok' : 'err');
+
+                    if (data.Answer && data.Answer.length) {
+                        output.innerHTML += line('─── 应答记录 (' + data.Answer.length + ') ───', 'dim');
+                        data.Answer.forEach(function (a) {
+                            var typeNames = { 1: 'A', 28: 'AAAA', 5: 'CNAME', 15: 'MX', 2: 'NS', 16: 'TXT', 6: 'SOA', 33: 'SRV', 257: 'CAA' };
+                            var tn = typeNames[a.type] || ('TYPE' + a.type);
+                            output.innerHTML += line('<b>' + tn + '</b>  ' + esc(a.data) + '  <span style="opacity:0.5">TTL ' + a.TTL + 's</span>');
+                        });
+                    } else {
+                        output.innerHTML += line('无应答记录 (NODATA)', 'dim');
+                    }
+                    if (data.Authority && data.Authority.length) {
+                        output.innerHTML += line('─── 权威 (' + data.Authority.length + ') ───', 'dim');
+                        data.Authority.forEach(function (a) {
+                            output.innerHTML += line(esc(a.data) + '  <span style="opacity:0.5">TTL ' + a.TTL + 's</span>', 'dim');
+                        });
+                    }
+                } catch (e) {
+                    output.innerHTML += line('查询失败: ' + esc(e.message), 'err');
+                }
+            }
+
+            /* --- HTTP 状态检测 --- */
+            async function doHTTP(target) {
+                var url = target.startsWith('http') ? target : 'https://' + target;
+                output.innerHTML = line('<span class="ndiag-spinner"></span>HTTP 检测 ' + esc(url), 'info');
+                var t0 = performance.now();
+                try {
+                    var resp = await fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store', redirect: 'follow', signal: AbortSignal.timeout(10000) });
+                    var elapsed = (performance.now() - t0).toFixed(1);
+                    var cls = resp.ok ? 'ok' : 'err';
+                    output.innerHTML += line('Status: <b>' + resp.status + ' ' + esc(resp.statusText) + '</b>  (' + elapsed + ' ms)', cls);
+                    if (resp.redirected) output.innerHTML += line('Redirect → ' + esc(resp.url), 'info');
+                    output.innerHTML += line('Content-Type: ' + esc(resp.headers.get('content-type') || 'N/A'), 'dim');
+                    output.innerHTML += line('Server: ' + esc(resp.headers.get('server') || 'N/A'), 'dim');
+                    var cfRay = resp.headers.get('cf-ray');
+                    if (cfRay) output.innerHTML += line('CF-Ray: ' + esc(cfRay), 'dim');
+                    var hsts = resp.headers.get('strict-transport-security');
+                    if (hsts) output.innerHTML += line('HSTS: ' + esc(hsts), 'ok');
+                } catch (e) {
+                    var elapsed2 = (performance.now() - t0).toFixed(1);
+                    // no-cors 模式下无法读取状态，但能计时
+                    if (e.name === 'TypeError') {
+                        output.innerHTML += line('请求已发出 (' + elapsed2 + ' ms)，但跨域限制无法读取响应头。', 'info');
+                        output.innerHTML += line('提示：目标未开放 CORS，状态码不可见。', 'dim');
+                    } else {
+                        output.innerHTML += line('请求失败 (' + elapsed2 + ' ms): ' + esc(e.message), 'err');
+                    }
+                }
+            }
+
+            /* --- 执行入口 --- */
+            async function run() {
+                var val = input.value.trim();
+                if (!val) { input.focus(); return; }
+                setLoading(true);
+                try {
+                    if (mode === 'ping') await doPing(val);
+                    else if (mode === 'dns') await doDNS(val, dnsType.value);
+                    else await doHTTP(val);
+                } catch (e) {
+                    output.innerHTML += line('未知错误: ' + esc(e.message), 'err');
+                }
+                setLoading(false);
+                output.scrollTop = output.scrollHeight;
+            }
+
+            runBtn.addEventListener('click', run);
+            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
+        })();
+
+        /* ============================================================
+           你的连接 (访客 IP 信息卡片)
+           ============================================================ */
+        (function initIPCard() {
+            var elAddr = document.getElementById('ipAddr');
+            var elLoc = document.getElementById('ipLoc');
+            var elOrg = document.getElementById('ipOrg');
+            var elAsn = document.getElementById('ipAsn');
+            var elTz = document.getElementById('ipTz');
+            var elProto = document.getElementById('ipProto');
+            if (!elAddr) return;
+
+            // 协议版本 — 纯本地，无需网络
+            try {
+                var nav = performance.getEntriesByType('navigation')[0];
+                if (nav && nav.nextHopProtocol) {
+                    var p = nav.nextHopProtocol;
+                    elProto.textContent = p === 'h3' ? 'HTTP/3 (QUIC)' : p === 'h2' ? 'HTTP/2' : p.toUpperCase();
+                } else {
+                    elProto.textContent = location.protocol === 'https:' ? 'HTTPS' : 'HTTP';
+                }
+            } catch (_) { elProto.textContent = '—'; }
+
+            // 时区 — 纯本地
+            try {
+                elTz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || '—';
+            } catch (_) { elTz.textContent = '—'; }
+
+            // IP / 地理 / ISP — 公共 CORS API
+            fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(8000) })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    elAddr.textContent = d.ip || '—';
+                    var loc = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+                    elLoc.textContent = loc || '—';
+                    elOrg.textContent = d.org || d.asn_org || '—';
+                    elAsn.textContent = d.asn || '—';
+                    if (d.timezone) elTz.textContent = d.timezone;
+                })
+                .catch(function () {
+                    elAddr.textContent = '获取失败';
+                    elLoc.textContent = '—';
+                    elOrg.textContent = '—';
+                    elAsn.textContent = '—';
+                });
+        })();
+
+        /* ============================================================
+           请求头透视 (访客 HTTP Headers 可视化)
+           ============================================================ */
+        (function initHeaders() {
+            var view = document.getElementById('hdrView');
+            var countEl = document.getElementById('hdrCount');
+            var refreshBtn = document.getElementById('hdrRefresh');
+            if (!view) return;
+
+            var SOURCES = [
+                'https://httpbingo.org/headers',
+                'https://httpbin.org/headers'
+            ];
+            // 值得高亮的"有趣"请求头
+            var INTERESTING = ['user-agent', 'accept-language', 'referer', 'sec-fetch-site', 'sec-fetch-mode', 'sec-ch-ua', 'sec-ch-ua-platform', 'accept-encoding', 'cookie', 'authorization', 'x-forwarded-for', 'cf-connecting-ip', 'cf-ipcountry'];
+
+            function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+            function render(headers) {
+                var keys = Object.keys(headers).sort();
+                var html = '';
+                keys.forEach(function (k) {
+                    var isHl = INTERESTING.indexOf(k.toLowerCase()) !== -1;
+                    html += '<div class="hdr-row' + (isHl ? ' hl' : '') + '">' +
+                        '<span class="hdr-name">' + esc(k) + '</span>' +
+                        '<span class="hdr-val">' + esc(String(headers[k])) + '</span>' +
+                        '</div>';
+                });
+                view.innerHTML = html;
+                countEl.textContent = keys.length + ' 个请求头 · ' + new Date().toLocaleTimeString();
+            }
+
+            function fail() {
+                view.innerHTML = '<div class="ndiag-placeholder"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> 抓取失败（可能是网络或跨域限制），点击「重新抓取」重试</div>';
+                countEl.textContent = '—';
+            }
+
+            function load(srcIdx) {
+                if (srcIdx >= SOURCES.length) { fail(); return; }
+                refreshBtn.disabled = true;
+                view.innerHTML = '<div class="ndiag-placeholder"><span class="ndiag-spinner"></span> 正在抓取你的请求头…</div>';
+                fetch(SOURCES[srcIdx], { signal: AbortSignal.timeout(8000) })
+                    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+                    .then(function (data) {
+                        var headers = data.headers || data.Headers || {};
+                        if (!Object.keys(headers).length) throw new Error('empty');
+                        render(headers);
+                        refreshBtn.disabled = false;
+                    })
+                    .catch(function () {
+                        refreshBtn.disabled = false;
+                        load(srcIdx + 1); // 尝试下一个源
+                    });
+            }
+
+            refreshBtn.addEventListener('click', function () { load(0); });
+            load(0);
+        })();
+
+        /* ============================================================
+           TLS 1.3 握手动画
+           ============================================================ */
+        (function initTLS() {
+            var stepsEl = document.getElementById('tlsSteps');
+            var playBtn = document.getElementById('tlsPlay');
+            var detailEl = document.getElementById('tlsDetail');
+            if (!stepsEl || !playBtn) return;
+
+            var STEPS = [
+                { dir: 'cs', name: 'ClientHello', enc: false, desc: '<b>ClientHello</b> — 客户端发送支持的 TLS 版本（supported_versions）、加密套件列表、SNI（要访问的域名）以及 ECDHE 公钥（key_share）。这是握手的第一个 RTT 的开始。' },
+                { dir: 'sc', name: 'ServerHello', enc: false, desc: '<b>ServerHello</b> — 服务器选定加密套件和密钥交换参数，回传自己的 ECDHE 公钥。此时双方已能用 Diffie-Hellman 算出相同的会话密钥 —— TLS 1.3 在此处就完成密钥协商，这是 1-RTT 的关键。' },
+                { dir: 'sc', name: 'EncryptedExtensions', enc: true, desc: '<b>EncryptedExtensions</b> — 服务器发送加密的扩展信息，例如 ALPN 协商结果（确认使用 h2 / h3）。从这里开始，所有报文都是加密的。' },
+                { dir: 'sc', name: 'Certificate', enc: true, desc: '<b>Certificate</b> — 服务器发送证书链以证明身份。与 TLS 1.2 不同，TLS 1.3 把证书也放进加密通道，避免中间人窥探你访问的是哪个站点。' },
+                { dir: 'sc', name: 'CertificateVerify', enc: true, desc: '<b>CertificateVerify</b> — 服务器用证书私钥对握手 transcript 签名，证明自己确实持有该私钥，防止证书被冒用。' },
+                { dir: 'sc', name: 'Finished', enc: true, desc: '<b>Finished</b> — 服务器发送 MAC 校验值，确认握手完整未被篡改。收到它之后，客户端就知道密钥协商成功，可以开始发送加密应用数据了。' },
+                { dir: 'cs', name: 'Finished + 应用数据', enc: true, desc: '<b>Client Finished + Application Data</b> — 客户端发送自己的 Finished 确认，并随首个加密报文一起携带 HTTP 请求。整个握手只花了 1 个 RTT（TLS 1.2 需要 2 个），这就是为什么 TLS 1.3 更快。' },
+            ];
+
+            // 构建步骤 DOM
+            var html = '';
+            STEPS.forEach(function (s, i) {
+                html += '<div class="tls-step dir-' + s.dir + '" data-idx="' + i + '">' +
+                    '<div class="tls-msg"><span class="tls-name">' + s.name + '</span>' +
+                    (s.enc ? '<span class="tls-enc"><i class="fas fa-lock" aria-hidden="true"></i> 加密</span>' : '') +
+                    '</div>' +
+                    '<div class="tls-arrow"><span class="tls-packet"></span></div>' +
+                    '</div>';
+            });
+            stepsEl.innerHTML = html;
+
+            var stepEls = stepsEl.querySelectorAll('.tls-step');
+            var playing = false;
+            var timers = [];
+
+            function showDetail(i) {
+                detailEl.innerHTML = STEPS[i].desc;
+            }
+
+            // 点击步骤查看说明
+            stepEls.forEach(function (el) {
+                el.addEventListener('click', function () {
+                    showDetail(parseInt(el.dataset.idx, 10));
+                });
+            });
+
+            function reset() {
+                timers.forEach(clearTimeout);
+                timers = [];
+                stepEls.forEach(function (el) { el.classList.remove('active', 'done'); });
+            }
+
+            function play() {
+                if (playing) return;
+                playing = true;
+                playBtn.disabled = true;
+                playBtn.innerHTML = '<span class="ndiag-spinner"></span> 握手中…';
+                reset();
+
+                stepEls.forEach(function (el, i) {
+                    // 每步间隔 850ms，动画 700ms
+                    timers.push(setTimeout(function () {
+                        stepEls.forEach(function (x) { x.classList.remove('active'); });
+                        el.classList.add('active');
+                        showDetail(i);
+                        // 上一步标记完成
+                        if (i > 0) stepEls[i - 1].classList.add('done');
+                    }, i * 850));
+                });
+
+                // 结束
+                timers.push(setTimeout(function () {
+                    stepEls[stepEls.length - 1].classList.add('done');
+                    stepEls.forEach(function (x) { x.classList.remove('active'); });
+                    playing = false;
+                    playBtn.disabled = false;
+                    playBtn.innerHTML = '<i class="fas fa-play" aria-hidden="true"></i> 重新演示';
+                    detailEl.innerHTML = '<b>握手完成 ✓</b> — 共 1-RTT。此后所有通信均使用协商出的会话密钥进行 AEAD 加密（如 AES-128-GCM 或 ChaCha20-Poly1305），且每次会话密钥都不同（前向安全）。';
+                }, STEPS.length * 850 + 800));
+            }
+
+            playBtn.addEventListener('click', play);
+        })();
+
+        /* ============================================================
+           服务健康面板
+           ============================================================ */
+        (function initHealth() {
+            var grid = document.getElementById('healthGrid');
+            var timeEl = document.getElementById('healthTime');
+            var btn = document.getElementById('healthRefresh');
+            if (!grid) return;
+            var SERVICES = [
+                { name: 'Blog', host: 'blog.bjhr.space' },
+                { name: 'API', host: 'api.bjhr.space' },
+                { name: 'GitHub Pages', host: 'bluedrifthk.github.io' },
+                { name: 'NetSight Pro', host: 'ipcheck.bjhr.space' }
+            ];
+            function probe() {
+                btn.disabled = true;
+                grid.innerHTML = SERVICES.map(function (s, i) {
+                    return '<div class="health-item"><span class="health-dot" id="hd' + i + '"></span><div class="health-info"><div class="health-name">' + s.name + '</div><div class="health-meta" id="hm' + i + '">探测中…</div></div></div>';
+                }).join('');
+                Promise.all(SERVICES.map(function (s, i) {
+                    var t0 = performance.now();
+                    return fetch('https://' + s.host, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                        .then(function () { return { i: i, ms: Math.round(performance.now() - t0), up: true }; })
+                        .catch(function () { return { i: i, ms: Math.round(performance.now() - t0), up: false }; });
+                })).then(function (results) {
+                    results.forEach(function (r) {
+                        var dot = document.getElementById('hd' + r.i);
+                        var meta = document.getElementById('hm' + r.i);
+                        var cls = !r.up ? 'down' : r.ms < 400 ? 'up' : r.ms < 900 ? 'slow' : 'down';
+                        dot.className = 'health-dot ' + cls;
+                        meta.textContent = !r.up ? '不可达' : r.ms + ' ms · ' + (cls === 'up' ? '正常' : cls === 'slow' ? '偏慢' : '高延迟');
+                    });
+                    timeEl.textContent = '更新于 ' + new Date().toLocaleTimeString();
+                    btn.disabled = false;
+                });
+            }
+            btn.addEventListener('click', probe);
+            probe();
+        })();
+
+        /* ============================================================
+           本站架构图
+           ============================================================ */
+        (function initArch() {
+            var info = document.getElementById('archInfo');
+            var nodes = document.querySelectorAll('.arch-node');
+            if (!info || !nodes.length) return;
+            var DATA = {
+                visitor: '<b>访客浏览器</b> — 你正在使用的设备。发起 HTTPS 请求，经 DNS 解析后连接到距离最近的 Cloudflare 边缘节点。',
+                pages: '<b>GitHub Pages</b> — 静态站点托管。源码推送到 GitHub 仓库后自动构建部署，作为源站 (origin) 提供 HTML / CSS / JS。',
+                cdn: '<b>Cloudflare CDN</b> — 全球 300+ 边缘节点缓存静态资源，就近响应访客，大幅降低延迟并隐藏源站真实 IP。',
+                workers: '<b>Cloudflare Workers</b> — 运行在边缘的 Serverless 函数，处理动态逻辑（OG 图生成、API 代理等），无需自建服务器。',
+                storage: '<b>D1 · R2 · KV</b> — Cloudflare 边缘存储：D1（SQLite 数据库）、R2（对象存储）、KV（键值缓存），与 Workers 毫秒级互通。'
+            };
+            nodes.forEach(function (n) {
+                function show() {
+                    nodes.forEach(function (x) { x.classList.remove('sel'); });
+                    n.classList.add('sel');
+                    info.innerHTML = DATA[n.dataset.node] || '';
+                }
+                n.addEventListener('click', show);
+                n.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+            });
+        })();
+
+        /* ============================================================
+           实时访问日志流 (模拟)
+           ============================================================ */
+        (function initLogStream() {
+            var view = document.getElementById('logView');
+            var countEl = document.getElementById('logCount');
+            var toggle = document.getElementById('logToggle');
+            if (!view) return;
+            var methods = ['GET', 'GET', 'GET', 'POST', 'HEAD'];
+            var paths = ['/', '/index.html', '/api/ip', '/assets/app.js', '/favicon.ico', '/blog/quic-tuning', '/api/dns'];
+            var statuses = [200, 200, 200, 200, 301, 304, 404, 200];
+            var countries = ['CN', 'US', 'JP', 'DE', 'HK', 'SG', 'KR', 'GB'];
+            var colos = ['HKG', 'NRT', 'SJC', 'FRA', 'SIN', 'ICN', 'LHR'];
+            var count = 0, paused = false, timer = null, started = false;
+            function rand(a) { return a[Math.floor(Math.random() * a.length)]; }
+            function ip() { return (Math.floor(Math.random() * 223) + 1) + '.' + Math.floor(Math.random() * 256) + '.' + Math.floor(Math.random() * 256) + '.' + Math.floor(Math.random() * 256); }
+            function addLine() {
+                var t = new Date().toTimeString().slice(0, 8);
+                var st = rand(statuses);
+                var line = '<div class="log-line"><span class="lt">' + t + '</span> <span class="lip">' + ip() + '</span> <span class="lm">' + rand(methods) + '</span> ' + rand(paths) + ' <span class="ls' + String(st)[0] + '">' + st + '</span> ' + rand(countries) + '/' + rand(colos) + ' ' + (Math.random() * 80 + 2).toFixed(0) + 'ms</div>';
+                view.insertAdjacentHTML('beforeend', line);
+                count++;
+                countEl.textContent = count + (isEn() ? ' lines' : ' 条');
+                while (view.children.length > 120) view.removeChild(view.firstChild);
+                view.scrollTop = view.scrollHeight;
+            }
+            function loop() {
+                if (!paused) addLine();
+                timer = setTimeout(loop, 800 + Math.random() * 1800);
+            }
+            function isEn() { return window.__siteLang === 'en'; }
+            function renderToggle() {
+                toggle.innerHTML = paused
+                    ? '<i class="fas fa-play" aria-hidden="true"></i> ' + (isEn() ? 'Resume' : '继续')
+                    : '<i class="fas fa-pause" aria-hidden="true"></i> ' + (isEn() ? 'Pause' : '暂停');
+            }
+            toggle.addEventListener('click', function () {
+                paused = !paused;
+                renderToggle();
+            });
+            document.addEventListener('site-lang-change', function () {
+                renderToggle();
+                countEl.textContent = count + (isEn() ? ' lines' : ' 条');
+            });
+            // 进入视口才开始，离开暂停以省资源
+            if ('IntersectionObserver' in window) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting && !started) { started = true; loop(); }
+                    });
+                }, { threshold: 0.1 }).observe(view);
+            } else { loop(); }
+        })();
+
+        /* ============================================================
+           开放 API 文档
+           ============================================================ */
+        (function initApiDocs() {
+            var list = document.getElementById('apiList');
+            if (!list) return;
+            var BASE = 'https://api.bjhr.space';
+            var APIS = [
+                { m: 'GET', p: '/api/ip', zh: '返回访客 IP、归属地、ISP、协议版本', en: 'Returns visitor IP, location, ISP, and protocol version' },
+                { m: 'GET', p: '/api/headers', zh: '回显你的全部 HTTP 请求头', en: 'Echoes back all your HTTP request headers' },
+                { m: 'GET', p: '/api/dns?name=example.com&type=A', zh: 'DNS over HTTPS 查询代理', en: 'DNS over HTTPS query proxy' },
+                { m: 'GET', p: '/api/ping?host=example.com', zh: 'HTTP 延迟探测（模拟 ping）', en: 'HTTP latency probe (simulated ping)' },
+                { m: 'GET', p: '/api/health', zh: '各服务健康状态', en: 'Health status of each service' },
+                { m: 'GET', p: '/og?title=Hello', zh: '动态生成 OG 社交分享图（SVG）', en: 'Dynamically generated OG share image (SVG)' }
+            ];
+            function isEn() { return window.__siteLang === 'en'; }
+            function bindTry() {
+                list.querySelectorAll('.api-try').forEach(function (btn) {
+                    btn.addEventListener('click', function () {
+                        var i = btn.dataset.idx || btn.dataset.i;
+                        var out = document.getElementById('apiOut' + i);
+                        var en = isEn();
+                        out.classList.add('open');
+                        out.textContent = en ? 'Requesting…' : '请求中…';
+                        fetch(BASE + APIS[i].p, { signal: AbortSignal.timeout(8000) })
+                            .then(function (r) { return r.text().then(function (t) { return { status: r.status, body: t }; }); })
+                            .then(function (res) { out.textContent = 'HTTP ' + res.status + '\n\n' + res.body.slice(0, 1500); })
+                            .catch(function (e) { out.textContent = (en ? 'Request failed: ' : '请求失败：') + e.message + (en ? '\n(The endpoint may not be deployed, or CORS is not open for your origin)' : '\n（该端点可能尚未部署，或未对你的来源开放 CORS）'); });
+                    });
+                });
+            }
+            function render() {
+                var en = isEn();
+                list.innerHTML = APIS.map(function (a, i) {
+                    return '<div class="api-item"><div class="api-head"><span class="api-method">' + a.m + '</span><span class="api-path">' + a.p + '</span><span class="api-desc">' + (en ? a.en : a.zh) + '</span><button class="api-try" data-i="' + i + '" type="button">' + (en ? 'Try it' : '试调用') + '</button></div><div class="api-out" id="apiOut' + i + '"></div></div>';
+                }).join('');
+                bindTry();
+            }
+            render();
+            document.addEventListener('site-lang-change', render);
+        })();
+
+        /* ============================================================
+           HTTP/3 vs HTTP/2 协议检测
+           ============================================================ */
+        (function initProtoCompare() {
+            var el = document.getElementById('protoCurrent');
+            if (!el) return;
+            var proto = '';
+            try {
+                var nav = performance.getEntriesByType('navigation')[0];
+                if (nav && nav.nextHopProtocol) proto = nav.nextHopProtocol;
+            } catch (_) {}
+            var label = proto === 'h3' ? 'HTTP/3 (QUIC)' : proto === 'h2' ? 'HTTP/2' : proto === 'http/1.1' ? 'HTTP/1.1' : (proto || '未知');
+            var note = proto === 'h3' ? ' — 正在享受 QUIC 的 0-RTT 重连与无队头阻塞。'
+                : proto === 'h2' ? ' — 已启用多路复用；升级到 HTTP/3 可在弱网下进一步降低延迟。'
+                : ' — 通过 file:// 或本地打开时协议信息不可用，部署到 HTTPS 后即可检测。';
+            el.innerHTML = '你当前连接到本站使用的是 <b>' + label + '</b>' + note;
+        })();
+
+        /* ============================================================
+           Traceroute 可视化 (模拟)
+           ============================================================ */
+        (function initTraceroute() {
+            var input = document.getElementById('traceInput');
+            var btn = document.getElementById('traceRun');
+            var hopsEl = document.getElementById('traceHops');
+            if (!input || !hopsEl) return;
+            var MID = ['gateway.local', 'isp-core.router', 'cf-edge.hkg.cloudflare.com', 'cf-backbone.cloudflare.com'];
+            function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+            function addHop(num, host, rtt, isTarget) {
+                var div = document.createElement('div');
+                div.className = 'trace-hop' + (isTarget ? ' target' : '');
+                div.innerHTML = '<span class="trace-num">' + num + '</span><span class="trace-host">' + esc(host) + '</span><span class="trace-rtt">' + (rtt != null ? rtt + ' ms' : '…') + '</span>';
+                hopsEl.appendChild(div);
+                setTimeout(function () { div.classList.add('show'); }, 30);
+                return div;
+            }
+            function run() {
+                var target = input.value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+                if (!target) { input.focus(); return; }
+                btn.disabled = true;
+                hopsEl.innerHTML = '';
+                MID.forEach(function (h, i) {
+                    setTimeout(function () { addHop(i + 1, h, (Math.random() * 8 + 1 + i * 4).toFixed(1), false); }, i * 320);
+                });
+                var t0 = performance.now();
+                var delay = MID.length * 320 + 200;
+                fetch('https://' + target, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                    .catch(function () {})
+                    .finally(function () {
+                        var rtt = (performance.now() - t0).toFixed(1);
+                        var wait = Math.max(0, delay - (performance.now() - t0));
+                        setTimeout(function () { addHop(MID.length + 1, target, rtt, true); btn.disabled = false; }, wait);
+                    });
+            }
+            btn.addEventListener('click', run);
+            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
+        })();
+
+        /* ============================================================
+           DNS 记录查询 (多类型)
+           ============================================================ */
+        (function initDnsTool() {
+            var input = document.getElementById('dnsToolInput');
+            var btn = document.getElementById('dnsToolRun');
+            var res = document.getElementById('dnsToolResults');
+            if (!input || !res) return;
+            var TYPES = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA', 'CAA'];
+            function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+            function query(name, type) {
+                return fetch('https://cloudflare-dns.com/dns-query?name=' + encodeURIComponent(name) + '&type=' + type, { headers: { 'Accept': 'application/dns-json' } })
+                    .then(function (r) { return r.json(); })
+                    .then(function (d) { return { type: type, answers: d.Answer || [] }; })
+                    .catch(function () { return { type: type, answers: [] }; });
+            }
+            function run() {
+                var name = input.value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+                if (!name) { input.focus(); return; }
+                btn.disabled = true;
+                res.innerHTML = '<div class="ndiag-placeholder"><span class="ndiag-spinner"></span> 正在查询 ' + esc(name) + ' …</div>';
+                Promise.all(TYPES.map(function (t) { return query(name, t); })).then(function (results) {
+                    var html = '';
+                    results.forEach(function (r) {
+                        html += '<div class="dns-group"><div class="dns-group-head">' + r.type + '<span class="dns-empty">' + (r.answers.length ? r.answers.length + ' 条记录' : '无记录') + '</span></div>';
+                        r.answers.forEach(function (a) {
+                            html += '<div class="dns-rec"><span>' + esc(a.data) + '</span><span class="dns-ttl">TTL ' + a.TTL + 's</span></div>';
+                        });
+                        html += '</div>';
+                    });
+                    res.innerHTML = html;
+                    btn.disabled = false;
+                });
+            }
+            btn.addEventListener('click', run);
+            input.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
+        })();
+
+        /* ============================================================
+           全球节点延迟环
+           ============================================================ */
+        (function initLatRing() {
+            var svg = document.getElementById('latRing');
+            var listEl = document.getElementById('latList');
+            var timeEl = document.getElementById('latTime');
+            var btn = document.getElementById('latRefresh');
+            if (!svg || !listEl) return;
+            var NODES = [
+                { name: 'Hong Kong', url: 'https://blog.bjhr.space' },
+                { name: 'Tokyo', url: 'https://www.yahoo.co.jp' },
+                { name: 'Singapore', url: 'https://www.google.com.sg' },
+                { name: 'San Jose', url: 'https://www.cloudflare.com' },
+                { name: 'Frankfurt', url: 'https://www.wikipedia.org' },
+                { name: 'Sydney', url: 'https://www.microsoft.com' }
+            ];
+            var CX = 160, CY = 160, R = 115;
+            function color(ms) { if (ms == null) return '#64748b'; if (ms < 200) return '#06b6d4'; if (ms < 450) return '#34d399'; if (ms < 800) return '#fbbf24'; return '#f87171'; }
+            function render(results) {
+                var html = '<circle class="ring-bg" cx="' + CX + '" cy="' + CY + '" r="' + R + '"/>';
+                var avg = [];
+                results.forEach(function (r, i) {
+                    var ang = (i / results.length) * Math.PI * 2 - Math.PI / 2;
+                    var x = CX + R * Math.cos(ang), y = CY + R * Math.sin(ang);
+                    if (r.ms != null) avg.push(r.ms);
+                    html += '<circle class="lat-node-dot" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="7" fill="' + color(r.ms) + '"/>';
+                    var lx = CX + (R + 20) * Math.cos(ang), ly = CY + (R + 20) * Math.sin(ang);
+                    html += '<text class="lat-node-label" x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle">' + r.name.split(' ')[0] + '</text>';
+                });
+                var avgMs = avg.length ? Math.round(avg.reduce(function (a, b) { return a + b; }, 0) / avg.length) : 0;
+                html += '<text class="lat-center-num" x="' + CX + '" y="' + (CY - 2) + '" text-anchor="middle">' + avgMs + '</text>';
+                html += '<text class="lat-center-lbl" x="' + CX + '" y="' + (CY + 14) + '" text-anchor="middle">avg ms</text>';
+                svg.innerHTML = html;
+                listEl.innerHTML = results.map(function (r) {
+                    return '<div class="lat-row"><span class="lat-dot" style="background:' + color(r.ms) + '"></span><span class="lat-name">' + r.name + '</span><span class="lat-ms">' + (r.ms != null ? r.ms + ' ms' : '超时') + '</span></div>';
+                }).join('');
+            }
+            function probe() {
+                btn.disabled = true;
+                listEl.innerHTML = NODES.map(function (n) { return '<div class="lat-row"><span class="lat-dot" style="background:#64748b"></span><span class="lat-name">' + n.name + '</span><span class="lat-ms">探测中…</span></div>'; }).join('');
+                Promise.all(NODES.map(function (n) {
+                    var t0 = performance.now();
+                    return fetch(n.url, { method: 'HEAD', mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) })
+                        .then(function () { return { name: n.name, ms: Math.round(performance.now() - t0) }; })
+                        .catch(function () { return { name: n.name, ms: null }; });
+                })).then(function (results) {
+                    render(results);
+                    timeEl.textContent = '更新于 ' + new Date().toLocaleTimeString();
+                    btn.disabled = false;
+                });
+            }
+            btn.addEventListener('click', probe);
+            probe();
         })();
 
         /* ============================================================
@@ -7485,60 +8603,295 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
            多语言切换 (i18n)
            ============================================================ */
         (function initI18n() {
+            /* 选择器字典：键为 CSS 选择器；以 @ 开头表示设置 placeholder；
+               值为数组时按序号对应 querySelectorAll 的每个元素；
+               值中含 '<' 时用 innerHTML，否则用保留 <i> 图标的 textContent。 */
             var dict = {
                 zh: {
-                    'about-title': '关于我',
-                    'skills-title': '技术能力',
-                    'projects-title': '核心项目',
-                    'gantt-title': '项目时间线',
-                    'blog-title': '博客文章',
-                    'heatmap-title': '贡献热力图',
-                    'activity-title': '实时动态',
-                    'status-title': '站点状态',
-                    'perf-title': '性能评分',
-                    'gh-repos-title': '开源仓库',
-                    'badge-title': '证书与成就',
-                    'timeline-title': '技术旅程',
-                    'links-title': '推荐资源',
-                    'contact-title': '联系我',
-                    'support-title': '支持我',
-                    'terminal-title': '交互式终端'
+                    /* ---- 区块标题 ---- */
+                    '#about-title': '关于我',
+                    '#status-title': '站点状态',
+                    '#perf-title': '性能评分',
+                    '#skills-title': '技术能力',
+                    '#terminal-title': '交互式终端',
+                    '#netdiag-title': '网络诊断台',
+                    '#ipcard-title': '你的连接',
+                    '#headers-title': '请求头透视',
+                    '#tls-title': 'TLS 1.3 握手过程',
+                    '#health-title': '服务健康',
+                    '#arch-title': '本站架构',
+                    '#logs-title': '实时访问日志',
+                    '#api-title': '开放 API',
+                    '#proto-title': 'HTTP/3 vs HTTP/2',
+                    '#trace-title': 'Traceroute 可视化',
+                    '#dnstool-title': 'DNS 记录查询',
+                    '#latency-title': '全球节点延迟',
+                    '#projects-title': '核心项目',
+                    '#gantt-title': '项目时间线',
+                    '#blog-title': '博客文章',
+                    '#heatmap-title': '贡献热力图',
+                    '#activity-title': '实时动态',
+                    '#gh-repos-title': '开源仓库',
+                    '#badge-title': '证书与成就',
+                    '#timeline-title': '技术旅程',
+                    '#links-title': '推荐资源',
+                    '#contact-title': '联系我',
+                    '#support-title': '支持我的工作',
+                    /* ---- 区块描述 ---- */
+                    '#status-title + .section-desc': '服务实时健康度，一目了然。',
+                    '#perf-title + .section-desc': '基于 Lighthouse 核心指标的自评表现。',
+                    '#skills-title + .section-desc': '涵盖边缘计算、全栈开发、网络协议与数据库等领域。',
+                    '#terminal-title + .section-desc': '输入命令了解我 —— 试试 <code>help</code> 查看所有可用命令。',
+                    '#netdiag-title + .section-desc': '基于 NetSight Pro 引擎的轻量诊断工具，直接在浏览器中体验。',
+                    '#ipcard-title + .section-desc': '以下是你当前访问本站时的网络信息（纯前端获取，不经过任何后端存储）。',
+                    '#headers-title + .section-desc': '你的浏览器每次访问都会携带这些 HTTP 请求头 —— 这就是服务器眼中的你。',
+                    '#tls-title + .section-desc': '相比 TLS 1.2 的 2-RTT，TLS 1.3 只需 1-RTT 即可建立加密连接。点击「演示握手」查看完整流程，点击任意步骤查看说明。',
+                    '#health-title + .section-desc': '从你的浏览器实时探测本站相关服务的可达性与往返延迟。',
+                    '#arch-title + .section-desc': '本站如何从源码走到你面前 —— 点击任意节点查看说明。',
+                    '#logs-title + .section-desc': '模拟的边缘访问日志流（tail -f 风格演示，数据为本地生成）。',
+                    '#api-title + .section-desc': 'api.bjhr.space 提供的公开端点，可在线试调用。',
+                    '#proto-title + .section-desc': '检测你当前连接实际使用的协议，并对比两代 HTTP 的核心差异。',
+                    '#trace-title + .section-desc': '逐跳模拟数据包前往目标的路径（浏览器无法发送 ICMP，此为可视化演示）。',
+                    '#dnstool-title + .section-desc': '一次性查询域名的全部常见记录类型（via Cloudflare DoH）。',
+                    '#latency-title + .section-desc': '从你的浏览器探测全球多个边缘端点的往返延迟（颜色越青越快）。',
+                    '#projects-title + .section-desc': '目前正在持续维护与迭代的开源项目：',
+                    '#gantt-title + .section-desc': '各项目的开发周期与活跃状态一览。',
+                    '#blog-title + .section-desc': '关于边缘计算、网络协议与工程实践的技术笔记。',
+                    '#heatmap-title + .section-desc': '过去一年在 GitHub 上的提交活跃度（本地生成的可视化预览）。',
+                    '#activity-title + .section-desc': '来自 GitHub 的最近活动（commit、PR、Issue）。',
+                    '#gh-repos-title + .section-desc': '语言分布与置顶项目一览（数据来自 GitHub API 实时获取）。',
+                    '#badge-title + .section-desc': '专业认证与开源里程碑，见证持续精进的脚步。',
+                    '#links-title + .section-desc': '一些我经常使用的技术工具与学习资源：',
+                    '#contact-title + .section-desc': '技术交流、合作或闲聊，欢迎通过以下方式找到我：',
+                    /* ---- 头部 / Hero ---- */
+                    '.header h1': '👋 我是 <span class="gradient-text" data-text="BlueDriftHK">BlueDriftHK</span>',
+                    '.tags .tag': ['边缘计算', 'Serverless', '网络诊断', '全栈工具', '协议安全', '边缘数据库', '性能优化'],
+                    '.stat-label': ['开源项目', 'GitHub Stars', '技术领域'],
+                    '#searchBtn span': '搜索',
+                    '#resumeBtn span': '简历',
+                    '.skip-link': '跳转到主要内容',
+                    /* ---- 关于我正文 ---- */
+                    '#about-title + p': '我是一名 <strong style="color:var(--text-primary);">边缘计算架构师</strong> 与 <strong style="color:var(--text-primary);">全栈工具开发者</strong>，热衷于利用 Cloudflare Workers 将复杂的网络诊断能力封装成开箱即用的轻量级工具。',
+                    '#about-title + p + p': '我相信 <strong style="color:var(--text-primary);">「代码即艺术，性能即正义」</strong> —— 每一个工具都应该被精雕细琢，让开发者能专注于创造，而非重复造轮子。',
+                    '#about-title ~ ul li': [
+                        '<strong style="color:var(--text-primary);">🎯 当前专注：</strong>构建高性能的边缘网络诊断工具，让开发者 5 分钟内拥有自己的全球网络监控面板。',
+                        '<strong style="color:var(--text-primary);">🔬 技术探索：</strong>HLS 流媒体协议、边缘节点智能路由、实时数据可视化、协议安全检测、QUIC/HTTP3。',
+                        '<strong style="color:var(--text-primary);">💬 话题领域：</strong>边缘计算、Serverless 架构、实时通信、开源生态、网络性能优化、DevOps。',
+                        '<strong style="color:var(--text-primary);">🌍 工作方式：</strong>远程协作 · 开源驱动 · 持续交付 · 用户导向 · 文档优先。'
+                    ],
+                    /* ---- 站点状态 / 性能 ---- */
+                    '#statusNote': '<span class="dot" aria-hidden="true"></span>所有系统运行正常',
+                    '.perf-label': ['性能', '可访问性', '最佳实践', 'SEO'],
+                    /* ---- 网络诊断台 ---- */
+                    '@#ndiagInput': '输入域名或 URL，例如 cloudflare.com',
+                    '#ndiagRun': '执行',
+                    '#ndiagOutput .ndiag-placeholder': '输入目标后点击「执行」开始诊断',
+                    /* ---- 你的连接 ---- */
+                    '.ipcard-label': ['IP 地址', '位置', 'ISP / 组织', 'ASN', '时区', '协议'],
+                    /* ---- 请求头透视 ---- */
+                    '#hdrRefresh': '重新抓取',
+                    '#hdrView .ndiag-placeholder': '正在抓取你的请求头…',
+                    /* ---- TLS 握手 ---- */
+                    '#tlsPlay': '演示握手',
+                    '.tls-badge': ['1-RTT', '前向安全', '加密证书'],
+                    '#tlsDetail': '点击上方任意步骤查看该报文的详细说明。',
+                    /* ---- 服务健康 / 架构 / 日志 ---- */
+                    '#healthRefresh': '重新探测',
+                    '#archInfo': '点击架构图中的任意节点查看它在整条链路中的作用。',
+                    '#logToggle': '暂停',
+                    /* ---- Traceroute / DNS ---- */
+                    '#traceRun': '追踪',
+                    '@#traceInput': '输入目标域名，例如 cloudflare.com',
+                    '#dnsToolRun': '查询',
+                    '@#dnsToolInput': '输入域名，例如 cloudflare.com',
+                    /* ---- 全球节点延迟 ---- */
+                    '#latRefresh': '重新探测',
+                    /* ---- HTTP/3 vs HTTP/2 ---- */
+                    '.proto-col ul li': [
+                        '基于 <b>TCP</b>，队头阻塞仍存在',
+                        '多路复用单一 TCP 连接',
+                        'TLS 1.2/1.3 之上',
+                        '丢包会阻塞所有流',
+                        '基于 <b>QUIC (UDP)</b>，无队头阻塞',
+                        '流级别独立，丢包互不影响',
+                        '内建 TLS 1.3，0-RTT 重连',
+                        '连接迁移（切网不断线）'
+                    ],
+                    /* ---- 联系我 ---- */
+                    'label[for="contact-name"]': '你的名字',
+                    'label[for="contact-email"]': '邮箱地址',
+                    'label[for="contact-message"]': '留言内容',
+                    '@#contact-name': '怎么称呼你？',
+                    '@#contact-message': '想聊点什么？技术交流、合作提议、或者只是打个招呼...',
+                    '.form-submit': '发送消息',
+                    '#contactForm + p': '也可以直接在 GitHub Issues 中 @我，我会尽快回复。',
+                    /* ---- 支持我 ---- */
+                    '#support-title ~ ul li': [
+                        '⭐ <strong style="color:var(--text-primary);">Star</strong> 我的项目 —— 让更多开发者发现这些工具。',
+                        '🐛 提交 <strong style="color:var(--text-primary);">Issue</strong> —— 反馈问题或提出新的想法。',
+                        '☕ <strong style="color:var(--text-primary);">赞助</strong> —— 通过 <a href="https://github.com/sponsors/BlueDriftHK" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a> 支持持续迭代。',
+                        '📢 <strong style="color:var(--text-primary);">分享</strong> —— 转发我的项目或文章，帮助更多人。'
+                    ],
+                    '#support-title ~ p': '所有开源项目均遵循 <strong style="color:var(--text-primary);">GNU GPL v3.0</strong> 协议 · 欢迎贡献代码与建议。',
+                    /* ---- 页脚 ---- */
+                    '.footer-links a': ['GitHub', 'Twitter', 'Email', '本站源码'],
+                    '.footer > p:nth-of-type(1)': '⭐️ 如果我的项目对你有帮助，请给个 Star 吧！',
+                    '.footer > p:nth-of-type(2)': '🔮 保持好奇，保持创新 · 用代码改变世界',
+                    '#ftBuilt': '基于 GitHub Pages 构建',
+                    '#ftVisits': '访问量',
+                    '#ftUptimePre': '本站已稳定运行',
+                    '#ftUptimeDay': '天',
+                    /* ---- 搜索 / 命令面板 ---- */
+                    '@#searchInput': '搜索文章、项目、技能…',
+                    '.search-hint span': [
+                        '<i class="fas fa-arrow-up" aria-hidden="true"></i>/<i class="fas fa-arrow-down" aria-hidden="true"></i> 选择',
+                        '<i class="fas fa-turn-up" aria-hidden="true"></i> Enter 跳转',
+                        'ESC 关闭'
+                    ],
+                    '@#cmdInput': '输入命令…（导航、主题、语言、简历）'
                 },
                 en: {
-                    'about-title': 'About Me',
-                    'skills-title': 'Skills',
-                    'projects-title': 'Projects',
-                    'gantt-title': 'Project Timeline',
-                    'blog-title': 'Blog Posts',
-                    'heatmap-title': 'Contributions',
-                    'activity-title': 'Live Activity',
-                    'status-title': 'Site Status',
-                    'perf-title': 'Performance',
-                    'gh-repos-title': 'Repositories',
-                    'badge-title': 'Certifications',
-                    'timeline-title': 'Journey',
-                    'links-title': 'Resources',
-                    'contact-title': 'Contact',
-                    'support-title': 'Support',
-                    'terminal-title': 'Terminal'
-                },
-                ja: {
-                    'about-title': '自己紹介',
-                    'skills-title': 'スキル',
-                    'projects-title': 'プロジェクト',
-                    'gantt-title': 'タイムライン',
-                    'blog-title': 'ブログ記事',
-                    'heatmap-title': 'コントリビューション',
-                    'activity-title': 'アクティビティ',
-                    'status-title': 'サイト状態',
-                    'perf-title': 'パフォーマンス',
-                    'gh-repos-title': 'リポジトリ',
-                    'badge-title': '資格・実績',
-                    'timeline-title': '技術の旅',
-                    'links-title': 'おすすめリソース',
-                    'contact-title': 'お問い合わせ',
-                    'support-title': 'サポート',
-                    'terminal-title': 'ターミナル'
+                    /* ---- Section titles ---- */
+                    '#about-title': 'About Me',
+                    '#status-title': 'Site Status',
+                    '#perf-title': 'Performance',
+                    '#skills-title': 'Skills',
+                    '#terminal-title': 'Terminal',
+                    '#netdiag-title': 'Network Diagnostics',
+                    '#ipcard-title': 'Your Connection',
+                    '#headers-title': 'Header Inspector',
+                    '#tls-title': 'TLS 1.3 Handshake',
+                    '#health-title': 'Service Health',
+                    '#arch-title': 'Architecture',
+                    '#logs-title': 'Live Access Logs',
+                    '#api-title': 'Open API',
+                    '#proto-title': 'HTTP/3 vs HTTP/2',
+                    '#trace-title': 'Traceroute',
+                    '#dnstool-title': 'DNS Records',
+                    '#latency-title': 'Global Latency',
+                    '#projects-title': 'Projects',
+                    '#gantt-title': 'Project Timeline',
+                    '#blog-title': 'Blog Posts',
+                    '#heatmap-title': 'Contribution Heatmap',
+                    '#activity-title': 'Live Activity',
+                    '#gh-repos-title': 'Repositories',
+                    '#badge-title': 'Certifications',
+                    '#timeline-title': 'My Journey',
+                    '#links-title': 'Resources',
+                    '#contact-title': 'Contact',
+                    '#support-title': 'Support My Work',
+                    /* ---- Section descriptions ---- */
+                    '#status-title + .section-desc': 'Real-time service health, at a glance.',
+                    '#perf-title + .section-desc': 'Self-assessed scores based on core Lighthouse metrics.',
+                    '#skills-title + .section-desc': 'Covering edge computing, full-stack development, network protocols, and databases.',
+                    '#terminal-title + .section-desc': 'Type commands to learn about me — try <code>help</code> to see all available commands.',
+                    '#netdiag-title + .section-desc': 'A lightweight diagnostic tool powered by the NetSight Pro engine, running right in your browser.',
+                    '#ipcard-title + .section-desc': 'Network details of your current visit (fetched purely client-side, never stored on any backend).',
+                    '#headers-title + .section-desc': 'These are the HTTP request headers your browser sends on every visit — this is how the server sees you.',
+                    '#tls-title + .section-desc': 'Unlike TLS 1.2\'s 2-RTT, TLS 1.3 establishes an encrypted connection in just 1-RTT. Click "Play Handshake" for the full flow, or click any step for details.',
+                    '#health-title + .section-desc': 'Probes the reachability and round-trip latency of this site\'s services from your browser in real time.',
+                    '#arch-title + .section-desc': 'How this site travels from source code to your screen — click any node for details.',
+                    '#logs-title + .section-desc': 'A simulated edge access-log stream (tail -f style demo, data generated locally).',
+                    '#api-title + .section-desc': 'Public endpoints served by api.bjhr.space — try them live.',
+                    '#proto-title + .section-desc': 'Detects the protocol your current connection actually uses and compares two generations of HTTP.',
+                    '#trace-title + .section-desc': 'Simulates a packet\'s hop-by-hop path to a target (browsers can\'t send ICMP, so this is a visual demo).',
+                    '#dnstool-title + .section-desc': 'Query all common record types for a domain in one go (via Cloudflare DoH).',
+                    '#latency-title + .section-desc': 'Probes round-trip latency to multiple global edge endpoints from your browser (greener = faster).',
+                    '#projects-title + .section-desc': 'Open-source projects currently under active maintenance and iteration:',
+                    '#gantt-title + .section-desc': 'Development timelines and activity status of each project.',
+                    '#blog-title + .section-desc': 'Technical notes on edge computing, network protocols, and engineering practice.',
+                    '#heatmap-title + .section-desc': 'GitHub commit activity over the past year (a locally generated visualization preview).',
+                    '#activity-title + .section-desc': 'Recent activity from GitHub (commits, PRs, issues).',
+                    '#gh-repos-title + .section-desc': 'Language breakdown and pinned repositories (fetched live from the GitHub API).',
+                    '#badge-title + .section-desc': 'Professional certifications and open-source milestones marking steady progress.',
+                    '#links-title + .section-desc': 'Some of the technical tools and learning resources I use regularly:',
+                    '#contact-title + .section-desc': 'For technical exchange, collaboration, or a casual chat — reach me through:',
+                    /* ---- Header / Hero ---- */
+                    '.header h1': '👋 I\'m <span class="gradient-text" data-text="BlueDriftHK">BlueDriftHK</span>',
+                    '.tags .tag': ['Edge Computing', 'Serverless', 'Network Diagnostics', 'Full-stack Tools', 'Protocol Security', 'Edge Database', 'Performance'],
+                    '.stat-label': ['Open Source', 'GitHub Stars', 'Tech Domains'],
+                    '#searchBtn span': 'Search',
+                    '#resumeBtn span': 'Resume',
+                    '.skip-link': 'Skip to main content',
+                    /* ---- About body ---- */
+                    '#about-title + p': 'I\'m an <strong style="color:var(--text-primary);">edge computing architect</strong> and <strong style="color:var(--text-primary);">full-stack tooling developer</strong>, passionate about wrapping complex network diagnostics into ready-to-use, lightweight tools powered by Cloudflare Workers.',
+                    '#about-title + p + p': 'I believe <strong style="color:var(--text-primary);">"code is art, performance is justice"</strong> — every tool deserves to be crafted with care, so developers can focus on creating instead of reinventing the wheel.',
+                    '#about-title ~ ul li': [
+                        '<strong style="color:var(--text-primary);">🎯 Current focus:</strong> Building high-performance edge network diagnostics tools that give developers a global monitoring panel in 5 minutes.',
+                        '<strong style="color:var(--text-primary);">🔬 Exploring:</strong> HLS streaming, edge smart routing, real-time data visualization, protocol security, QUIC/HTTP3.',
+                        '<strong style="color:var(--text-primary);">💬 Topics:</strong> Edge computing, Serverless architecture, real-time communication, open source, network performance, DevOps.',
+                        '<strong style="color:var(--text-primary);">🌍 Way of working:</strong> Remote · Open-source driven · Continuous delivery · User-oriented · Docs first.'
+                    ],
+                    /* ---- Status / Performance ---- */
+                    '#statusNote': '<span class="dot" aria-hidden="true"></span>All systems operational',
+                    '.perf-label': ['Performance', 'Accessibility', 'Best Practices', 'SEO'],
+                    /* ---- Network diagnostics ---- */
+                    '@#ndiagInput': 'Enter a domain or URL, e.g. cloudflare.com',
+                    '#ndiagRun': 'Run',
+                    '#ndiagOutput .ndiag-placeholder': 'Enter a target and click "Run" to start diagnosing',
+                    /* ---- Your connection ---- */
+                    '.ipcard-label': ['IP Address', 'Location', 'ISP / Org', 'ASN', 'Timezone', 'Protocol'],
+                    /* ---- Header inspector ---- */
+                    '#hdrRefresh': 'Refetch',
+                    '#hdrView .ndiag-placeholder': 'Fetching your request headers…',
+                    /* ---- TLS handshake ---- */
+                    '#tlsPlay': 'Play Handshake',
+                    '.tls-badge': ['1-RTT', 'Forward Secrecy', 'Encrypted Certs'],
+                    '#tlsDetail': 'Click any step above to see a detailed explanation of that message.',
+                    /* ---- Health / Architecture / Logs ---- */
+                    '#healthRefresh': 'Re-probe',
+                    '#archInfo': 'Click any node in the diagram to see its role in the full delivery path.',
+                    '#logToggle': 'Pause',
+                    /* ---- Traceroute / DNS ---- */
+                    '#traceRun': 'Trace',
+                    '@#traceInput': 'Enter a target domain, e.g. cloudflare.com',
+                    '#dnsToolRun': 'Query',
+                    '@#dnsToolInput': 'Enter a domain, e.g. cloudflare.com',
+                    /* ---- Global latency ---- */
+                    '#latRefresh': 'Re-probe',
+                    /* ---- HTTP/3 vs HTTP/2 ---- */
+                    '.proto-col ul li': [
+                        'Built on <b>TCP</b>; head-of-line blocking remains',
+                        'Multiplexes over a single TCP connection',
+                        'Runs over TLS 1.2/1.3',
+                        'Packet loss stalls all streams',
+                        'Built on <b>QUIC (UDP)</b>; no head-of-line blocking',
+                        'Independent streams; loss doesn\'t cascade',
+                        'Built-in TLS 1.3 with 0-RTT resumption',
+                        'Connection migration (survives network switches)'
+                    ],
+                    /* ---- Contact ---- */
+                    'label[for="contact-name"]': 'Your Name',
+                    'label[for="contact-email"]': 'Email Address',
+                    'label[for="contact-message"]': 'Message',
+                    '@#contact-name': 'What should I call you?',
+                    '@#contact-message': 'What would you like to talk about? Tech exchange, collaboration, or just a hello...',
+                    '.form-submit': 'Send Message',
+                    '#contactForm + p': 'You can also @ me directly in GitHub Issues — I\'ll reply as soon as possible.',
+                    /* ---- Support ---- */
+                    '#support-title ~ ul li': [
+                        '⭐ <strong style="color:var(--text-primary);">Star</strong> my projects — help more developers discover these tools.',
+                        '🐛 Open an <strong style="color:var(--text-primary);">Issue</strong> — report bugs or propose new ideas.',
+                        '☕ <strong style="color:var(--text-primary);">Sponsor</strong> — support continuous iteration via <a href="https://github.com/sponsors/BlueDriftHK" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>.',
+                        '📢 <strong style="color:var(--text-primary);">Share</strong> — spread the word about my projects or articles to help more people.'
+                    ],
+                    '#support-title ~ p': 'All open-source projects are licensed under <strong style="color:var(--text-primary);">GNU GPL v3.0</strong> · Contributions and suggestions welcome.',
+                    /* ---- Footer ---- */
+                    '.footer-links a': ['GitHub', 'Twitter', 'Email', 'Source Code'],
+                    '.footer > p:nth-of-type(1)': '⭐️ If my projects helped you, please give them a Star!',
+                    '.footer > p:nth-of-type(2)': '🔮 Stay curious, stay innovative · Change the world with code',
+                    '#ftBuilt': 'Built with GitHub Pages',
+                    '#ftVisits': 'Visits',
+                    '#ftUptimePre': 'Running stable for',
+                    '#ftUptimeDay': 'days',
+                    /* ---- Search / Command palette ---- */
+                    '@#searchInput': 'Search articles, projects, skills…',
+                    '.search-hint span': [
+                        '<i class="fas fa-arrow-up" aria-hidden="true"></i>/<i class="fas fa-arrow-down" aria-hidden="true"></i> Navigate',
+                        '<i class="fas fa-turn-up" aria-hidden="true"></i> Enter to open',
+                        'ESC to close'
+                    ],
+                    '@#cmdInput': 'Type a command… (navigation, theme, language, resume)'
                 }
             };
 
@@ -7550,32 +8903,63 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 if (saved && dict[saved]) currentLang = saved;
             } catch (_) {}
 
+            // 写入文本：含 '<' 用 innerHTML；否则保留 <i> 图标只换文本
+            function setElText(el, val) {
+                if (val.indexOf('<') !== -1) { el.innerHTML = val; return; }
+                var icon = el.querySelector('i');
+                if (icon) {
+                    el.textContent = '';
+                    el.appendChild(icon);
+                    el.appendChild(document.createTextNode(' ' + val));
+                } else {
+                    el.textContent = val;
+                }
+            }
+
+            // 同步悬浮目录（TOC）链接文字
+            function syncToc() {
+                var panel = document.getElementById('tocPanel');
+                if (!panel) return;
+                panel.querySelectorAll('a').forEach(function (a) {
+                    var id = (a.getAttribute('href') || '').slice(1);
+                    var h2 = id && document.getElementById(id);
+                    if (h2) a.textContent = h2.textContent.trim();
+                });
+            }
+
             function applyLang(lang) {
                 currentLang = lang;
+                window.__siteLang = lang;
                 var translations = dict[lang];
-                Object.keys(translations).forEach(function (id) {
-                    var el = document.getElementById(id);
-                    if (el) {
-                        // 保留图标 <i> 标签，只替换文本
-                        var icon = el.querySelector('i');
-                        if (icon) {
-                            el.textContent = '';
-                            el.appendChild(icon);
-                            el.appendChild(document.createTextNode(' ' + translations[id]));
-                        } else {
-                            el.textContent = translations[id];
+                Object.keys(translations).forEach(function (sel) {
+                    var val = translations[sel];
+                    var isPh = sel.charAt(0) === '@';
+                    var selector = isPh ? sel.slice(1) : sel;
+                    if (Array.isArray(val)) {
+                        document.querySelectorAll(selector).forEach(function (el, i) {
+                            if (i >= val.length) return;
+                            if (isPh) el.setAttribute('placeholder', val[i]);
+                            else setElText(el, val[i]);
+                        });
+                    } else {
+                        var el = document.querySelector(selector);
+                        if (el) {
+                            if (isPh) el.setAttribute('placeholder', val);
+                            else setElText(el, val);
                         }
                     }
                 });
                 // 更新 html lang 属性
-                var langMap = { zh: 'zh-CN', en: 'en', ja: 'ja' };
-                document.documentElement.setAttribute('lang', langMap[lang] || lang);
+                document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
                 // 更新按钮状态
                 langBtns.forEach(function (btn) {
                     var isActive = btn.getAttribute('data-lang') === lang;
                     btn.classList.toggle('active', isActive);
                     btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
                 });
+                syncToc();
+                // 通知动态组件（问候语 / 打字机 / 主题标签等）
+                try { document.dispatchEvent(new CustomEvent('site-lang-change', { detail: lang })); } catch (_) {}
                 try { localStorage.setItem('site-lang', lang); } catch (_) {}
             }
 
@@ -7584,6 +8968,9 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     applyLang(btn.getAttribute('data-lang'));
                 });
             });
+
+            // 暴露给动态组件查询
+            window.__siteLang = currentLang;
 
             // 初始应用
             if (currentLang !== 'zh') applyLang(currentLang);
