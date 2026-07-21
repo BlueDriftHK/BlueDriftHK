@@ -3178,19 +3178,6 @@
             .ndiag-stat-row { gap: 10px; }
         }
 
-        /* ============================================================
-           你的连接 (IP 信息卡片)
-           ============================================================ */
-        .ipcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-        .ipcard-item { background: color-mix(in srgb, var(--bg-dark) 70%, var(--bg-card)); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; transition: var(--transition); }
-        .ipcard-item:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .ipcard-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); font-weight: 600; }
-        .ipcard-val { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; color: var(--text-primary); word-break: break-all; }
-        .ipcard-val.loading { opacity: 0.4; }
-        @media (max-width: 600px) {
-            .ipcard-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .ipcard-item { padding: 10px 12px; }
-        }
 
         /* ============================================================
            请求头透视
@@ -3911,19 +3898,6 @@
             </div>
         </section>
 
-        <!-- ===== 你的连接 ===== -->
-        <section class="card reveal" aria-labelledby="ipcard-title">
-            <h2 id="ipcard-title"><i class="fas fa-user-shield" aria-hidden="true"></i> 你的连接</h2>
-            <p class="section-desc">以下是你当前访问本站时的网络信息（纯前端获取，不经过任何后端存储）。</p>
-            <div class="ipcard-grid" id="ipcardGrid">
-                <div class="ipcard-item"><span class="ipcard-label">IP 地址</span><span class="ipcard-val" id="ipAddr">获取中…</span></div>
-                <div class="ipcard-item"><span class="ipcard-label">位置</span><span class="ipcard-val" id="ipLoc">获取中…</span></div>
-                <div class="ipcard-item"><span class="ipcard-label">ISP / 组织</span><span class="ipcard-val" id="ipOrg">获取中…</span></div>
-                <div class="ipcard-item"><span class="ipcard-label">ASN</span><span class="ipcard-val" id="ipAsn">获取中…</span></div>
-                <div class="ipcard-item"><span class="ipcard-label">时区</span><span class="ipcard-val" id="ipTz">获取中…</span></div>
-                <div class="ipcard-item"><span class="ipcard-label">协议</span><span class="ipcard-val" id="ipProto">获取中…</span></div>
-            </div>
-        </section>
 
         <!-- ===== 请求头透视 ===== -->
         <section class="card reveal" aria-labelledby="headers-title">
@@ -6844,52 +6818,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
             input.addEventListener('keydown', function (e) { if (e.key === 'Enter') run(); });
         })();
 
-        /* ============================================================
-           你的连接 (访客 IP 信息卡片)
-           ============================================================ */
-        (function initIPCard() {
-            var elAddr = document.getElementById('ipAddr');
-            var elLoc = document.getElementById('ipLoc');
-            var elOrg = document.getElementById('ipOrg');
-            var elAsn = document.getElementById('ipAsn');
-            var elTz = document.getElementById('ipTz');
-            var elProto = document.getElementById('ipProto');
-            if (!elAddr) return;
-
-            // 协议版本 — 纯本地，无需网络
-            try {
-                var nav = performance.getEntriesByType('navigation')[0];
-                if (nav && nav.nextHopProtocol) {
-                    var p = nav.nextHopProtocol;
-                    elProto.textContent = p === 'h3' ? 'HTTP/3 (QUIC)' : p === 'h2' ? 'HTTP/2' : p.toUpperCase();
-                } else {
-                    elProto.textContent = location.protocol === 'https:' ? 'HTTPS' : 'HTTP';
-                }
-            } catch (_) { elProto.textContent = '—'; }
-
-            // 时区 — 纯本地
-            try {
-                elTz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || '—';
-            } catch (_) { elTz.textContent = '—'; }
-
-            // IP / 地理 / ISP — 公共 CORS API
-            fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(8000) })
-                .then(function (r) { return r.json(); })
-                .then(function (d) {
-                    elAddr.textContent = d.ip || '—';
-                    var loc = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
-                    elLoc.textContent = loc || '—';
-                    elOrg.textContent = d.org || d.asn_org || '—';
-                    elAsn.textContent = d.asn || '—';
-                    if (d.timezone) elTz.textContent = d.timezone;
-                })
-                .catch(function () {
-                    elAddr.textContent = '获取失败';
-                    elLoc.textContent = '—';
-                    elOrg.textContent = '—';
-                    elAsn.textContent = '—';
-                });
-        })();
 
         /* ============================================================
            请求头透视 (访客 HTTP Headers 可视化)
@@ -9944,7 +9872,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#skills-title': '技术能力',
                     '#terminal-title': '交互式终端',
                     '#netdiag-title': '网络诊断台',
-                    '#ipcard-title': '你的连接',
                     '#headers-title': '请求头透视',
                     '#tls-title': 'TLS 1.3 握手过程',
                     '#health-title': '服务健康',
@@ -9983,7 +9910,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#terminal-title + .section-desc': '输入命令了解我 —— 试试 <code>help</code> 查看所有可用命令。',
                     '.term-hint .term-dim': '快捷命令：',
                     '#netdiag-title + .section-desc': '基于 NetSight Pro 引擎的轻量诊断工具，直接在浏览器中体验。',
-                    '#ipcard-title + .section-desc': '以下是你当前访问本站时的网络信息（纯前端获取，不经过任何后端存储）。',
                     '#headers-title + .section-desc': '你的浏览器每次访问都会携带这些 HTTP 请求头 —— 这就是服务器眼中的你。',
                     '#tls-title + .section-desc': '相比 TLS 1.2 的 2-RTT，TLS 1.3 只需 1-RTT 即可建立加密连接。点击「演示握手」查看完整流程，点击任意步骤查看说明。',
                     '#health-title + .section-desc': '从你的浏览器实时探测本站相关服务的可达性与往返延迟。',
@@ -10036,8 +9962,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '@#ndiagInput': '输入域名或 URL，例如 cloudflare.com',
                     '#ndiagRun': '执行',
                     '#ndiagOutput .ndiag-placeholder': '输入目标后点击「执行」开始诊断',
-                    /* ---- 你的连接 ---- */
-                    '.ipcard-label': ['IP 地址', '位置', 'ISP / 组织', 'ASN', '时区', '协议'],
                     /* ---- 请求头透视 ---- */
                     '#hdrRefresh': '重新抓取',
                     '#hdrView .ndiag-placeholder': '正在抓取你的请求头…',
@@ -10108,7 +10032,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#skills-title': 'Skills',
                     '#terminal-title': 'Terminal',
                     '#netdiag-title': 'Network Diagnostics',
-                    '#ipcard-title': 'Your Connection',
                     '#headers-title': 'Header Inspector',
                     '#tls-title': 'TLS 1.3 Handshake',
                     '#health-title': 'Service Health',
@@ -10147,7 +10070,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '#terminal-title + .section-desc': 'Type commands to learn about me — try <code>help</code> to see all available commands.',
                     '.term-hint .term-dim': 'Quick commands:',
                     '#netdiag-title + .section-desc': 'A lightweight diagnostic tool powered by the NetSight Pro engine, running right in your browser.',
-                    '#ipcard-title + .section-desc': 'Network details of your current visit (fetched purely client-side, never stored on any backend).',
                     '#headers-title + .section-desc': 'These are the HTTP request headers your browser sends on every visit — this is how the server sees you.',
                     '#tls-title + .section-desc': 'Unlike TLS 1.2\'s 2-RTT, TLS 1.3 establishes an encrypted connection in just 1-RTT. Click "Play Handshake" for the full flow, or click any step for details.',
                     '#health-title + .section-desc': 'Probes the reachability and round-trip latency of this site\'s services from your browser in real time.',
@@ -10200,8 +10122,6 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                     '@#ndiagInput': 'Enter a domain or URL, e.g. cloudflare.com',
                     '#ndiagRun': 'Run',
                     '#ndiagOutput .ndiag-placeholder': 'Enter a target and click "Run" to start diagnosing',
-                    /* ---- Your connection ---- */
-                    '.ipcard-label': ['IP Address', 'Location', 'ISP / Org', 'ASN', 'Timezone', 'Protocol'],
                     /* ---- Header inspector ---- */
                     '#hdrRefresh': 'Refetch',
                     '#hdrView .ndiag-placeholder': 'Fetching your request headers…',
