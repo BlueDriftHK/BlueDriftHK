@@ -32,7 +32,6 @@
 - 🧩 Composable 架构信徒——小模块、松耦合、自由组合，拒绝巨石应用
 - 🎨 业余审美在线，坚信 CLI 工具也值得一个漂亮的 UI
 - 📡 关注 QUIC / WebTransport / Wasm 等下一代传输与计算范式
-- 🌏 坐标 Asia/Shanghai，活跃于 UTC+8 时区
 
 **Motto / 座右铭**：
 
