@@ -777,7 +777,7 @@
         [data-theme="light"] .card {
             background: rgba(255, 255, 255, 0.75);
         }
-        /* 渐变流动边框 */
+        /* 渐变流动边框（已禁用） */
         .card::before {
             content: '';
             position: absolute;
@@ -791,6 +791,7 @@
             opacity: 0;
             transition: opacity 0.4s;
             animation: border-rotate 4s linear infinite;
+            display: none;
         }
         @keyframes border-rotate {
             to { --border-angle: 360deg; }
@@ -800,12 +801,12 @@
             initial-value: 0deg;
             inherits: false;
         }
-        .card:hover::before { opacity: 1; }
+        .card:hover::before { opacity: 0; }
         .card:hover {
             border-color: transparent;
             box-shadow: var(--shadow-hover);
         }
-        /* 鼠标跟随光晕 */
+        /* 鼠标跟随光晕（已禁用） */
         .card::after {
             content: '';
             position: absolute;
@@ -818,8 +819,9 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s;
+            display: none;
         }
-        .card:hover::after { opacity: 1; }
+        .card:hover::after { opacity: 0; }
         .card h2 {
             font-size: 1.3rem;
             font-weight: 700;
@@ -1505,35 +1507,8 @@
         }
         [data-theme="light"] .floating-orbs .orb { opacity: 0.06; }
 
-        /* 自定义光标 */
-        .cursor-dot {
-            position: fixed;
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            transition: transform 0.1s ease;
-            mix-blend-mode: difference;
-        }
-        .cursor-ring {
-            position: fixed;
-            width: 32px;
-            height: 32px;
-            border: 1.5px solid var(--primary);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99998;
-            transition: transform 0.15s ease, width 0.2s, height 0.2s, border-color 0.2s;
-            opacity: 0.6;
-        }
-        .cursor-ring.hovering {
-            width: 48px;
-            height: 48px;
-            border-color: var(--accent);
-            opacity: 0.9;
-        }
+        /* 自定义光标（已禁用） */
+        .cursor-dot, .cursor-ring { display: none !important; }
         @media (hover: none), (pointer: coarse) {
             .cursor-dot, .cursor-ring { display: none; }
         }
@@ -5437,7 +5412,7 @@
             var dateEl = document.getElementById('ssDate');
             if (!saver || !logo) return;
 
-            var IDLE_MS = 3000;
+            var IDLE_MS = 180000;
             var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var idleTimer = null, rafId = null, clockTimer = null;
             var active = false;
@@ -8205,19 +8180,19 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
         }
 
         /* ============================================================
-           卡片鼠标光晕跟随
+           卡片鼠标光晕跟随（已禁用）
            ============================================================ */
-        if (window.matchMedia('(hover: hover)').matches) {
-            document.querySelectorAll('.card').forEach(function(card) {
-                card.addEventListener('mousemove', function(e) {
-                    const rect = card.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width) * 100;
-                    const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    card.style.setProperty('--spotlight-x', x + '%');
-                    card.style.setProperty('--spotlight-y', y + '%');
-                }, { passive: true });
-            });
-        }
+        // if (window.matchMedia('(hover: hover)').matches) {
+        //     document.querySelectorAll('.card').forEach(function(card) {
+        //         card.addEventListener('mousemove', function(e) {
+        //             const rect = card.getBoundingClientRect();
+        //             const x = ((e.clientX - rect.left) / rect.width) * 100;
+        //             const y = ((e.clientY - rect.top) / rect.height) * 100;
+        //             card.style.setProperty('--spotlight-x', x + '%');
+        //             card.style.setProperty('--spotlight-y', y + '%');
+        //         }, { passive: true });
+        //     });
+        // }
 
         /* ============================================================
            磁吸按钮效果
@@ -8425,47 +8400,38 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
         }
 
         /* ============================================================
-           自定义光标
+           自定义光标（已禁用）
            ============================================================ */
-        if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-            var cursorDot = document.getElementById('cursorDot');
-            var cursorRing = document.getElementById('cursorRing');
-            var cursorX = 0, cursorY = 0;
-            var ringX = 0, ringY = 0;
-
-            document.addEventListener('mousemove', function(e) {
-                cursorX = e.clientX;
-                cursorY = e.clientY;
-                cursorDot.style.left = (cursorX - 4) + 'px';
-                cursorDot.style.top = (cursorY - 4) + 'px';
-            }, { passive: true });
-
-            function animateRing() {
-                ringX += (cursorX - ringX) * 0.15;
-                ringY += (cursorY - ringY) * 0.15;
-                cursorRing.style.left = (ringX - 16) + 'px';
-                cursorRing.style.top = (ringY - 16) + 'px';
-                requestAnimationFrame(animateRing);
-            }
-            animateRing();
-
-            // 悬停交互元素时放大光环
-            var hoverTargets = document.querySelectorAll('a, button, .skill, .project-card, .link-item, input, textarea');
-            hoverTargets.forEach(function(el) {
-                el.addEventListener('mouseenter', function() {
-                    cursorRing.classList.add('hovering');
-                }, { passive: true });
-                el.addEventListener('mouseleave', function() {
-                    cursorRing.classList.remove('hovering');
-                }, { passive: true });
-            });
-        } else {
-            // 隐藏光标元素
-            var dot = document.getElementById('cursorDot');
-            var ring = document.getElementById('cursorRing');
-            if (dot) dot.style.display = 'none';
-            if (ring) ring.style.display = 'none';
-        }
+        // if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        //     var cursorDot = document.getElementById('cursorDot');
+        //     var cursorRing = document.getElementById('cursorRing');
+        //     var cursorX = 0, cursorY = 0;
+        //     var ringX = 0, ringY = 0;
+        //     document.addEventListener('mousemove', function(e) {
+        //         cursorX = e.clientX;
+        //         cursorY = e.clientY;
+        //         cursorDot.style.left = (cursorX - 4) + 'px';
+        //         cursorDot.style.top = (cursorY - 4) + 'px';
+        //     }, { passive: true });
+        //     function animateRing() {
+        //         ringX += (cursorX - ringX) * 0.15;
+        //         ringY += (cursorY - ringY) * 0.15;
+        //         cursorRing.style.left = (ringX - 16) + 'px';
+        //         cursorRing.style.top = (ringY - 16) + 'px';
+        //         requestAnimationFrame(animateRing);
+        //     }
+        //     animateRing();
+        //     var hoverTargets = document.querySelectorAll('a, button, .skill, .project-card, .link-item, input, textarea');
+        //     hoverTargets.forEach(function(el) {
+        //         el.addEventListener('mouseenter', function() { cursorRing.classList.add('hovering'); }, { passive: true });
+        //         el.addEventListener('mouseleave', function() { cursorRing.classList.remove('hovering'); }, { passive: true });
+        //     });
+        // } else {
+        //     var dot = document.getElementById('cursorDot');
+        //     var ring = document.getElementById('cursorRing');
+        //     if (dot) dot.style.display = 'none';
+        //     if (ring) ring.style.display = 'none';
+        // }
 
         /* ============================================================
            头像点击动画 (旋转 + 弹出表情包)
