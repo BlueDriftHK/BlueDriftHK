@@ -2718,23 +2718,7 @@
         }
         [data-theme="light"] .screensaver { background: rgba(15, 23, 42, 0.9); }
         .screensaver.active { opacity: 1; visibility: visible; }
-        .ss-logo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(1.6rem, 5vw, 3rem);
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: linear-gradient(120deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            white-space: nowrap;
-            will-change: transform;
-            filter: drop-shadow(0 0 18px rgba(6, 182, 212, 0.4));
-            transition: filter 0.4s;
-        }
+        .ss-logo { display: none; }
         .ss-clock {
             position: absolute;
             top: 50%;
@@ -5165,11 +5149,8 @@
         <!-- 频谱 -->
         <div class="ss-spectrum" id="ssSpectrum"></div>
 
-        <!-- 弹跳 Logo -->
-        <div class="ss-logo" id="ssLogo">BlueDriftHK</div>
-
         <!-- 底部提示 -->
-        <div class="ss-hint">移动鼠标或按任意键返回</div>
+        <div class="ss-hint">按 Esc 退出屏保 · T 切换主题 · S 搜索</div>
     </div>
 
     <!-- Konami 代码彩蛋 -->
@@ -5738,16 +5719,14 @@
            ============================================================ */
         (function initScreensaver() {
             var saver = document.getElementById('screensaver');
-            var logo = document.getElementById('ssLogo');
             var timeEl = document.getElementById('ssTime');
             var dateEl = document.getElementById('ssDate');
-            if (!saver || !logo) return;
+            if (!saver) return;
 
-            var IDLE_MS = 10000;
+            var IDLE_MS = 3000;
             var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            var idleTimer = null, rafId = null, clockTimer = null;
+            var idleTimer = null, clockTimer = null;
             var active = false;
-            var x = 80, y = 80, vx = 1.7, vy = 1.25, hue = 0;
 
             function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
@@ -5761,23 +5740,7 @@
                 }
             }
 
-            /* ---- 弹跳 Logo ---- */
-            function step() {
-                var w = window.innerWidth - logo.offsetWidth;
-                var h = window.innerHeight - logo.offsetHeight;
-                x += vx; y += vy;
-                var bounced = false;
-                if (x <= 0) { x = 0; vx = Math.abs(vx); bounced = true; }
-                else if (x >= w) { x = w; vx = -Math.abs(vx); bounced = true; }
-                if (y <= 0) { y = 0; vy = Math.abs(vy); bounced = true; }
-                else if (y >= h) { y = h; vy = -Math.abs(vy); bounced = true; }
-                if (bounced) {
-                    hue = (hue + 47) % 360;
-                    logo.style.filter = 'drop-shadow(0 0 18px rgba(6,182,212,0.4)) hue-rotate(' + hue + 'deg)';
-                }
-                logo.style.transform = 'translate(' + x + 'px,' + y + 'px)';
-                rafId = requestAnimationFrame(step);
-            }
+            /* ---- 弹跳 Logo（已移除） ---- */
 
             /* ---- 环形时钟 ---- */
             var ringHr = document.getElementById('ssRingHr');
@@ -6113,13 +6076,6 @@
                 tickCountdown();
                 var cdInterval = setInterval(tickCountdown, 1000);
 
-                // 弹跳 Logo
-                if (!reduce) {
-                    x = Math.random() * Math.max(1, window.innerWidth - logo.offsetWidth);
-                    y = Math.random() * Math.max(1, window.innerHeight - logo.offsetHeight);
-                    rafId = requestAnimationFrame(step);
-                }
-
                 // 保存定时器引用以便清理
                 saver._ssTimers = [ringTimer, specInterval, sysInterval, cdInterval];
             }
@@ -6129,7 +6085,6 @@
                 active = false;
                 saver.classList.remove('active');
                 saver.setAttribute('aria-hidden', 'true');
-                if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
                 if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
                 if (pRaf) { cancelAnimationFrame(pRaf); pRaf = null; }
                 if (quoteTimer) { clearTimeout(quoteTimer); quoteTimer = null; }
@@ -6142,26 +6097,25 @@
             }
 
             function resetTimer() {
-                if (active) deactivate();
                 if (idleTimer) clearTimeout(idleTimer);
                 idleTimer = setTimeout(activate, IDLE_MS);
             }
 
             /* ---- 快捷键 ---- */
             window.addEventListener('keydown', function (e) {
-                if (!active) return;
-                if (e.key === 't' || e.key === 'T') {
-                    document.getElementById('themeToggle').click();
-                } else if (e.key === 's' || e.key === 'S') {
-                    var searchBtn = document.getElementById('searchBtn') || document.querySelector('[aria-label="搜索"]');
-                    if (searchBtn) searchBtn.click();
+                if (e.key === 'Escape' || e.key === 'Esc') {
+                    if (active) deactivate();
+                } else if (active) {
+                    if (e.key === 't' || e.key === 'T') {
+                        document.getElementById('themeToggle').click();
+                    } else if (e.key === 's' || e.key === 'S') {
+                        var searchBtn = document.getElementById('searchBtn') || document.querySelector('[aria-label="搜索"]');
+                        if (searchBtn) searchBtn.click();
+                    }
+                } else {
+                    resetTimer();
                 }
             }, { passive: true });
-
-            var events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'];
-            events.forEach(function (ev) {
-                window.addEventListener(ev, resetTimer, { passive: true });
-            });
 
             document.addEventListener('visibilitychange', function () {
                 if (document.hidden) {
@@ -10393,6 +10347,9 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
                 var tag = (e.target.tagName || '').toLowerCase();
                 if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
                 if (e.ctrlKey || e.metaKey || e.altKey) return;
+                // 屏保激活时不响应全局快捷键
+                var saver = document.getElementById('screensaver');
+                if (saver && saver.classList.contains('active')) return;
 
                 var key = e.key.toLowerCase();
                 if (key === 'd') {
