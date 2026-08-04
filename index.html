@@ -5743,7 +5743,7 @@
             var dateEl = document.getElementById('ssDate');
             if (!saver || !logo) return;
 
-            var IDLE_MS = 3000;
+            var IDLE_MS = 10000;
             var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var idleTimer = null, rafId = null, clockTimer = null;
             var active = false;
