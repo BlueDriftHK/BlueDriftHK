@@ -2769,6 +2769,262 @@
             .ss-logo { top: 16%; left: 50%; transform: translateX(-50%) !important; }
         }
 
+        /* ---- 屏保粒子星空画布 ---- */
+        #ssParticleCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ---- 屏保天气小部件 ---- */
+        .ss-weather {
+            position: absolute;
+            top: 24px;
+            left: 28px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s 0.3s, transform 0.5s 0.3s;
+        }
+        .screensaver.active .ss-weather { opacity: 1; transform: none; }
+        .ss-weather-icon { font-size: 1.6rem; line-height: 1; }
+        .ss-weather-temp {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .ss-weather-desc { font-size: 0.72rem; color: var(--text-secondary); margin-top: 2px; }
+        .ss-weather-loc { font-size: 0.68rem; color: var(--primary); margin-top: 1px; }
+
+        /* ---- 屏保系统状态条 ---- */
+        .ss-sysbar {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            z-index: 2;
+            display: flex;
+            gap: 16px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            background: rgba(17, 24, 39, 0.6);
+            border: 1px solid rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s 0.4s, transform 0.5s 0.4s;
+        }
+        .screensaver.active .ss-sysbar { opacity: 1; transform: none; }
+        .ss-sys-item { display: flex; align-items: center; gap: 6px; }
+        .ss-sys-item i { color: var(--primary); font-size: 0.78rem; }
+        .ss-sys-val { color: var(--text-primary); font-weight: 600; }
+        .ss-sys-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 6px #34d399;
+        }
+        .ss-sys-dot.offline { background: #f87171; box-shadow: 0 0 6px #f87171; }
+
+        /* ---- 屏保名言轮播 ---- */
+        .ss-quote {
+            position: absolute;
+            left: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            max-width: 260px;
+            opacity: 0;
+            transition: opacity 0.5s 0.6s;
+        }
+        .screensaver.active .ss-quote { opacity: 1; }
+        .ss-quote-text {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-style: italic;
+            border-left: 2px solid var(--primary);
+            padding-left: 14px;
+            min-height: 3.4em;
+        }
+        .ss-quote-author {
+            margin-top: 8px;
+            font-size: 0.72rem;
+            color: var(--primary);
+            padding-left: 16px;
+        }
+        .ss-quote-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: var(--primary);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+        }
+
+        /* ---- 屏保访客计数 ---- */
+        .ss-visitors {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s 0.7s;
+        }
+        .screensaver.active .ss-visitors { opacity: 1; }
+        .ss-visitors-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .ss-visitors-label {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .ss-visitors-today {
+            font-size: 0.68rem;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        /* ---- 屏保频谱动画条 ---- */
+        .ss-spectrum {
+            position: absolute;
+            bottom: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 36px;
+            opacity: 0;
+            transition: opacity 0.5s 0.5s;
+        }
+        .screensaver.active .ss-spectrum { opacity: 1; }
+        .ss-spec-bar {
+            width: 4px;
+            border-radius: 2px;
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            animation: specBounce 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes specBounce {
+            0% { height: 4px; opacity: 0.4; }
+            100% { height: var(--spec-h, 20px); opacity: 1; }
+        }
+
+        /* ---- 屏保快捷操作提示 ---- */
+        .ss-shortcuts {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s 0.8s;
+        }
+        .screensaver.active .ss-shortcuts { opacity: 1; }
+        .ss-shortcut {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: rgba(17, 24, 39, 0.5);
+            border: 1px solid rgba(30, 41, 59, 0.5);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+        }
+        .ss-shortcut kbd {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 4px;
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.66rem;
+        }
+
+        /* ---- 屏保倒计时 ---- */
+        .ss-countdown {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s 0.9s;
+        }
+        .screensaver.active .ss-countdown { opacity: 1; }
+        .ss-countdown-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .ss-countdown-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+        .ss-countdown-event {
+            font-size: 0.68rem;
+            color: var(--accent-light);
+            margin-top: 2px;
+        }
+
+        /* ---- 屏保环形时钟 ---- */
+        .ss-ring-clock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s 0.2s;
+        }
+        .screensaver.active .ss-ring-clock { opacity: 1; }
+        .ss-ring-clock svg {
+            width: clamp(200px, 35vw, 340px);
+            height: clamp(200px, 35vw, 340px);
+        }
+        .ss-ring-track { fill: none; stroke: rgba(30, 41, 59, 0.4); stroke-width: 3; }
+        .ss-ring-sec { fill: none; stroke: var(--primary); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.3s; filter: drop-shadow(0 0 4px rgba(6,182,212,0.5)); }
+        .ss-ring-min { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; transition: stroke-dashoffset 0.5s; filter: drop-shadow(0 0 4px rgba(139,92,246,0.4)); }
+        .ss-ring-hr { fill: none; stroke: var(--primary-light); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s; filter: drop-shadow(0 0 6px rgba(34,211,238,0.5)); }
+        .ss-ring-tick { stroke: rgba(148, 163, 184, 0.2); stroke-width: 1; }
+
         /* 自定义滚动条 */
         html { scrollbar-width: thin; scrollbar-color: var(--primary) var(--bg-dark); }
         ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -4833,11 +5089,86 @@
 
     <!-- 页面空闲屏保 -->
     <div class="screensaver" id="screensaver" aria-hidden="true">
+        <canvas id="ssParticleCanvas"></canvas>
+
+        <!-- 环形时钟（背景层） -->
+        <div class="ss-ring-clock" id="ssRingClock">
+            <svg viewBox="0 0 200 200">
+                <circle class="ss-ring-track" cx="100" cy="100" r="90"/>
+                <circle class="ss-ring-track" cx="100" cy="100" r="75"/>
+                <circle class="ss-ring-track" cx="100" cy="100" r="60"/>
+                <!-- 刻度 -->
+                <g id="ssRingTicks"></g>
+                <!-- 进度弧 -->
+                <circle class="ss-ring-hr" id="ssRingHr" cx="100" cy="100" r="60"
+                    stroke-dasharray="377" stroke-dashoffset="377" transform="rotate(-90 100 100)"/>
+                <circle class="ss-ring-min" id="ssRingMin" cx="100" cy="100" r="75"
+                    stroke-dasharray="471.2" stroke-dashoffset="471.2" transform="rotate(-90 100 100)"/>
+                <circle class="ss-ring-sec" id="ssRingSec" cx="100" cy="100" r="90"
+                    stroke-dasharray="565.5" stroke-dashoffset="565.5" transform="rotate(-90 100 100)"/>
+            </svg>
+        </div>
+
+        <!-- 数字时钟 -->
         <div class="ss-clock">
             <div class="ss-time" id="ssTime">00:00</div>
             <div class="ss-date" id="ssDate"></div>
         </div>
+
+        <!-- 天气 -->
+        <div class="ss-weather" id="ssWeather">
+            <div>
+                <div class="ss-weather-icon" id="ssWeatherIcon">--</div>
+                <div class="ss-weather-loc" id="ssWeatherLoc">定位中…</div>
+            </div>
+            <div>
+                <div class="ss-weather-temp" id="ssWeatherTemp">--°</div>
+                <div class="ss-weather-desc" id="ssWeatherDesc">加载中</div>
+            </div>
+        </div>
+
+        <!-- 系统状态 -->
+        <div class="ss-sysbar" id="ssSysbar">
+            <div class="ss-sys-item"><div class="ss-sys-dot" id="ssNetDot"></div><span id="ssNetStatus">在线</span></div>
+            <div class="ss-sys-item"><i class="fas fa-memory"></i><span class="ss-sys-val" id="ssMemVal">--</span></div>
+            <div class="ss-sys-item"><i class="fas fa-file-alt"></i><span class="ss-sys-val" id="ssResVal">--</span></div>
+            <div class="ss-sys-item"><i class="fas fa-wifi"></i><span class="ss-sys-val" id="ssConnVal">--</span></div>
+        </div>
+
+        <!-- 名言 -->
+        <div class="ss-quote">
+            <div class="ss-quote-text" id="ssQuoteText"></div>
+            <div class="ss-quote-author" id="ssQuoteAuthor"></div>
+        </div>
+
+        <!-- 访客计数 -->
+        <div class="ss-visitors">
+            <div class="ss-visitors-num" id="ssVisitorsNum">0</div>
+            <div class="ss-visitors-label">累计访客</div>
+            <div class="ss-visitors-today" id="ssVisitorsToday">今日 0</div>
+        </div>
+
+        <!-- 倒计时 -->
+        <div class="ss-countdown">
+            <div class="ss-countdown-label" id="ssCountdownLabel">距离</div>
+            <div class="ss-countdown-timer" id="ssCountdownTimer">--</div>
+            <div class="ss-countdown-event" id="ssCountdownEvent"></div>
+        </div>
+
+        <!-- 快捷操作 -->
+        <div class="ss-shortcuts">
+            <div class="ss-shortcut"><kbd>T</kbd> 切换主题</div>
+            <div class="ss-shortcut"><kbd>S</kbd> 搜索</div>
+            <div class="ss-shortcut"><kbd>Esc</kbd> 关闭屏保</div>
+        </div>
+
+        <!-- 频谱 -->
+        <div class="ss-spectrum" id="ssSpectrum"></div>
+
+        <!-- 弹跳 Logo -->
         <div class="ss-logo" id="ssLogo">BlueDriftHK</div>
+
+        <!-- 底部提示 -->
         <div class="ss-hint">移动鼠标或按任意键返回</div>
     </div>
 
@@ -5403,7 +5734,7 @@
         })();
 
         /* ============================================================
-           页面空闲屏保
+           页面空闲屏保（增强版）
            ============================================================ */
         (function initScreensaver() {
             var saver = document.getElementById('screensaver');
@@ -5412,7 +5743,7 @@
             var dateEl = document.getElementById('ssDate');
             if (!saver || !logo) return;
 
-            var IDLE_MS = 180000;
+            var IDLE_MS = 3000;
             var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var idleTimer = null, rafId = null, clockTimer = null;
             var active = false;
@@ -5420,6 +5751,7 @@
 
             function pad(n) { return n < 10 ? '0' + n : '' + n; }
 
+            /* ---- 数字时钟 ---- */
             function tickClock() {
                 var d = new Date();
                 if (timeEl) timeEl.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
@@ -5429,6 +5761,7 @@
                 }
             }
 
+            /* ---- 弹跳 Logo ---- */
             function step() {
                 var w = window.innerWidth - logo.offsetWidth;
                 var h = window.innerHeight - logo.offsetHeight;
@@ -5446,6 +5779,300 @@
                 rafId = requestAnimationFrame(step);
             }
 
+            /* ---- 环形时钟 ---- */
+            var ringHr = document.getElementById('ssRingHr');
+            var ringMin = document.getElementById('ssRingMin');
+            var ringSec = document.getElementById('ssRingSec');
+            var HR_C = 377, MIN_C = 471.2, SEC_C = 565.5;
+            // 生成刻度
+            (function initTicks() {
+                var g = document.getElementById('ssRingTicks');
+                if (!g) return;
+                for (var i = 0; i < 60; i++) {
+                    var a = (i / 60) * Math.PI * 2 - Math.PI / 2;
+                    var r1 = 94, r2 = i % 5 === 0 ? 88 : 91;
+                    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', 100 + Math.cos(a) * r1);
+                    line.setAttribute('y1', 100 + Math.sin(a) * r1);
+                    line.setAttribute('x2', 100 + Math.cos(a) * r2);
+                    line.setAttribute('y2', 100 + Math.sin(a) * r2);
+                    line.setAttribute('class', 'ss-ring-tick');
+                    if (i % 5 === 0) line.setAttribute('stroke-width', '1.5');
+                    g.appendChild(line);
+                }
+            })();
+            function tickRing() {
+                var d = new Date();
+                var h = d.getHours() % 12, m = d.getMinutes(), s = d.getSeconds(), ms = d.getMilliseconds();
+                var sFrac = (s + ms / 1000) / 60;
+                var mFrac = (m + sFrac) / 60;
+                var hFrac = (h + mFrac) / 12;
+                if (ringSec) ringSec.setAttribute('stroke-dashoffset', SEC_C * (1 - sFrac));
+                if (ringMin) ringMin.setAttribute('stroke-dashoffset', MIN_C * (1 - mFrac));
+                if (ringHr) ringHr.setAttribute('stroke-dashoffset', HR_C * (1 - hFrac));
+            }
+
+            /* ---- 粒子星空 ---- */
+            var pCanvas = document.getElementById('ssParticleCanvas');
+            var pCtx = null, pStars = [], pRaf = null;
+            function initParticles() {
+                if (!pCanvas || !pCanvas.getContext) return;
+                pCtx = pCanvas.getContext('2d');
+                var w = window.innerWidth, h = window.innerHeight;
+                pCanvas.width = w; pCanvas.height = h;
+                pStars = [];
+                var count = Math.min(120, Math.floor(w * h / 8000));
+                for (var i = 0; i < count; i++) {
+                    pStars.push({
+                        x: Math.random() * w, y: Math.random() * h,
+                        r: Math.random() * 1.5 + 0.3,
+                        vx: (Math.random() - 0.5) * 0.15,
+                        vy: (Math.random() - 0.5) * 0.15,
+                        alpha: Math.random() * 0.6 + 0.2,
+                        twinkle: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+            function drawParticles() {
+                if (!pCtx) return;
+                pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+                for (var i = 0; i < pStars.length; i++) {
+                    var s = pStars[i];
+                    s.x += s.vx; s.y += s.vy;
+                    s.twinkle += 0.015;
+                    if (s.x < 0) s.x = pCanvas.width;
+                    if (s.x > pCanvas.width) s.x = 0;
+                    if (s.y < 0) s.y = pCanvas.height;
+                    if (s.y > pCanvas.height) s.y = 0;
+                    var a = s.alpha * (0.5 + 0.5 * Math.sin(s.twinkle));
+                    pCtx.beginPath();
+                    pCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                    pCtx.fillStyle = 'rgba(148,163,184,' + a.toFixed(3) + ')';
+                    pCtx.fill();
+                }
+                // 连线
+                for (var i = 0; i < pStars.length; i++) {
+                    for (var j = i + 1; j < pStars.length; j++) {
+                        var dx = pStars[i].x - pStars[j].x, dy = pStars[i].y - pStars[j].y;
+                        var dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 100) {
+                            pCtx.beginPath();
+                            pCtx.moveTo(pStars[i].x, pStars[i].y);
+                            pCtx.lineTo(pStars[j].x, pStars[j].y);
+                            pCtx.strokeStyle = 'rgba(6,182,212,' + (0.06 * (1 - dist / 100)).toFixed(3) + ')';
+                            pCtx.lineWidth = 0.5;
+                            pCtx.stroke();
+                        }
+                    }
+                }
+                pRaf = requestAnimationFrame(drawParticles);
+            }
+
+            /* ---- 频谱条 ---- */
+            var specEl = document.getElementById('ssSpectrum');
+            var specBars = [];
+            function initSpectrum() {
+                if (!specEl) return;
+                specEl.innerHTML = '';
+                specBars = [];
+                var count = 40;
+                for (var i = 0; i < count; i++) {
+                    var bar = document.createElement('div');
+                    bar.className = 'ss-spec-bar';
+                    var h = 6 + Math.random() * 26;
+                    bar.style.setProperty('--spec-h', h + 'px');
+                    bar.style.animationDelay = (Math.random() * 0.8).toFixed(2) + 's';
+                    bar.style.animationDuration = (0.4 + Math.random() * 0.6).toFixed(2) + 's';
+                    specEl.appendChild(bar);
+                    specBars.push(bar);
+                }
+            }
+            function randomizeSpectrum() {
+                for (var i = 0; i < specBars.length; i++) {
+                    var h = 4 + Math.random() * 30;
+                    specBars[i].style.setProperty('--spec-h', h + 'px');
+                }
+            }
+
+            /* ---- 名言轮播 ---- */
+            var QUOTES = [
+                { text: '代码即艺术，性能即正义。', author: '— BlueDriftHK' },
+                { text: 'Any sufficiently advanced technology is indistinguishable from magic.', author: '— Arthur C. Clarke' },
+                { text: 'The best way to predict the future is to invent it.', author: '— Alan Kay' },
+                { text: 'First, solve the problem. Then, write the code.', author: '— John Johnson' },
+                { text: 'Simplicity is the ultimate sophistication.', author: '— Leonardo da Vinci' },
+                { text: 'Programs must be written for people to read, and only incidentally for machines to execute.', author: '— Harold Abelson' },
+                { text: 'The edge is where the future lives.', author: '— BlueDriftHK' },
+                { text: 'Measure twice, cut once — especially in distributed systems.', author: '— BlueDriftHK' }
+            ];
+            var quoteIdx = 0, quoteCharIdx = 0, quoteDeleting = false, quoteTimer = null;
+            var quoteTextEl = document.getElementById('ssQuoteText');
+            var quoteAuthorEl = document.getElementById('ssQuoteAuthor');
+            function typeQuote() {
+                if (!quoteTextEl) return;
+                var q = QUOTES[quoteIdx];
+                if (!quoteDeleting) {
+                    quoteTextEl.innerHTML = q.text.substring(0, quoteCharIdx) + '<span class="ss-quote-cursor"></span>';
+                    quoteCharIdx++;
+                    if (quoteCharIdx > q.text.length) {
+                        quoteDeleting = true;
+                        quoteTimer = setTimeout(typeQuote, 3000);
+                        return;
+                    }
+                    quoteTimer = setTimeout(typeQuote, 50 + Math.random() * 30);
+                } else {
+                    quoteTextEl.innerHTML = q.text.substring(0, quoteCharIdx) + '<span class="ss-quote-cursor"></span>';
+                    quoteCharIdx--;
+                    if (quoteCharIdx < 0) {
+                        quoteDeleting = false;
+                        quoteIdx = (quoteIdx + 1) % QUOTES.length;
+                        if (quoteAuthorEl) quoteAuthorEl.textContent = QUOTES[quoteIdx].author;
+                        quoteTimer = setTimeout(typeQuote, 500);
+                        return;
+                    }
+                    quoteTimer = setTimeout(typeQuote, 25);
+                }
+            }
+
+            /* ---- 访客计数 ---- */
+            var visitorsEl = document.getElementById('ssVisitorsNum');
+            var visitorsTodayEl = document.getElementById('ssVisitorsToday');
+            function updateVisitors() {
+                var total = 0, today = 0;
+                try {
+                    total = parseInt(localStorage.getItem('ss_total_visits') || '0', 10);
+                    var lastDate = localStorage.getItem('ss_last_visit_date') || '';
+                    var todayStr = new Date().toISOString().slice(0, 10);
+                    today = parseInt(localStorage.getItem('ss_today_visits') || '0', 10);
+                    if (lastDate !== todayStr) {
+                        today = 1;
+                        localStorage.setItem('ss_last_visit_date', todayStr);
+                    } else {
+                        today++;
+                    }
+                    total++;
+                    localStorage.setItem('ss_total_visits', String(total));
+                    localStorage.setItem('ss_today_visits', String(today));
+                } catch (e) {
+                    total = Math.floor(Math.random() * 5000) + 1000;
+                    today = Math.floor(Math.random() * 50) + 10;
+                }
+                if (visitorsEl) visitorsEl.textContent = total.toLocaleString();
+                if (visitorsTodayEl) visitorsTodayEl.textContent = '今日 ' + today;
+            }
+
+            /* ---- 天气 ---- */
+            var weatherIconEl = document.getElementById('ssWeatherIcon');
+            var weatherTempEl = document.getElementById('ssWeatherTemp');
+            var weatherDescEl = document.getElementById('ssWeatherDesc');
+            var weatherLocEl = document.getElementById('ssWeatherLoc');
+            var WMO_CODES = {
+                0: ['☀️', '晴'], 1: ['🌤️', '大部晴朗'], 2: ['⛅', '多云'], 3: ['☁️', '阴'],
+                45: ['️', '雾'], 48: ['️', '雾凇'], 51: ['🌦️', '小毛毛雨'], 53: ['🌦️', '毛毛雨'],
+                55: ['🌧️', '密毛毛雨'], 61: ['🌧️', '小雨'], 63: ['🌧️', '中雨'], 65: ['🌧️', '大雨'],
+                71: ['🌨️', '小雪'], 73: ['️', '中雪'], 75: ['❄️', '大雪'], 77: ['❄️', '雪粒'],
+                80: ['🌧️', '小阵雨'], 81: ['🌧️', '阵雨'], 82: ['️', '强阵雨'],
+                95: ['⛈️', '雷暴'], 96: ['⛈️', '雷暴+小冰雹'], 99: ['⛈️', '雷暴+大冰雹']
+            };
+            function fetchWeather(lat, lon) {
+                fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&timezone=auto')
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (!data || !data.current_weather) return;
+                        var cw = data.current_weather;
+                        var info = WMO_CODES[cw.weathercode] || ['️', '未知'];
+                        if (weatherIconEl) weatherIconEl.textContent = info[0];
+                        if (weatherTempEl) weatherTempEl.textContent = Math.round(cw.temperature) + '°C';
+                        if (weatherDescEl) weatherDescEl.textContent = info[1] + ' · 风速 ' + cw.windspeed + ' km/h';
+                    })
+                    .catch(function () {
+                        if (weatherDescEl) weatherDescEl.textContent = '天气数据暂不可用';
+                    });
+            }
+            function initWeather() {
+                if (weatherLocEl) weatherLocEl.textContent = '定位中…';
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (pos) {
+                            var lat = pos.coords.latitude.toFixed(2);
+                            var lon = pos.coords.longitude.toFixed(2);
+                            if (weatherLocEl) weatherLocEl.textContent = lat + '°N, ' + lon + '°E';
+                            fetchWeather(pos.coords.latitude, pos.coords.longitude);
+                        },
+                        function () {
+                            // 默认香港
+                            if (weatherLocEl) weatherLocEl.textContent = '香港 (默认)';
+                            fetchWeather(22.3193, 114.1694);
+                        },
+                        { timeout: 5000 }
+                    );
+                } else {
+                    if (weatherLocEl) weatherLocEl.textContent = '香港 (默认)';
+                    fetchWeather(22.3193, 114.1694);
+                }
+            }
+
+            /* ---- 系统状态 ---- */
+            var netDot = document.getElementById('ssNetDot');
+            var netStatus = document.getElementById('ssNetStatus');
+            var memVal = document.getElementById('ssMemVal');
+            var resVal = document.getElementById('ssResVal');
+            var connVal = document.getElementById('ssConnVal');
+            function updateSysbar() {
+                // 网络
+                var online = navigator.onLine;
+                if (netDot) { netDot.className = 'ss-sys-dot' + (online ? '' : ' offline'); }
+                if (netStatus) netStatus.textContent = online ? '在线' : '离线';
+                // 内存
+                if (memVal) {
+                    var mem = performance.memory;
+                    memVal.textContent = mem ? Math.round(mem.usedJSHeapSize / 1048576) + ' MB' : 'N/A';
+                }
+                // 资源数
+                if (resVal) {
+                    var resources = performance.getEntriesByType('resource');
+                    resVal.textContent = resources.length + ' 资源';
+                }
+                // 连接类型
+                if (connVal) {
+                    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                    connVal.textContent = conn ? (conn.effectiveType || conn.type || '--').toUpperCase() : '--';
+                }
+            }
+
+            /* ---- 倒计时 ---- */
+            var countdownLabel = document.getElementById('ssCountdownLabel');
+            var countdownTimer = document.getElementById('ssCountdownTimer');
+            var countdownEvent = document.getElementById('ssCountdownEvent');
+            var EVENTS = [
+                { name: '新年', date: function () { var y = new Date().getFullYear() + 1; return new Date(y, 0, 1); } },
+                { name: '春节 2027', date: function () { return new Date(2027, 1, 6); } },
+                { name: '中秋 2026', date: function () { return new Date(2026, 8, 25); } },
+                { name: '国庆', date: function () { return new Date(new Date().getFullYear(), 9, 1); } }
+            ];
+            function getNextEvent() {
+                var now = new Date();
+                for (var i = 0; i < EVENTS.length; i++) {
+                    var d = EVENTS[i].date();
+                    if (d > now) return { name: EVENTS[i].name, date: d };
+                }
+                return { name: EVENTS[0].name, date: EVENTS[0].date() };
+            }
+            function tickCountdown() {
+                var ev = getNextEvent();
+                var now = new Date();
+                var diff = ev.date - now;
+                if (diff < 0) diff = 0;
+                var days = Math.floor(diff / 86400000);
+                var hours = Math.floor((diff % 86400000) / 3600000);
+                var mins = Math.floor((diff % 3600000) / 60000);
+                var secs = Math.floor((diff % 60000) / 1000);
+                if (countdownLabel) countdownLabel.textContent = '距离 ' + ev.name;
+                if (countdownTimer) countdownTimer.textContent = days + '天 ' + pad(hours) + ':' + pad(mins) + ':' + pad(secs);
+                if (countdownEvent) countdownEvent.textContent = ev.date.getFullYear() + '-' + pad(ev.date.getMonth() + 1) + '-' + pad(ev.date.getDate());
+            }
+
+            /* ---- 激活/失活 ---- */
             function activate() {
                 if (active) return;
                 active = true;
@@ -5453,11 +6080,48 @@
                 saver.setAttribute('aria-hidden', 'false');
                 tickClock();
                 clockTimer = setInterval(tickClock, 1000);
+
+                // 环形时钟
+                tickRing();
+                var ringTimer = setInterval(tickRing, 100);
+
+                // 粒子
+                if (!reduce) {
+                    initParticles();
+                    drawParticles();
+                }
+
+                // 频谱
+                initSpectrum();
+                var specInterval = setInterval(randomizeSpectrum, 600);
+
+                // 名言
+                if (quoteAuthorEl) quoteAuthorEl.textContent = QUOTES[0].author;
+                typeQuote();
+
+                // 访客
+                updateVisitors();
+
+                // 天气
+                initWeather();
+
+                // 系统状态
+                updateSysbar();
+                var sysInterval = setInterval(updateSysbar, 2000);
+
+                // 倒计时
+                tickCountdown();
+                var cdInterval = setInterval(tickCountdown, 1000);
+
+                // 弹跳 Logo
                 if (!reduce) {
                     x = Math.random() * Math.max(1, window.innerWidth - logo.offsetWidth);
                     y = Math.random() * Math.max(1, window.innerHeight - logo.offsetHeight);
                     rafId = requestAnimationFrame(step);
                 }
+
+                // 保存定时器引用以便清理
+                saver._ssTimers = [ringTimer, specInterval, sysInterval, cdInterval];
             }
 
             function deactivate() {
@@ -5467,6 +6131,14 @@
                 saver.setAttribute('aria-hidden', 'true');
                 if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
                 if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+                if (pRaf) { cancelAnimationFrame(pRaf); pRaf = null; }
+                if (quoteTimer) { clearTimeout(quoteTimer); quoteTimer = null; }
+                if (saver._ssTimers) {
+                    saver._ssTimers.forEach(function (t) { clearInterval(t); });
+                    saver._ssTimers = [];
+                }
+                quoteCharIdx = 0;
+                quoteDeleting = false;
             }
 
             function resetTimer() {
@@ -5475,12 +6147,22 @@
                 idleTimer = setTimeout(activate, IDLE_MS);
             }
 
+            /* ---- 快捷键 ---- */
+            window.addEventListener('keydown', function (e) {
+                if (!active) return;
+                if (e.key === 't' || e.key === 'T') {
+                    document.getElementById('themeToggle').click();
+                } else if (e.key === 's' || e.key === 'S') {
+                    var searchBtn = document.getElementById('searchBtn') || document.querySelector('[aria-label="搜索"]');
+                    if (searchBtn) searchBtn.click();
+                }
+            }, { passive: true });
+
             var events = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'wheel'];
             events.forEach(function (ev) {
                 window.addEventListener(ev, resetTimer, { passive: true });
             });
 
-            // 页面不可见时暂停计时，可见时重置
             document.addEventListener('visibilitychange', function () {
                 if (document.hidden) {
                     if (idleTimer) clearTimeout(idleTimer);
