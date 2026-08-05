@@ -9,6 +9,8 @@
     <meta name="author" content="BlueDriftHK" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://blog.bjhr.space/" />
+    <link rel="icon" type="image/png" href="fkcgcd4s-1024.png" />
+    <link rel="apple-touch-icon" href="fkcgcd4s-1024.png" />
 
     <!-- PWA -->
     <meta name="theme-color" content="#0a0e1a" />
@@ -646,7 +648,26 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
-            margin-top: 16px;
+            margin-bottom: 10px;
+        }
+        .header-actions a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 18px;
+            border-radius: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            min-height: 40px;
+        }
+        .header-actions a:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            color: var(--text-primary);
+            box-shadow: var(--glow);
         }
         .theme-toggle {
             background: var(--bg-card);
@@ -736,7 +757,7 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 8px;
-            margin-top: 14px;
+            margin-bottom: 20px;
         }
         .social-bar a {
             display: inline-flex;
@@ -3836,9 +3857,36 @@
 
         <!-- ===== 头部 ===== -->
         <header class="header reveal">
+
+            <div class="header-actions">
+                <button class="theme-toggle magnetic-btn" id="searchBtn" aria-label="搜索本站 (按 /)" type="button">
+                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i> <span>搜索</span>
+                </button>
+                <button class="theme-toggle magnetic-btn" id="themeToggle" aria-label="切换深色/浅色主题" type="button">
+                    <i class="fas fa-moon" aria-hidden="true"></i> <span id="themeLabel">深色</span>
+                </button>
+                <button class="theme-toggle magnetic-btn bg-mode-btn" id="bgModeBtn" aria-label="切换背景特效" aria-pressed="false" type="button">
+                    <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> <span id="bgModeLabel">特效关</span>
+                </button>
+                <div class="lang-switch" role="group" aria-label="语言切换">
+                    <button class="lang-btn active" data-lang="zh" type="button" aria-pressed="true">中</button>
+                    <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
+                </div>
+                <button class="resume-btn magnetic-btn" id="resumeBtn" type="button" aria-label="下载简历 PDF">
+                    <i class="fas fa-download btn-icon" aria-hidden="true"></i>
+                    <i class="fas fa-check btn-check" aria-hidden="true"></i>
+                    <span>简历</span>
+                </button>
+                <a href="https://github.com/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
+                <a href="mailto:asiacomk@gmail.com"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
+                <a href="https://twitter.com/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter" aria-hidden="true"></i> Twitter</a>
+                <a href="https://t.me/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram-plane" aria-hidden="true"></i> Telegram</a>
+                <a href="https://youtube.com/@BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube" aria-hidden="true"></i> YouTube</a>
+            </div>
+
             <div class="avatar-wrapper">
-                <img class="avatar" src="https://github.com/BlueDriftHK.png" alt="BlueDriftHK 头像" width="130" height="130" loading="eager"
-                    onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22130%22 height=%22130%22%3E%3Crect fill=%22%23111827%22 width=%22130%22 height=%22130%22 rx=%2265%22/%3E%3Ctext x=%2265%22 y=%2275%22 text-anchor=%22middle%22 font-size=%2248%22%3E🚀%3C/text%3E%3C/svg%3E'" />
+                <img class="avatar" src="fkcgcd4s-1024.png" alt="BlueDriftHK 头像" width="130" height="130" loading="eager"
+                    onerror="this.src='https://github.com/BlueDriftHK.png'" />
                 <span class="status-indicator" title="在线" aria-label="当前在线"></span>
             </div>
 
@@ -3878,34 +3926,6 @@
                     <span class="stat-label">技术领域</span>
                 </div>
             </div>
-
-            <div class="header-actions">
-                <button class="theme-toggle magnetic-btn" id="searchBtn" aria-label="搜索本站 (按 /)" type="button">
-                    <i class="fas fa-magnifying-glass" aria-hidden="true"></i> <span>搜索</span>
-                </button>
-                <button class="theme-toggle magnetic-btn" id="themeToggle" aria-label="切换深色/浅色主题" type="button">
-                    <i class="fas fa-moon" aria-hidden="true"></i> <span id="themeLabel">深色</span>
-                </button>
-                <button class="theme-toggle magnetic-btn bg-mode-btn" id="bgModeBtn" aria-label="切换背景特效" aria-pressed="false" type="button">
-                    <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> <span id="bgModeLabel">特效关</span>
-                </button>
-                <div class="lang-switch" role="group" aria-label="语言切换">
-                    <button class="lang-btn active" data-lang="zh" type="button" aria-pressed="true">中</button>
-                    <button class="lang-btn" data-lang="en" type="button" aria-pressed="false">EN</button>
-                </div>
-                <button class="resume-btn magnetic-btn" id="resumeBtn" type="button" aria-label="下载简历 PDF">
-                    <i class="fas fa-download btn-icon" aria-hidden="true"></i>
-                    <i class="fas fa-check btn-check" aria-hidden="true"></i>
-                    <span>简历</span>
-                </button>
-            </div>
-
-            <nav class="social-bar" aria-label="社交媒体链接">
-                <a href="https://github.com/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a>
-                <a href="mailto:asiacomk@gmail.com"><i class="fas fa-envelope" aria-hidden="true"></i> Email</a>
-                <a href="https://twitter.com/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter" aria-hidden="true"></i> Twitter</a>
-                <a href="https://t.me/BlueDriftHK" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram-plane" aria-hidden="true"></i> Telegram</a>
-            </nav>
         </header>
 
         <!-- ===== 关于我 ===== -->
@@ -10882,6 +10902,29 @@ const url = await env.BUCKET.createSignedUrl(row.r2_key, 3600);</code></pre>
 
             // 初始应用（自动检测的结果不写入存储，仅显式切换才持久化）
             if (currentLang !== 'zh') applyLang(currentLang, hasSaved ? undefined : false);
+        })();
+
+        /* ============================================================
+           Page Visibility API — 标签页标题切换
+           ============================================================ */
+        (function () {
+            var originalTitle = document.title;
+            var hasVisited = false;
+            var revertTimer = null;
+
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    if (revertTimer) { clearTimeout(revertTimer); revertTimer = null; }
+                    hasVisited = true;
+                    document.title = '\u4f60\u5feb\u56de\u6765\u5440\uff01';
+                } else if (hasVisited) {
+                    document.title = '\u4f60\u56de\u6765\u4e86\u5440';
+                    revertTimer = setTimeout(function () {
+                        document.title = originalTitle;
+                        revertTimer = null;
+                    }, 3000);
+                }
+            });
         })();
 
         /* ============================================================
