@@ -6,807 +6,331 @@
     <title>BlueDriftHK · Edge Runtime Engineer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
         /* ===== Reset & Base ===== */
-        *,
-        *::before,
-        *::after {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-primary: #080816;
-            --bg-card: rgba(255, 255, 255, 0.04);
-            --bg-card-hover: rgba(255, 255, 255, 0.07);
-            --border: rgba(255, 255, 255, 0.06);
-            --border-hover: rgba(255, 255, 255, 0.12);
-            --text-primary: #f0f0f5;
-            --text-secondary: #9898b0;
-            --text-muted: #5a5a72;
-            --accent: #818cf8;
-            --accent-hover: #a5b4fc;
-            --accent-glow: rgba(129, 140, 248, 0.15);
-            --green: #34d399;
-            --cyan: #22d3ee;
-            --radius: 16px;
-            --radius-lg: 24px;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --font: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-        }
-
         body {
-            font-family: var(--font);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 40px 24px 60px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Aurora background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -20%;
-            left: -20%;
-            right: -20%;
-            bottom: -20%;
-            background:
-                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(129, 140, 248, 0.08) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 40% at 80% 20%, rgba(52, 211, 153, 0.06) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 50% at 50% 50%, rgba(34, 211, 238, 0.04) 0%, transparent 70%);
-            animation: auroraFloat 20s ease-in-out infinite alternate;
-            pointer-events: none;
-            z-index: 0;
-            filter: blur(80px);
-        }
-
-        @keyframes auroraFloat {
-            0% {
-                transform: translate(-2%, -1%) scale(1);
-            }
-            50% {
-                transform: translate(2%, 3%) scale(1.05);
-            }
-            100% {
-                transform: translate(-1%, -2%) scale(0.95);
-            }
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ===== Navigation ===== */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0 32px;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 20px;
-            letter-spacing: -0.5px;
-        }
-
-        .logo .dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(0.8);
-            }
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color var(--transition);
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .nav-links .btn-outline {
-            padding: 8px 18px;
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: transparent;
-            transition: all var(--transition);
-            cursor: default;
-        }
-
-        .nav-links .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--accent-glow);
-        }
-
-        /* ===== Hero ===== */
-        .hero {
-            padding: 20px 0 40px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 12px;
-        }
-
-        .hero h1 span {
-            background: linear-gradient(135deg, var(--accent), #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero .tagline {
-            font-size: 18px;
-            color: var(--text-secondary);
-            max-width: 560px;
-            margin-bottom: 28px;
-        }
-
-        .hero .tagline strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-
-        .hero-stats .stat {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .hero-stats .stat .number {
-            font-size: 22px;
-            font-weight: 700;
-            font-family: var(--font-mono);
-            color: var(--text-primary);
-        }
-
-        .hero-stats .stat .label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        /* ===== Cards ===== */
-        .section-title {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            padding-top: 20px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            transition: all var(--transition);
-        }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .card .card-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        .card .card-label i {
-            margin-right: 6px;
-            color: var(--accent);
-            opacity: 0.6;
-        }
-
-        .card p,
-        .card li {
-            font-size: 14px;
-            color: var(--text-secondary);
+            background: #0b0b1a;
+            color: #e8e8f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
             line-height: 1.7;
+            padding: 40px 24px 60px;
+            max-width: 860px;
+            margin: 0 auto;
+            font-size: 15px;
         }
 
-        .card ul {
+        a {
+            color: #818cf8;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #2a2a40;
+            margin: 32px 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        h1 span {
+            color: #818cf8;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 28px 0 12px;
+            letter-spacing: -0.2px;
+            color: #c8c8e0;
+        }
+
+        .subhead {
+            font-size: 16px;
+            color: #8888aa;
+            margin-bottom: 24px;
+        }
+
+        .tagline {
+            font-style: italic;
+            color: #666688;
+            margin-bottom: 28px;
+            border-left: 3px solid #818cf8;
+            padding-left: 16px;
+        }
+
+        ul {
             list-style: none;
             padding: 0;
         }
-
-        .card ul li {
+        ul li {
             padding: 4px 0;
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
+            padding-left: 20px;
+            position: relative;
         }
-
-        .card ul li::before {
+        ul li::before {
             content: '▸';
-            color: var(--accent);
-            font-size: 12px;
+            position: absolute;
+            left: 0;
+            color: #818cf8;
             opacity: 0.6;
         }
 
-        .card .highlight {
-            color: var(--text-primary);
-            font-weight: 500;
+        .inline-code {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            font-size: 13px;
+            background: #1a1a2e;
+            padding: 1px 8px;
+            border-radius: 4px;
+            color: #c8c8e8;
         }
 
-        .card .chip-group {
+        .chip-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px 10px;
+            margin: 8px 0 4px;
         }
-
-        .card .chip {
-            padding: 4px 14px;
-            border: 1px solid var(--border);
-            border-radius: 50px;
+        .chip {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
-            color: var(--text-secondary);
-            font-family: var(--font-mono);
-            transition: all var(--transition);
-        }
-
-        .card .chip:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .card .chip.accent {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* ===== Project Card ===== */
-        .project-card {
-            grid-column: 1 / -1;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px 32px;
-            transition: all var(--transition);
-            margin-bottom: 20px;
-        }
-
-        .project-card:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .project-card .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .project-card .project-name {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-        }
-
-        .project-card .project-name a {
-            color: var(--text-primary);
-            text-decoration: none;
-            transition: color var(--transition);
-        }
-
-        .project-card .project-name a:hover {
-            color: var(--accent);
-        }
-
-        .project-card .project-badge {
-            font-size: 12px;
-            padding: 4px 14px;
-            border-radius: 50px;
-            background: var(--accent-glow);
-            border: 1px solid rgba(129, 140, 248, 0.15);
-            color: var(--accent);
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .project-card .project-desc {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.7;
-        }
-
-        .project-card .project-metrics {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px 32px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .project-card .project-metrics .metric {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-card .project-metrics .metric .value {
-            font-size: 16px;
-            font-weight: 600;
-            font-family: var(--font-mono);
-            color: var(--text-primary);
-        }
-
-        .project-card .project-metrics .metric .label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .project-card .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 14px;
-        }
-
-        .project-card .project-tags .tag {
-            padding: 3px 12px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 500;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-        }
-
-        /* ===== Roadmap ===== */
-        .roadmap-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .roadmap-list .item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .roadmap-list .item:last-child {
-            border-bottom: none;
-        }
-
-        .roadmap-list .item .status {
-            font-size: 11px;
-            font-weight: 600;
+            background: #1a1a2e;
             padding: 2px 12px;
-            border-radius: 50px;
-            flex-shrink: 0;
+            border-radius: 12px;
+            color: #a0a0c0;
+            border: 1px solid #2a2a40;
+        }
+        .chip.accent {
+            border-color: #818cf8;
+            color: #818cf8;
         }
 
-        .roadmap-list .item .status.active {
-            background: rgba(52, 211, 153, 0.12);
-            color: var(--green);
-            border: 1px solid rgba(52, 211, 153, 0.15);
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 8px;
+            font-size: 14px;
+        }
+        th,
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #2a2a40;
+            text-align: left;
+        }
+        th {
+            color: #8888aa;
+            font-weight: 500;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            color: #d0d0e0;
+        }
+        td .highlight {
+            color: #f0f0f8;
+            font-weight: 500;
         }
 
-        .roadmap-list .item .status.planning {
-            background: rgba(251, 191, 36, 0.10);
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.12);
-        }
-
-        .roadmap-list .item .status.research {
-            background: rgba(129, 140, 248, 0.10);
-            color: var(--accent);
-            border: 1px solid rgba(129, 140, 248, 0.12);
-        }
-
-        /* ===== Footer ===== */
         .footer {
             margin-top: 40px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            border-top: 1px solid #2a2a40;
+            font-size: 13px;
+            color: #666688;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             flex-wrap: wrap;
-            gap: 16px;
-            font-size: 13px;
-            color: var(--text-muted);
+            gap: 12px;
         }
-
         .footer a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color var(--transition);
+            color: #8888aa;
         }
-
         .footer a:hover {
-            color: var(--accent);
+            color: #818cf8;
         }
-
         .footer .socials {
             display: flex;
-            gap: 16px;
+            gap: 14px;
         }
 
-        .footer .socials a {
-            font-size: 18px;
-        }
-
-        .footer .quote {
-            font-style: italic;
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 768px) {
+        @media (max-width: 600px) {
             body {
-                padding: 20px 16px 40px;
+                padding: 24px 16px 40px;
+                font-size: 14px;
             }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero .tagline {
-                font-size: 16px;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .project-card {
-                padding: 20px;
-            }
-
-            .project-card .project-header {
-                flex-direction: column;
-            }
-
-            .hero-stats {
-                gap: 20px;
-            }
-
-            .navbar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .nav-links {
-                justify-content: center;
-                gap: 16px;
-            }
-
-            .footer {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
+            h1 {
                 font-size: 26px;
             }
-
-            .project-card .project-metrics {
-                gap: 12px;
+            table {
+                font-size: 13px;
+            }
+            th,
+            td {
+                padding: 6px 8px;
+            }
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <!-- ===== Header ===== -->
+    <h1>BlueDriftHK · <span>Edge Runtime Engineer</span></h1>
+    <div class="subhead">Cloudflare Workers 生态深耕者。专注于将网络延迟压缩到物理极限。</div>
+    <div class="tagline">Code as Art, Latency as Justice.</div>
 
-        <!-- ===== Navigation ===== -->
-        <nav class="navbar">
-            <div class="logo">
-                <span class="dot"></span>
-                <span>BlueDriftHK</span>
-            </div>
-            <div class="nav-links">
-                <a href="#stack">能力栈</a>
-                <a href="#project">项目</a>
-                <a href="#roadmap">路线</a>
-                <a href="https://github.com/BlueDriftHK" target="_blank">GitHub</a>
-                <span class="btn-outline"><i class="fas fa-code"></i> 边缘·架构</span>
-            </div>
-        </nav>
+    <hr />
 
-        <!-- ===== Hero ===== -->
-        <section class="hero">
-            <div class="hero-badge"><i class="fas fa-bolt" style="margin-right:6px;color:var(--accent);"></i> Edge Runtime Engineer</div>
-            <h1>把计算推到<br /><span>离用户最近的地方</span></h1>
-            <p class="tagline">
-                Cloudflare Workers 生态深耕者。专注于将网络延迟压缩到物理极限。<br />
-                <strong>Code as Art, Latency as Justice.</strong>
-            </p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="number">180+</span>
-                    <span class="label">Commits</span>
-                </div>
-                <div class="stat">
-                    <span class="number">13</span>
-                    <span class="label">API 端点</span>
-                </div>
-                <div class="stat">
-                    <span class="number">~12ms</span>
-                    <span class="label">边缘 RTT</span>
-                </div>
-                <div class="stat">
-                    <span class="number">$0</span>
-                    <span class="label">部署成本</span>
-                </div>
-            </div>
-        </section>
+    <!-- ===== 能力栈 ===== -->
+    <h2>🧩 能力栈</h2>
 
-        <!-- ===== Stack ===== -->
-        <h2 class="section-title" id="stack"><i class="fas fa-cubes" style="margin-right:8px;color:var(--accent);"></i> 能力栈</h2>
+    <ul>
+        <li><strong>Runtime</strong> &nbsp; Cloudflare Workers / Pages · Node.js · Bun</li>
+        <li><strong>Language</strong> &nbsp; JavaScript (ES2020+) · TypeScript · Rust (Wasm 目标)</li>
+        <li><strong>Protocol</strong> &nbsp; HTTP/2 · HTTP/3 · QUIC · WebSocket · WSS · gRPC-Web</li>
+        <li><strong>Storage &amp; Services</strong> &nbsp; KV · D1 · R2 · Workers AI · Cloudflare Zero Trust</li>
+        <li><strong>Tooling</strong> &nbsp; Wrangler · Vitest · GitHub Actions · Grafana · Prometheus · Docker</li>
+        <li><strong>Design</strong> &nbsp; Glass‑morphism · 响应式 SPA · Canvas 2D · CSS Variables (Dark/Light)</li>
+    </ul>
 
-        <div class="grid-2">
-            <div class="card">
-                <div class="card-label"><i class="fas fa-server"></i> Runtime</div>
-                <p>Cloudflare Workers / Pages · Node.js · Bun</p>
-            </div>
-            <div class="card">
-                <div class="card-label"><i class="fas fa-code"></i> Language</div>
-                <p>JavaScript (ES2020+) · TypeScript · Rust (Wasm 目标)</p>
-            </div>
-            <div class="card">
-                <div class="card-label"><i class="fas fa-network-wired"></i> Protocol</div>
-                <p>HTTP/2 · HTTP/3 · QUIC · WebSocket · WSS · gRPC-Web</p>
-            </div>
-            <div class="card">
-                <div class="card-label"><i class="fas fa-database"></i> Storage &amp; Services</div>
-                <p>KV · D1 · R2 · Workers AI · Cloudflare Zero Trust</p>
-            </div>
-            <div class="card">
-                <div class="card-label"><i class="fas fa-toolbox"></i> Tooling</div>
-                <p>Wrangler · Vitest · GitHub Actions · Grafana · Prometheus · Docker</p>
-            </div>
-            <div class="card">
-                <div class="card-label"><i class="fas fa-paint-brush"></i> Design</div>
-                <p>Glass-morphism · 响应式 SPA · Canvas 2D · CSS Variables (Dark/Light)</p>
-            </div>
-        </div>
+    <hr />
 
-        <!-- ===== Project ===== -->
-        <h2 class="section-title" id="project"><i class="fas fa-rocket" style="margin-right:8px;color:var(--accent);"></i> 代表项目</h2>
+    <!-- ===== 代表项目 ===== -->
+    <h2>📦 代表项目</h2>
 
-        <div class="project-card">
-            <div class="project-header">
-                <div class="project-name">
-                    <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">NetSight Pro</a>
-                </div>
-                <span class="project-badge"><i class="fas fa-star"></i> v4.1-security</span>
-            </div>
-            <div class="project-desc">
-                部署在 Cloudflare Workers 边缘节点的专业级网络诊断工具。<br />
-                <span style="color:var(--text-muted);">15 分钟完成从克隆到生产使用。</span>
-            </div>
+    <p style="font-size:17px;font-weight:600;margin-bottom:4px;">
+        <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">NetSight Pro</a>
+        <span style="font-weight:400;font-size:14px;color:#666688;margin-left:8px;">v4.1-security</span>
+    </p>
+    <p style="color:#a0a0c0;margin-bottom:12px;">
+        边缘部署的专业级网络诊断工具。15 分钟完成从克隆到生产使用。
+    </p>
 
-            <div style="margin-bottom:12px;">
-                <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">诊断能力</span>
-                <div class="project-tags">
-                    <span class="tag">实时 RTT 监控</span>
-                    <span class="tag">丢包率 &amp; 抖动</span>
-                    <span class="tag">带宽测速</span>
-                    <span class="tag">CPU 基准</span>
-                    <span class="tag">并发压力</span>
-                    <span class="tag">WebSocket 延迟</span>
-                    <span class="tag">流式吞吐量</span>
-                    <span class="tag">TTFB 分阶段解析</span>
-                </div>
-            </div>
-
-            <div style="margin-bottom:12px;">
-                <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">安全 &amp; 协议</span>
-                <div class="project-tags">
-                    <span class="tag">TLS / 加密套件 / ECH</span>
-                    <span class="tag">HTTP/2 / HTTP/3</span>
-                    <span class="tag">JA3 / JA4 指纹</span>
-                    <span class="tag">Cloudflare Bot 评分</span>
-                </div>
-            </div>
-
-            <div style="margin-bottom:16px;">
-                <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">IP 智能</span>
-                <div class="project-tags">
-                    <span class="tag">双栈 IP (IPv4/IPv6)</span>
-                    <span class="tag">地理位置 &amp; 距离</span>
-                    <span class="tag">欺诈评分 (Scamalytics)</span>
-                    <span class="tag">托管/代理/VPN/Tor 识别</span>
-                </div>
-            </div>
-
-            <div style="margin-bottom:16px;">
-                <span style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">前端交互</span>
-                <div class="project-tags">
-                    <span class="tag">三语言切换</span>
-                    <span class="tag">深色/浅色主题</span>
-                    <span class="tag">实时 Canvas 图表</span>
-                    <span class="tag">一键复制诊断报告</span>
-                    <span class="tag">多节点对比</span>
-                </div>
-            </div>
-
-            <div class="project-metrics">
-                <div class="metric">
-                    <span class="value">13</span>
-                    <span class="label">API 端点</span>
-                </div>
-                <div class="metric">
-                    <span class="value">~1.2k</span>
-                    <span class="label">月均独立部署</span>
-                </div>
-                <div class="metric">
-                    <span class="value">94%</span>
-                    <span class="label">JS/TS</span>
-                </div>
-                <div class="metric">
-                    <span class="value"><i class="fas fa-check" style="color:var(--green);font-size:12px;"></i> 全 CORS</span>
-                    <span class="label">跨域支持</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== Roadmap ===== -->
-        <h2 class="section-title" id="roadmap"><i class="fas fa-map-signs" style="margin-right:8px;color:var(--accent);"></i> 2026 H2 技术路线</h2>
-
-        <div class="card" style="margin-bottom:20px;">
-            <div class="roadmap-list">
-                <div class="item">
-                    <span class="status active">进行中</span>
-                    <span><span class="highlight">v2.5 Alert Engine</span> – 阈值告警 + Webhook / Telegram 推送</span>
-                </div>
-                <div class="item">
-                    <span class="status planning">计划</span>
-                    <span><span class="highlight">v2.6 Multi-tenant</span> – 多租户隔离</span>
-                </div>
-                <div class="item">
-                    <span class="status planning">设计中</span>
-                    <span><span class="highlight">v3.0 Plugin System</span> – 插件化架构</span>
-                </div>
-                <div class="item">
-                    <span class="status research">研究</span>
-                    <span><span class="highlight">Wasm Speed Core</span> – Rust → Wasm 编译测速核心，预期性能 ×3</span>
-                </div>
-                <div class="item">
-                    <span class="status research">研究</span>
-                    <span><span class="highlight">AI Anomaly Detection</span> – 基于 Workers AI 的异常模式识别</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== Footer ===== -->
-        <footer class="footer">
-            <span>
-                &copy; 2026 <a href="https://github.com/BlueDriftHK" target="_blank">BlueDriftHK</a>
-                &middot; 基于 <a href="https://opensource.org/licenses/MIT" target="_blank">MIT</a> 开源
-            </span>
-            <span class="quote">“在边缘，用代码丈量世界。”</span>
-            <div class="socials">
-                <a href="https://github.com/BlueDriftHK" target="_blank" aria-label="GitHub">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" aria-label="Project">
-                    <i class="fas fa-rocket"></i>
-                </a>
-                <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/issues" target="_blank" aria-label="Issues">
-                    <i class="fas fa-bug"></i>
-                </a>
-            </div>
-        </footer>
-
+    <p style="font-weight:500;color:#c8c8e0;margin:12px 0 4px;">诊断能力</p>
+    <div class="chip-group">
+        <span class="chip">实时 RTT 监控</span>
+        <span class="chip">丢包率 &amp; 抖动</span>
+        <span class="chip">带宽测速 (下载/上传)</span>
+        <span class="chip">CPU 基准测试</span>
+        <span class="chip">并发压力测试</span>
+        <span class="chip">WebSocket 延迟</span>
+        <span class="chip">流式吞吐量</span>
+        <span class="chip">TTFB 分阶段解析</span>
     </div>
 
+    <p style="font-weight:500;color:#c8c8e0;margin:12px 0 4px;">安全 &amp; 协议</p>
+    <div class="chip-group">
+        <span class="chip">TLS 版本 / 加密套件 / ECH</span>
+        <span class="chip">HTTP/2 / HTTP/3 检测</span>
+        <span class="chip">JA3 / JA4 指纹</span>
+        <span class="chip">Cloudflare Bot 评分</span>
+    </div>
+
+    <p style="font-weight:500;color:#c8c8e0;margin:12px 0 4px;">IP 智能</p>
+    <div class="chip-group">
+        <span class="chip">双栈 IP (IPv4/IPv6)</span>
+        <span class="chip">地理位置 &amp; 距离计算</span>
+        <span class="chip">欺诈评分 (Scamalytics)</span>
+        <span class="chip">托管/代理/VPN/Tor 识别</span>
+    </div>
+
+    <p style="font-weight:500;color:#c8c8e0;margin:12px 0 4px;">前端交互</p>
+    <div class="chip-group">
+        <span class="chip">三语言切换 (EN/简中/繁中)</span>
+        <span class="chip">深色/浅色主题</span>
+        <span class="chip">实时 Canvas 图表</span>
+        <span class="chip">一键复制诊断报告</span>
+        <span class="chip">多节点对比</span>
+    </div>
+
+    <p style="font-weight:500;color:#c8c8e0;margin:12px 0 4px;">API 端点 (13个)</p>
+    <div class="chip-group">
+        <span class="chip accent">/health</span>
+        <span class="chip accent">/speedtest</span>
+        <span class="chip accent">/upload-test</span>
+        <span class="chip accent">/cpu-test</span>
+        <span class="chip accent">/dns-proxy</span>
+        <span class="chip accent">/ws-test</span>
+        <span class="chip accent">/http2-test</span>
+        <span class="chip accent">/concurrent-test</span>
+        <span class="chip accent">/stream-test</span>
+        <span class="chip accent">/api/log-speed</span>
+        <span class="chip accent">/api/speed-history</span>
+        <span class="chip accent">/api/usage-stats</span>
+        <span class="chip accent">/api/ip-fraud</span>
+    </div>
+
+    <hr />
+
+    <!-- ===== 项目数据 ===== -->
+    <h2>📊 项目数据</h2>
+
+    <table>
+        <tr><th>指标</th><th>数值</th></tr>
+        <tr><td>版本</td><td>v4.1-security (2026-08)</td></tr>
+        <tr><td>Commits</td><td>180+</td></tr>
+        <tr><td>API 端点</td><td>13 (全部支持 CORS)</td></tr>
+        <tr><td>平均 RTT (边缘→边缘)</td><td>~12 ms</td></tr>
+        <tr><td>部署成本</td><td>$0 (Cloudflare Free Tier)</td></tr>
+        <tr><td>月均独立部署实例</td><td>~1.2k</td></tr>
+        <tr><td>代码语言占比</td><td>JS/TS 94% · Rust 4% · Shell 2%</td></tr>
+    </table>
+
+    <hr />
+
+    <!-- ===== 技术路线 ===== -->
+    <h2>🗺️ 2026 H2 技术路线</h2>
+
+    <ul>
+        <li><span class="inline-code" style="background:#1a3a2a;color:#34d399;">进行中</span> &nbsp; <strong>v2.5 Alert Engine</strong> – 阈值告警 + Webhook / Telegram 推送</li>
+        <li><span class="inline-code" style="background:#3a3a1a;color:#fbbf24;">计划</span> &nbsp; <strong>v2.6 Multi-tenant</strong> – 多租户隔离</li>
+        <li><span class="inline-code" style="background:#2a2a3a;color:#818cf8;">设计中</span> &nbsp; <strong>v3.0 Plugin System</strong> – 插件化架构</li>
+        <li><span class="inline-code" style="background:#1a1a3a;color:#a78bfa;">研究</span> &nbsp; <strong>Wasm Speed Core</strong> – Rust → Wasm 编译测速核心，预期性能 ×3</li>
+        <li><span class="inline-code" style="background:#1a1a3a;color:#a78bfa;">研究</span> &nbsp; <strong>AI Anomaly Detection</strong> – 基于 Workers AI 的异常模式识别</li>
+    </ul>
+
+    <hr />
+
+    <!-- ===== 联系 ===== -->
+    <h2>📬 联系与社区</h2>
+
+    <ul>
+        <li><strong>GitHub</strong>：<a href="https://github.com/BlueDriftHK" target="_blank">BlueDriftHK</a></li>
+        <li><strong>项目仓库</strong>：<a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank">CF-workers-netdiag</a></li>
+        <li><strong>技术分享</strong>：不定期输出边缘计算、Serverless 网络优化相关内容</li>
+        <li><strong>反馈通道</strong>：GitHub Issues / Discussions 全部开放</li>
+    </ul>
+
+    <!-- ===== Footer ===== -->
+    <div class="footer">
+        <span>&copy; 2026 <a href="https://github.com/BlueDriftHK" target="_blank">BlueDriftHK</a> &middot; MIT</span>
+        <span style="font-style:italic;color:#555577;">“在边缘，用代码丈量世界。”</span>
+        <div class="socials">
+            <a href="https://github.com/BlueDriftHK" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank"><i class="fas fa-rocket"></i></a>
+            <a href="https://github.com/BlueDriftHK/CF-workers-netdiag/issues" target="_blank"><i class="fas fa-bug"></i></a>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons (optional, you can remove if you don't want icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </body>
 </html>
