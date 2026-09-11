@@ -61,33 +61,31 @@
 
 ---
 
-## ✨ 代表作 / A thing I made
+## ✨ 我做的两个东西 / Two things I built
 
-<table>
-<tr>
-<td width="60%" valign="top">
+### 🔭 [NetSight Pro](https://ipcheck.bjhr.space/) · 极光网络诊断
 
-### [NetSight Pro](https://github.com/BlueDriftHK/CF-workers-netdiag)
+边缘部署的 Aurora 级网络诊断工具——把复杂指标做得干净好看。
+RTT / 丢包 / 抖动 · 带宽测速 · TLS & HTTP/3 检测 · JA3/JA4 指纹 · 双栈 IP 情报 · 中英繁三语，$0 跑在全球边缘。
 
-边缘部署的专业级网络诊断工具，也是我最满意的一个作品。
-RTT 监控 · 丢包/抖动 · 带宽测速 · TLS/HTTP3 检测 · JA3/JA4 指纹 · 双栈 IP 情报 —— 全部跑在 Cloudflare 边缘，$0 部署，中英繁三语。
+An Aurora-grade, edge-deployed network diagnostics tool — complex metrics made beautifully simple. RTT / loss / jitter, speed tests, TLS & HTTP/3, JA3/JA4 fingerprints, dual-stack IP intel, trilingual, $0 at the edge.
 
-An edge-deployed network diagnostics tool I'm genuinely proud of: real-time RTT, packet loss & jitter, speed tests, TLS / HTTP/3 detection, JA3/JA4 fingerprints and dual-stack IP intel — all at the edge, free to deploy, trilingual.
+<a href="https://ipcheck.bjhr.space/"><img src="https://img.shields.io/badge/Live_Demo-ipcheck.bjhr.space-22D3EE?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Live demo"/></a>
+<a href="https://github.com/BlueDriftHK/CF-workers-netdiag"><img src="https://img.shields.io/badge/Source-NetSight_Pro-6366F1?style=for-the-badge&logo=github&logoColor=white" alt="Source"/></a>
 
-**Try it** → clone & deploy in ~15 min, or hit the live instance.
+---
 
-</td>
-<td width="40%" valign="top" align="center">
+### ☁️ [iCloud · CF-KVR2-NetworkCloud](https://icloud.bjhr.space/) · 一个文件，一个 Worker，属于你自己的云
 
-![](https://img.shields.io/github/stars/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&logo=github&color=6366F1)
-![](https://img.shields.io/github/license/BlueDriftHK/CF-workers-netdiag?style=for-the-badge&color=22D3EE)
-![](https://img.shields.io/badge/AGPL--3.0-open%20source-22D3EE?style=for-the-badge)
+单文件跑在 Cloudflare 上的私人网盘：**R2** 存文件、**KV** 存元数据、**Durable Objects** 做缓存，无出口流量费。
+拖拽上传 / 大文件分片 · 分享链接（密码/过期/次数）· WebDAV 挂载本地盘 · 音乐/图片/视频/PDF/Markdown 在线播放预览 · AES-256-GCM 客户端零知识加密 · Apple 风格 UI + 中英双语 + PWA。
 
-`$0 / Free Tier` `Edge Native` `Single Worker`
+A single-file personal cloud on Cloudflare — R2 for bytes, KV for metadata, Durable Objects for caching, zero egress fees. Drag-drop & chunked uploads · shareable links · WebDAV mount · media/PDF/Markdown preview · client-side AES-256-GCM zero-knowledge encryption · Apple-style UI, bilingual, PWA.
 
-</td>
-</tr>
-</table>
+<a href="https://icloud.bjhr.space/"><img src="https://img.shields.io/badge/Live_Demo-icloud.bjhr.space-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" alt="Live demo"/></a>
+<a href="https://github.com/BlueDriftHK/CF-KVR2-NetworkCloud"><img src="https://img.shields.io/badge/Source-NetworkCloud-6366F1?style=for-the-badge&logo=github&logoColor=white" alt="Source"/></a>
+
+<sub>两个都是 AGPL-3.0 开源，欢迎 fork 完一键部署到你的边缘。<br/>Both are AGPL-3.0 open source — fork and deploy to your own edge in minutes.</sub>
 
 ---
 
