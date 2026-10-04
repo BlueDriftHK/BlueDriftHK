@@ -709,10 +709,9 @@ function handleKeydown(e) {
   } else if ((e.key === "t" || e.key === "T") && !inInput) {
     cycleTheme();
   }
-  /* 翻页预留：未来接入文章分页时启用
-  else if (e.key === "ArrowLeft") { /* 上一页 */ }
-  else if (e.key === "ArrowRight") { /* 下一页 */ }
-  */
+  // 翻页预留：未来接入文章分页时启用
+  // else if (e.key === "ArrowLeft") { /* 上一页 */ }
+  // else if (e.key === "ArrowRight") { /* 下一页 */ }
 }
 
 document.addEventListener("keydown", handleKeydown);
@@ -728,11 +727,10 @@ document.getElementById("crypto-btn").addEventListener("click", function () {
 /* 搜索框预留：接入 Pagefind 后在此绑定 search()，当前仅做快捷键聚焦 */
 document.getElementById("search-input").addEventListener("input", function () {
   var q = this.value.trim();
-  /* Pagefind 预留代码（部署后启用）：
-  if (q.length >= 2 && window.pagefind) {
-    pagefind.search(q).then(function (r) { /* 渲染结果 */ });
-  }
-  */
+  // Pagefind 预留代码（部署后启用）：
+  // if (q.length >= 2 && window.pagefind) {
+  //   pagefind.search(q).then(function (r) { /* 渲染结果 */ });
+  // }
   /* 离线占位：关键词简单过滤文章标题 */
   var list = document.getElementById("post-list");
   var cards = list.querySelectorAll(".post-card");
