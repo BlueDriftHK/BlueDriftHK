@@ -84,4 +84,3 @@ Issues & Discussions are open — come talk networking, the edge, or just say he
 
 > 在边缘，用代码丈量世界。
 > *Measuring the world, from the edge.*
-*（内容由AI生成，仅供参考）*
