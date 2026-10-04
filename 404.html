@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 / NETSIGHT·PRO</title>
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-grid: rgba(255, 255, 255, 0.045);
+    --panel: #111111;
+    --line: #2a2a2a;
+    --text: #d6d6d6;
+    --text-dim: #8a8a8a;
+    --text-faint: #5a5a5a;
+    --mono: #e8e8e8;
+    --accent: #c9c9c9;
+    --err: #a3544a;
+    --grid-size: 24px;
+    --radius: 0px;
+    --font-sans: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: var(--radius); }
+  html { height: 100%; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    background-image:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    background-position: -1px -1px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 48px 56px;
+    text-align: center;
+    max-width: 520px;
+  }
+  .code {
+    font-family: var(--font-mono);
+    font-size: 88px;
+    line-height: 1;
+    color: var(--err);
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  .divider {
+    width: 56px;
+    height: 1px;
+    background: var(--line);
+    margin: 28px auto;
+  }
+  .msg {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.28em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .desc {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+  .back {
+    display: inline-block;
+    margin-top: 32px;
+    padding: 10px 24px;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .back:hover { border-color: var(--accent); color: var(--accent); }
+  .auto-tip {
+    margin-top: 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+  <div class="panel">
+    <div class="code">404</div>
+    <div class="divider"></div>
+    <div class="msg">PAGE NOT FOUND</div>
+    <div class="desc">请求的页面不存在或已被移动。</div>
+    <a class="back" href="./index.html">← 返回首页</a>
+    <div class="auto-tip" id="auto-tip">8 秒后自动跳回首页</div>
+  </div>
+  <script>
+    var sec = 8;
+    var tip = document.getElementById("auto-tip");
+    var timer = setInterval(function () {
+      sec--;
+      if (tip) tip.textContent = sec + " 秒后自动跳回首页";
+      if (sec <= 0) {
+        clearInterval(timer);
+        window.location.href = "./index.html";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
