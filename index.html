@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETSIGHT·PRO / 博客</title>
+<meta name="description" content="NetSight Pro 灰度 HUD 风格个人博客首页——纯静态单文件，无外部依赖。">
+<!--
+  ============================================================
+  NETSIGHT PRO / GRAYSCALE HUD BLOG — SINGLE FILE STATIC
+  ------------------------------------------------------------
+  Build note:
+  - 单文件自包含：内嵌全部 CSS 与 JS，无外部依赖可离线运行。
+  - 灰度 HUD 语言：近黑底、细网格、直角卡片、等宽数字、状态色语义。
+  - 所有内容数据（文章/标签/项目）由下方 window.__SITE_DATA__ 维护，
+    替换数据即可更新首页，无需改动结构。
+  - 预留接入点（注释说明，不实际引入外链，避免本地打开报错）：
+      [1] Pagefind   —— 搜索预留，见 #search-input 与 search.js 注释。
+      [2] giscus     —— 评论预留，见 <footer> 后 #giscus 挂载点注释。
+      [3] busuanzi   —— 不蒜子统计预留，见页脚脚本注释。
+      [4] PWA        —— manifest / service worker 预留，见 head 注释。
+  ============================================================
+-->
+<!-- PWA：manifest + Service Worker（相对路径，适配 GitHub Pages 子路径部署） -->
+<link rel="manifest" href="./manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function (e) {
+        console.warn("SW register failed:", e);
+      });
+    });
+  }
+</script>
+<style>
+  /* ============================================================
+     THEME TOKENS — CSS 变量
+     三态：dark(默认) / light / system(跟随系统)
+     ============================================================ */
+  :root {
+    /* Dark（默认近黑） */
+    --bg: #0a0a0a;
+    --bg-grid: rgba(255, 255, 255, 0.045);
+    --panel: #111111;
+    --panel-raised: #161616;
+    --line: #2a2a2a;
+    --line-strong: #3a3a3a;
+    --text: #d6d6d6;
+    --text-dim: #8a8a8a;
+    --text-faint: #5a5a5a;
+    --mono: #e8e8e8;
+    --accent: #c9c9c9;
+    --ok: #9fb8a0;      /* 正常：低饱和灰绿 */
+    --warn: #b08d3e;    /* 警告：暗琥珀 */
+    --err: #a3544a;     /* 异常：暗红 */
+    --grid-size: 24px;
+    --radius: 0px;      /* 直角卡片 */
+    --font-sans: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+  }
+
+  html[data-theme="light"] {
+    --bg: #e9e9e9;
+    --bg-grid: rgba(0, 0, 0, 0.05);
+    --panel: #f5f5f5;
+    --panel-raised: #fdfdfd;
+    --line: #c9c9c9;
+    --line-strong: #9a9a9a;
+    --text: #1c1c1c;
+    --text-dim: #5c5c5c;
+    --text-faint: #8a8a8a;
+    --mono: #141414;
+    --accent: #333333;
+    --ok: #4c7a50;
+    --warn: #8a6d1f;
+    --err: #a04a3f;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: var(--radius); }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    /* 细网格背景 */
+    background-image:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    background-position: -1px -1px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* 顶部状态条：仪器化细节 */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+  }
+  .status-bar .dot { width: 6px; height: 6px; background: var(--ok); display: inline-block; }
+  .status-bar .sep { color: var(--line-strong); }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ============ 顶部导航 ============ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0 14px;
+    border-bottom: 1px solid var(--line-strong);
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    user-select: none;
+  }
+  .brand .logo { color: var(--accent); font-weight: 700; font-size: 18px; }
+  .brand .tag { color: var(--text-faint); font-size: 11px; }
+  .topbar-controls { display: flex; align-items: center; gap: 10px; }
+
+  .search-box { position: relative; display: flex; align-items: center; }
+  .search-box input {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 7px 12px 7px 30px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box .kbd {
+    position: absolute;
+    right: 8px;
+    font-size: 10px;
+    color: var(--text-faint);
+    border: 1px solid var(--line);
+    padding: 1px 5px;
+    font-family: var(--font-mono);
+  }
+  .search-box .s-ico {
+    position: absolute;
+    left: 10px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .btn {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn .kbd-hint { color: var(--text-faint); margin-left: 6px; font-size: 10px; }
+
+  /* ============ 主网格布局 ============ */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    padding: 24px 0 60px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+  }
+  .section-title::before { content: "//"; color: var(--line-strong); }
+  .section-title .count {
+    margin-left: auto;
+    color: var(--text-dim);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  /* ============ 文章卡片 ============ */
+  .post-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .post-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: default;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .post-card:hover { border-color: var(--accent); background: var(--panel-raised); }
+
+  .post-card .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+  .post-card .date { color: var(--mono); }
+  .post-card .status-tag {
+    font-size: 10px;
+    padding: 0 6px;
+    border: 1px solid var(--line-strong);
+    color: var(--text-faint);
+  }
+  .post-card .status-tag.locked { color: var(--warn); border-color: var(--warn); }
+  .post-card .status-tag.private { color: var(--err); border-color: var(--err); }
+
+  .post-card h3 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .post-card h3 a { color: inherit; text-decoration: none; }
+  .post-card h3 a:hover { color: var(--accent); }
+
+  .post-card .excerpt { color: var(--text-dim); font-size: 13px; }
+
+  .post-card .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .post-card .tag-chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 1px 8px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .post-card .tag-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ============ 侧栏 ============ */
+  .sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 16px;
+  }
+
+  /* 标签云 */
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag-cloud .tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .tag-cloud .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag-cloud .tag .n { color: var(--text-faint); margin-left: 4px; font-size: 10px; }
+
+  /* 私密文章加密入口 */
+  .crypto-panel { border: 1px solid var(--warn); }
+  .crypto-panel .lock-icon { color: var(--warn); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; }
+  .crypto-panel p { font-size: 12px; color: var(--text-dim); margin: 6px 0 12px; }
+  .crypto-panel .btn-warn {
+    border-color: var(--warn);
+    color: var(--warn);
+    width: 100%;
+  }
+  .crypto-panel .btn-warn:hover { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+
+  /* 项目入口 */
+  .proj-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .proj-card:hover { border-color: var(--accent); background: var(--panel-raised); }
+  .proj-card .p-body { flex: 1; min-width: 0; }
+  .proj-card .p-name { font-family: var(--font-mono); font-size: 14px; color: var(--text); }
+  .proj-card .p-desc { font-size: 12px; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .proj-card .p-dot { width: 8px; height: 8px; flex: none; }
+  .proj-card .p-dot.ok { background: var(--ok); }
+  .proj-card .p-dot.warn { background: var(--warn); }
+  .proj-card .p-dot.err { background: var(--err); }
+  .proj-card .p-dot.unknown { background: var(--text-faint); }
+  .proj-card .p-status {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 1px 6px;
+    border: 1px solid var(--line);
+    color: var(--text-faint);
+  }
+  .proj-card .p-status.ok { color: var(--ok); border-color: var(--ok); }
+  .proj-card .p-status.err { color: var(--err); border-color: var(--err); }
+  .proj-card .p-status.unknown { color: var(--text-faint); border-color: var(--line); }
+
+  /* ============ 页脚 ============ */
+  footer {
+    border-top: 1px solid var(--line-strong);
+    padding: 20px 0 40px;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-stat { font-family: var(--font-mono); }
+  .footer-stat .num { color: var(--mono); }
+  .footer-links a { color: var(--text-dim); text-decoration: none; margin-right: 14px; }
+  .footer-links a:hover { color: var(--accent); }
+
+  .kbd-tip {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .kbd-tip b { color: var(--text-dim); border: 1px solid var(--line); padding: 0 5px; font-weight: 400; }
+
+  /* ============ 响应式：窄屏单列 ============ */
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .search-box input { width: 140px; }
+  }
+  @media (max-width: 520px) {
+    .container { padding: 0 16px; }
+    .topbar { flex-direction: column; align-items: stretch; }
+    .topbar-controls { justify-content: space-between; }
+    .search-box { flex: 1; }
+    .search-box input { width: 100%; }
+    .status-bar { padding: 4px 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span class="dot"></span>
+  <span id="sb-clock">00:00:00</span>
+  <span class="sep">|</span>
+  <span>NETSIGHT·PRO BLOG // STATIC</span>
+  <span class="sep">|</span>
+  <span id="sb-theme">DARK</span>
+</div>
+
+<header class="container">
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo">NETSIGHT·PRO</span>
+      <span class="tag">/blog</span>
+    </div>
+    <div class="topbar-controls">
+      <div class="search-box">
+        <span class="s-ico">/</span>
+        <!-- Pagefind 搜索预留：接入后替换为 Pagefind UI 或调用 pagefind.search() -->
+        <input id="search-input" type="search" placeholder="搜索文章…" autocomplete="off">
+        <span class="kbd">/</span>
+      </div>
+      <button id="theme-btn" class="btn" type="button" title="切换主题（T）">THEME<span class="kbd-hint">T</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="layout">
+
+    <!-- ============ 主栏：文章列表 ============ -->
+    <section class="main-col">
+      <h2 class="section-title">LATEST POSTS<span class="count" id="post-count">0</span></h2>
+      <div class="post-list" id="post-list"><!-- 文章卡片由 JS 渲染 --></div>
+    </section>
+
+    <!-- ============ 侧栏 ============ -->
+    <aside class="sidebar">
+
+      <section class="panel">
+        <h2 class="section-title">TAGS</h2>
+        <div class="tag-cloud" id="tag-cloud"><!-- 标签云由 JS 渲染 --></div>
+      </section>
+
+      <section class="panel crypto-panel" id="crypto-panel">
+        <h2 class="section-title">PRIVATE ARCHIVE</h2>
+        <div class="lock-icon">[ ENCRYPTED ]</div>
+        <p>加密文章需链接携带密钥访问。前端解密功能为预留占位，点击按钮将提示占位信息。</p>
+        <button id="crypto-btn" class="btn btn-warn" type="button">访问加密文章</button>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">PROJECTS</h2>
+        <div id="proj-list" style="display:flex;flex-direction:column;gap:10px;"><!-- 项目卡片由 JS 渲染 --></div>
+      </section>
+
+    </aside>
+
+  </div>
+</main>
+
+<footer class="container">
+  <div class="footer-grid">
+    <div class="footer-stat">
+      <span>PV <span class="num" id="b-pv">--</span></span>
+      <span>UV <span class="num" id="b-uv">--</span></span>
+      <span class="footer-stat-note">不蒜子统计</span>
+      <span id="busuanzi_value_site_pv" style="display:none;"></span>
+      <span id="busuanzi_value_site_uv" style="display:none;"></span>
+    </div>
+    <div class="footer-links">
+      <a href="#top">回到顶部</a>
+      <a href="https://github.com/" rel="noopener" target="_blank">GitHub</a>
+    </div>
+    <div>© <span id="year">2026</span> NetSight Pro · 备案号占位（ICP 备 00000000 号）</div>
+  </div>
+
+  <div class="kbd-tip">
+    <span><b>T</b> 切换主题</span>
+    <span><b>/</b> 聚焦搜索</span>
+    <span><b>←→</b> 翻页（预留）</span>
+  </div>
+</footer>
+
+<!-- 不蒜子统计：busuanzi.js 写入标准 id 后同步到 #b-pv / #b-uv -->
+<script async src="https://busuanzi.ibruce.info/busuanzi.js"></script>
+<script>
+(function () {
+  var done = false;
+  function sync() {
+    if (done) return;
+    var pv = document.getElementById("busuanzi_value_site_pv");
+    var uv = document.getElementById("busuanzi_value_site_uv");
+    var bp = document.getElementById("b-pv");
+    var bu = document.getElementById("b-uv");
+    var got = false;
+    if (pv && bp && pv.textContent) { bp.textContent = pv.textContent; got = true; }
+    if (uv && bu && uv.textContent) { bu.textContent = uv.textContent; got = true; }
+    if (got) done = true;
+  }
+  setInterval(sync, 2000);
+  sync();
+})();
+</script>
+
+<!-- ============================================================
+     giscus 评论挂载点预留
+     接入步骤：
+     1) 在 GitHub 创建 Discussions 并安装 giscus app；
+     2) 在下方 <script> 中填写 data-repo / data-repo-id / data-category 等参数；
+     3) 取消注释 script 标签并替换为实际 giscus 脚本地址。
+     说明：当前未引入外链脚本，页面可完全离线运行不报错。
+     ============================================================ -->
+<div class="container" id="giscus" style="padding-bottom:40px;">
+  <!-- giscus 评论区将挂载于此容器内 -->
+</div>
+
+<script>
+"use strict";
+/* ============================================================
+   项目健康检测端点（/health）
+   留空字符串表示未配置：项目卡片保持灰色 UNKNOWN，不发起请求。
+   例：DRIVE_HEALTH_URL = "https://drive.example.com/health";
+   ============================================================ */
+var DRIVE_HEALTH_URL = "";
+var NETSIGHT_HEALTH_URL = "";
+
+/* ============================================================
+   站点数据 — 替换此对象即可更新首页内容
+   ============================================================ */
+var __SITE_DATA__ = {
+  posts: [
+    {
+      id: "github-actions-deploy",
+      title: "GitHub Actions 自动部署：Pages 工作流完整配置",
+      date: "2026-10-02",
+      tags: ["CI/CD", "GitHub", "部署"],
+      status: "public",
+      excerpt: "从 checkout 到 deploy-pages，一条 workflow 搞定博客自动发布与缓存更新。",
+      url: "./post.html?id=github-actions-deploy"
+    },
+    {
+      id: "netsight-hud-design",
+      title: "NetSight Pro v2 架构笔记：灰度 HUD 的仪器化设计语言",
+      date: "2026-09-28",
+      tags: ["HUD", "设计", "NetSight"],
+      status: "public",
+      excerpt: "从近黑底、细网格到状态色语义——记录 NetSight Pro 界面中克制、仪器化的视觉系统如何落地。",
+      url: "./post.html?id=netsight-hud-design"
+    },
+    {
+      id: "personaldrive-notes",
+      title: "PersonalDrive 网盘自建踩坑记录：对象存储与权限模型",
+      date: "2026-09-14",
+      tags: ["网盘", "后端", "对象存储"],
+      status: "public",
+      excerpt: "自建网盘过程中的存储选型、鉴权链路与数据安全设计要点。",
+      url: "./post.html?id=personaldrive-notes"
+    },
+    {
+      id: "pagefind-static-search",
+      title: "用纯静态方案给博客做全文搜索：Pagefind 实践",
+      date: "2026-08-30",
+      tags: ["Pagefind", "搜索", "静态站"],
+      status: "public",
+      excerpt: "零依赖、零后端。Pagefind 如何为 GitHub Pages 静态博客补齐站内搜索能力。",
+      url: "./post.html?id=pagefind-static-search"
+    },
+    {
+      id: "q3-private-review",
+      title: "私密日记：2026 年 Q3 个人网络工具链复盘（加密）",
+      date: "2026-09-02",
+      tags: ["日记", "加密"],
+      status: "locked",
+      excerpt: "此文章已加密，需通过带密钥的链接访问。",
+      url: "./post.html?id=q3-private-review&key=__KEY__",
+    }
+  ],
+  projects: [
+    {
+      name: "PersonalDrive",
+      desc: "自建网盘 · 对象存储 + 分享链接",
+      url: "#",
+      healthUrl: DRIVE_HEALTH_URL
+    },
+    {
+      name: "NetSight",
+      desc: "网络诊断 · 延迟 / 路由 / DNS",
+      url: "#",
+      healthUrl: NETSIGHT_HEALTH_URL
+    }
+  ]
+};
+
+/* ============================================================
+   主题三态切换：dark / light / system（跟随系统）
+   localStorage 键：nsp-theme
+   ============================================================ */
+var THEME_KEY = "nsp-theme";
+var themeNames = ["dark", "light", "system"];
+var themeIdx = 0;
+
+function getSystemTheme() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(name) {
+  var resolved = name === "system" ? getSystemTheme() : name;
+  document.documentElement.setAttribute("data-theme", resolved);
+  var label = (name === "system" ? "AUTO:" + resolved.toUpperCase() : name.toUpperCase());
+  var el = document.getElementById("sb-theme");
+  if (el) el.textContent = label;
+  var btn = document.getElementById("theme-btn");
+  if (btn) btn.textContent = "THEME: " + label;
+}
+
+function initTheme() {
+  var saved = null;
+  try { saved = localStorage.getItem(THEME_KEY); } catch (e) { saved = null; }
+  if (themeNames.indexOf(saved) === -1) saved = "dark";   // 默认深色
+  themeIdx = themeNames.indexOf(saved);
+  applyTheme(saved);
+}
+
+function cycleTheme() {
+  themeIdx = (themeIdx + 1) % themeNames.length;
+  var name = themeNames[themeIdx];
+  try { localStorage.setItem(THEME_KEY, name); } catch (e) { /* 忽略 */ }
+  applyTheme(name);
+}
+
+/* 跟随系统：监听系统主题变化（仅 system 模式需要实时跟随） */
+if (window.matchMedia) {
+  window.matchMedia("(prefers-color-scheme: light)").addListener(function () {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { saved = null; }
+    if (saved === "system") applyTheme("system");
+  });
+}
+
+/* ============================================================
+   渲染：文章列表 / 标签云 / 项目入口
+   ============================================================ */
+function renderPosts() {
+  var list = document.getElementById("post-list");
+  var count = document.getElementById("post-count");
+  var html = "";
+  var posts = __SITE_DATA__.posts;
+  posts.forEach(function (p) {
+    var tagHtml = "";
+    (p.tags || []).forEach(function (t) {
+      tagHtml += '<button class="tag-chip" type="button" data-tag="' + t + '">' + t + "</button>";
+    });
+    var statusHtml = "";
+    if (p.status === "locked") statusHtml = '<span class="status-tag locked">[LOCKED]</span>';
+    else if (p.status === "private") statusHtml = '<span class="status-tag private">[PRIVATE]</span>';
+    html +=
+      '<article class="post-card">' +
+        '<div class="meta-row"><span class="date">' + p.date + "</span>" + statusHtml + "</div>" +
+        "<h3><a href=\"" + p.url + '">' + p.title + "</a></h3>" +
+        '<p class="excerpt">' + p.excerpt + "</p>" +
+        '<div class="tags-row">' + tagHtml + "</div>" +
+      "</article>";
+  });
+  list.innerHTML = html;
+  if (count) count.textContent = String(posts.length).padStart(2, "0");
+}
+
+function renderTags() {
+  var cloud = document.getElementById("tag-cloud");
+  var counts = {};
+  __SITE_DATA__.posts.forEach(function (p) {
+    (p.tags || []).forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+  });
+  var html = "";
+  Object.keys(counts).sort().forEach(function (t) {
+    html += '<button class="tag" type="button" data-tag="' + t + '">' + t + '<span class="n">' + counts[t] + "</span></button>";
+  });
+  cloud.innerHTML = html;
+}
+
+var HEALTH_TIMEOUT = 5000;   // 单次检测超时 5s
+var HEALTH_INTERVAL = 60000; // 自动重测间隔 60s
+
+function renderProjects() {
+  var box = document.getElementById("proj-list");
+  var html = "";
+  __SITE_DATA__.projects.forEach(function (pr) {
+    html +=
+      '<a class="proj-card" href="' + pr.url + '" data-name="' + pr.name + '">' +
+        '<span class="p-dot unknown"></span>' +
+        '<div class="p-body"><div class="p-name">' + pr.name + '</div><div class="p-desc">' + pr.desc + "</div></div>" +
+        '<span class="p-status unknown">UNKNOWN</span>' +
+      "</a>";
+  });
+  box.innerHTML = html;
+}
+
+/* 真实健康检测：fetch /health 端点，5s 超时
+   成功(2xx)=绿点 OK；失败/超时=红点 DOWN；未配置(空 URL)=灰点 UNKNOWN */
+function checkHealth(name, url) {
+  var card = document.querySelector('.proj-card[data-name="' + name + '"]');
+  if (!card) return;
+  var dot = card.querySelector(".p-dot");
+  var st = card.querySelector(".p-status");
+  function setState(cls, label) {
+    dot.className = "p-dot " + cls;
+    st.className = "p-status " + cls;
+    st.textContent = label;
+  }
+  if (!url) { setState("unknown", "UNKNOWN"); return; }
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, HEALTH_TIMEOUT);
+  fetch(url, { signal: ctrl.signal, cache: "no-store" })
+    .then(function (r) {
+      clearTimeout(timer);
+      setState(r.ok ? "ok" : "err", r.ok ? "OK" : "DOWN");
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      setState("err", "DOWN");
+    });
+}
+
+/* 初始化检测一次，之后每 60s 自动重测 */
+function startHealthChecks() {
+  __SITE_DATA__.projects.forEach(function (pr) { checkHealth(pr.name, pr.healthUrl); });
+  setInterval(function () {
+    __SITE_DATA__.projects.forEach(function (pr) { checkHealth(pr.name, pr.healthUrl); });
+  }, HEALTH_INTERVAL);
+}
+
+/* ============================================================
+   交互：快捷键 / 搜索 / 标签过滤 / 加密占位 / 时钟
+   ============================================================ */
+function handleKeydown(e) {
+  var tag = (e.target.tagName || "").toLowerCase();
+  var inInput = tag === "input" || tag === "textarea";
+  if (e.key === "/" && !inInput) {
+    e.preventDefault();
+    var si = document.getElementById("search-input");
+    if (si) si.focus();
+  } else if ((e.key === "t" || e.key === "T") && !inInput) {
+    cycleTheme();
+  }
+  // 翻页预留：未来接入文章分页时启用
+  // else if (e.key === "ArrowLeft") { /* 上一页 */ }
+  // else if (e.key === "ArrowRight") { /* 下一页 */ }
+}
+
+document.addEventListener("keydown", handleKeydown);
+
+document.getElementById("theme-btn").addEventListener("click", cycleTheme);
+
+document.getElementById("crypto-btn").addEventListener("click", function () {
+  /* 私密文章解密预留：接入时在此读取 URL 中的密钥参数并解密正文。
+     当前为占位提示，不实现真实解密。 */
+  alert("[占位] 加密文章需通过带密钥的链接访问。前端解密模块为预留状态，接入后即可使用。");
+});
+
+/* 搜索 + 标签统一过滤：搜索匹配 标题+摘要+标签，与标签点击过滤叠加生效 */
+var searchQuery = "";
+var activeTag = "";
+
+function applyFilters() {
+  var list = document.getElementById("post-list");
+  var cards = list.querySelectorAll(".post-card");
+  var q = searchQuery.toLowerCase();
+  cards.forEach(function (card) {
+    var title = (card.querySelector("h3") || {}).textContent || "";
+    var excerpt = (card.querySelector(".excerpt") || {}).textContent || "";
+    var tags = [];
+    card.querySelectorAll(".tag-chip").forEach(function (c) {
+      tags.push(c.getAttribute("data-tag"));
+    });
+    var text = (title + " " + excerpt + " " + tags.join(" ")).toLowerCase();
+    var matchSearch = q === "" || text.indexOf(q) !== -1;
+    var matchTag = activeTag === "" || tags.indexOf(activeTag) !== -1;
+    card.style.display = (matchSearch && matchTag) ? "" : "none";
+  });
+}
+
+document.getElementById("search-input").addEventListener("input", function () {
+  searchQuery = this.value.trim();
+  applyFilters();
+});
+
+document.addEventListener("click", function (e) {
+  var btn = e.target.closest("[data-tag]");
+  if (!btn) return;
+  var tag = btn.getAttribute("data-tag");
+  activeTag = (activeTag === tag) ? "" : tag;
+  applyFilters();
+  var cloudTags = document.querySelectorAll(".tag[data-tag]");
+  cloudTags.forEach(function (x) {
+    var on = x.getAttribute("data-tag") === activeTag && activeTag !== "";
+    x.style.borderColor = on ? "var(--accent)" : "";
+    x.style.color = on ? "var(--accent)" : "";
+  });
+});
+
+/* 状态栏时钟（仪器化细节） */
+function tickClock() {
+  var el = document.getElementById("sb-clock");
+  if (!el) return;
+  var d = new Date();
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  el.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+setInterval(tickClock, 1000);
+tickClock();
+
+/* ============================================================
+   不蒜子统计占位：部署后接入脚本会自动更新 #b-pv / #b-uv
+   ============================================================ */
+document.getElementById("year").textContent = String(new Date().getFullYear());
+
+/* 初始化 */
+renderPosts();
+renderTags();
+renderProjects();
+startHealthChecks();
+initTheme();
+</script>
+</body>
+</html>
