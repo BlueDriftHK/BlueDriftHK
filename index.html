@@ -1,482 +1,789 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BlueDriftHK · 学生开发者</title>
-<meta name="description" content="BlueDriftHK 的个人主页 · 学生开发者 · 边缘计算爱好者 · Cloudflare Workers" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETSIGHT·PRO / 博客</title>
+<meta name="description" content="NetSight Pro 灰度 HUD 风格个人博客首页——纯静态单文件，无外部依赖。">
+<!--
+  ============================================================
+  NETSIGHT PRO / GRAYSCALE HUD BLOG — SINGLE FILE STATIC
+  ------------------------------------------------------------
+  Build note:
+  - 单文件自包含：内嵌全部 CSS 与 JS，无外部依赖可离线运行。
+  - 灰度 HUD 语言：近黑底、细网格、直角卡片、等宽数字、状态色语义。
+  - 所有内容数据（文章/标签/项目）由下方 window.__SITE_DATA__ 维护，
+    替换数据即可更新首页，无需改动结构。
+  - 预留接入点（注释说明，不实际引入外链，避免本地打开报错）：
+      [1] Pagefind   —— 搜索预留，见 #search-input 与 search.js 注释。
+      [2] giscus     —— 评论预留，见 <footer> 后 #giscus 挂载点注释。
+      [3] busuanzi   —— 不蒜子统计预留，见页脚脚本注释。
+      [4] PWA        —— manifest / service worker 预留，见 head 注释。
+  ============================================================
+-->
+<!-- PWA：manifest + Service Worker（相对路径，适配 GitHub Pages 子路径部署） -->
+<link rel="manifest" href="./manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function (e) {
+        console.warn("SW register failed:", e);
+      });
+    });
+  }
+</script>
 <style>
+  /* ============================================================
+     THEME TOKENS — CSS 变量
+     三态：dark(默认) / light / system(跟随系统)
+     ============================================================ */
   :root {
-    --cyan:#22d3ee; --indigo:#6366f1; --purple:#a855f7; --orange:#f38020;
-    --bg:#05050f; --surface:rgba(255,255,255,.04); --surface-2:rgba(255,255,255,.07);
-    --text:#eef0f6; --text-2:#9a9ab5; --text-3:#63637e; --border:rgba(255,255,255,.09);
-    --radius:18px; --maxw:820px; --font:'Inter',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+    /* Dark（默认近黑） */
+    --bg: #0a0a0a;
+    --bg-grid: rgba(255, 255, 255, 0.045);
+    --panel: #111111;
+    --panel-raised: #161616;
+    --line: #2a2a2a;
+    --line-strong: #3a3a3a;
+    --text: #d6d6d6;
+    --text-dim: #8a8a8a;
+    --text-faint: #5a5a5a;
+    --mono: #e8e8e8;
+    --accent: #c9c9c9;
+    --ok: #9fb8a0;      /* 正常：低饱和灰绿 */
+    --warn: #b08d3e;    /* 警告：暗琥珀 */
+    --err: #a3544a;     /* 异常：暗红 */
+    --grid-size: 24px;
+    --radius: 0px;      /* 直角卡片 */
+    --font-sans: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+    --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
   }
-  [data-theme="light"] {
-    --bg:#f3f5ff; --surface:rgba(255,255,255,.72); --surface-2:rgba(255,255,255,.9);
-    --text:#171733; --text-2:#565675; --text-3:#8f8fae; --border:rgba(20,20,60,.09);
+
+  html[data-theme="light"] {
+    --bg: #e9e9e9;
+    --bg-grid: rgba(0, 0, 0, 0.05);
+    --panel: #f5f5f5;
+    --panel-raised: #fdfdfd;
+    --line: #c9c9c9;
+    --line-strong: #9a9a9a;
+    --text: #1c1c1c;
+    --text-dim: #5c5c5c;
+    --text-faint: #8a8a8a;
+    --mono: #141414;
+    --accent: #333333;
+    --ok: #4c7a50;
+    --warn: #8a6d1f;
+    --err: #a04a3f;
   }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-  a{color:inherit;text-decoration:none}
-  /* aurora bg */
-  .aurora{position:fixed;inset:0;z-index:-2;overflow:hidden;filter:blur(0)}
-  .aurora span{position:absolute;width:520px;height:520px;border-radius:50%;opacity:.14;filter:blur(120px)}
-  .a1{background:var(--cyan);top:-160px;left:-120px}
-  .a2{background:var(--indigo);top:20%;right:-160px}
-  .a3{background:var(--purple);bottom:-180px;left:30%}
-  [data-theme="light"] .aurora span{opacity:.16}
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
 
-  /* nav */
-  nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 72%,transparent);border-bottom:1px solid var(--border)}
-  .nav-in{max-width:var(--maxw);margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
-  .brand{font-weight:800;letter-spacing:-.02em;font-size:1.05rem}
-  .brand .grad{background:linear-gradient(120deg,var(--cyan),var(--indigo),var(--purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .nav-act{display:flex;gap:8px}
-  .chip{border:1px solid var(--border);background:var(--surface);border-radius:99px;padding:6px 13px;font-size:.8rem;color:var(--text-2);cursor:pointer;transition:.2s}
-  .chip:hover{background:var(--surface-2);color:var(--text)}
+  * { margin: 0; padding: 0; box-sizing: border-box; border-radius: var(--radius); }
 
-  /* hero */
-  header.hero{padding:72px 0 40px;text-align:center}
-  .avatar{width:88px;height:88px;border-radius:50%;margin:0 auto 22px;border:1px solid var(--border);background:linear-gradient(135deg,var(--cyan),var(--indigo),var(--purple));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;color:#fff;box-shadow:0 12px 40px rgba(99,102,241,.35)}
-  h1{font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.03em}
-  h1 .grad{background:linear-gradient(120deg,var(--cyan),var(--indigo),var(--orange));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .tag{color:var(--text-2);margin-top:12px;font-size:1.02rem}
-  .stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
-  .stat{border:1px solid var(--border);background:var(--surface);border-radius:14px;padding:10px 18px;font-size:.82rem;color:var(--text-2);display:flex;align-items:center;gap:8px}
-  .stat b{color:var(--text);font-variant-numeric:tabular-nums}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--text-3)}
-  .dot.on{background:#22c55e;box-shadow:0 0 8px #22c55e}
-  .dot.off{background:#ef4444}
+  html { scroll-behavior: smooth; }
 
-  /* section */
-  section{padding:34px 0}
-  .sec-h{font-size:.78rem;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);font-weight:700;margin-bottom:14px}
-  .lead{color:var(--text);font-size:1.05rem}
-  .lead .en{display:block;color:var(--text-2);font-size:.9rem;margin-top:6px}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    /* 细网格背景 */
+    background-image:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+    background-position: -1px -1px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 
-  /* projects */
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media(max-width:640px){.grid{grid-template-columns:1fr}}
-  .card{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:22px;transition:.25s}
-  .card:hover{transform:translateY(-3px);border-color:rgba(99,102,241,.4);background:var(--surface-2)}
-  .card .ico{font-size:1.6rem}
-  .card h3{font-size:1.15rem;margin:8px 0 2px;letter-spacing:-.01em}
-  .card .sub{color:var(--text-3);font-size:.78rem;font-family:'JetBrains Mono',ui-monospace,monospace}
-  .card p{color:var(--text-2);font-size:.88rem;margin:12px 0}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-  .tag2{font-size:.68rem;padding:3px 9px;border-radius:7px;background:var(--surface-2);color:var(--text-2);border:1px solid var(--border)}
-  .btns{display:flex;gap:8px;flex-wrap:wrap}
-  .btn{font-size:.8rem;font-weight:600;padding:8px 15px;border-radius:10px;border:1px solid var(--border);display:inline-flex;align-items:center;gap:6px;transition:.2s}
-  .btn.p{background:linear-gradient(120deg,var(--cyan),var(--indigo));color:#fff;border:none}
-  .btn.p.o{background:linear-gradient(120deg,var(--orange),var(--indigo))}
-  .btn:hover{transform:translateY(-2px)}
+  /* 顶部状态条：仪器化细节 */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 92%, transparent);
+  }
+  .status-bar .dot { width: 6px; height: 6px; background: var(--ok); display: inline-block; }
+  .status-bar .sep { color: var(--line-strong); }
 
-  /* articles */
-  .posts{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
-  .post{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);transition:.2s}
-  .post:last-child{border-bottom:none}
-  .post:hover{background:var(--surface-2)}
-  .post .no{font-family:'JetBrains Mono',monospace;color:var(--cyan);font-size:.8rem}
-  .post .ti{flex:1;font-size:.94rem}
-  .post .da{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--text-3)}
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
 
-  /* contact */
-  .social{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px}
-  .social a{border:1px solid var(--border);background:var(--surface);border-radius:12px;padding:10px 18px;font-size:.85rem;color:var(--text-2);transition:.2s}
-  .social a:hover{color:var(--text);border-color:rgba(99,102,241,.5);transform:translateY(-2px)}
+  /* ============ 顶部导航 ============ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0 14px;
+    border-bottom: 1px solid var(--line-strong);
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+    user-select: none;
+  }
+  .brand .logo { color: var(--accent); font-weight: 700; font-size: 18px; }
+  .brand .tag { color: var(--text-faint); font-size: 11px; }
+  .topbar-controls { display: flex; align-items: center; gap: 10px; }
 
-  footer{text-align:center;padding:34px 0 60px;color:var(--text-3);font-size:.82rem}
-  footer .qm{color:var(--text-2);margin-bottom:6px}
+  .search-box { position: relative; display: flex; align-items: center; }
+  .search-box input {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 7px 12px 7px 30px;
+    width: 220px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+  .search-box .kbd {
+    position: absolute;
+    right: 8px;
+    font-size: 10px;
+    color: var(--text-faint);
+    border: 1px solid var(--line);
+    padding: 1px 5px;
+    font-family: var(--font-mono);
+  }
+  .search-box .s-ico {
+    position: absolute;
+    left: 10px;
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
 
-  /* ===== Konami easter egg ===== */
-  .konami-bar{position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;background:linear-gradient(90deg,#ef4444,#f59e0b,#eab308,#22c55e,#06b6d4,#8b5cf6,#ef4444);background-size:200% 100%;opacity:0;transition:opacity .4s}
-  body.konami-mode .konami-bar{opacity:1;animation:kslide 3s linear infinite}
-  body.konami-mode main{animation:khue 12s linear infinite}
-  @keyframes kslide{to{background-position:200% 0}}
-  @keyframes khue{to{filter:hue-rotate(360deg)}}
-  .toast{position:fixed;top:22px;left:50%;transform:translateX(-50%) translateY(-24px);z-index:10001;background:var(--surface-2);backdrop-filter:blur(10px);border:1px solid var(--indigo);color:var(--text);padding:10px 20px;border-radius:12px;font-size:.85rem;opacity:0;pointer-events:none;transition:.4s}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  @media(prefers-reduced-motion:reduce){body.konami-mode main,.konami-bar{animation:none}}
+  .btn {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn .kbd-hint { color: var(--text-faint); margin-left: 6px; font-size: 10px; }
 
-  /* ===== Idle screensaver (time popup) ===== */
-  .screensaver{position:fixed;inset:0;z-index:10000;background:rgba(5,5,15,.95);opacity:0;visibility:hidden;transition:opacity .6s,visibility .6s;cursor:none;overflow:hidden}
-  .screensaver.active{opacity:1;visibility:visible}
-  #ssCanvas{position:absolute;inset:0}
-  .ss-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity .5s .2s;pointer-events:none}
-  .screensaver.active .ss-ring{opacity:1}
-  .ss-ring svg{width:clamp(230px,40vw,360px);height:clamp(230px,40vw,360px)}
-  .ss-ring-track{fill:none;stroke:rgba(148,163,184,.15);stroke-width:3}
-  .ss-ring-sec{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .3s;filter:drop-shadow(0 0 4px rgba(34,211,238,.5))}
-  .ss-ring-min{fill:none;stroke:var(--purple);stroke-width:2.5;stroke-linecap:round;transition:stroke-dashoffset .5s}
-  .ss-ring-hr{fill:none;stroke:var(--indigo);stroke-width:3;stroke-linecap:round}
-  .ss-tick{stroke:rgba(148,163,184,.35);stroke-width:1}
-  .ss-clock{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
-  .ss-time{font-family:'JetBrains Mono',monospace;font-size:clamp(2.6rem,10vw,5.4rem);font-weight:700;letter-spacing:2px;background:linear-gradient(120deg,var(--cyan),var(--indigo));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  .ss-date{font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--text-2);margin-top:6px}
-  .ss-hint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--text-3);letter-spacing:1px}
+  /* ============ 主网格布局 ============ */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    padding: 24px 0 60px;
+  }
 
-  /* ===== Article reader modal ===== */
-  .reader{position:fixed;inset:0;z-index:9000;display:flex;align-items:flex-start;justify-content:center;padding:5vh 18px;background:rgba(5,5,15,.6);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
-  .reader.open{opacity:1;visibility:visible}
-  .reader-card{width:100%;max-width:760px;max-height:90vh;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translateY(14px) scale(.99);transition:transform .3s}
-  .reader.open .reader-card{transform:none}
-  .reader-top{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 26px;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-  .reader-top .rtag{font-size:.72rem;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;font-weight:700}
-  .reader-close{border:1px solid var(--border);background:var(--surface);color:var(--text-2);width:34px;height:34px;border-radius:10px;font-size:1.1rem;cursor:pointer;transition:.2s;flex:none}
-  .reader-close:hover{color:var(--text);background:var(--surface-2);transform:rotate(90deg)}
-  .reader-body{padding:28px 30px 48px}
-  .reader-body h1{font-size:1.7rem;line-height:1.25;letter-spacing:-.02em;margin-bottom:10px}
-  .reader-meta{color:var(--text-3);font-size:.82rem;font-family:'JetBrains Mono',monospace;margin-bottom:24px;display:flex;gap:14px;flex-wrap:wrap}
-  .reader-body h2{font-size:1.18rem;margin:30px 0 12px;padding-left:12px;border-left:3px solid var(--indigo);letter-spacing:-.01em}
-  .reader-body p{color:var(--text);margin:0 0 15px;font-size:.98rem}
-  .reader-body ul,.reader-body ol{margin:0 0 16px 22px;color:var(--text)}
-  .reader-body li{margin:6px 0}
-  .reader-body a{color:var(--cyan);text-decoration:underline}
-  .reader-body blockquote{margin:0 0 16px;padding:12px 18px;border-left:3px solid var(--cyan);background:var(--surface);border-radius:0 12px 12px 0;color:var(--text-2)}
-  .reader-body code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.86em;background:var(--surface-2);padding:2px 6px;border-radius:6px;color:var(--orange)}
-  .reader-body pre{background:#0a0a18;border:1px solid var(--border);border-radius:12px;padding:16px;overflow:auto;margin:0 0 18px}
-  [data-theme="light"] .reader-body pre{background:#0f1020}
-  .reader-body pre code{background:none;padding:0;color:#c8d3f5;font-size:.82rem;line-height:1.6}
-  .reader-body .tip{font-size:.85rem;color:var(--text-2);background:linear-gradient(120deg,rgba(34,211,238,.08),rgba(99,102,241,.08));border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin:18px 0}
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin: 0 0 14px;
+  }
+  .section-title::before { content: "//"; color: var(--line-strong); }
+  .section-title .count {
+    margin-left: auto;
+    color: var(--text-dim);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  /* ============ 文章卡片 ============ */
+  .post-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .post-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: default;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .post-card:hover { border-color: var(--accent); background: var(--panel-raised); }
+
+  .post-card .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+  .post-card .date { color: var(--mono); }
+  .post-card .status-tag {
+    font-size: 10px;
+    padding: 0 6px;
+    border: 1px solid var(--line-strong);
+    color: var(--text-faint);
+  }
+  .post-card .status-tag.locked { color: var(--warn); border-color: var(--warn); }
+  .post-card .status-tag.private { color: var(--err); border-color: var(--err); }
+
+  .post-card h3 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .post-card h3 a { color: inherit; text-decoration: none; }
+  .post-card h3 a:hover { color: var(--accent); }
+
+  .post-card .excerpt { color: var(--text-dim); font-size: 13px; }
+
+  .post-card .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .post-card .tag-chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 1px 8px;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .post-card .tag-chip:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ============ 侧栏 ============ */
+  .sidebar { display: flex; flex-direction: column; gap: 24px; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 16px;
+  }
+
+  /* 标签云 */
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag-cloud .tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .tag-cloud .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .tag-cloud .tag .n { color: var(--text-faint); margin-left: 4px; font-size: 10px; }
+
+  /* 私密文章加密入口 */
+  .crypto-panel { border: 1px solid var(--warn); }
+  .crypto-panel .lock-icon { color: var(--warn); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; }
+  .crypto-panel p { font-size: 12px; color: var(--text-dim); margin: 6px 0 12px; }
+  .crypto-panel .btn-warn {
+    border-color: var(--warn);
+    color: var(--warn);
+    width: 100%;
+  }
+  .crypto-panel .btn-warn:hover { background: color-mix(in srgb, var(--warn) 12%, transparent); }
+
+  /* 项目入口 */
+  .proj-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+  }
+  .proj-card:hover { border-color: var(--accent); background: var(--panel-raised); }
+  .proj-card .p-body { flex: 1; min-width: 0; }
+  .proj-card .p-name { font-family: var(--font-mono); font-size: 14px; color: var(--text); }
+  .proj-card .p-desc { font-size: 12px; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .proj-card .p-dot { width: 8px; height: 8px; flex: none; }
+  .proj-card .p-dot.ok { background: var(--ok); }
+  .proj-card .p-dot.warn { background: var(--warn); }
+  .proj-card .p-dot.err { background: var(--err); }
+  .proj-card .p-dot.unknown { background: var(--text-faint); }
+  .proj-card .p-status {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 1px 6px;
+    border: 1px solid var(--line);
+    color: var(--text-faint);
+  }
+  .proj-card .p-status.ok { color: var(--ok); border-color: var(--ok); }
+  .proj-card .p-status.err { color: var(--err); border-color: var(--err); }
+  .proj-card .p-status.unknown { color: var(--text-faint); border-color: var(--line); }
+
+  /* ============ 页脚 ============ */
+  footer {
+    border-top: 1px solid var(--line-strong);
+    padding: 20px 0 40px;
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+  .footer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-stat { font-family: var(--font-mono); }
+  .footer-stat .num { color: var(--mono); }
+  .footer-links a { color: var(--text-dim); text-decoration: none; margin-right: 14px; }
+  .footer-links a:hover { color: var(--accent); }
+
+  .kbd-tip {
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .kbd-tip b { color: var(--text-dim); border: 1px solid var(--line); padding: 0 5px; font-weight: 400; }
+
+  /* ============ 响应式：窄屏单列 ============ */
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .search-box input { width: 140px; }
+  }
+  @media (max-width: 520px) {
+    .container { padding: 0 16px; }
+    .topbar { flex-direction: column; align-items: stretch; }
+    .topbar-controls { justify-content: space-between; }
+    .search-box { flex: 1; }
+    .search-box input { width: 100%; }
+    .status-bar { padding: 4px 16px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
 </style>
 </head>
 <body>
-<div class="aurora"><span class="a1"></span><span class="a2"></span><span class="a3"></span></div>
-<div class="konami-bar"></div>
-<div class="toast" id="toast" role="status"></div>
 
-<nav>
-  <div class="nav-in">
-    <a class="brand" href="#top">🌊 <span class="grad">BlueDriftHK</span></a>
-    <div class="nav-act">
-      <button class="chip" id="langBtn">EN</button>
-      <button class="chip" id="themeBtn">🌙</button>
+<div class="status-bar">
+  <span class="dot"></span>
+  <span id="sb-clock">00:00:00</span>
+  <span class="sep">|</span>
+  <span>NETSIGHT·PRO BLOG // STATIC</span>
+  <span class="sep">|</span>
+  <span id="sb-theme">DARK</span>
+</div>
+
+<header class="container">
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo">NETSIGHT·PRO</span>
+      <span class="tag">/blog</span>
     </div>
-  </div>
-</nav>
-
-<main id="top">
-<header class="hero wrap">
-  <div class="avatar">B</div>
-  <h1><span class="grad" data-i18n="name">BlueDriftHK</span></h1>
-  <p class="tag" data-i18n="tagline">学生开发者 · 边缘计算爱好者 · 把延迟抠到物理极限</p>
-  <div class="stats">
+    <div class="topbar-controls">
+      <div class="search-box">
+        <span class="s-ico">/</span>
+        <!-- Pagefind 搜索预留：接入后替换为 Pagefind UI 或调用 pagefind.search() -->
+        <input id="search-input" type="search" placeholder="搜索文章…" autocomplete="off">
+        <span class="kbd">/</span>
+      </div>
+      <button id="theme-btn" class="btn" type="button" title="切换主题（T）">THEME<span class="kbd-hint">T</span></button>
+    </div>
   </div>
 </header>
 
-<div class="wrap">
-  <section>
-    <div class="sec-h" data-i18n="aboutH">关于我</div>
-    <p class="lead">
-      <span data-i18n="aboutZh">一个人描述自己最好的方式，是说他正在为什么着迷。我痴迷的是「网络的另一端到底有多快」——白天上课，晚上把想法一个接一个部署到 Cloudflare Workers：博客、网盘、网络诊断。我偏爱单文件、零成本、跑在全球边缘的小东西。</span>
-      <span class="en" data-i18n="aboutEn">I'm a student developer obsessed with one question: how fast can the other side of the network be? Between classes I ship ideas onto Cloudflare Workers — a blog, a cloud drive, network diagnostics. I love single-file, $0, edge-native things.</span>
-    </p>
-  </section>
+<main class="container">
+  <div class="layout">
 
-  <section>
-    <div class="sec-h" data-i18n="projH">我做的两个东西</div>
-    <div class="grid">
-      <article class="card">
-        <div class="ico">🔭</div>
-        <h3>NetSight Pro</h3>
-        <div class="sub">ipcheck.bjhr.space</div>
-        <p data-i18n="p1">边缘部署的极光网络诊断台。RTT / 丢包 / 抖动、带宽测速、TLS & HTTP/3 检测、JA3/JA4 指纹、双栈 IP 情报，中英繁三语。</p>
-        <div class="tags"><span class="tag2">Workers</span><span class="tag2">Diagnostics</span><span class="tag2">AGPL-3.0</span></div>
-        <div class="btns">
-          <a class="btn p" href="https://ipcheck.bjhr.space/" target="_blank" rel="noopener"><span data-i18n="live">在线体验</span> →</a>
-          <a class="btn" href="https://github.com/BlueDriftHK/CF-workers-netdiag" target="_blank" rel="noopener">Source</a>
-        </div>
-      </article>
-      <article class="card">
-        <div class="ico">☁️</div>
-        <h3>CF-KVR2-NetworkCloud</h3>
-        <div class="sub">icloud.bjhr.space</div>
-        <p data-i18n="p2">一个文件、一个 Worker 的私人网盘。R2 存文件、KV 存元数据、DO 做缓存，无出口流量费。支持分片上传、分享链接、WebDAV 挂载、客户端 AES-256-GCM 加密。</p>
-        <div class="tags"><span class="tag2">R2 · KV · DO</span><span class="tag2">WebDAV</span><span class="tag2">AGPL-3.0</span></div>
-        <div class="btns">
-          <a class="btn p o" href="https://icloud.bjhr.space/" target="_blank" rel="noopener"><span data-i18n="live">在线体验</span> →</a>
-          <a class="btn" href="https://github.com/BlueDriftHK/CF-KVR2-NetworkCloud" target="_blank" rel="noopener">Source</a>
-        </div>
-      </article>
-    </div>
-  </section>
+    <!-- ============ 主栏：文章列表 ============ -->
+    <section class="main-col">
+      <h2 class="section-title">LATEST POSTS<span class="count" id="post-count">0</span></h2>
+      <div class="post-list" id="post-list"><!-- 文章卡片由 JS 渲染 --></div>
+    </section>
 
-  <section>
-    <div class="sec-h" data-i18n="blogH">博客文章</div>
-    <div class="posts" id="posts">
-      <a class="post" href="#a1" data-article="a1"><span class="no">01</span><span class="ti">用 Cloudflare Workers 打造全球网络诊断面板</span><span class="da">2025-12-15</span></a>
-      <a class="post" href="#a2" data-article="a2"><span class="no">02</span><span class="ti">QUIC 与 HTTP/3 实战性能调优</span><span class="da">2026-01-08</span></a>
-      <a class="post" href="#a3" data-article="a3"><span class="no">03</span><span class="ti">HLS 自适应码率（ABR）原理与调优</span><span class="da">2026-02-11</span></a>
-      <a class="post" href="#a4" data-article="a4"><span class="no">04</span><span class="ti">D1 + R2 构建 Serverless 数据层</span><span class="da">2026-03-27</span></a>
-      <a class="post" href="#a5" data-article="a5"><span class="no">05</span><span class="ti">Web 安全加固清单：TLS、HSTS 与 CSP</span><span class="da">2026-05-02</span></a>
-      <a class="post" href="#a6" data-article="a6"><span class="no">06</span><span class="ti">WebSocket 实时通信的重连与心跳设计</span><span class="da">2026-06-18</span></a>
-    </div>
-  </section>
+    <!-- ============ 侧栏 ============ -->
+    <aside class="sidebar">
 
-  <section>
-    <div class="sec-h" data-i18n="contactH">联系我</div>
-    <div class="social">
-      <a href="https://github.com/BlueDriftHK" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://twitter.com/BlueDriftHK" target="_blank" rel="noopener">X @BlueDriftHK</a>
-      <a href="https://t.me/BlueDriftHK" target="_blank" rel="noopener">Telegram</a>
-      <a href="mailto:asiacomk@gmail.com">Email</a>
-    </div>
-  </section>
+      <section class="panel">
+        <h2 class="section-title">TAGS</h2>
+        <div class="tag-cloud" id="tag-cloud"><!-- 标签云由 JS 渲染 --></div>
+      </section>
 
-  <footer>
-    <div class="qm" data-i18n="quote">在边缘，用代码丈量世界。</div>
-    <div>© 2026 BlueDriftHK · <span data-i18n="hint">试试 ↑↑↓↓←→←→ B A</span></div>
-  </footer>
-</div>
+      <section class="panel crypto-panel" id="crypto-panel">
+        <h2 class="section-title">PRIVATE ARCHIVE</h2>
+        <div class="lock-icon">[ ENCRYPTED ]</div>
+        <p>加密文章需链接携带密钥访问。前端解密功能为预留占位，点击按钮将提示占位信息。</p>
+        <button id="crypto-btn" class="btn btn-warn" type="button">访问加密文章</button>
+      </section>
+
+      <section class="panel">
+        <h2 class="section-title">PROJECTS</h2>
+        <div id="proj-list" style="display:flex;flex-direction:column;gap:10px;"><!-- 项目卡片由 JS 渲染 --></div>
+      </section>
+
+    </aside>
+
+  </div>
 </main>
 
-<!-- Idle screensaver -->
-<div class="screensaver" id="screensaver" aria-hidden="true">
-  <canvas id="ssCanvas"></canvas>
-  <div class="ss-ring" id="ssRing">
-    <svg viewBox="0 0 200 200">
-      <circle class="ss-ring-track" cx="100" cy="100" r="90"/>
-      <circle class="ss-ring-track" cx="100" cy="100" r="75"/>
-      <circle class="ss-ring-track" cx="100" cy="100" r="60"/>
-      <g id="ssTicks"></g>
-      <circle class="ss-ring-hr" id="ssHr" cx="100" cy="100" r="60" stroke-dasharray="377" stroke-dashoffset="377" transform="rotate(-90 100 100)"/>
-      <circle class="ss-ring-min" id="ssMin" cx="100" cy="100" r="75" stroke-dasharray="471.2" stroke-dashoffset="471.2" transform="rotate(-90 100 100)"/>
-      <circle class="ss-ring-sec" id="ssSec" cx="100" cy="100" r="90" stroke-dasharray="565.5" stroke-dashoffset="565.5" transform="rotate(-90 100 100)"/>
-    </svg>
-  </div>
-  <div class="ss-clock">
-    <div class="ss-time" id="ssTime">00:00:00</div>
-    <div class="ss-date" id="ssDate"></div>
-  </div>
-  <div class="ss-hint" id="ssHint">移动鼠标或按任意键退出 · Move to wake</div>
-</div>
-
-<!-- Article reader -->
-<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
-  <div class="reader-card">
-    <div class="reader-top">
-      <span class="rtag">BlueDriftHK · Blog</span>
-      <button class="reader-close" id="readerClose" aria-label="关闭">&times;</button>
+<footer class="container">
+  <div class="footer-grid">
+    <div class="footer-stat">
+      <!-- 不蒜子统计预留：部署后取消注释并引入脚本，busuanzi.site 提供 UV/PV 计数
+      <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+      -->
+      <span>PV <span class="num" id="b-pv">--</span></span>
+      <span>UV <span class="num" id="b-uv">--</span></span>
+      <span class="footer-stat-note">不蒜子统计预留</span>
     </div>
-    <div class="reader-body" id="readerBody"></div>
+    <div class="footer-links">
+      <a href="#top">回到顶部</a>
+      <a href="https://github.com/" rel="noopener" target="_blank">GitHub</a>
+    </div>
+    <div>© <span id="year">2026</span> NetSight Pro · 备案号占位（ICP 备 00000000 号）</div>
   </div>
+
+  <div class="kbd-tip">
+    <span><b>T</b> 切换主题</span>
+    <span><b>/</b> 聚焦搜索</span>
+    <span><b>←→</b> 翻页（预留）</span>
+  </div>
+</footer>
+
+<!-- ============================================================
+     giscus 评论挂载点预留
+     接入步骤：
+     1) 在 GitHub 创建 Discussions 并安装 giscus app；
+     2) 在下方 <script> 中填写 data-repo / data-repo-id / data-category 等参数；
+     3) 取消注释 script 标签并替换为实际 giscus 脚本地址。
+     说明：当前未引入外链脚本，页面可完全离线运行不报错。
+     ============================================================ -->
+<div class="container" id="giscus" style="padding-bottom:40px;">
+  <!-- giscus 评论区将挂载于此容器内 -->
 </div>
 
 <script>
-(function(){
-  "use strict";
-  function pad(n){return n<10?'0'+n:''+n;}
-  var $=function(id){return document.getElementById(id);};
+"use strict";
+/* ============================================================
+   项目健康检测端点（/health）
+   留空字符串表示未配置：项目卡片保持灰色 UNKNOWN，不发起请求。
+   例：DRIVE_HEALTH_URL = "https://drive.example.com/health";
+   ============================================================ */
+var DRIVE_HEALTH_URL = "";
+var NETSIGHT_HEALTH_URL = "";
 
-  /* ---------- i18n ---------- */
-  var DICT={
-    en:{
-      tagline:'Student developer · Edge computing enthusiast · Shaving latency to the limit',
-      statusTxt:'Status',visitors:'Visitors',loc:'Runs at the edge',
-      aboutZh:'The best way to describe yourself is to say what you\'re obsessed with. Mine is: how fast can the other side of the network be? Between classes I ship ideas onto Cloudflare Workers — a blog, a cloud drive, diagnostics. I love single-file, $0, edge-native things.',
-      aboutEn:'白天上课，晚上把想法部署到边缘 —— 我偏爱干净、省钱、跑在全球的小东西。',
-      projH:'Two things I built',p1:'An Aurora-grade, edge-deployed network diagnostics console: RTT / loss / jitter, speed tests, TLS & HTTP/3, JA3/JA4 fingerprints, dual-stack IP intel. Trilingual.',
-      p2:'A one-file, one-Worker personal cloud. R2 for bytes, KV for metadata, DO for caching, zero egress. Chunked uploads, share links, WebDAV mount, client-side AES-256-GCM.',
-      live:'Live demo',blogH:'Writing',contactH:'Say hi',quote:'Measuring the world, from the edge.',hint:'Try ↑↑↓↓←→←→ B A'
+/* ============================================================
+   站点数据 — 替换此对象即可更新首页内容
+   ============================================================ */
+var __SITE_DATA__ = {
+  posts: [
+    {
+      id: "github-actions-deploy",
+      title: "GitHub Actions 自动部署：Pages 工作流完整配置",
+      date: "2026-10-02",
+      tags: ["CI/CD", "GitHub", "部署"],
+      status: "public",
+      excerpt: "从 checkout 到 deploy-pages，一条 workflow 搞定博客自动发布与缓存更新。",
+      url: "./post.html?id=github-actions-deploy"
     },
-    zh:{
-      tagline:'学生开发者 · 边缘计算爱好者 · 把延迟抠到物理极限',
-      statusTxt:'站点状态',visitors:'累计访客',loc:'运行于全球边缘',
-      aboutZh:'一个人描述自己最好的方式，是说他正在为什么着迷。我痴迷的是「网络的另一端到底有多快」——白天上课，晚上把想法一个接一个部署到 Cloudflare Workers：博客、网盘、网络诊断。我偏爱单文件、零成本、跑在全球边缘的小东西。',
-      aboutEn:'I\'m a student developer obsessed with one question: how fast can the other side of the network be? Between classes I ship ideas onto Cloudflare Workers — a blog, a cloud drive, network diagnostics. I love single-file, $0, edge-native things.',
-      projH:'我做的两个东西',p1:'边缘部署的极光网络诊断台。RTT / 丢包 / 抖动、带宽测速、TLS & HTTP/3 检测、JA3/JA4 指纹、双栈 IP 情报，中英繁三语。',
-      p2:'一个文件、一个 Worker 的私人网盘。R2 存文件、KV 存元数据、DO 做缓存，无出口流量费。支持分片上传、分享链接、WebDAV 挂载、客户端 AES-256-GCM 加密。',
-      live:'在线体验',blogH:'博客文章',contactH:'联系我',quote:'在边缘，用代码丈量世界。',hint:'试试 ↑↑↓↓←→←→ B A'
+    {
+      id: "netsight-hud-design",
+      title: "NetSight Pro v2 架构笔记：灰度 HUD 的仪器化设计语言",
+      date: "2026-09-28",
+      tags: ["HUD", "设计", "NetSight"],
+      status: "public",
+      excerpt: "从近黑底、细网格到状态色语义——记录 NetSight Pro 界面中克制、仪器化的视觉系统如何落地。",
+      url: "./post.html?id=netsight-hud-design"
+    },
+    {
+      id: "personaldrive-notes",
+      title: "PersonalDrive 网盘自建踩坑记录：对象存储与权限模型",
+      date: "2026-09-14",
+      tags: ["网盘", "后端", "对象存储"],
+      status: "public",
+      excerpt: "自建网盘过程中的存储选型、鉴权链路与数据安全设计要点。",
+      url: "./post.html?id=personaldrive-notes"
+    },
+    {
+      id: "pagefind-static-search",
+      title: "用纯静态方案给博客做全文搜索：Pagefind 实践",
+      date: "2026-08-30",
+      tags: ["Pagefind", "搜索", "静态站"],
+      status: "public",
+      excerpt: "零依赖、零后端。Pagefind 如何为 GitHub Pages 静态博客补齐站内搜索能力。",
+      url: "./post.html?id=pagefind-static-search"
+    },
+    {
+      id: "q3-private-review",
+      title: "私密日记：2026 年 Q3 个人网络工具链复盘（加密）",
+      date: "2026-09-02",
+      tags: ["日记", "加密"],
+      status: "locked",
+      excerpt: "此文章已加密，需通过带密钥的链接访问。",
+      url: "./post.html?id=q3-private-review"
     }
-  };
-  var lang = (function(){ try{return localStorage.getItem('bd_lang')||'zh';}catch(e){return 'zh';} })();
-  function applyLang(){
-    var d=DICT[lang]||DICT.zh;
-    document.querySelectorAll('[data-i18n]').forEach(function(el){
-      var k=el.getAttribute('data-i18n'); if(d[k]!=null) el.textContent=d[k];
-    });
-    document.documentElement.lang = lang==='zh'?'zh-CN':'en';
-    $('langBtn').textContent = lang==='zh'?'EN':'中';
-    try{localStorage.setItem('bd_lang',lang);}catch(e){}
-  }
-  $('langBtn').addEventListener('click',function(){ lang = lang==='zh'?'en':'zh'; applyLang(); paintStatus(); });
-  applyLang();
-
-  /* ---------- theme ---------- */
-  function setTheme(t){ document.documentElement.setAttribute('data-theme',t); $('themeBtn').textContent = t==='light'?'☀️':'🌙'; try{localStorage.setItem('bd_theme',t);}catch(e){} }
-  var savedTheme=(function(){try{return localStorage.getItem('bd_theme');}catch(e){return null;}})();
-  setTheme(savedTheme||'dark');
-  $('themeBtn').addEventListener('click',function(){ setTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light'); });
-
-  /* ---------- guest counter + status ---------- */
-  fetch('https://api.bjhr.space/count').then(function(r){return r.text();}).then(function(t){
-    var n=null; try{ n=JSON.parse(t).count; }catch(e){}
-    if(n==null){var m=t.match(/\d[\d,]*/); if(m) n=m[0].replace(/,/g,'');}
-    if(n!=null) $('countVal').textContent=Number(n).toLocaleString(); else $('countVal').textContent='—';
-  }).catch(function(){ $('countVal').textContent='—'; });
-
-  var statusOk=null;
-  function statusText(){ if(statusOk===null)return '…'; return (statusOk?(lang==='zh'?'在线':'Online'):(lang==='zh'?'离线':'Offline')); }
-  function paintStatus(){ if(statusOk===null)return; $('statusDot').className='dot '+(statusOk?'on':'off'); $('statusVal').textContent=statusText(); }
-  fetch('https://api.bjhr.space/status').then(function(r){ statusOk=!!r.ok; }).catch(function(){ statusOk=false; }).then(paintStatus);
-
-  /* ---------- Konami easter egg ---------- */
-  var SEQ=['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
-  var buf=[],toast=$('toast'),toastT=null;
-  function showToast(msg){ toast.textContent=msg; toast.classList.add('show'); if(toastT)clearTimeout(toastT); toastT=setTimeout(function(){toast.classList.remove('show');},3500); }
-  document.addEventListener('keydown',function(e){
-    var t=e.target; if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.isContentEditable))return;
-    buf.push((e.key||'').toLowerCase()); if(buf.length>SEQ.length)buf.shift();
-    if(buf.length===SEQ.length&&buf.every(function(v,i){return v===SEQ[i];})){
-      buf=[]; var on=document.body.classList.toggle('konami-mode');
-      showToast(on?'🎉 彩蛋解锁：彩虹模式！再输一次关闭':'🌈 彩虹模式已关闭 / Rainbow off');
+  ],
+  projects: [
+    {
+      name: "PersonalDrive",
+      desc: "自建网盘 · 对象存储 + 分享链接",
+      url: "#",
+      healthUrl: DRIVE_HEALTH_URL
+    },
+    {
+      name: "NetSight",
+      desc: "网络诊断 · 延迟 / 路由 / DNS",
+      url: "#",
+      healthUrl: NETSIGHT_HEALTH_URL
     }
+  ]
+};
+
+/* ============================================================
+   主题三态切换：dark / light / system（跟随系统）
+   localStorage 键：nsp-theme
+   ============================================================ */
+var THEME_KEY = "nsp-theme";
+var themeNames = ["dark", "light", "system"];
+var themeIdx = 0;
+
+function getSystemTheme() {
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+}
+
+function applyTheme(name) {
+  var resolved = name === "system" ? getSystemTheme() : name;
+  document.documentElement.setAttribute("data-theme", resolved);
+  var label = (name === "system" ? "AUTO:" + resolved.toUpperCase() : name.toUpperCase());
+  var el = document.getElementById("sb-theme");
+  if (el) el.textContent = label;
+  var btn = document.getElementById("theme-btn");
+  if (btn) btn.textContent = "THEME: " + label;
+}
+
+function initTheme() {
+  var saved = null;
+  try { saved = localStorage.getItem(THEME_KEY); } catch (e) { saved = null; }
+  if (themeNames.indexOf(saved) === -1) saved = "dark";   // 默认深色
+  themeIdx = themeNames.indexOf(saved);
+  applyTheme(saved);
+}
+
+function cycleTheme() {
+  themeIdx = (themeIdx + 1) % themeNames.length;
+  var name = themeNames[themeIdx];
+  try { localStorage.setItem(THEME_KEY, name); } catch (e) { /* 忽略 */ }
+  applyTheme(name);
+}
+
+/* 跟随系统：监听系统主题变化（仅 system 模式需要实时跟随） */
+if (window.matchMedia) {
+  window.matchMedia("(prefers-color-scheme: light)").addListener(function () {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (e) { saved = null; }
+    if (saved === "system") applyTheme("system");
   });
+}
 
-  /* ---------- Idle screensaver (time popup) ---------- */
-  (function(){
-    var saver=$('screensaver'),timeEl=$('ssTime'),dateEl=$('ssDate');
-    var IDLE_MS=90000;                    // ← 闲置多久弹出屏保，可调（90 秒）
-    var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var idleTimer=null,clockTimer=null,ringTimer=null,active=false,pRaf=null;
-
-    var WK=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-    function tickClock(){
-      var d=new Date();
-      timeEl.textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
-      dateEl.textContent=d.getFullYear()+' 年 '+(d.getMonth()+1)+' 月 '+d.getDate()+' 日 · '+WK[d.getDay()];
-    }
-    /* ring */
-    var hr=$('ssHr'),mn=$('ssMin'),sc=$('ssSec'),HR_C=377,MIN_C=471.2,SEC_C=565.5;
-    (function(){var g=$('ssTicks');if(!g)return;for(var i=0;i<60;i++){var a=(i/60)*Math.PI*2-Math.PI/2,r1=94,r2=i%5===0?88:91;var l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',100+Math.cos(a)*r1);l.setAttribute('y1',100+Math.sin(a)*r1);l.setAttribute('x2',100+Math.cos(a)*r2);l.setAttribute('y2',100+Math.sin(a)*r2);l.setAttribute('class','ss-tick');if(i%5===0)l.setAttribute('stroke-width','1.6');g.appendChild(l);}})();
-    function tickRing(){var d=new Date();var h=d.getHours()%12,m=d.getMinutes(),s=d.getSeconds(),ms=d.getMilliseconds();var sf=(s+ms/1000)/60,mf=(m+sf)/60,hf=(h+mf)/12;sc.setAttribute('stroke-dashoffset',SEC_C*(1-sf));mn.setAttribute('stroke-dashoffset',MIN_C*(1-mf));hr.setAttribute('stroke-dashoffset',HR_C*(1-hf));}
-    /* starfield */
-    var cv=$('ssCanvas'),ctx=null,stars=[];
-    function initP(){if(!cv||!cv.getContext)return;ctx=cv.getContext('2d');var w=window.innerWidth,h=window.innerHeight;cv.width=w;cv.height=h;stars=[];var c=Math.min(110,Math.floor(w*h/9000));for(var i=0;i<c;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.4+.3,vx:(Math.random()-.5)*.12,vy:(Math.random()-.5)*.12,a:Math.random()*.6+.2,tw:Math.random()*6.28});}
-    function draw(){if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);for(var i=0;i<stars.length;i++){var s=stars[i];s.x+=s.vx;s.y+=s.vy;s.tw+=.015;if(s.x<0)s.x=cv.width;if(s.x>cv.width)s.x=0;if(s.y<0)s.y=cv.height;if(s.y>cv.height)s.y=0;var a=s.a*(.5+.5*Math.sin(s.tw));ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.29);ctx.fillStyle='rgba(148,163,184,'+a.toFixed(3)+')';ctx.fill();}pRaf=requestAnimationFrame(draw);}
-
-    function activate(){
-      if(active)return; active=true;
-      saver.classList.add('active'); saver.setAttribute('aria-hidden','false');
-      tickClock(); clockTimer=setInterval(tickClock,1000);
-      tickRing(); ringTimer=setInterval(tickRing,100);
-      if(!reduce){initP(); if(!pRaf)draw();}
-    }
-    function deactivate(){
-      if(!active)return; active=false;
-      saver.classList.remove('active'); saver.setAttribute('aria-hidden','true');
-      if(clockTimer){clearInterval(clockTimer);clockTimer=null;}
-      if(ringTimer){clearInterval(ringTimer);ringTimer=null;}
-      if(pRaf){cancelAnimationFrame(pRaf);pRaf=null;}
-    }
-    function reset(){ if(idleTimer)clearTimeout(idleTimer); idleTimer=setTimeout(activate,IDLE_MS); }
-    ['mousemove','mousedown','wheel','touchstart','keydown','scroll'].forEach(function(ev){
-      window.addEventListener(ev,function(){ if(active){deactivate();} reset(); },{passive:true});
+/* ============================================================
+   渲染：文章列表 / 标签云 / 项目入口
+   ============================================================ */
+function renderPosts() {
+  var list = document.getElementById("post-list");
+  var count = document.getElementById("post-count");
+  var html = "";
+  var posts = __SITE_DATA__.posts;
+  posts.forEach(function (p) {
+    var tagHtml = "";
+    (p.tags || []).forEach(function (t) {
+      tagHtml += '<button class="tag-chip" type="button" data-tag="' + t + '">' + t + "</button>";
     });
-    document.addEventListener('visibilitychange',function(){ if(document.hidden){if(idleTimer)clearTimeout(idleTimer);deactivate();}else reset(); });
-    window.addEventListener('resize',function(){ if(active&&!reduce)initP(); });
-    reset();
-  })();
+    var statusHtml = "";
+    if (p.status === "locked") statusHtml = '<span class="status-tag locked">[LOCKED]</span>';
+    else if (p.status === "private") statusHtml = '<span class="status-tag private">[PRIVATE]</span>';
+    html +=
+      '<article class="post-card">' +
+        '<div class="meta-row"><span class="date">' + p.date + "</span>" + statusHtml + "</div>" +
+        "<h3><a href=\"" + p.url + '">' + p.title + "</a></h3>" +
+        '<p class="excerpt">' + p.excerpt + "</p>" +
+        '<div class="tags-row">' + tagHtml + "</div>" +
+      "</article>";
+  });
+  list.innerHTML = html;
+  if (count) count.textContent = String(posts.length).padStart(2, "0");
+}
 
-  /* ---------- Article reader ---------- */
-  var ARTICLES={
-    a1:{t:'用 Cloudflare Workers 打造全球网络诊断面板',d:'2025-12-15',r:'约 8 分钟',c:
-      '<p>做 NetSight Pro 的初衷很简单：我想随时知道「我离某个站点到底有多远、连接质量怎么样」。传统做法要架服务器，而我更想要一个 clone 下来十几分钟就能跑、还不用花钱的东西。Cloudflare Workers 正好合适。</p>'+
-      '<h2>为什么放在边缘</h2><p>Workers 跑在全球几十个城市的数据中心，用户请求会被就近接入。把测速、ping、traceroute 这类接口放在边缘，意味着测到的 RTT 是「用户到最近节点」的真实体感，而不是绕到某台固定服务器。零冷启动、按请求计费、免费额度对个人项目几乎够用一辈子。</p>'+
-      '<h2>架构：一个 Worker + KV</h2><p>整个后端就是一个 Worker 文件。前端负责发探测请求、画图；Worker 负责回显时间戳、代理受限接口、以及把访问统计写进 KV。KV 是个键值存储，用来存计数器、封禁名单这类小 JSON 再合适不过，读写延迟低、无需建表。</p>'+
-      '<pre><code>export default {\n  async fetch(request, env) {\n    const url = new URL(request.url);\n    if (url.pathname === "/ping") {\n      return Response.json({ t: Date.now() }, {\n        headers: { "Access-Control-Allow-Origin": "*" }\n      });\n    }\n    return new Response("ok");\n  }\n};</code></pre>'+
-      '<h2>RTT 与测速怎么测</h2><p>RTT 用「客户端发出到收到响应」的时间差近似，每 2 秒采一次样，连成一串就是抖动曲线。带宽测速靠下载/上传不同大小的二进制块，取多个样本剔除异常后算平均。CPU 基准、并发压测、WebSocket 延迟各自是一个独立端点，前端按需调用。</p>'+
-      '<h2>踩过的坑</h2><ul>'+
-      '<li><b>错误信息被吞</b>：Worker 里未捕获的异常会返回一张 HTML 错误页而不是 JSON，前端 <code>res.json()</code> 直接崩。所有分支都要 try/catch 并保证返回 JSON。</li>'+
-      '<li><b>先解析再判断</b>：客户端 fetch 要先把响应解析出来，再判断 <code>res.ok</code>，否则上游 API 的真实报错拿不到。</li>'+
-      '<li><b>CORS</b>：像 ipapi 这类第三方接口会被 Cloudflare 挑战页拦截，要么换源（ipwho.is），要么自己起一个 Worker 代理转发。</li></ul>'+
-      '<div class="tip">经验：把「诊断能力」拆成一个个无状态的小端点，前端自由组合，比写一个大接口好维护得多，也方便单独测活。</div>'+
-      '<p>最终成品部署在 <a href="https://ipcheck.bjhr.space/" target="_blank" rel="noopener">ipcheck.bjhr.space</a>，13 个端点全部支持 CORS，$0 跑在免费额度上。</p>'
-    },
-    a2:{t:'QUIC 与 HTTP/3 实战性能调优',d:'2026-01-08',r:'约 12 分钟',c:
-      '<p>HTTP/3 基于 QUIC，而 QUIC 跑在 UDP 上。第一次认真调它，是被「弱网下 H2 卡成 PPT、H3 却还能看视频」这个现象逼着去搞明白的。</p>'+
-      '<h2>它到底解决了什么</h2><ul>'+
-      '<li><b>消除队头阻塞</b>：TCP 上一个丢包会卡住后面所有流；QUIC 的多路复用是传输层的，单条流丢包只影响自己。</li>'+
-      '<li><b>0-RTT / 1-RTT 握手</b>：TLS 1.3 被整合进 QUIC 握手，重连时甚至能 0-RTT 直接发数据。</li>'+
-      '<li><b>连接迁移</b>：连接用 Connection ID 标识，WiFi 切 4G 换 IP 不断线。</li></ul>'+
-      '<h2>拥塞控制</h2><p>QUIC 把拥塞控制算法挪到用户态，可插拔。默认 Cubic 在高带宽高延迟下表现一般，换 BBR 往往能明显提升吞吐——它按「带宽×RTT」估算发送速率，而不是死盯丢包。Cloudflare 边缘默认就帮你处理了大部分。</p>'+
-      '<h2>怎么确认自己真的走了 H3</h2><p>浏览器 DevTools 的 Network 面板加一列 Protocol，看是 <code>h3</code> 还是 <code>h2</code>；命令行可以用 <code>curl --http3</code> 探测。注意中间任何一跳（代理、企业网关）不支持 UDP，就会回落到 H2/H1。</p>'+
-      '<div class="tip">常见误区：开了 HTTP/3 不代表一定在用。MTU、防火墙对 UDP 的限速、以及 QUIC 的丢包重传实现，都可能让它在某些网络下反而不如 TCP。一定要实测，别迷信协议号。</div>'+
-      '<h2>调优清单</h2><ol><li>确保服务器同时放行 UDP/443，别只开 TCP。</li><li>开启 Alt-Svc 头，让客户端知道可以升级到 h3。</li><li>首屏小资源多、连接频繁重建的场景，收益最大。</li><li>监控降级率：h3→h2 的比例异常说明网络路径有问题。</li></ol>'
-    },
-    a3:{t:'HLS 自适应码率（ABR）原理与调优',d:'2026-02-11',r:'约 10 分钟',c:
-      '<p>做 M3U8 播放器时，最影响体验的就是 ABR——切清晰度切得对不对、会不会卡。搞懂它得先回到 HLS 的基本结构。</p>'+
-      '<h2>三个文件</h2><ul>'+
-      '<li><b>主 m3u8</b>：一份「菜单」，列出多个清晰度档位（variant）及各自的子播放列表地址和码率、分辨率。</li>'+
-      '<li><b>子 m3u8</b>：某个档位的分片清单，一串 <code>.ts</code> 或 <code>.m4s</code> 分片。</li>'+
-      '<li><b>分片</b>：实际的视频小块，通常 2–6 秒一段。</li></ul>'+
-      '<h2>ABR 在决策什么</h2><p>播放器持续估算两件事：当前<b>下载带宽</b>和<b>缓冲区水位</b>。带宽够、缓冲在涨，就往高档切；缓冲快见底或带宽掉，就降到低档保流畅。经典算法（如 BOLA）在「质量」和「避免卡顿」之间做权衡。</p>'+
-      '<h2>关键参数</h2><ul>'+
-      '<li>分片越短，起播越快、切换越灵敏，但请求开销越大。</li>'+
-      '<li>档位码率跨度别太大，否则一次降档观感断崖。</li>'+
-      '<li>缓冲区目标（如 8–12 秒）决定抗抖动能力，直播要偏短。</li></ul>'+
-      '<h2>低延迟 LL-HLS</h2><p>传统 HLS 端到端延迟十几秒起步。LL-HLS 用「部分分片（partial segment）」+ 长轮询，把延迟压到几秒，代价是服务端和 CDN 要支持，实现复杂度上升。</p>'+
-      '<div class="tip">调优直觉：卡顿比画质糊一点更伤体验。宁可保守降档保流畅，也别为了高分辨率反复缓冲。观察「切换频率」——频繁上下横跳说明阈值太敏感，该加滞回（hysteresis）。</div>'
-    },
-    a4:{t:'D1 + R2 构建 Serverless 数据层',d:'2026-03-27',r:'约 9 分钟',c:
-      '<p>Cloudflare 给了三种存储：KV、D1、R2。个人项目里我最终偏爱 R2 + KV，但理解 D1 的定位仍然重要。</p>'+
-      '<h2>各自适合什么</h2><ul>'+
-      '<li><b>R2</b>：对象存储，放文件本身（图片、视频、备份）。没有出口流量费，这是它相对 S3 的最大杀手锏。支持分片上传处理大文件。</li>'+
-      '<li><b>KV</b>：低延迟键值存储，放小 JSON——元数据、配置、计数器、会话。最终一致性，读多写少。</li>'+
-      '<li><b>D1</b>：托管 SQLite，能写 SQL、有事务、支持关系查询。适合结构化、需要联表/约束的数据。</li></ul>'+
-      '<h2>一个常见组合</h2><p>文件二进制进 R2，用 key 索引；文件的元数据（名字、大小、标签、上传时间）存 KV 的 JSON。想要全文检索或复杂关系时再上 D1。D1 里绝不塞大对象，只存指针。</p>'+
-      '<pre><code>await env.DRIVE.put(key, buf, {\n  httpMetadata: { contentType: "image/jpeg" }\n});\nawait env.META.put("file:" + key,\n  JSON.stringify({ size: buf.byteLength, ts: Date.now() }));</code></pre>'+
-      '<h2>为什么个人项目我绕开 D1</h2><p>D1 要建表、写迁移、处理 SQL，心智负担对「就想存点东西」的场景偏重。KV 直接存 JSON 更轻。但一旦数据之间有真实关系、要按条件查询，D1 的 SQL 能力是 KV 硬凑不出来的。</p>'+
-      '<div class="tip">成本视角：R2 无出口费意味着「给用户下载/预览文件」几乎不产生流量账单，做网盘、图床、静态资源分发特别划算。D1/KV 则要注意读写请求配额。</div>'
-    },
-    a5:{t:'Web 安全加固清单：TLS、HSTS 与 CSP',d:'2026-05-02',r:'约 11 分钟',c:
-      '<p>给博客和网盘做安全审查时，反复出现的就这几个头。整理成一份能照着做的清单。</p>'+
-      '<h2>TLS：先把地基打牢</h2><ul>'+
-      '<li>只留 TLS 1.2 / 1.3，关掉 1.0/1.1。优先 1.3。</li>'+
-      '<li>禁用弱加密套件（无前向保密的、RC4/3DES 之类）。</li>'+
-      '<li>证书链完整、开启 OCSP Stapling 减少握手延迟。</li></ul>'+
-      '<h2>HSTS：强制走 HTTPS</h2><p>响应头 <code>Strict-Transport-Security</code> 告诉浏览器「以后一段时间内只用 HTTPS 访问我」，防止降级和 SSL 剥离攻击。</p>'+
-      '<pre><code>Strict-Transport-Security: max-age=63072000;\n  includeSubDomains; preload</code></pre>'+
-      '<p>加进 preload 列表要慎重——一旦提交，域名到期或没配好证书会导致整站无法访问，且很难撤回。</p>'+
-      '<h2>CSP：给资源上白名单</h2><p>Content-Security-Policy 是防 XSS 的主力，声明「哪些来源的脚本/样式/图片允许加载」。</p>'+
-      '<pre><code>Content-Security-Policy: default-src \'self\';\n  script-src \'self\'; object-src \'none\';\n  base-uri \'self\'; frame-ancestors \'none\'</code></pre>'+
-      '<p>别用 <code>unsafe-inline</code> 图省事，内联脚本改用 nonce 或 hash。上线前先用 <code>Content-Security-Policy-Report-Only</code> 观察违规报告。</p>'+
-      '<h2>其它值得加的头</h2><ul><li><code>X-Content-Type-Options: nosniff</code></li><li><code>Referrer-Policy: strict-origin-when-cross-origin</code></li><li><code>Permissions-Policy</code> 关掉用不到的摄像头/麦克风等。</li></ul>'+
-      '<div class="tip">验证工具：Security Headers、Mozilla Observatory 能给你的站点打分并指出缺失的头。改 CSP 最容易把页面点崩，务必灰度、看控制台报错。</div>'
-    },
-    a6:{t:'WebSocket 实时通信的重连与心跳设计',d:'2026-06-18',r:'约 10 分钟',c:
-      '<p>WebSocket 看着是「一条长连接一直用」，现实是它会因为网络切换、代理超时、服务端回收等各种原因断掉。健壮性全靠重连和心跳兜底。</p>'+
-      '<h2>为什么会断</h2><p>移动网络切基站、Nginx/CDN 的空闲超时（常见 60s）、服务端进程重启、笔记本休眠……都会静默断开，而你不一定立刻收到 <code>onclose</code>。</p>'+
-      '<h2>心跳：主动探活</h2><p>定时发一个 ping，收到 pong 才算活着。若连续 N 次没回应，就主动关闭并重连——别干等 TCP 超时。心跳间隔要小于链路上最短的那个空闲超时。</p>'+
-      '<h2>重连：指数退避 + 抖动</h2>'+
-      '<pre><code>let attempts = 0;\nfunction reconnect() {\n  const delay = Math.min(30000,\n    1000 * 2 ** attempts++);\n  setTimeout(connect, delay + Math.random() * 500);\n}</code></pre>'+
-      '<p>固定间隔会在服务恢复瞬间被所有客户端同时打爆（惊群）。指数退避 + 随机抖动把重连摊开，上限封顶（如 30s）。</p>'+
-      '<h2>别丢消息</h2><ul><li>断线期间要发的消息进本地队列，重连成功后按序补发。</li><li>每条消息带自增 id，服务端/客户端据此去重和续传。</li><li>重连后先做一次状态同步（拉全量快照），再恢复增量。</li></ul>'+
-      '<h2>页面可见性优化</h2><p>标签页切到后台，浏览器可能限流定时器。监听 <code>visibilitychange</code>：隐藏时暂停心跳、显示时立刻探一次活，避免「回来发现早断了」。</p>'+
-      '<div class="tip">一个真实教训：Cloudflare Workers 的 WebSocket 有最长连接时长限制，到点会主动断开。所以「永不重连」的假设一定不成立，客户端必须假设连接随时会没。</div>'
-    }
-  };
-  function openReader(key){
-    var art=ARTICLES[key]; if(!art)return;
-    $('readerBody').innerHTML='<h1 id="readerTitle">'+art.t+'</h1><div class="reader-meta"><span>'+art.d+'</span><span>'+art.r+'</span></div>'+art.c;
-    $('reader').classList.add('open');
-    document.body.style.overflow='hidden';
-    var card=$('reader').querySelector('.reader-card'); if(card)card.scrollTop=0;
+function renderTags() {
+  var cloud = document.getElementById("tag-cloud");
+  var counts = {};
+  __SITE_DATA__.posts.forEach(function (p) {
+    (p.tags || []).forEach(function (t) { counts[t] = (counts[t] || 0) + 1; });
+  });
+  var html = "";
+  Object.keys(counts).sort().forEach(function (t) {
+    html += '<button class="tag" type="button" data-tag="' + t + '">' + t + '<span class="n">' + counts[t] + "</span></button>";
+  });
+  cloud.innerHTML = html;
+}
+
+var HEALTH_TIMEOUT = 5000;   // 单次检测超时 5s
+var HEALTH_INTERVAL = 60000; // 自动重测间隔 60s
+
+function renderProjects() {
+  var box = document.getElementById("proj-list");
+  var html = "";
+  __SITE_DATA__.projects.forEach(function (pr) {
+    html +=
+      '<a class="proj-card" href="' + pr.url + '" data-name="' + pr.name + '">' +
+        '<span class="p-dot unknown"></span>' +
+        '<div class="p-body"><div class="p-name">' + pr.name + '</div><div class="p-desc">' + pr.desc + "</div></div>" +
+        '<span class="p-status unknown">UNKNOWN</span>' +
+      "</a>";
+  });
+  box.innerHTML = html;
+}
+
+/* 真实健康检测：fetch /health 端点，5s 超时
+   成功(2xx)=绿点 OK；失败/超时=红点 DOWN；未配置(空 URL)=灰点 UNKNOWN */
+function checkHealth(name, url) {
+  var card = document.querySelector('.proj-card[data-name="' + name + '"]');
+  if (!card) return;
+  var dot = card.querySelector(".p-dot");
+  var st = card.querySelector(".p-status");
+  function setState(cls, label) {
+    dot.className = "p-dot " + cls;
+    st.className = "p-status " + cls;
+    st.textContent = label;
   }
-  function closeReader(){ $('reader').classList.remove('open'); document.body.style.overflow=''; }
-  var postsEl=$('posts');
-  if(postsEl){ postsEl.addEventListener('click',function(e){
-    var a=e.target.closest?e.target.closest('a[data-article]'):null; if(!a)return;
-    e.preventDefault(); openReader(a.getAttribute('data-article'));
-  }); }
-  $('readerClose').addEventListener('click',closeReader);
-  $('reader').addEventListener('click',function(e){ if(e.target===$('reader'))closeReader(); });
-  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&$('reader').classList.contains('open'))closeReader(); });
-  if(location.hash){ var _k=location.hash.slice(1); if(ARTICLES[_k]) setTimeout(function(){openReader(_k);},150); }
-})();
+  if (!url) { setState("unknown", "UNKNOWN"); return; }
+  var ctrl = new AbortController();
+  var timer = setTimeout(function () { ctrl.abort(); }, HEALTH_TIMEOUT);
+  fetch(url, { signal: ctrl.signal, cache: "no-store" })
+    .then(function (r) {
+      clearTimeout(timer);
+      setState(r.ok ? "ok" : "err", r.ok ? "OK" : "DOWN");
+    })
+    .catch(function () {
+      clearTimeout(timer);
+      setState("err", "DOWN");
+    });
+}
+
+/* 初始化检测一次，之后每 60s 自动重测 */
+function startHealthChecks() {
+  __SITE_DATA__.projects.forEach(function (pr) { checkHealth(pr.name, pr.healthUrl); });
+  setInterval(function () {
+    __SITE_DATA__.projects.forEach(function (pr) { checkHealth(pr.name, pr.healthUrl); });
+  }, HEALTH_INTERVAL);
+}
+
+/* ============================================================
+   交互：快捷键 / 搜索 / 标签过滤 / 加密占位 / 时钟
+   ============================================================ */
+function handleKeydown(e) {
+  var tag = (e.target.tagName || "").toLowerCase();
+  var inInput = tag === "input" || tag === "textarea";
+  if (e.key === "/" && !inInput) {
+    e.preventDefault();
+    var si = document.getElementById("search-input");
+    if (si) si.focus();
+  } else if ((e.key === "t" || e.key === "T") && !inInput) {
+    cycleTheme();
+  }
+  /* 翻页预留：未来接入文章分页时启用
+  else if (e.key === "ArrowLeft") { /* 上一页 */ }
+  else if (e.key === "ArrowRight") { /* 下一页 */ }
+  */
+}
+
+document.addEventListener("keydown", handleKeydown);
+
+document.getElementById("theme-btn").addEventListener("click", cycleTheme);
+
+document.getElementById("crypto-btn").addEventListener("click", function () {
+  /* 私密文章解密预留：接入时在此读取 URL 中的密钥参数并解密正文。
+     当前为占位提示，不实现真实解密。 */
+  alert("[占位] 加密文章需通过带密钥的链接访问。前端解密模块为预留状态，接入后即可使用。");
+});
+
+/* 搜索框预留：接入 Pagefind 后在此绑定 search()，当前仅做快捷键聚焦 */
+document.getElementById("search-input").addEventListener("input", function () {
+  var q = this.value.trim();
+  /* Pagefind 预留代码（部署后启用）：
+  if (q.length >= 2 && window.pagefind) {
+    pagefind.search(q).then(function (r) { /* 渲染结果 */ });
+  }
+  */
+  /* 离线占位：关键词简单过滤文章标题 */
+  var list = document.getElementById("post-list");
+  var cards = list.querySelectorAll(".post-card");
+  cards.forEach(function (card) {
+    var title = card.querySelector("h3").textContent.toLowerCase();
+    card.style.display = (q === "" || title.indexOf(q.toLowerCase()) !== -1) ? "" : "none";
+  });
+});
+
+/* 标签点击过滤 */
+document.addEventListener("click", function (e) {
+  var btn = e.target.closest("[data-tag]");
+  if (!btn) return;
+  var tag = btn.getAttribute("data-tag");
+  var list = document.getElementById("post-list");
+  var cards = list.querySelectorAll(".post-card");
+  var shown = 0;
+  cards.forEach(function (card) {
+    var has = card.querySelectorAll(".tag-chip").length > 0;
+    var chips = card.querySelectorAll(".tag-chip");
+    var match = false;
+    chips.forEach(function (c) { if (c.getAttribute("data-tag") === tag) match = true; });
+    card.style.display = match ? "" : "none";
+    if (match) shown++;
+  });
+  var active = document.querySelectorAll(".tag[data-tag=\"" + tag + "\"]");
+  active.forEach(function (x) { x.style.borderColor = "var(--accent)"; x.style.color = "var(--accent)"; });
+});
+
+/* 状态栏时钟（仪器化细节） */
+function tickClock() {
+  var el = document.getElementById("sb-clock");
+  if (!el) return;
+  var d = new Date();
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  el.textContent = pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+setInterval(tickClock, 1000);
+tickClock();
+
+/* ============================================================
+   不蒜子统计占位：部署后接入脚本会自动更新 #b-pv / #b-uv
+   ============================================================ */
+document.getElementById("year").textContent = String(new Date().getFullYear());
+
+/* 初始化 */
+renderPosts();
+renderTags();
+renderProjects();
+startHealthChecks();
+initTheme();
 </script>
 </body>
 </html>
