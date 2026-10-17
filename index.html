@@ -882,7 +882,8 @@ function unescapeHtml(s) {
 /* 站内链接：http 下用真实路径，file:// 下退化为 hash 路由（保证双击可开） */
 function href(path, ctx) {
   var p = path.charAt(0) === "/" ? path : "/" + path;
-  if (ctx && ctx.hash) return "#" + p;
+  /* hash 模式：base 为空，必须归一化掉开头多余的斜杠，否则会拼出 "#//blog/" 这种双斜杠 */
+  if (ctx && ctx.hash) return "#" + p.replace(/\/{2,}/g, "/");
   return (ctx && ctx.base ? ctx.base : "/") + p.replace(/^\//, "");
 }
 function fmtDate(iso, lang) {
@@ -1277,11 +1278,17 @@ function bootstrap() {
   var ctx = { base: isFile ? "" : base, hash: isFile };
   var lang = localStorage.getItem("bd-lang") || document.documentElement.lang.split("-")[0] || data.site.defaultLang;
   if (lang !== "zh" && lang !== "en") lang = "zh";
-  var theme = localStorage.getItem("bd-theme") || "";
+  /* 取「实际已生效」的主题：<head> 里的预置脚本可能已按系统偏好写成 dark，
+     只读 localStorage 会导致系统深色时第一次点切换看起来没反应。 */
+  var theme = localStorage.getItem("bd-theme") || document.documentElement.getAttribute("data-theme") || "";
   var currentRoute = window.__ROUTE__ || "/";
 
   function routeFromLocation() {
-    if (isFile) return location.hash.replace(/^#/, "") || "/";
+    if (isFile) {
+      var h = location.hash.replace(/^#/, "");
+      /* 只有以 "/" 开头的才是路由；"#demo" 这类页内锚点按首页处理，不能被当成路由 */
+      return h.charAt(0) === "/" ? h : "/";
+    }
     return location.pathname.replace(/\/index\.html$/, "/") || "/";
   }
   function setLang(l) {
@@ -1391,7 +1398,14 @@ function bootstrap() {
     navigate(route);
   });
   window.addEventListener("popstate", function () { currentRoute = routeFromLocation(); render(currentRoute); updateTitle(); markActiveNav(); });
-  if (isFile) window.addEventListener("hashchange", function () { currentRoute = routeFromLocation(); render(currentRoute); updateTitle(); markActiveNav(); });
+  if (isFile) window.addEventListener("hashchange", function () {
+    var h = location.hash.replace(/^#/, "");
+    /* 页内锚点（#demo 等，不以 "/" 开头）不参与路由，交给浏览器原生滚动 */
+    if (h && h.charAt(0) !== "/") return;
+    var r = routeFromLocation();
+    if (r === currentRoute) return; /* navigate() 已经渲染过，避免重复重绘 */
+    currentRoute = r; render(r); updateTitle(); markActiveNav();
+  });
 
   /* 搜索面板 */
   var palette = document.getElementById("palette"), input = document.getElementById("searchInput"), results = document.getElementById("searchResults");
@@ -1665,8 +1679,18 @@ function bootstrap() {
 
   /* ---------- 启动 ---------- */
   applyI18nStatic();
-  if (lang !== (document.documentElement.lang.split("-")[0] || "zh")) render(currentRoute);
-  else afterRender();
+  /* 首屏必须按「当前地址里的路由」重画一次。
+     预渲染的 HTML 只属于 window.__ROUTE__ 对应的那一个路由（本文件是 /blog/），
+     而这段启动代码原本在语言匹配时就跳过渲染，于是直接打开本文件
+     （file://，无 hash）会停在预渲染的那一页，而不是首页。
+     注意：window.__ROUTE__ 只是构建期的提示，这里一律以地址栏为准。 */
+  currentRoute = routeFromLocation();
+  render(currentRoute);
+  /* 以页内锚点（如 #demo）直接打开时，等首页渲染完再滚到目标位置 */
+  if (isFile && location.hash && location.hash.charAt(1) !== "/") {
+    var anchorEl = document.getElementById(location.hash.slice(1));
+    if (anchorEl) anchorEl.scrollIntoView();
+  }
   markActiveNav();
   updateTitle();
   var lb = document.getElementById("langLabel"); if (lb) lb.textContent = lang === "en" ? "中文" : "EN";
