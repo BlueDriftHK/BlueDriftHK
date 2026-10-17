@@ -83,7 +83,7 @@ Both are AGPL-3.0 open source — fork and deploy to your own edge in minutes.
 ## 📖 博客 / Blog
 
 技术笔记不定期更新：边缘计算、Serverless 与网络优化。
-[https://blog.bjhr.space/](https://blog.bjhr.space/)
+[https://blog.bjhr.space/](https://blog.bjhr.online/)
 
 Occasional notes on edge computing, serverless networking & network optimization.
 
